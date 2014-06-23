@@ -24,6 +24,7 @@ class Url(models.Model):
 class Play(models.Model):
     actual = models.ForeignKey(Url, default=None)
 
+    # J'ai des doutes sur la class Meta. Peut eter à enlever
     class Meta:
         abstract = True
 
