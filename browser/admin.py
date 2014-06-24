@@ -13,5 +13,5 @@ admin.site.register(Url, UrlAdmin)
 
 
 class PlayAdmin(admin.ModelAdmin):
-    list_display = ('actual')
+    list_display = ('actual',)
 admin.site.register(Play, PlayAdmin)

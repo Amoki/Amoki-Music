@@ -29,7 +29,9 @@ class Play(models.Model):
         try:
             return Play.objects.get()
         except Play.DoesNotExist:
-            return Play()
+            play = Play()
+            play.save()
+            return play
 
     def play_next(self):
         if not self.actual:
