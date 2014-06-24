@@ -8,18 +8,7 @@
         <link href="{% static 'style.css' %}"    title="Défaut" rel="stylesheet" type="text/css" media="screen" />
     </head>
     <body>
-    	<ul>
-			{% for category in categories %}
-				<li>{{ category }}</li>
-			{% endfor %}
-		</ul>
-		<ul>
-			{% for url in urls %}
-				<li>{{ url }}</li>
-			{% endfor %}
-			<form action="." method="post">
-					<input type="submit" name="addUrl" value="add Url" />
-			</form>
-		</ul>
+
+    <p>{% playing %}</p>
     </body>
 </html>
