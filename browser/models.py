@@ -52,9 +52,11 @@ class Play(models.Model):
         self.actual = url
         self.save()
 
-        PROCNAME = 'firefox.exe'
+        PROCNAME = u'firefox.exe'
         for process in psutil.process_iter():
+            print process.name
             if process.name == PROCNAME:
+                print ("killing %s", PROCNAME)
                 process.kill()
 
         webbrowser.open(url.url)
