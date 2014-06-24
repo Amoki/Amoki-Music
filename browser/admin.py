@@ -8,7 +8,7 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class UrlAdmin(admin.ModelAdmin):
-    list_display = ('url', 'category', 'date')
+    list_display = ('name', 'url', 'category', 'date')
 admin.site.register(Url, UrlAdmin)
 
 

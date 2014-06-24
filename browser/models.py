@@ -13,12 +13,16 @@ class Category (models.Model):
 
 class Url(models.Model):
     url = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category)
     played = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.url
+        return self.name
+
+    def replay(self):
+        Url(url=self.url, category=self.category).save()
 
 
 class Play(models.Model):
@@ -53,3 +57,6 @@ class Play(models.Model):
     def reset(self):
         self.actual = Url.objects.filter(date__lt=self.actual.date).last()
         self.save()
+
+
+from browser.signals import *
