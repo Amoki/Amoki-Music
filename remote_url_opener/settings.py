@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'remote_url_opener',
+    'browser',
 )
 
 MIDDLEWARE_CLASSES = (
