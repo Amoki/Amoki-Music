@@ -26,7 +26,11 @@ class Url(models.Model):
 
 
 class Play(models.Model):
-    actual = models.ForeignKey(Url, default=None)
+    actual = models.ForeignKey(Url, null=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(Play, self).save(*args, **kwargs)
 
     @classmethod
     def load():
@@ -39,8 +43,9 @@ class Play(models.Model):
 
     def play_next(self):
         if not self.actual:
-            return
-        url = Url.objects.filter(date__lt=self.actual.date).first()
+            url = Url.objects.filter().first()
+        else:
+            url = Url.objects.filter(date__lt=self.actual.date).first()
         if not url:
             return
 
