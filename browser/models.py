@@ -40,7 +40,8 @@ class Play(models.Model):
             return Play()
 
     def play_next(self):
-        # bug si y'a pas de self.actual
+        if not self.actual:
+            return
         url = Url.objects.filter(date__lt=self.actual.date).first()
         if not url:
             return
@@ -49,9 +50,9 @@ class Play(models.Model):
         self.save()
 
         PROCNAME = 'firefox.exe'
-        for proc in psutil.process_iter():
-            if proc.name == PROCNAME:
-                proc.kill()
+        for process in psutil.process_iter():
+            if process.name == PROCNAME:
+                process.kill()
 
         webbrowser.open(url.url)
 
