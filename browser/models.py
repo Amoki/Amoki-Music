@@ -24,14 +24,6 @@ class Url(models.Model):
 class Play(models.Model):
     actual = models.ForeignKey(Url, default=None)
 
-    # J'ai des doutes sur la class Meta. Peut eter à enlever
-    class Meta:
-        abstract = True
-
-    def save(self, *args, **kwargs):
-        self.__class__.objects.exclude(id=self.id).delete()
-        super(Play, self).save(*args, **kwargs)
-
     @classmethod
     def load():
         try:
