@@ -18,7 +18,8 @@
 				<li>{{ url }}</li>
 			{% endfor %}
 			<form action="." method="post">
-					<input type="submit" name="addUrl" value="add Url" />
+				{% csrf_token %}
+				<input type="submit" name="addUrl" value="add Url" />
 			</form>
 		</ul>
     </body>
