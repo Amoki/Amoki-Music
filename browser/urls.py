@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('shop.views',
+urlpatterns = patterns('browser.views',
     url(r'^$', 'home'),
     url(r'^nowplaying/$', 'nowplaying'),
 )
