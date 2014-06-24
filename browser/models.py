@@ -54,10 +54,12 @@ class Play(models.Model):
 
         PROCNAME = u'firefox.exe'
         for process in psutil.process_iter():
-            print process.name
-            if process.name == PROCNAME:
-                print ("killing %s", PROCNAME)
-                process.kill()
+            try:
+                if process.name == PROCNAME:
+                    print ("killing %s", PROCNAME)
+                    process.kill()
+            except:
+                pass
 
         webbrowser.open(url.url)
 
