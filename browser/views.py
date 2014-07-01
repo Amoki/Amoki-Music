@@ -21,5 +21,6 @@ def reset_playlist(request):
 
 
 def now_playing(request):
-    playing = Play.load().actual
+    player = Play.load()
+    playing = player.actual
     return render(request, 'nowplaying.html', locals())

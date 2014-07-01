@@ -4,6 +4,7 @@ import webbrowser
 import psutil
 import sched
 import time
+from threading import Timer
 
 
 class Category (models.Model):
@@ -30,14 +31,14 @@ class Url(models.Model):
 
 class Play(models.Model):
     actual = models.ForeignKey(Url, null=True, editable=False)
-    scheduler = sched.scheduler(time.time, time.sleep)
+    event = None
 
     def save(self, *args, **kwargs):
         self.__class__.objects.exclude(id=self.id).delete()
         super(Play, self).save(*args, **kwargs)
 
     @classmethod
-    def load():
+    def load(self):
         try:
             return Play.objects.get()
         except Play.DoesNotExist:
@@ -46,15 +47,20 @@ class Play(models.Model):
             return play
 
     def play_next(self):
+        # clear the queue
+        if self.event:
+            self.event.cancel()
+
         if not self.actual:
             url = Url.objects.filter().first()
         else:
-            url = Url.objects.filter(date__lt=self.actual.date).first()
+            url = Url.objects.filter(date__gt=self.actual.date).first()
 
         if not url:
             self.actual = None
             self.save()
-            self.scheduler.enter(5, 1, play_next, (self,))
+            self.event = Timer(5, self.play_next, ())
+            self.event.start()
         else:
             self.actual = url
             self.save()
@@ -72,7 +78,8 @@ class Play(models.Model):
 
             webbrowser.open(url.url)
 
-            self.scheduler.enter(url.duration, 1, play_next, (self,))
+            self.event = Timer(url.duration, self.play_next, ())
+            self.event.start()
 
     def reset(self):
         self.actual = Url.objects.filter(date__lt=self.actual.date).last()
