@@ -3,6 +3,22 @@ from browser.models import Category, Url, Play
 
 
 def home(request):
+    player = Play.load()
+
+    if request.method == "POST":
+        if request.POST.get('add_url'):
+            url = Url(
+                url=request.POST.get('url'),
+                category=Category.objects.get(pk=request.POST.get('category'))
+            )
+            url.save()
+
+        if request.POST.get('play_next'):
+            player = Play.load()
+            player.play_next()
+
+    player = Play.load()
+    playing = player.actual
     categories = Category.objects.all()
     urls = Url.objects.all()
     return render(request, 'index.html', locals())

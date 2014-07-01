@@ -5,22 +5,43 @@
         <title>Accueil</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="content-language" content="fr" />
-        <link href="{% static 'style.css' %}"    title="Défaut" rel="stylesheet" type="text/css" media="screen" />
     </head>
     <body>
-    	<ul>
-			{% for category in categories %}
-				<li>{{ category }}</li>
-			{% endfor %}
-		</ul>
+    	<h1>Now playing</h1>
+    	<h2>{{ playing }}</h2>
+		<form action="." method="post">
+			{% csrf_token %}
+			<select name="category">
+				{% for category in categories %}
+					<option VALUE="{{ category.pk }}">{{ category }}</option>
+				{% endfor %}
+			</select>
+			<input type="text" value="" name="url">
+			<input type="submit" name="add_url" value="Add to queue" />
+		</form>
+
+		<form action="." method="post">
+			{% csrf_token %}
+			<input type="submit" name="play_next" value="Next music" />
+		</form>
+
+		{% for category in categories %}
+		<h2>{{ category }}</h2>
 		<ul>
 			{% for url in urls %}
-				<li>{{ url }}</li>
+				{% if url.category.name == category.name %}
+					<li>{{ url }}</li>
+					<form action="." method="post">
+						{% csrf_token %}
+						<input type="hidden" value="{{ url.url }}" name="url">
+						<input type="hidden" value="{{ category.pk }}" name="category">
+						<input type="submit" name="add_url" value="Add to queue" />
+					</form>
+				{% endif %}
 			{% endfor %}
-			<form action="." method="post">
-				{% csrf_token %}
-				<input type="submit" name="addUrl" value="add Url" />
-			</form>
+
 		</ul>
+		{% endfor %}
+
     </body>
 </html>

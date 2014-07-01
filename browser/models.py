@@ -2,13 +2,11 @@ from django.db import models
 
 import webbrowser
 import psutil
-import sched
-import time
 from threading import Timer
 
 
 class Category (models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __unicode__(self):
         return self.name
