@@ -2,6 +2,8 @@ from django.db import models
 
 import webbrowser
 import psutil
+import sched
+import time
 
 
 class Category (models.Model):
@@ -16,7 +18,8 @@ class Url(models.Model):
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category)
-    played = models.BooleanField(default=False)
+    played_count = models.PositiveIntegerField(default=0, editable=False)
+    duration = models.PositiveIntegerField(editable=False)
 
     def __unicode__(self):
         return self.name
@@ -27,6 +30,7 @@ class Url(models.Model):
 
 class Play(models.Model):
     actual = models.ForeignKey(Url, null=True, editable=False)
+    scheduler = sched.scheduler(time.time, time.sleep)
 
     def save(self, *args, **kwargs):
         self.__class__.objects.exclude(id=self.id).delete()
@@ -46,22 +50,29 @@ class Play(models.Model):
             url = Url.objects.filter().first()
         else:
             url = Url.objects.filter(date__lt=self.actual.date).first()
+
         if not url:
-            return
+            self.actual = None
+            self.save()
+            self.scheduler.enter(5, 1, play_next, (self,))
+        else:
+            self.actual = url
+            self.save()
+            url.played_count += 1
+            url.save()
 
-        self.actual = url
-        self.save()
+            PROCNAME = u'firefox.exe'
+            for process in psutil.process_iter():
+                try:
+                    if process.name == PROCNAME:
+                        print ("killing %s", PROCNAME)
+                        process.kill()
+                except:
+                    pass
 
-        PROCNAME = u'firefox.exe'
-        for process in psutil.process_iter():
-            try:
-                if process.name == PROCNAME:
-                    print ("killing %s", PROCNAME)
-                    process.kill()
-            except:
-                pass
+            webbrowser.open(url.url)
 
-        webbrowser.open(url.url)
+            self.scheduler.enter(url.duration, 1, play_next, (self,))
 
     def reset(self):
         self.actual = Url.objects.filter(date__lt=self.actual.date).last()
