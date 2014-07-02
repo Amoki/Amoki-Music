@@ -57,8 +57,6 @@ class Play(models.Model):
         if not url:
             self.actual = None
             self.save()
-            self.event = Timer(5, self.play_next, ())
-            self.event.start()
         else:
             self.actual = url
             self.save()
