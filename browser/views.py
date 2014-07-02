@@ -12,12 +12,12 @@ def home(request):
                 category=Category.objects.get(pk=request.POST.get('category'))
             )
             url.save()
+            if not player.actual:
+                player.play_next()
 
         if request.POST.get('play_next'):
-            player = Play.load()
             player.play_next()
 
-    player = Play.load()
     playing = player.actual
     categories = Category.objects.all()
     urls = Url.objects.all()
