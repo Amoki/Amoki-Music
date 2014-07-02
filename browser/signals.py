@@ -3,8 +3,10 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from browser.models import Url
-import urllib2
+
 from BeautifulSoup import BeautifulSoup
+
+import urllib2
 import HTMLParser
 import json
 
@@ -19,14 +21,14 @@ def set_name(sender, instance, **kwargs):
 def set_duration(sender, instance, **kwargs):
     try:
         video_id = instance.url.rsplit("v=", 1)[1]
-        query = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=" + video_id + "&key=AIzaSyAFstaFPAwbEb46OCCawakLha7B7qA5mo4"
+        query = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=" + video_id + "&key=AIzaSyCt5t3qv1MTXW5Vaq0KB9__0m7xP5bQNo4"
         body = urllib2.urlopen(query).read()
         res = json.loads(body)
         raw_time = res["items"][0]["contentDetails"]["duration"]
 
         time = int(raw_time.rsplit("M", 1)[1].rsplit("S", 1)[0])
-        time += 60 * int(raw_time.rsplit("M", 1)[0].rsplit("T", 1)[1])
-
+        time += 60 * int(raw_time.rsplit("M", 1)[0].rsplit("PT", 1)[1])
+        # TODO : handle hours
         instance.duration = time
-    except:
-        instance.time = 5
+    except urllib2.URLError, e:
+        raise e

@@ -53,3 +53,10 @@ coverage.xml
 docs/_build/
 
 *.sqlite3
+
+###############
+## Amoki
+###############
+.v_env/*
+*.sublime-project
+*.sublime-workspace
