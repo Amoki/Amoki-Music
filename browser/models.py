@@ -28,19 +28,9 @@ class Music(models.Model):
         Url(url=self.url, category=self.category).save()
 
 
-event = None
-
-
-def get_event():
-    return event
-
-
-def set_event(event):
-    event = event
-
-
 class Player(models.Model):
     actual = models.ForeignKey(Music, null=True, editable=False)
+    event = None
 
     def save(self, *args, **kwargs):
         self.__class__.objects.exclude(id=self.id).delete()
@@ -57,8 +47,8 @@ class Player(models.Model):
 
     def play_next(self, forced=False):
         # clear the queue
-        if get_event():
-            get_event().cancel()
+        if self.event:
+            self.event.cancel()
 
         music = None
 
@@ -79,8 +69,8 @@ class Player(models.Model):
 
             webbrowser.open(music.url, new=0)
 
-            set_event(Timer(music.duration, self.play_next, ()))
-            get_event().start()
+            self.event = Timer(music.duration, self.play_next, ())
+            self.event.start()
 
     def push(self, url, category):
         old_url = Music.objects.filter(url=url, category=category).first()
