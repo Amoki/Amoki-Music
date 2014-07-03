@@ -16,7 +16,7 @@ def get_youtube_id(url):
 
 
 def get_youtube_link(id):
-    return "https://www.youtube.com/watch?" + id
+    return "https://www.youtube.com/watch?v=" + id
 
 
 @receiver(pre_save, sender=Music)
@@ -25,7 +25,7 @@ def set_url_name_and_duration(sender, instance, **kwargs):
     query = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + video_id + "&key=AIzaSyCt5t3qv1MTXW5Vaq0KB9__0m7xP5bQNo4"
     body = urllib2.urlopen(query).read()
     res = json.loads(body)
-
+    print res
     raw_time = res["items"][0]["contentDetails"]["duration"]
     time = int(raw_time.rsplit("M", 1)[1].rsplit("S", 1)[0])
     time += 60 * int(raw_time.rsplit("M", 1)[0].rsplit("PT", 1)[1])
