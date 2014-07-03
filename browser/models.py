@@ -13,7 +13,7 @@ class Category (models.Model):
         return self.name
 
 
-class Musique(models.Model):
+class Music(models.Model):
     url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
@@ -29,7 +29,7 @@ class Musique(models.Model):
 
 
 class Player(models.Model):
-    actual = models.ForeignKey(Musique, null=True, editable=False)
+    actual = models.ForeignKey(Music, null=True, editable=False)
     event = None
 
     def save(self, *args, **kwargs):
@@ -81,7 +81,7 @@ class Player(models.Model):
             self.event.start()
 
     def push(self, url, category):
-        old_url = Musique.objects.filter(url=url, category=category).first()
+        old_url = Music.objects.filter(url=url, category=category).first()
         if not old_url:
             old_url = Musique(
                 url=url,
@@ -97,7 +97,7 @@ class Player(models.Model):
             self.play_next(forced=True)
 
     def reset(self):
-        self.actual = Musique.objects.filter(date__lt=self.actual.date).last()
+        self.actual = Music.objects.filter(date__lt=self.actual.date).last()
         self.save()
 
 

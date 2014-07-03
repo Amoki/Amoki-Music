@@ -2,7 +2,7 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from browser.models import Musique
+from browser.models import Music
 
 import urllib2
 import json
@@ -15,7 +15,7 @@ def get_youtube_id(url):
         return url.rsplit("v=", 1)[1]
 
 
-@receiver(pre_save, sender=Musique)
+@receiver(pre_save, sender=Music)
 def set_url_name_and_duration(sender, instance, **kwargs):
     try:
         video_id = get_youtube_id(instance.url)
