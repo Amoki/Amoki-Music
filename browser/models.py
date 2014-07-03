@@ -61,22 +61,22 @@ class Player(models.Model):
         if get_event():
             get_event().cancel()
 
-        url = None
+        music = None
 
         if self.actual:
             if not forced:
-                url = Url.objects.filter(date__gt=self.actual.date).first()
+                music = Music.objects.filter(date__gt=self.actual.date).first()
             else:
-                url = self.actual
+                music = self.actual
 
-        if not url:
+        if not music:
             self.actual = None
             self.save()
         else:
-            self.actual = url
+            self.actual = music
             self.save()
-            url.played_count += 1
-            url.save()
+            music.played_count += 1
+            music.save()
 
             PROCNAME = u'firefox.exe'
             for process in psutil.process_iter():
@@ -86,15 +86,15 @@ class Player(models.Model):
                 except:
                     pass
 
-            webbrowser.open(url.url, new=0)
+            webbrowser.open(music.url)
 
-            set_event(Timer(url.duration, self.play_next, ()))
-            event.start()
+            set_event(Timer(music.duration, self.play_next, ()))
+            get_event().start()
 
     def push(self, url, category):
         old_url = Music.objects.filter(url=url, category=category).first()
         if not old_url:
-            old_url = Musique(
+            old_url = Music(
                 url=url,
                 category=category
             )
@@ -123,7 +123,7 @@ class Player(models.Model):
 
     def get_musics_remaining(self):
         if not self.actual:
-            return ()
+            return
         nexts = Music.objects.filter(date__lt=self.actual.date)
 
         return map(str, nexts)
