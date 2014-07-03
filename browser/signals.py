@@ -31,5 +31,5 @@ def set_url_name_and_duration(sender, instance, **kwargs):
         instance.url = video_id
         instance.name = res["items"][0]["snippet"]["title"]
 
-    except urllib2.URLError, e:
-        raise e
+    except:
+        raise

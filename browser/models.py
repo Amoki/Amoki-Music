@@ -86,7 +86,7 @@ class Player(models.Model):
                 except:
                     pass
 
-            webbrowser.open(url.url)
+            webbrowser.open(url.url, new=0)
 
             set_event(Timer(url.duration, self.play_next, ()))
             event.start()
@@ -112,6 +112,8 @@ class Player(models.Model):
         self.save()
 
     def get_remaining_time(self):
+        if not self.actual:
+            return 0
         nexts = Music.objects.filter(date__lt=self.actual.date)
         time_left = 0
         for music in nexts:
@@ -120,11 +122,15 @@ class Player(models.Model):
         return time_left
 
     def get_musics_remaining(self):
+        if not self.actual:
+            return ()
         nexts = Music.objects.filter(date__lt=self.actual.date)
 
         return map(str, nexts)
 
     def get_number_remaining(self):
+        if not self.actual:
+            return 0
         return Music.objects.filter(date__lt=self.actual.date).count()
 
 

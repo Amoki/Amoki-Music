@@ -7,7 +7,7 @@
         <meta http-equiv="content-language" content="fr" />
     </head>
     <body>
-    	<h1>Now playing :</h1><h2>{{ playing }}</h2>
+    	<h1>Now playing :</h1><h2>{{ playing }} <i>({{ playingplayed_count }})</i></h2>
     	<h3>Music left : {{ count_left }} - {{ time_left }}</h3>
     	<h3>Next musics : {% for music in nexts_music %} {{music}}, {% endfor %}</h3>
 		<form action="." method="post">

@@ -15,9 +15,9 @@ def home(request):
     playing = player.actual
     categories = Category.objects.all().order_by('name')
     urls = Music.objects.all()
-    time_left = playing.time_left()
-    count_left = playing.get_number_remaining()
-    nexts_music = playing.get_musics_remaining()
+    time_left = player.get_remaining_time()
+    count_left = player.get_number_remaining()
+    nexts_music = player.get_musics_remaining()
     return render(request, 'index.html', locals())
 
 
