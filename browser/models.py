@@ -108,13 +108,13 @@ class Player(models.Model):
             self.play_next(forced=True)
 
     def reset(self):
-        self.actual = Music.objects.filter(date__lt=self.actual.date).last()
+        self.actual = Music.objects.filter(date__gt=self.actual.date).last()
         self.save()
 
     def get_remaining_time(self):
         if not self.actual:
             return 0
-        nexts = Music.objects.filter(date__lt=self.actual.date)
+        nexts = Music.objects.filter(date__gt=self.actual.date)
         time_left = 0
         for music in nexts:
             time_left += music.duration
@@ -124,14 +124,14 @@ class Player(models.Model):
     def get_musics_remaining(self):
         if not self.actual:
             return
-        nexts = Music.objects.filter(date__lt=self.actual.date)
+        nexts = Music.objects.filter(date__gt=self.actual.date)
 
         return map(str, nexts)
 
     def get_number_remaining(self):
         if not self.actual:
             return 0
-        return Music.objects.filter(date__lt=self.actual.date).count()
+        return Music.objects.filter(date__gt=self.actual.date).count()
 
 
 from browser.signals import *
