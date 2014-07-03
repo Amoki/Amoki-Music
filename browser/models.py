@@ -3,6 +3,7 @@ from django.utils import timezone
 
 import webbrowser
 import psutil
+import datetime
 from threading import Timer
 
 
@@ -22,15 +23,25 @@ class Music(models.Model):
     duration = models.PositiveIntegerField(editable=False)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.name, self.played_count)
+        return self.name
 
     def replay(self):
         Url(url=self.url, category=self.category).save()
 
 
+event = None
+
+
+def get_event():
+    return event
+
+
+def set_event(event):
+    event = event
+
+
 class Player(models.Model):
     actual = models.ForeignKey(Music, null=True, editable=False)
-    event = None
 
     def save(self, *args, **kwargs):
         self.__class__.objects.exclude(id=self.id).delete()
@@ -47,8 +58,8 @@ class Player(models.Model):
 
     def play_next(self, forced=False):
         # clear the queue
-        if self.event:
-            self.event.cancel()
+        if get_event():
+            get_event().cancel()
 
         url = None
 
@@ -77,8 +88,8 @@ class Player(models.Model):
 
             webbrowser.open(url.url)
 
-            self.event = Timer(url.duration, self.play_next, ())
-            self.event.start()
+            set_event(Timer(url.duration, self.play_next, ()))
+            event.start()
 
     def push(self, url, category):
         old_url = Music.objects.filter(url=url, category=category).first()
@@ -99,6 +110,22 @@ class Player(models.Model):
     def reset(self):
         self.actual = Music.objects.filter(date__lt=self.actual.date).last()
         self.save()
+
+    def get_remaining_time(self):
+        nexts = Music.objects.filter(date__lt=self.actual.date)
+        time_left = 0
+        for music in nexts:
+            time_left += music.duration
+        time_left = str(datetime.timedelta(seconds=time_left))
+        return time_left
+
+    def get_musics_remaining(self):
+        nexts = Music.objects.filter(date__lt=self.actual.date)
+
+        return map(str, nexts)
+
+    def get_number_remaining(self):
+        return Music.objects.filter(date__lt=self.actual.date).count()
 
 
 from browser.signals import *

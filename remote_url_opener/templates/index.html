@@ -7,8 +7,9 @@
         <meta http-equiv="content-language" content="fr" />
     </head>
     <body>
-    	<h1>Now playing</h1>
-    	<h2>{{ playing }}</h2>
+    	<h1>Now playing :</h1><h2>{{ playing }}</h2>
+    	<h3>Music left : {{ count_left }} - {{ time_left }}</h3>
+    	<h3>Next musics : {% for music in nexts_music %} {{music}}, {% endfor %}</h3>
 		<form action="." method="post">
 			{% csrf_token %}
 			<select name="category">
@@ -30,7 +31,7 @@
 		<ul>
 			{% for url in urls %}
 				{% if url.category.name == category.name %}
-					<li>{{ url }}</li>
+					<li>{{ url.name }} <i>({{ url.played_count }})</i></li>
 					<form action="." method="post">
 						{% csrf_token %}
 						<input type="hidden" value="{{ url.url }}" name="url">
