@@ -1,19 +1,13 @@
 from django.shortcuts import render
-from browser.models import Category, Url, Play
+from browser.models import Category, Url, Player
 
 
 def home(request):
-    player = Play.load()
+    player = Player.load()
 
     if request.method == "POST":
         if request.POST.get('add_url'):
-            url = Url(
-                url=request.POST.get('url'),
-                category=Category.objects.get(pk=request.POST.get('category'))
-            )
-            url.save()
-            if not player.actual:
-                player.play_next()
+            player.push(url=request.POST.get('url'), category=Category.objects.get(pk=request.POST.get('category')))
 
         if request.POST.get('play_next'):
             player.play_next()
@@ -25,18 +19,18 @@ def home(request):
 
 
 def play(request):
-    player = Play.load()
+    player = Player.load()
     player.play_next()
     return render(request, 'index.html')
 
 
 def reset_playlist(request):
-    player = Play.load()
+    player = Player.load()
     player.reset()
     return render(request, 'index.html')
 
 
 def now_playing(request):
-    player = Play.load()
+    player = Player.load()
     playing = player.actual
     return render(request, 'nowplaying.html', locals())

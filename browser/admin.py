@@ -1,5 +1,5 @@
 from django.contrib import admin
-from browser.models import Category, Url, Play
+from browser.models import Category, Url, Player
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -8,11 +8,11 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class UrlAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'category', 'date')
+    list_display = ('name', 'url', 'category', 'played_count', 'date')
 admin.site.register(Url, UrlAdmin)
 
 
-class PlayAdmin(admin.ModelAdmin):
+class PlayerAdmin(admin.ModelAdmin):
     list_display = ('actual',)
     actions = ['play_next']
 
@@ -22,4 +22,4 @@ class PlayAdmin(admin.ModelAdmin):
             self.message_user(request, "C'est un bon choix...")
     play_next.short_description = "Jouer la musique suivante"
 
-admin.site.register(Play, PlayAdmin)
+admin.site.register(Player, PlayerAdmin)

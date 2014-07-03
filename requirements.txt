@@ -1,3 +1,2 @@
 django==1.6.5
 psutil==1.2.1
-BeautifulSoup==3.2.1

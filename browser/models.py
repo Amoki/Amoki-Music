@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 import webbrowser
 import psutil
@@ -21,38 +22,41 @@ class Url(models.Model):
     duration = models.PositiveIntegerField(editable=False)
 
     def __unicode__(self):
-        return self.name
+        return "%s (%s)" % (self.name, self.played_count)
 
     def replay(self):
         Url(url=self.url, category=self.category).save()
 
 
-class Play(models.Model):
+class Player(models.Model):
     actual = models.ForeignKey(Url, null=True, editable=False)
     event = None
 
     def save(self, *args, **kwargs):
         self.__class__.objects.exclude(id=self.id).delete()
-        super(Play, self).save(*args, **kwargs)
+        super(Player, self).save(*args, **kwargs)
 
     @classmethod
     def load(self):
         try:
-            return Play.objects.get()
-        except Play.DoesNotExist:
-            play = Play()
-            play.save()
-            return play
+            return Player.objects.get()
+        except Player.DoesNotExist:
+            player = Player()
+            player.save()
+            return player
 
-    def play_next(self):
+    def play_next(self, forced=False):
         # clear the queue
         if self.event:
             self.event.cancel()
 
-        if not self.actual:
-            url = Url.objects.filter().first()
-        else:
-            url = Url.objects.filter(date__gt=self.actual.date).first()
+        url = None
+
+        if self.actual:
+            if not forced:
+                url = Url.objects.filter(date__gt=self.actual.date).first()
+            else:
+                url = self.actual
 
         if not url:
             self.actual = None
@@ -67,7 +71,6 @@ class Play(models.Model):
             for process in psutil.process_iter():
                 try:
                     if process.name == PROCNAME:
-                        print ("killing %s", PROCNAME)
                         process.kill()
                 except:
                     pass
@@ -76,6 +79,22 @@ class Play(models.Model):
 
             self.event = Timer(url.duration, self.play_next, ())
             self.event.start()
+
+    def push(self, url, category):
+        old_url = Url.objects.filter(url=url, category=category).first()
+        if not old_url:
+            old_url = Url(
+                url=url,
+                category=category
+            )
+        else:
+            old_url.date = timezone.now()
+        old_url.save()
+
+        if not self.actual:
+            self.actual = old_url
+            self.save()
+            self.play_next(forced=True)
 
     def reset(self):
         self.actual = Url.objects.filter(date__lt=self.actual.date).last()
