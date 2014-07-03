@@ -16,7 +16,7 @@ def get_youtube_id(url):
 
 
 def get_youtube_link(id):
-    return "https://www.youtube.com/watch?" + id
+    return "https://www.youtube.com/watch?v=" + id
 
 
 @receiver(pre_save, sender=Music)
