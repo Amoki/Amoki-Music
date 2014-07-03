@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 import webbrowser
-import psutil
 import datetime
 from threading import Timer
 
@@ -77,14 +76,6 @@ class Player(models.Model):
             self.save()
             music.played_count += 1
             music.save()
-
-            PROCNAME = u'firefox.exe'
-            for process in psutil.process_iter():
-                try:
-                    if process.name == PROCNAME:
-                        process.kill()
-                except:
-                    pass
 
             webbrowser.open(music.url)
 
