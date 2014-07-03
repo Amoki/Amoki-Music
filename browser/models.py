@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from sst.actions import *
 
-import webbrowser
 import datetime
 from threading import Timer
 
@@ -67,7 +67,7 @@ class Player(models.Model):
             music.played_count += 1
             music.save()
 
-            webbrowser.open(music.url, new=0)
+            go_to(music.url)
 
             self.event = Timer(music.duration, self.play_next, ())
             self.event.start()
