@@ -48,8 +48,8 @@ class Player(models.Model):
 
     def play_next(self, forced=False):
         # clear the queue
-        if self.event:
-            self.event.cancel()
+        if Player.event:
+            Player.event.cancel()
 
         music = None
 
@@ -78,8 +78,8 @@ class Player(models.Model):
 
             webbrowser.open(music.url)
 
-            self.event = Timer(music.duration, self.play_next, ())
-            self.event.start()
+            Player.event = Timer(music.duration, self.play_next, ())
+            Player.event.start()
 
     def push(self, url, category):
         old_url = Music.objects.filter(url=url, category=category).first()
@@ -101,6 +101,12 @@ class Player(models.Model):
         self.actual = Music.objects.filter(date__gt=self.actual.date).last()
         self.save()
 
+    def get_actual_remaining_time(self):
+        if not self.actual:
+            return datetime.timedelta(seconds=0)
+
+        return timestamp(datetime.now() - self.actual.date)
+
     def get_remaining_time(self):
         if not self.actual:
             return 0
@@ -108,7 +114,8 @@ class Player(models.Model):
         time_left = 0
         for music in nexts:
             time_left += music.duration
-        time_left = str(datetime.timedelta(seconds=time_left))
+        time_left += self.get_actual_remaining_time()
+
         return time_left
 
     def get_musics_remaining(self):

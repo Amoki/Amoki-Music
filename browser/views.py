@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from browser.models import Category, Music, Player
 
+import datetime
+
 
 def home(request):
     player = Player.load()
@@ -13,11 +15,12 @@ def home(request):
             player.play_next()
 
     playing = player.actual
-    categories = Category.objects.all().order_by('name')
     urls = Music.objects.all()
-    time_left = player.get_remaining_time()
+    categories = Category.objects.all().order_by('name')
     count_left = player.get_number_remaining()
     nexts_music = player.get_musics_remaining()
+    time_left = str(datetime.timedelta(seconds=player.get_remaining_time()))
+    actual_time_left = str(datetime.timedelta(seconds=player.get_actual_remaining_time()))
     return render(request, 'index.html', locals())
 
 
