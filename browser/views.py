@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from browser.models import Category, Url, Player
+from browser.models import Category, Musique, Player
 
 
 def home(request):
@@ -14,7 +14,7 @@ def home(request):
 
     playing = player.actual
     categories = Category.objects.all()
-    urls = Url.objects.all()
+    urls = Musique.objects.all()
     return render(request, 'index.html', locals())
 
 

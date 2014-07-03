@@ -1,5 +1,5 @@
 from django.contrib import admin
-from browser.models import Category, Url, Player
+from browser.models import Category, Musique, Player
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -7,9 +7,9 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 
-class UrlAdmin(admin.ModelAdmin):
+class MusiqueAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'category', 'played_count', 'date')
-admin.site.register(Url, UrlAdmin)
+admin.site.register(Musique, MusiqueAdmin)
 
 
 class PlayerAdmin(admin.ModelAdmin):

@@ -2,7 +2,7 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from browser.models import Url
+from browser.models import Musique
 
 import urllib2
 import json
@@ -15,8 +15,8 @@ def get_youtube_id(url):
         return url.rsplit("v=", 1)[1]
 
 
-@receiver(pre_save, sender=Url)
-def set_name_and_duration(sender, instance, **kwargs):
+@receiver(pre_save, sender=Musique)
+def set_url_name_and_duration(sender, instance, **kwargs):
     try:
         video_id = get_youtube_id(instance.url)
         query = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + video_id + "&key=AIzaSyCt5t3qv1MTXW5Vaq0KB9__0m7xP5bQNo4"
@@ -28,7 +28,7 @@ def set_name_and_duration(sender, instance, **kwargs):
         time += 60 * int(raw_time.rsplit("M", 1)[0].rsplit("PT", 1)[1])
         # TODO : handle hours
         instance.duration = time
-
+        instance.url = video_id
         instance.name = res["items"][0]["snippet"]["title"]
 
     except urllib2.URLError, e:
