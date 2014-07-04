@@ -7,9 +7,13 @@
         <meta http-equiv="content-language" content="fr" />
     </head>
     <body>
+    {% if playing %}
     	<h1>Now playing :</h1><h2>{{ playing }} <i>({{ playing.get_played_count }})</i></h2>
     	<h3>Music left : {{ count_left }} - {{ time_left }}</h3>
     	<h3>Next musics : {% for music in nexts_music %} {{music}}, {% endfor %}</h3>
+    {% else %}
+    	<h2>No music :'( Add yours now !</h2>
+    {% endif %}
 		<form action="." method="post">
 			{% csrf_token %}
 			<select name="category">
