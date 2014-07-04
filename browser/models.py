@@ -38,23 +38,11 @@ class Music(models.Model):
         return self.name
 
 
-class Player(models.Model):
-    actual = models.ForeignKey(Music, null=True, editable=False)
+class Player():
+    actual = None
     event = None
 
-    def save(self, *args, **kwargs):
-        self.__class__.objects.exclude(id=self.id).delete()
-        super(Player, self).save(*args, **kwargs)
-
     @classmethod
-    def load(self):
-        try:
-            return Player.objects.get()
-        except Player.DoesNotExist:
-            player = Player()
-            player.save()
-            return player
-
     def play_next(self, forced=False):
         # clear the queue
         if Player.event:
@@ -62,62 +50,64 @@ class Player(models.Model):
 
         music = None
 
-        if self.actual:
+        if Player.actual:
             if not forced:
-                music = Music.objects.filter(date__gt=self.actual.date).first()
+                music = Music.objects.filter(date__gt=Player.actual.date).first()
             else:
-                music = self.actual
+                music = Player.actual
 
         if not music:
-            self.actual = None
-            self.save()
+            Player.actual = None
         else:
-            self.actual = music
-            self.save()
+            Player.actual = music
             music.playing_date = datetime.now()
             music.save()
 
             webbrowser.open(get_youtube_link(music.video_id))
 
-            Player.event = Timer(music.duration, self.play_next, ())
+            Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
 
+    @classmethod
     def push(self, video_id, category):
         music = Music(video_id=video_id, category=category)
         music.save()
 
-        if not self.actual:
-            self.actual = music
-            self.save()
-            self.play_next(forced=True)
+        if not Player.actual:
+            Player.actual = music
+            Player.play_next(forced=True)
 
+    @classmethod
     def get_actual_remaining_time(self):
-        if not self.actual:
+        if not Player.actual:
             return 0
-        return self.actual.duration - int(((datetime.now() - self.actual.playing_date)).total_seconds())
+        return Player.actual.duration - int(((datetime.now() - Player.actual.playing_date)).total_seconds())
 
+    @classmethod
     def get_remaining_time(self):
-        if not self.actual:
+        if not Player.actual:
             return 0
-        nexts = Music.objects.filter(date__gt=self.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.actual.date)
         time_left = 0
         for music in nexts:
             time_left += music.duration
-        time_left += self.get_actual_remaining_time()
+        time_left += Player.get_actual_remaining_time()
 
         return time_left
 
+    @classmethod
     def get_musics_remaining(self):
-        if not self.actual:
+        if not Player.actual:
             return
-        nexts = Music.objects.filter(date__gt=self.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.actual.date)
 
         return map(str, nexts)
 
+    @classmethod
     def get_number_remaining(self):
-        if not self.actual:
+        if not Player.actual:
             return 0
-        return Music.objects.filter(date__gte=self.actual.date).count()
+        return Music.objects.filter(date__gte=Player.actual.date).count()
 
 
 from browser.signals import *
