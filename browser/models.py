@@ -3,6 +3,7 @@ from django.db import models
 import webbrowser
 from datetime import datetime
 from threading import Timer
+from browser.helpers import get_youtube_link
 
 
 class Category (models.Model):
@@ -13,7 +14,7 @@ class Category (models.Model):
 
 
 class Music(models.Model):
-    url = models.CharField(max_length=255)
+    video_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
     playing_date = models.DateTimeField(null=True)
@@ -25,13 +26,13 @@ class Music(models.Model):
         checked_musics = []
         musics = []
         for music in Music.objects.all():
-            if [music.url, music.category] not in checked_musics:
+            if [music.video_id, music.category] not in checked_musics:
                 musics.append(music)
-                checked_musics.append([music.url, music.category])
+                checked_musics.append([music.video_id, music.category])
         return musics
 
     def get_played_count(self):
-        return Music.objects.filter(url=self.url).count()
+        return Music.objects.filter(video_id=self.video_id).count()
 
     def __unicode__(self):
         return self.name
@@ -76,13 +77,13 @@ class Player(models.Model):
             music.playing_date = datetime.now()
             music.save()
 
-            webbrowser.open(music.url)
+            webbrowser.open(get_youtube_link(music.video_id))
 
             Player.event = Timer(music.duration, self.play_next, ())
             Player.event.start()
 
-    def push(self, url, category):
-        music = Music(url=url, category=category)
+    def push(self, video_id, category):
+        music = Music(video_id=video_id, category=category)
         music.save()
 
         if not self.actual:
@@ -116,7 +117,7 @@ class Player(models.Model):
     def get_number_remaining(self):
         if not self.actual:
             return 0
-        return Music.objects.filter(date__gt=self.actual.date).count()
+        return Music.objects.filter(date__gte=self.actual.date).count()
 
 
 from browser.signals import *

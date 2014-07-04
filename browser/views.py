@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from browser.models import Category, Music, Player
-
+from browser.helpers import get_youtube_id
 import datetime
 
 
@@ -9,7 +9,7 @@ def home(request):
 
     if request.method == "POST":
         if request.POST.get('add_url'):
-            player.push(url=request.POST.get('url'), category=Category.objects.get(pk=request.POST.get('category')))
+            player.push(video_id=get_youtube_id(request.POST.get('url')), category=Category.objects.get(pk=request.POST.get('category')))
 
         if request.POST.get('play_next'):
             player.play_next()

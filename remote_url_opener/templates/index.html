@@ -34,7 +34,7 @@
 					<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
 					<form action="." method="post">
 						{% csrf_token %}
-						<input type="hidden" value="{{ url.url }}" name="url">
+						<input type="hidden" value="{{ music.video_id }}" name="url">
 						<input type="hidden" value="{{ category.pk }}" name="category">
 						<input type="submit" name="add_url" value="Add to queue" />
 					</form>
