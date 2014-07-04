@@ -16,7 +16,7 @@ def set_id_name_and_duration(sender, instance, **kwargs):
     body = urllib2.urlopen(query).read()
     res = json.loads(body)
     time = res["items"][0]["contentDetails"]["duration"]
-    print time
+
     instance.duration = get_time_in_seconds(time)
     instance.video_id = video_id
     instance.name = res["items"][0]["snippet"]["title"]
