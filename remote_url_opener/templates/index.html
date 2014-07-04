@@ -1,48 +1,94 @@
 {% load static %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
         <title>Accueil</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="content-language" content="fr" />
+        <link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
     </head>
     <body>
-    	<h1>Now playing :</h1><h2>{{ playing }} <i>({{ playing.played_count }})</i></h2>
-    	<h3>Music left : {{ count_left }} - {{ time_left }}</h3>
-    	<h3>Next musics : {% for music in nexts_music %} {{music}}, {% endfor %}</h3>
-		<form action="." method="post">
-			{% csrf_token %}
-			<select name="category">
-				{% for category in categories %}
-					<option VALUE="{{ category.pk }}">{{ category }}</option>
-				{% endfor %}
-			</select>
-			<input type="text" value="" name="url">
-			<input type="submit" name="add_url" value="Add to queue" />
-		</form>
+    	<div id="player-center" class="player-slide-center">
+    		<div class="title">
+	    		<span class="now-playing">{{ playing }}</span>
+	    		<span class="time-left">{{ actual_time_left }} <i>({{ playing.played_count }})</i></span>
+	    	</div>
+	    	<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
+	    	<div class="center">
+		    	<h3>Playlist : </h3>
+		    	<div class="playlist">
 
-		<form action="." method="post">
-			{% csrf_token %}
-			<input type="submit" name="play_next" value="Next music" />
-		</form>
+			    	{% for music in nexts_music %} 
+			    		<span class="gris">{{music}}</span><br/> 
+			    	{% endfor %}
+		    	 
+				</div>
+	    	</div>
 
-		{% for category in categories %}
-		<h2>{{ category }}</h2>
-		<ul>
-			{% for url in urls %}
-				{% if url.category.name == category.name %}
-					<li>{{ url.name }} <i>({{ url.played_count }})</i></li>
-					<form action="." method="post">
+	    	<div class="add-music">
+	    		<form action="." method="post">
 						{% csrf_token %}
-						<input type="hidden" value="{{ url.url }}" name="url">
-						<input type="hidden" value="{{ category.pk }}" name="category">
-						<input type="submit" name="add_url" value="Add to queue" />
-					</form>
-				{% endif %}
+						<div class="select-categ">
+							<select name="category">
+								{% for category in categories %}
+									<option VALUE="{{ category.pk }}">{{ category }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="input-test">
+							<input type="text" value="" name="url">
+						</div>
+						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" />
+				</form>
+
+				
+	    	</div>
+	    	<form action="." method="post">
+					{% csrf_token %}
+					<input type="submit" name="play_next" value="Next music" />
+				</form>
+			
+			
+		</div>
+
+		<div id="vinil" class="vinil" onclick="test(this)">
+			
+		</div>
+
+
+
+			{% for category in categories %}
+			<h2>{{ category }}</h2>
+			<ul>
+				{% for url in urls %}
+					{% if url.category.name == category.name %}
+						<li>{{ url.name }} <i>({{ url.played_count }})</i></li>
+						<form action="." method="post">
+							{% csrf_token %}
+							<input type="hidden" value="{{ url.url }}" name="url">
+							<input type="hidden" value="{{ category.pk }}" name="category">
+							<input type="submit" name="add_url" value="Add to queue" />
+						</form>
+					{% endif %}
+				{% endfor %}
+
+			</ul>
 			{% endfor %}
 
-		</ul>
-		{% endfor %}
-
     </body>
+    <script type="text/javascript">
+	    function test(e){
+	    	var divVinil = document.getElementById("vinil")
+	    	var divPlayer = document.getElementById("player-center")
+	    	 if (divVinil.className.indexOf("vinil-center") > -1){
+	    	 	divVinil.className = "vinil"
+	    	 	divPlayer.className = "player-slide-center"
+	    	 }
+	    	 else {
+	    	 	divVinil.className = "vinil-center"
+	    	 	divPlayer.className = "player-slide-hide"
+	    	 }
+	    }
+    </script>
 </html>
