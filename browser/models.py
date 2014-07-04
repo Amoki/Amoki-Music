@@ -68,14 +68,6 @@ class Player(models.Model):
             music.played_count += 1
             music.save()
 
-            PROCNAME = u'firefox.exe'
-            for process in psutil.process_iter():
-                try:
-                    if process.name == PROCNAME:
-                        process.kill()
-                except:
-                    pass
-
             webbrowser.open(music.url)
 
             Player.event = Timer(music.duration, self.play_next, ())
