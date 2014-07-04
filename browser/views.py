@@ -18,7 +18,7 @@ def home(request):
             Category(name=request.POST.get('category')).save()
 
     playing = player.actual
-    urls = Music.objects.all()
+    musics = Music.get_unique()
     categories = Category.objects.all().order_by('name')
     count_left = player.get_number_remaining()
     nexts_music = player.get_musics_remaining()

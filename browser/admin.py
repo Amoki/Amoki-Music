@@ -8,7 +8,7 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'category', 'played_count', 'date')
+    list_display = ('name', 'url', 'category', 'date')
 admin.site.register(Music, MusicAdmin)
 
 

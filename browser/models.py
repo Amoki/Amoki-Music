@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 import webbrowser
 from datetime import datetime
@@ -8,6 +7,11 @@ from threading import Timer
 
 class Category (models.Model):
     name = models.CharField(max_length=255, unique=True)
+
+    @classmethod
+    def add(name):
+        if not Category.objects.filter(name=name):
+            Category(name=name).save()
 
     def __unicode__(self):
         return self.name
@@ -19,14 +23,23 @@ class Music(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     playing_date = models.DateTimeField(null=True)
     category = models.ForeignKey(Category)
-    played_count = models.PositiveIntegerField(default=0, editable=False)
     duration = models.PositiveIntegerField(editable=False)
+
+    @classmethod
+    def get_unique(self):
+        checked_musics = []
+        musics = []
+        for music in Music.objects.all():
+            if [music.url, music.category] not in checked_musics:
+                musics.append(music)
+                checked_musics.append([music.url, music.category])
+        return musics
+
+    def get_played_count(self):
+        return Music.objects.filter(url=self.url).count()
 
     def __unicode__(self):
         return self.name
-
-    def replay(self):
-        Url(url=self.url, category=self.category).save()
 
 
 class Player(models.Model):
@@ -65,7 +78,6 @@ class Player(models.Model):
         else:
             self.actual = music
             self.save()
-            music.played_count += 1
             music.playing_date = datetime.now()
             music.save()
 
@@ -75,24 +87,13 @@ class Player(models.Model):
             Player.event.start()
 
     def push(self, url, category):
-        old_url = Music.objects.filter(url=url, category=category).first()
-        if not old_url:
-            old_url = Music(
-                url=url,
-                category=category
-            )
-        else:
-            old_url.date = timezone.now()
-        old_url.save()
+        music = Music(url=url, category=category)
+        music.save()
 
         if not self.actual:
-            self.actual = old_url
+            self.actual = music
             self.save()
             self.play_next(forced=True)
-
-    def reset(self):
-        self.actual = Music.objects.filter(date__gt=self.actual.date).last()
-        self.save()
 
     def get_actual_remaining_time(self):
         if not self.actual:
