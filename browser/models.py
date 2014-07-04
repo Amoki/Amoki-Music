@@ -68,7 +68,6 @@ class Player(models.Model):
             music.played_count += 1
             music.save()
 
-            print(webbrowser.get('mozilla'))
             webbrowser.open(music.url, new=0)
 
             Player.event = Timer(music.duration, self.play_next, ())
