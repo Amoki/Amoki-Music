@@ -97,7 +97,7 @@ class Player(models.Model):
     def get_actual_remaining_time(self):
         if not self.actual:
             return 0
-        return self.actual.duration - ((datetime.now() - self.actual.playing_date)).total_seconds()
+        return self.actual.duration - int(((datetime.now() - self.actual.playing_date)).total_seconds())
 
     def get_remaining_time(self):
         if not self.actual:
