@@ -14,6 +14,9 @@ def home(request):
         if request.POST.get('play_next'):
             player.play_next()
 
+        if request.POST.get('add_category'):
+            Category(name=request.POST.get('category')).save()
+
     playing = player.actual
     urls = Music.objects.all()
     categories = Category.objects.all().order_by('name')
@@ -22,21 +25,3 @@ def home(request):
     time_left = str(datetime.timedelta(seconds=player.get_remaining_time()))
     actual_time_left = str(datetime.timedelta(seconds=player.get_actual_remaining_time()))
     return render(request, 'index.html', locals())
-
-
-def play(request):
-    player = Player.load()
-    player.play_next()
-    return render(request, 'index.html')
-
-
-def reset_playlist(request):
-    player = Player.load()
-    player.reset()
-    return render(request, 'index.html')
-
-
-def now_playing(request):
-    player = Player.load()
-    playing = player.actual
-    return render(request, 'nowplaying.html', locals())

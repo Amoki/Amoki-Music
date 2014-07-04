@@ -4,7 +4,6 @@ from django.utils import timezone
 import webbrowser
 import psutil
 from datetime import datetime
-from datetime import timedelta
 from threading import Timer
 
 
