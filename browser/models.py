@@ -25,7 +25,7 @@ class Music(models.Model):
     def get_unique(self):
         checked_musics = []
         musics = []
-        for music in Music.objects.all():
+        for music in Music.objects.all().order_by('-date'):
             if [music.video_id, music.category] not in checked_musics:
                 musics.append(music)
                 checked_musics.append([music.video_id, music.category])
