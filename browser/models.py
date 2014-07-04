@@ -3,6 +3,7 @@ from django.utils import timezone
 
 import webbrowser
 from datetime import datetime
+from datetime import timedelta
 from threading import Timer
 
 
@@ -96,7 +97,7 @@ class Player(models.Model):
     def get_actual_remaining_time(self):
         if not self.actual:
             return 0
-        return (datetime.now() - self.actual.date).total_seconds()
+        return self.actual.duration - ((datetime.now() - self.actual.date)).total_seconds()
 
     def get_remaining_time(self):
         if not self.actual:
