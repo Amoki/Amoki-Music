@@ -1,3 +1,6 @@
+import isodate
+
+
 def get_youtube_id(url):
     if not "v=" in url:
         return url
@@ -8,4 +11,7 @@ def get_youtube_id(url):
 def get_youtube_link(video_id):
     return "https://www.youtube.com/watch?v=" + video_id
 
+
 # TODO hours converter
+def get_time_in_seconds(time):
+    return isodate.parse_duration(time).total_seconds()

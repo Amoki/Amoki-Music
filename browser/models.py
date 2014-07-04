@@ -6,7 +6,7 @@ from threading import Timer
 from browser.helpers import get_youtube_link
 
 
-class Category (models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
     def __unicode__(self):
