@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 import webbrowser
-import psutil
 from datetime import datetime
 from threading import Timer
 
@@ -18,6 +17,7 @@ class Music(models.Model):
     url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
+    playing_date = models.DateTimeField(null=True)
     category = models.ForeignKey(Category)
     played_count = models.PositiveIntegerField(default=0, editable=False)
     duration = models.PositiveIntegerField(editable=False)
@@ -66,6 +66,7 @@ class Player(models.Model):
             self.actual = music
             self.save()
             music.played_count += 1
+            music.playing_date = datetime.now()
             music.save()
 
             webbrowser.open(music.url)
@@ -96,7 +97,7 @@ class Player(models.Model):
     def get_actual_remaining_time(self):
         if not self.actual:
             return 0
-        return self.actual.duration - ((datetime.now() - self.actual.date)).total_seconds()
+        return self.actual.duration - ((datetime.now() - self.actual.playing_date)).total_seconds()
 
     def get_remaining_time(self):
         if not self.actual:
