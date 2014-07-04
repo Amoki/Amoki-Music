@@ -8,11 +8,6 @@ from threading import Timer
 class Category (models.Model):
     name = models.CharField(max_length=255, unique=True)
 
-    @classmethod
-    def add(name):
-        if not Category.objects.filter(name=name):
-            Category(name=name).save()
-
     def __unicode__(self):
         return self.name
 
