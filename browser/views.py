@@ -9,7 +9,6 @@ import datetime
 def home(request):
     if request.method == "POST":
         if request.POST.get('add_url'):
-            print request.POST
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
 
         if request.POST.get('play_next'):
