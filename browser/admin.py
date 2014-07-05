@@ -1,12 +1,7 @@
 from django.contrib import admin
-from browser.models import Category, Music
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-admin.site.register(Category, CategoryAdmin)
+from browser.models import Music
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'video_id', 'category', 'date')
+    list_display = ('name', 'video_id', 'date')
 admin.site.register(Music, MusicAdmin)

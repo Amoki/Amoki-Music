@@ -11,32 +11,31 @@
 	<body>		
 		<div id="player-center" class="">
 			<div class="title">
-				<marquee class="now-playing">{{ playing }}</marquee>
-				<span class="time-left">{{ actual_time_left }} <i>({{ playing.get_played_count }})</i></span>
+			    {% if playing %}
+			    	<marquee class="now-playing">{{ playing }}</marquee>
+			    	<span class="time-left">{{ actual_time_left }} <i>({{ playing.get_played_count }})</i></span>
+			
+			    {% else %}
+			    	<span class="now-playing">No music :'( Add yours now !</span>
+			    {% endif %}
 			</div>
 			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
 			<div class="center">
-				<h3>Playlist : </h3>
-				<div class="playlist style-11">
-					{% for music in nexts_music %} 
-						<span class="gris">{{music}}</span><br/> 
-					{% endfor %}
-
-				</div>
+				{% if playing %}
+					<h3>Playlist : </h3>
+					<div class="playlist bleu-scrollbar">
+						{% for music in nexts_music %} 
+							<span class="gris">{{music}}</span><br/> 
+						{% endfor %}
+					</div>
+				{% else %}
+					<h3>Playlist empty</h3>
+				{% endif %}
 			</div>
-
 			<div class="add-music">
 				<form action="." method="post">
 						{% csrf_token %}
-					<!--	<div class="select-categ">
-							<select name="category">
-								{% for category in categories %}
-									<option VALUE="{{ category.pk }}">{{ category }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					-->
-						<div class="input-test">
+						<div class="input-design">
 							<input type="text" value="" name="url">
 						</div>
 						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
@@ -49,43 +48,41 @@
 				
 			
 		</div>
-		<div id="vinil" class="vinil" onclick="test(this)"></div>
+		<div id="vinil" class="vinil vinil-firefox" onclick="test(this)"></div>
 
-		<div id="historique" class="historique-hide style-12" onclick="test(this)">
-		{% for category  in categories %}
+		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
+			<div id="scrolling">
 			{% for music in musics %}
-				{% if music.category.name == category.name %}	
-					<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
-					<form action="." method="post">
-						{% csrf_token %}
-						<input type="hidden" value="{{ music.video_id }}" name="url">
-						<input type="hidden" value="{{ category.pk }}" name="category">
-						<input type="submit" name="add_url" value="Add to queue" />
-					</form>
-				{% endif %}
+				<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
+				<form action="." method="post">
+					{% csrf_token %}
+					<input type="hidden" value="{{ music.video_id }}" name="url">
+					<input type="button" name="add_url" value="Add to queue" onClick="delai(this.form)"/>
+				</form>
 			{% endfor %}
-		{% endfor %}
+			</div>
 		</div>
 
 	</body>
 	<script type="text/javascript">
+		function delai(e){
+			console.log(e)
+			setTimeout(function(){e.submit()},2000)
+		}
 		function test(e){
 			var divVinil = document.getElementById("vinil")
 			var divPlayer = document.getElementById("player-center")
 			var divHistorique = document.getElementById("historique")
-			console.log(e.className)
 			if (divVinil.className.indexOf("vinil-center") > -1){
 				divVinil.className = "vinil vinil-base"
 				divPlayer.className = "player-slide-center"
-				divHistorique.className = "historique-hide historique-slide-out style-12"
+				divHistorique.className = "historique-hide historique-slide-out no-scrollbar"
 			}
 			else {
 					divVinil.className = "vinil-center"
 					divPlayer.className = "player-slide-hide"
-					divHistorique.className = "historique-visible historique-slide-in style-12"
+					divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
 			}
 		}
-
-
 	</script>
 </html>

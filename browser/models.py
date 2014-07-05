@@ -6,29 +6,21 @@ from threading import Timer
 from browser.helpers import get_youtube_link
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-
-    def __unicode__(self):
-        return self.name
-
-
 class Music(models.Model):
     video_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
     playing_date = models.DateTimeField(null=True)
-    category = models.ForeignKey(Category)
     duration = models.PositiveIntegerField(editable=False)
 
     @classmethod
     def get_unique(self):
         checked_musics = []
         musics = []
-        for music in Music.objects.all():
-            if [music.video_id, music.category] not in checked_musics:
+        for music in Music.objects.all().order_by('-date'):
+            if music.video_id not in checked_musics:
                 musics.append(music)
-                checked_musics.append([music.video_id, music.category])
+                checked_musics.append(music.video_id)
         return musics
 
     def get_played_count(self):
@@ -69,8 +61,8 @@ class Player():
             Player.event.start()
 
     @classmethod
-    def push(self, video_id, category):
-        music = Music(video_id=video_id, category=category)
+    def push(self, video_id):
+        music = Music(video_id=video_id)
         music.save()
 
         if not Player.actual:
