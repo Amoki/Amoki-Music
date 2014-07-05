@@ -259,6 +259,20 @@ body {
 }
 
 .vinil-center{
+	background: url("vinil.png") no-repeat;
+	position: absolute;
+	top: 113px;
+	margin: auto;
+	width: 552px;
+	height: 552px;
+
+	z-index: 0;
+
+	animation-name: vinil-slide-in;
+	animation-duration: 1s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	
 	-webkit-animation-name: vinil-slide-in;
 	-webkit-animation-duration: 1s;
 	-webkit-animation-iteration-count: 1;
@@ -278,15 +292,6 @@ body {
 	-moz-transition: scalling .6s ease-in;
 	-o-transition: scalling .6s ease-in;
 	transition: scalling .6s ease-in;
-
-	background: url("vinil.png") no-repeat;
-	position: absolute;
-	top: 113px;
-	margin: auto;
-	width: 552px;
-	height: 552px;
-
-	z-index: 0;
 
 }
 
@@ -329,6 +334,7 @@ body {
 
 .historique-hide {
 	visibility: hidden;
+	display: none;
 }
 /*
 .historique-slide-out {
@@ -384,6 +390,7 @@ border-radius: 10000px;
 padding: 85px;
 text-align: center;
 visibility: visible;
+display: block;
 }
 .historique-slide-in {
 	animation-name: histo-slide-in;
