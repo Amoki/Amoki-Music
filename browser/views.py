@@ -8,7 +8,7 @@ import datetime
 @csrf_exempt
 def home(request):
     if request.method == "POST":
-        if request.POST.get('add_url'):
+        if request.POST.get('url'):
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
 
         if request.POST.get('play_next'):
