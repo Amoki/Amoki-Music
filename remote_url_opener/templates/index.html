@@ -31,7 +31,6 @@
 			<form action="." method="post">
 				{% csrf_token %}
 				<input type="hidden" value="{{ music.video_id }}" name="url">
-				<input type="hidden" value="{{ category.pk }}" name="category">
 				<input type="submit" name="add_url" value="Add to queue" />
 			</form>
 		{% endfor %}

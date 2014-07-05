@@ -1,12 +1,15 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from browser.models import Music, Player
 from browser.helpers import get_youtube_id
 import datetime
 
 
+@csrf_exempt
 def home(request):
     if request.method == "POST":
         if request.POST.get('add_url'):
+            print request.POST
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
 
         if request.POST.get('play_next'):
