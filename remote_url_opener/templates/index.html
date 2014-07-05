@@ -1,40 +1,88 @@
 {% load static %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
-    <head>
-        <title>Accueil</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="content-language" content="fr" />
-    </head>
-    <body>
-    {% if playing %}
-    	<h1>Now playing :</h1><h2>{{ playing }} <i>({{ playing.get_played_count }})</i></h2>
-    	<h3>Music left : {{ count_left }} - {{ time_left }}</h3>
-    	<h3>Next musics : {% for music in nexts_music %} {{music}}, {% endfor %}</h3>
-    {% else %}
-    	<h2>No music :'( Add yours now !</h2>
-    {% endif %}
-		<form action="." method="post">
-			{% csrf_token %}
-			<input type="text" value="" name="url">
-			<input type="submit" name="add_url" value="Add to queue" />
-		</form>
+	<head>
+		<title>Accueil</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="content-language" content="fr" />
+		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
+	</head>
+	<body>		
+		<div id="player-center" class="">
+			<div class="title">
+			    {% if playing %}
+			    	<marquee class="now-playing">{{ playing }}</marquee>
+			    	<span class="time-left">{{ actual_time_left }} <i>({{ playing.get_played_count }})</i></span>
+			
+			    {% else %}
+			    	<span class="now-playing">No music :'( Add yours now !</span>
+			    {% endif %}
+			</div>
+			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
+			<div class="center">
+				{% if playing %}
+					<h3>Playlist : </h3>
+					<div class="playlist bleu-scrollbar">
+						{% for music in nexts_music %} 
+							<span class="gris">{{music}}</span><br/> 
+						{% endfor %}
+					</div>
+				{% else %}
+					<h3>Playlist empty</h3>
+				{% endif %}
+			</div>
+			<div class="add-music">
+				<form action="." method="post">
+						{% csrf_token %}
+						<div class="input-design">
+							<input type="text" value="" name="url">
+						</div>
+						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
+				</form>
+				<form action="." method="post">
+					{% csrf_token %}
+					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" />
+				</form>
+			</div>
+				
+			
+		</div>
+		<div id="vinil" class="vinil vinil-firefox" onclick="test(this)"></div>
 
-		<form action="." method="post">
-			{% csrf_token %}
-			<input type="submit" name="play_next" value="Next music" />
-		</form>
+		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
+			<div id="scrolling">
+			{% for music in musics %}
+				<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
+				<form action="." method="post">
+					{% csrf_token %}
+					<input type="hidden" value="{{ music.video_id }}" name="url">
+					<input type="button" name="add_url" value="Add to queue" onClick="delai(this.form)"/>
+				</form>
+			{% endfor %}
+			</div>
+		</div>
 
-		<ul>
-		{% for music in musics %}
-			<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
-			<form action="." method="post">
-				{% csrf_token %}
-				<input type="hidden" value="{{ music.video_id }}" name="url">
-				<input type="submit" name="add_url" value="Add to queue" />
-			</form>
-		{% endfor %}
-		</ul>
-
-    </body>
+	</body>
+	<script type="text/javascript">
+		function delai(e){
+			console.log(e)
+			setTimeout(function(){e.submit()},2000)
+		}
+		function test(e){
+			var divVinil = document.getElementById("vinil")
+			var divPlayer = document.getElementById("player-center")
+			var divHistorique = document.getElementById("historique")
+			if (divVinil.className.indexOf("vinil-center") > -1){
+				divVinil.className = "vinil vinil-base"
+				divPlayer.className = "player-slide-center"
+				divHistorique.className = "historique-hide historique-slide-out no-scrollbar"
+			}
+			else {
+					divVinil.className = "vinil-center"
+					divPlayer.className = "player-slide-hide"
+					divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
+			}
+		}
+	</script>
 </html>
