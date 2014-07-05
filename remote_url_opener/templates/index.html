@@ -16,11 +16,6 @@
     {% endif %}
 		<form action="." method="post">
 			{% csrf_token %}
-			<select name="category">
-				{% for category in categories %}
-					<option VALUE="{{ category.pk }}">{{ category }}</option>
-				{% endfor %}
-			</select>
 			<input type="text" value="" name="url">
 			<input type="submit" name="add_url" value="Add to queue" />
 		</form>
@@ -30,23 +25,17 @@
 			<input type="submit" name="play_next" value="Next music" />
 		</form>
 
-		{% for category in categories %}
-		<h2>{{ category }}</h2>
 		<ul>
-			{% for music in musics %}
-				{% if music.category.name == category.name %}
-					<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
-					<form action="." method="post">
-						{% csrf_token %}
-						<input type="hidden" value="{{ music.video_id }}" name="url">
-						<input type="hidden" value="{{ category.pk }}" name="category">
-						<input type="submit" name="add_url" value="Add to queue" />
-					</form>
-				{% endif %}
-			{% endfor %}
-
-		</ul>
+		{% for music in musics %}
+			<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
+			<form action="." method="post">
+				{% csrf_token %}
+				<input type="hidden" value="{{ music.video_id }}" name="url">
+				<input type="hidden" value="{{ category.pk }}" name="category">
+				<input type="submit" name="add_url" value="Add to queue" />
+			</form>
 		{% endfor %}
+		</ul>
 
     </body>
 </html>
