@@ -1,6 +1,9 @@
+html, body {
+	overflow: hidden;
+}
+
 body {
 	background-image: url("background-2.png");
-	background-repeat: no-repeat;
 	background-position: left top;
 	color: #007fd5
 }
@@ -8,7 +11,7 @@ body {
 #player-center {
 	background-image: url("cover-center.png");
 	background-repeat: no-repeat;
-	margin-left:26%;
+	margin-left:15%;
 	margin-top: 100px;
 	width: 568px;
 	height: 598px;
@@ -44,14 +47,15 @@ body {
 
 .now-playing {
 	font-weight: bold;
-	font-size: 36px;
+	font-size: 25px;
 	font-family: Arial;
 	float: left;
+	width: 75%
 }
 
 .time-left {
 	font-weight: bold;
-	font-size: 36px;
+	font-size: 25px;
 	font-family: Arial;
 	float: right;
 	margin-right: 25px;
@@ -59,6 +63,7 @@ body {
 
 .title {
 	height: 58px;
+	overflow:hidden;
 }
 
 .center {
@@ -132,14 +137,38 @@ body {
 	background: transparent url('btn-play.png') no-repeat;
 	height: 96px;
 	cursor: pointer;
+	outline: none;
+}
+
+.next-music {
+	text-indent: -9999px;
+	font-size: 0;
+	line-height: 0;
+	width: 94px;
+	border: none;
+	background: transparent url('btn-next.png') no-repeat;
+	height: 96px;
+	cursor: pointer;
+	outline: none;
 }
 
 .vinil{
+
+	background: url("vinil.png") no-repeat;
+	position: absolute;
+	top: 113px;
+	left:40%;
+	margin: auto;
+	width: 552px;
+	height: 552px;
+	z-index: 0000;
+}
+
+.vinil-base {
 	-webkit-animation-name: vinil-slide-hide;
 	-webkit-animation-duration: 2s;
 	-webkit-animation-iteration-count: 1;
 	-webkit-animation-fill-mode: forwards;
-	-webkit-animation-delay: .4s;
 
 	-webkit-transition: all .6s ease-in;
 	-moz-transition: all .6s ease-in;
@@ -150,13 +179,6 @@ body {
 	-o-transform: scale(1);
 	transform: scale(1);
 
-	background: url("vinil.png") no-repeat;
-	position: absolute;
-	top: 105px;
-	left:28%;
-	margin: auto;
-	width: 552px;
-	height: 552px;
 	z-index: 2000;
 }
 
@@ -177,7 +199,7 @@ body {
 
 	background: url("vinil.png") no-repeat;
 	position: absolute;
-	top: 105px;
+	top: 113px;
 	margin: auto;
 	width: 552px;
 	height: 552px;
@@ -192,7 +214,111 @@ body {
 
 @-webkit-keyframes vinil-slide-hide {
 	0% 	{left:28%;z-index: 2000;}
-	50%   {left:100%;z-index:0}
+	50%   {left:100%;z-index:2000}
 	100%  {left:40%;z-index: 0}
+}
+
+
+#historique {
+	font-size: 20px;
+	font-weight: bold;
+	top:30px;
+}
+
+.historique-hide {
+	height: 10px;
+	position: absolute;
+	margin: auto;
+	border: 4px double #007fd5;
+	border-radius: 10000px;
+	padding: 100px;
+	text-align: center;
+	overflow: hidden;
+	z-index: 10;
+
+	visibility: hidden;
+
+}
+
+.historique-slide-out {
+	-webkit-animation-name: histo-slide-out ;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-fill-mode: forwards;
+}
+@-webkit-keyframes histo-slide-out {
+	0% 		{left:21.5%;top:30px;z-index: 2000; visibility: visible; width: 510px;height: 510px;}
+	50%   {left:100%;top:100px;z-index:2000;visibility: hidden;width: 350px;height: 350px;}
+	100%  {left:40%;z-index: 0;}
     
+}
+
+.historique-visible {
+	width: 510px;
+	height: 510px;
+	position: absolute;
+	margin: auto;
+	top: 31px;
+
+	z-index: 100000;
+	border: 4px double #007fd5;
+	border-radius: 10000px;
+	padding: 100px;
+	text-align: center;
+		overflow: scroll;
+		overflow-x: hidden;
+}
+.historique-slide-in {
+	-webkit-animation-name: histo-slide-in;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-fill-mode: forwards;
+	
+	-webkit-transition: all .6s ease-in;
+	-moz-transition: all .6s ease-in;
+	-o-transition: all .6s ease-in;
+	transition: all .6s ease-in;
+}
+
+@-webkit-keyframes histo-slide-in {
+	0%   {left:40%; visibility: hidden;}
+	50%  {left:93%;z-index: 2000; visibility: hidden;}
+    100% {left:21.5%;z-index: 2000;visibility: visible;}
+}
+
+
+/*
+ *  STYLE 11
+ */
+
+.style-11::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+}
+
+.style-11::-webkit-scrollbar
+{
+	width: 10px;
+}
+
+.style-11::-webkit-scrollbar-thumb
+{
+	background-color: #3366FF;
+	border-radius: 10px;
+	background-image: -webkit-linear-gradient(0deg,
+	                                          rgba(255, 255, 255, 0.5) 25%,
+											  transparent 25%,
+											  transparent 50%,
+											  rgba(255, 255, 255, 0.5) 50%,
+											  rgba(255, 255, 255, 0.5) 75%,
+											  transparent 75%,
+											  transparent)
+}
+
+
+.style-12::-webkit-scrollbar
+{
+	width: 0px;
 }

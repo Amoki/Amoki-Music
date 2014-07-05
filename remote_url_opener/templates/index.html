@@ -2,92 +2,90 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
-    <head>
-        <title>Accueil</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="content-language" content="fr" />
-        <link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
-    </head>
-    <body>
-    	<div id="player-center" class="player-slide-center">
-    		<div class="title">
-	    		<span class="now-playing">{{ playing }}</span>
-	    		<span class="time-left">{{ actual_time_left }} <i>({{ playing.played_count }})</i></span>
-	    	</div>
-	    	<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
-	    	<div class="center">
-		    	<h3>Playlist : </h3>
-		    	<div class="playlist">
+	<head>
+		<title>Accueil</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="content-language" content="fr" />
+		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
+	</head>
+	<body>		
+		<div id="player-center" class="">
+			<div class="title">
+				<marquee class="now-playing">{{ playing }}</marquee>
+				<span class="time-left">{{ actual_time_left }} <i>({{ playing.get_played_count }})</i></span>
+			</div>
+			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
+			<div class="center">
+				<h3>Playlist : </h3>
+				<div class="playlist style-11">
+					{% for music in nexts_music %} 
+						<span class="gris">{{music}}</span><br/> 
+					{% endfor %}
 
-			    	{% for music in nexts_music %} 
-			    		<span class="gris">{{music}}</span><br/> 
-			    	{% endfor %}
-		    	 
 				</div>
-	    	</div>
+			</div>
 
-	    	<div class="add-music">
-	    		<form action="." method="post">
+			<div class="add-music">
+				<form action="." method="post">
 						{% csrf_token %}
-						<div class="select-categ">
+					<!--	<div class="select-categ">
 							<select name="category">
 								{% for category in categories %}
 									<option VALUE="{{ category.pk }}">{{ category }}</option>
 								{% endfor %}
 							</select>
 						</div>
+					-->
 						<div class="input-test">
 							<input type="text" value="" name="url">
 						</div>
-						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" />
+						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
 				</form>
-
-				
-	    	</div>
-	    	<form action="." method="post">
+				<form action="." method="post">
 					{% csrf_token %}
-					<input type="submit" name="play_next" value="Next music" />
+					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" />
 				</form>
-			
-			
-		</div>
-		<div id="vinil" class="vinil" onclick="test(this)">
+			</div>
+				
 			
 		</div>
+		<div id="vinil" class="vinil" onclick="test(this)"></div>
 
-
-
-			{% for category in categories %}
-			<h2>{{ category }}</h2>
-			<ul>
-				{% for url in urls %}
-					{% if url.category.name == category.name %}
-						<li>{{ url.name }} <i>({{ url.played_count }})</i></li>
-						<form action="." method="post">
-							{% csrf_token %}
-							<input type="hidden" value="{{ url.url }}" name="url">
-							<input type="hidden" value="{{ category.pk }}" name="category">
-							<input type="submit" name="add_url" value="Add to queue" />
-						</form>
-					{% endif %}
-				{% endfor %}
-
-			</ul>
+		<div id="historique" class="historique-hide style-12" onclick="test(this)">
+		{% for category  in categories %}
+			{% for music in musics %}
+				{% if music.category.name == category.name %}	
+					<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
+					<form action="." method="post">
+						{% csrf_token %}
+						<input type="hidden" value="{{ music.video_id }}" name="url">
+						<input type="hidden" value="{{ category.pk }}" name="category">
+						<input type="submit" name="add_url" value="Add to queue" />
+					</form>
+				{% endif %}
 			{% endfor %}
+		{% endfor %}
+		</div>
 
-    </body>
-    <script type="text/javascript">
-	    function test(e){
-	    	var divVinil = document.getElementById("vinil")
-	    	var divPlayer = document.getElementById("player-center")
-	    	 if (divVinil.className.indexOf("vinil-center") > -1){
-	    	 	divVinil.className = "vinil"
-	    	 	divPlayer.className = "player-slide-center"
-	    	 }
-	    	 else {
-	    	 	divVinil.className = "vinil-center"
-	    	 	divPlayer.className = "player-slide-hide"
-	    	 }
-	    }
-    </script>
+	</body>
+	<script type="text/javascript">
+		function test(e){
+			var divVinil = document.getElementById("vinil")
+			var divPlayer = document.getElementById("player-center")
+			var divHistorique = document.getElementById("historique")
+			console.log(e.className)
+			if (divVinil.className.indexOf("vinil-center") > -1){
+				divVinil.className = "vinil vinil-base"
+				divPlayer.className = "player-slide-center"
+				divHistorique.className = "historique-hide historique-slide-out style-12"
+			}
+			else {
+					divVinil.className = "vinil-center"
+					divPlayer.className = "player-slide-hide"
+					divHistorique.className = "historique-visible historique-slide-in style-12"
+			}
+		}
+
+
+	</script>
 </html>
