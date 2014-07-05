@@ -33,7 +33,7 @@
 				{% endif %}
 			</div>
 			<div class="add-music">
-				<form action="." method="post">
+				<form action="." method="post" onsubmit="return checkUrl(this)" >
 						{% csrf_token %}
 						<div class="input-design">
 							<input type="text" value="" name="url">
@@ -65,6 +65,9 @@
 
 	</body>
 	<script type="text/javascript">
+		function checkUrl(e){
+			console.log(this.getElementByNames("url").item(0).value.length)
+		}
 		function delai(e){
 			console.log(e)
 			setTimeout(function(){e.submit()},2000)
