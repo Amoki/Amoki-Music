@@ -48,7 +48,7 @@
 				
 			
 		</div>
-		<div id="vinil" class="vinil vinil-firefox" onclick="test(this)"></div>
+		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="test(this)"></div>
 
 		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
 			<div id="scrolling">
@@ -80,6 +80,7 @@
 				divVinil.className = "vinil vinil-base"
 				divPlayer.className = "player-slide-center"
 				divHistorique.className = "historique-hide historique-slide-out no-scrollbar"
+				{%if playing%}setTimeout(function(){divVinil.className += " spin"}, 1001);{%endif%}
 			}
 			else {
 					divVinil.className = "vinil-center"
