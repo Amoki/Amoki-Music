@@ -7,18 +7,24 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="content-language" content="fr" />
 		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
+		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 	</head>
-	<body>		
+	<body>
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
-					<marquee class="now-playing">{{ playing }}</marquee>
+					<div class="marquee">
+						<span class="now-playing">{{ playing }}</span>	
+					</div>
 					<span id="compteur_time_left" class="time-left">{{ actual_time_left }}</span>
 			
 				{% else %}
 					<span class="now-playing">No music :'( Add yours now !</span>
 				{% endif %}
 			</div>
+
+			<div class="separator"></div>
+
 			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
 			<div class="center">
 				{% if playing %}
@@ -32,6 +38,9 @@
 					<h3>Playlist empty</h3>
 				{% endif %}
 			</div>
+
+			<div class="separator"></div>
+
 			<div class="add-music">
 				<form action="." method="post">
 						{% csrf_token %}
@@ -44,10 +53,9 @@
 					{% csrf_token %}
 					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" />
 				</form>
-			</div>
-				
-			
+			</div>		
 		</div>
+
 		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="test(this)"></div>
 
 		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
@@ -88,6 +96,7 @@
 				divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
 			}
 		}
+
 		{% if playing %}
 		var doc = document.getElementById("compteur_time_left")
 		var actual_time = "{{actual_time_left}}"

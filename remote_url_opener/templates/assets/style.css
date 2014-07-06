@@ -1,39 +1,4 @@
 
-/* TEST ZONE */
-
-/* Make it a marquee 
-.marquee {
-    width: 450px;
-    margin: 0 auto;
-    white-space: nowrap;
-    overflow: hidden;
-    box-sizing: border-box;
-    border: 1px green solid;
-}
-
-.marquee span {
-    display: inline-block;
-    padding-left: 100%;
-    text-indent: 0;
-    border: 1px red solid;
-    animation: marquee 15s linear infinite;
-    -webkit-animation: marquee 15s linear infinite;
-    -moz-animation: marquee 15s linear infinite;
-}
-.marquee span:hover {
-    -webkit-animation-play-state: paused
-}
-
-/* Make it move 
-@keyframes marquee {
-    0%   { transform: translate(0, 0); }
-    100% { transform: translate(-100%, 0); }
-}
-
-
-
-/* TEST ZONE */
-
 *:focus{
 	outline: 0;
 }
@@ -46,6 +11,13 @@ body {
 	background-image: url("background-2.png");
 	background-position: left top;
 	color: #007fd5
+}
+
+.separator {
+	background: url("separator.png") no-repeat;
+	width: 588px%;
+	height:2px;
+	margin-left: -22px;
 }
 
 #player-center {
@@ -66,39 +38,8 @@ body {
 	animation-duration: 1s;
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
-
-	-webkit-animation-name: player-in;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-
-	-o-animation-name: player-in;
-	-o-animation-duration: 1s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-
-	-moz-animation-name: player-in;
-	-moz-animation-duration: 1s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
 }
-
 @keyframes player-in {
-	0% {left: 28.5%}
-	100%  {left: 21%}
-}
-
-@-o-keyframes player-in {
-	0% {left: 28.5%}
-	100%  {left: 21%}
-}
-
-@-moz-keyframes player-in {
-	0% {left: 28.5%}
-	100%  {left: 21%}
-}
-
-@-webkit-keyframes player-in {
 	0% {left: 28.5%}
 	100%  {left: 21%}
 }
@@ -108,39 +49,8 @@ body {
 	animation-duration: 2s;
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
-
-	-webkit-animation-name: player-out;
-	-webkit-animation-duration: 2s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-
-	-o-animation-name: player-out;
-	-o-animation-duration: 2s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-
-	-moz-animation-name: player-out;
-	-moz-animation-duration: 2s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
 }
-
 @keyframes player-out {
-	0% {left: 21%}
-	100%  {left: 28.5%}
-}
-
-@-webkit-keyframes player-out {
-	0% {left: 21%}
-	100%  {left: 28.5%}
-}
-
-@-o-keyframes player-out {
-	0% {left: 21%}
-	100%  {left: 28.5%}
-}
-
-@-moz-keyframes player-out {
 	0% {left: 21%}
 	100%  {left: 28.5%}
 }
@@ -149,9 +59,55 @@ body {
 	font-weight: bold;
 	font-size: 25px;
 	font-family: Arial;
-	float: left;
-	width: 70%
 }
+
+.marquee {
+	margin: 0 auto;
+	white-space: nowrap;
+	overflow: hidden;
+	float: left;
+	width: 70%;
+	margin-left: 10px;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    text-indent: 0;
+    animation: marquee 15s linear infinite;
+
+}
+.marquee span:hover {
+    animation-play-state: paused
+}
+/* Make it move */ 
+@keyframes marquee {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+/*  ZONE TEST TEST TEST */ 
+
+div.marquee:before {
+	background: -webkit-gradient(linear,left top,right top,from(rgba(35,35,35,1)),color-stop(0.5,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
+	background: -moz-linear-gradient(left,rgba(35,35,35,1),rgba(35,35,35,1) 60px,rgba(35,35,35,0));
+	z-index: 1;
+	left: 3px
+}
+div.marquee:after {
+	left: 370px;
+	background: -webkit-gradient(linear,right top,left top,from(rgba(35,35,35,1)),color-stop(0.5,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
+	background: -moz-linear-gradient(right,rgba(35,35,35,1),rgba(35,35,35,1) 60%,rgba(35,35,35,0));
+}
+
+div.marquee:before, div.marquee:after {
+	content: "";
+	position: absolute;
+	width: 100px;
+	height: 31px;
+}
+
+/*  ZONE TEST TEST TEST */
 
 .time-left {
 	font-weight: bold;
@@ -162,8 +118,11 @@ body {
 }
 
 .title {
-	height: 58px;
-	overflow:hidden;
+	overflow: hidden;
+	background-color: rgba(35,35,35,1);
+	margin-bottom: 35px;
+	margin-right: 2px;
+	height: 31px;
 }
 
 .center {
@@ -255,53 +214,11 @@ body {
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-in-out;
 
-	-webkit-animation-name: vinil-slide-out;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-	-webkit-animation-timing-function: ease-in-out;
-
-	-o-animation-name: vinil-slide-out;
-	-o-animation-duration: 1s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-	-o-animation-timing-function: ease-in-out;
-
-	-moz-animation-name: vinil-slide-out;
-	-moz-animation-duration: 1s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
-	-moz-animation-timing-function: ease-in-out;
-
-/*
-	-webkit-transition: all .6s ease-in;
-	-moz-transition: all .6s ease-in;
-	-o-transition: all .6s ease-in;
-	transition: all .6s ease-in;
-*/
 	z-index: 1000;
 }
-
 @keyframes vinil-slide-out {
 	0% 	{left:30%;z-index: 1000;transform:scale(1.3);}
 	50%   {left:71%;z-index:1000;transform:scale(1);}
-	100%  {left:40%;z-index: 0}
-}
-
-@-webkit-keyframes vinil-slide-out {
-	0% 	{left:30%;z-index: 1000;-webkit-transform:scale(1.3);}
-	50%   {left:71%;z-index:1000;-webkit-transform:scale(1);}
-	100%  {left:40%;z-index: 0;}
-}
-@-moz-keyframes vinil-slide-out {
-	0% 	{left:30%;z-index: 1000;-moz-transform:scale(1.3);}
-	50%   {left:71%;z-index:1000;-moz-transform:scale(1);}
-	100%  {left:40%;z-index: 0}
-}
-
-@-o-keyframes vinil-slide-out {
-	0% 	{left:30%;z-index: 1000;-o-transform:scale(1.3);}
-	50%   {left:71%;z-index:1000;-o-transform:scale(1);}
 	100%  {left:40%;z-index: 0}
 }
 
@@ -320,84 +237,19 @@ body {
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-in-out;
-
-	-webkit-animation-name: vinil-slide-in;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-	-webkit-animation-timing-function: ease-in-out;
-
-	-o-animation-name: vinil-slide-in;
-	-o-animation-duration: 1s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-	-o-animation-timing-function: ease-in-out;
-
-	-moz-animation-name: vinil-slide-in;
-	-moz-animation-duration: 1s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
-	-moz-animation-timing-function: ease-in-out;
-	/*
-	-webkit-transition: scalling .6s ease-in;
-	-moz-transition: scalling .6s ease-in;
-	-o-transition: scalling .6s ease-in;
-	transition: scalling .6s ease-in;
-	*/
-
 }
-
 @keyframes vinil-slide-in {
 	0%   {left:40%;}
 	50%  {left:71%;z-index: 1000;transform:scale(1);}
     100% {left:30%;z-index: 1000;transform:scale(1.3);}
 }
 
-@-webkit-keyframes vinil-slide-in {
-	0%   {left:40%;}
-	50%  {left:71%;z-index: 1000;-webkit-transform:scale(1);}
-    100% {left:30%;z-index: 1000;-webkit-transform:scale(1.3);}
-}
-
-@-moz-keyframes vinil-slide-in {
-	0%   {left:40%;}
-	50%  {left:71%;z-index: 1000;-moz-transform:scale(1);}
-    100% {left:30%;z-index: 1000;-moz-transform:scale(1.3);}
-}
-
-@-o-keyframes vinil-slide-in {
-	0%   {left:40%;}
-	50%  {left:71%;z-index: 1000;-o-transform:scale(1);}
-    100% {left:30%;z-index: 1000;-o-transform:scale(1.3);}
-}
-
 .spin {
 	animation: vinil-spin 5s infinite linear;
-
-	-webkit-animation: vinil-spin 5s infinite linear;
-	
-	-o-animation: vinil-spin 5s infinite linear;
-	
-	-moz-animation: vinil-spin 5s infinite linear;
 }
 @keyframes vinil-spin {
     from { transform: rotate(0deg);left: 40%; z-index: 100 }
     to { transform: rotate(360deg);left: 40%; z-index: 100 }
-}
-
-@-webkit-keyframes vinil-spin {
-    from { -webkit-transform: rotate(0deg);	left: 40%; z-index: 100}
-    to { -webkit-transform: rotate(360deg); left: 40%; z-index: 100}
-}
-
-@-moz-keyframes vinil-spin {
-    from { -moz-transform: rotate(0deg);left: 40%; z-index: 100 }
-    to { -moz-transform: rotate(360deg);left: 40%; z-index: 100 }
-}
-
-@-o-keyframes vinil-spin {
-    from { -o-transform: rotate(0deg);left: 40%; z-index: 100 }
-    to { -o-transform: rotate(360deg);left: 40%; z-index: 100 }
 }
 
 .vinil-firefox {
@@ -436,44 +288,11 @@ left: 40%;
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-in-out;
-
-	-webkit-animation-name: histo-slide-out ;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-	-webkit-animation-timing-function: ease-in-out;
-
-	-o-animation-name: histo-slide-out ;
-	-o-animation-duration: 1s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-	-o-animation-timing-function: ease-in-out;
-
-	-moz-animation-name: histo-slide-out ;
-	-moz-animation-duration: 1s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
-	-moz-animation-timing-function: ease-in-out;
 }
 
 @keyframes histo-slide-out {
 	0%   {left:30%;z-index: 2000;visibility: visible;transform:scale(1.3);}
 	50%  {left:71%;z-index: 2000; visibility: hidden;transform:scale(1); opacity: 0}
-    100% {left:40%; visibility: hidden;}
-}
-@-webkit-keyframes histo-slide-out {
-	0%   {left:30%;z-index: 2000;visibility: visible;-webkit-transform:scale(1.3);}
-	50%  {left:71%;z-index: 2000;visibility: hidden;-webkit-transform:scale(1); opacity: 0}
-    100% {left:40%; visibility: hidden;}
-}
-@-moz-keyframes histo-slide-out {
-	0%   {left:30%;z-index: 2000;visibility: visible;-moz-transform:scale(1.3);}
-	50%  {left:71%;z-index: 2000; visibility: hidden;-moz-transform:scale(1); opacity: 0}
-    100% {left:40%; visibility: hidden;}
-}
-@-o-keyframes histo-slide-out {
-	0%   {left:30%;z-index: 2000;visibility: visible;-o-transform:scale(1.3);}
-	50%  {left:71%;z-index: 2000; visibility: hidden;-o-transform:scale(1); opacity: 0}
     100% {left:40%; visibility: hidden;}
 }
 
@@ -496,44 +315,11 @@ display: block;
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-in-out;
-
-	-webkit-animation-name: histo-slide-in;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-fill-mode: forwards;
-	-webkit-animation-timing-function: ease-in-out;
-
-	-o-animation-name: histo-slide-in;
-	-o-animation-duration: 1s;
-	-o-animation-iteration-count: 1;
-	-o-animation-fill-mode: forwards;
-	-o-animation-timing-function: ease-in-out;
-
-	-moz-animation-name: histo-slide-in;
-	-moz-animation-duration: 1s;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-fill-mode: forwards;
-	-moz-animation-timing-function: ease-in-out;
 }
 @keyframes histo-slide-in {
 	0%   {left:40%; visibility: hidden;}
 	50%  {left:71%;z-index: 2000; visibility: hidden;transform:scale(1);opacity: 0}
     100% {left:30%;z-index: 2000;visibility: visible;transform:scale(1.3);opacity: 1}
-}
-@-webkit-keyframes histo-slide-in {
-	0%   {left:40%; visibility: hidden;}
-	50%  {left:71%;z-index: 2000; visibility: hidden;-webkit-transform:scale(1);opacity: 0}
-    100% {left:30%;z-index: 2000;visibility: visible;-webkit-transform:scale(1.3);opacity: 1}
-}
-@-moz-keyframes histo-slide-in {
-	0%   {left:40%; visibility: hidden;}
-	50%  {left:71%;z-index: 2000; visibility: hidden;-moz-transform:scale(1);opacity: 0}
-    100% {left:30%;z-index: 2000;visibility: visible;-moz-transform:scale(1.3);opacity: 1}
-}
-@-o-keyframes histo-slide-in {
-	0%   {left:40%; visibility: hidden;}
-	50%  {left:71%;z-index: 2000; visibility: hidden;-o-transform:scale(1);opacity: 0}
-    100% {left:30%;z-index: 2000;visibility: visible;-o-transform:scale(1.3);opacity: 1}
 }
 
 #scrolling {
