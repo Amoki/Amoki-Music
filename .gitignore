@@ -60,3 +60,4 @@ docs/_build/
 .v_env/*
 *.sublime-project
 *.sublime-workspace
+*.db
