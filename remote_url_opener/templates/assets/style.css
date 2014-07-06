@@ -66,8 +66,7 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	float: left;
-	width: 70%;
-	margin-left: 10px;
+	width: 450px;
 }
 
 .marquee span {
@@ -89,15 +88,15 @@ body {
 /*  ZONE TEST TEST TEST */ 
 
 div.marquee:before {
-	background: -webkit-gradient(linear,left top,right top,from(rgba(35,35,35,1)),color-stop(0.5,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
-	background: -moz-linear-gradient(left,rgba(35,35,35,1),rgba(35,35,35,1) 60px,rgba(35,35,35,0));
+	background: -webkit-gradient(linear,left top,right top,from(rgba(35,35,35,1)),color-stop(0.2,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
+	background: -moz-linear-gradient(left,rgba(35,35,35,1),rgba(35,35,35,1) 20px,rgba(35,35,35,0));
 	z-index: 1;
 	left: 3px
 }
 div.marquee:after {
-	left: 370px;
-	background: -webkit-gradient(linear,right top,left top,from(rgba(35,35,35,1)),color-stop(0.5,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
-	background: -moz-linear-gradient(right,rgba(35,35,35,1),rgba(35,35,35,1) 60%,rgba(35,35,35,0));
+	left: 355px;
+	background: -webkit-gradient(linear,right top,left top,from(rgba(35,35,35,1)),color-stop(0.2,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
+	background: -moz-linear-gradient(right,rgba(35,35,35,1),rgba(35,35,35,1) 20px,rgba(35,35,35,0));
 }
 
 div.marquee:before, div.marquee:after {
@@ -123,6 +122,7 @@ div.marquee:before, div.marquee:after {
 	margin-bottom: 35px;
 	margin-right: 2px;
 	height: 31px;
+	margin-left: -20px;
 }
 
 .center {
