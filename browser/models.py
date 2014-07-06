@@ -12,6 +12,7 @@ class Music(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     playing_date = models.DateTimeField(null=True)
     duration = models.PositiveIntegerField(editable=False)
+    thumbnail = models.CharField(max_length=255, editable=False)
 
     @classmethod
     def get_unique(self):
