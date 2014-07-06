@@ -11,13 +11,13 @@
 	<body>		
 		<div id="player-center" class="">
 			<div class="title">
-			    {% if playing %}
-			    	<marquee class="now-playing">{{ playing }}</marquee>
-			    	<span class="time-left">{{ actual_time_left }} <i>({{ playing.get_played_count }})</i></span>
+				{% if playing %}
+					<marquee class="now-playing">{{ playing }}</marquee>
+					<span id="compteur_time_left" class="time-left">{{ actual_time_left }}</span>
 			
-			    {% else %}
-			    	<span class="now-playing">No music :'( Add yours now !</span>
-			    {% endif %}
+				{% else %}
+					<span class="now-playing">No music :'( Add yours now !</span>
+				{% endif %}
 			</div>
 			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
 			<div class="center">
@@ -33,7 +33,7 @@
 				{% endif %}
 			</div>
 			<div class="add-music">
-				<form action="." method="post" onsubmit="return checkUrl(this)" >
+				<form action="." method="post">
 						{% csrf_token %}
 						<div class="input-design">
 							<input type="text" value="" name="url">
@@ -65,9 +65,9 @@
 
 	</body>
 	<script type="text/javascript">
-		function checkUrl(e){
+		/*function checkUrl(e){
 			console.log(this.getElementByNames("url").item(0).value.length)
-		}
+		}*/
 		function delai(e){
 			console.log(e)
 			setTimeout(function(){e.submit()},1000)
@@ -83,10 +83,50 @@
 				{%if playing%}setTimeout(function(){divVinil.className += " spin"}, 1001);{%endif%}
 			}
 			else {
-					divVinil.className = "vinil-center"
-					divPlayer.className = "player-slide-hide"
-					divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
+				divVinil.className = "vinil-center"
+				divPlayer.className = "player-slide-hide"
+				divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
 			}
 		}
+		{% if playing %}
+		var doc = document.getElementById("compteur_time_left")
+		var actual_time = "{{actual_time_left}}"
+		var split_actual_time = actual_time.split(":")
+		var heures = parseInt(split_actual_time[0])
+		var minutes = parseInt(split_actual_time[1])
+		var secondes = parseInt(split_actual_time[2])
+		function compteur() {
+			if(secondes == 0) {
+				secondes = 59
+				if(minutes == 0) {
+					minutes = 59
+					if(heures == 0)
+						window.location.reload()
+					else
+						heures--
+				}
+				else
+					minutes--
+			}
+			else {
+				secondes--
+			}
+			if(heures < 10)
+				doc.innerHTML = heures+':'
+			else
+				doc.innerHTML = heures+':'
+		  
+			if(minutes < 10)
+				doc.innerHTML += '0'+minutes+':'
+			else
+				doc.innerHTML += minutes+':'
+		  
+			if(secondes < 10)
+				doc.innerHTML += '0'+secondes
+			else
+				doc.innerHTML += secondes
+		}
+		setInterval("compteur()",1000)
+		{% endif %}
 	</script>
 </html>
