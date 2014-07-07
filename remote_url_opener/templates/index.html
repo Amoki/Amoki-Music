@@ -19,7 +19,9 @@
 					<span id="compteur_time_left" class="time-left">{{ actual_time_left }}</span>
 			
 				{% else %}
+				<div class="marquee">
 					<span class="now-playing">No music :'( Add yours now !</span>
+					</div>
 				{% endif %}
 			</div>
 
@@ -45,7 +47,7 @@
 				<form action="." method="post">
 						{% csrf_token %}
 						<div class="input-design">
-							<input type="text" value="" name="url">
+							<input type="text" value="" name="url" id="url">
 						</div>
 						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
 				</form>
@@ -73,9 +75,6 @@
 
 	</body>
 	<script type="text/javascript">
-		/*function checkUrl(e){
-			console.log(this.getElementByNames("url").item(0).value.length)
-		}*/
 		function delai(e){
 			console.log(e)
 			setTimeout(function(){e.submit()},1000)

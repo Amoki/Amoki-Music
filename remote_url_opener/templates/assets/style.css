@@ -81,7 +81,7 @@ body {
 }
 /* Make it move */ 
 @keyframes marquee {
-    0%   { transform: translate(0, 0); }
+    0%   { transform: translate(-2%, 0); }
     100% { transform: translate(-100%, 0); }
 }
 
@@ -327,7 +327,6 @@ display: block;
     overflow: auto !important;
     height: 100%;
     padding-right: 100px;
-    padding-left: 8px;
 }
 
 .bleu-scrollbar::-webkit-scrollbar-track

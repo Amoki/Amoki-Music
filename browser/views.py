@@ -1,5 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from browser.models import Music, Player
 from browser.helpers import get_youtube_id
 import datetime
@@ -20,4 +22,9 @@ def home(request):
     nexts_music = Player.get_musics_remaining()
     time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
+    
+    if request.method == "POST":
+            if request.POST.get('url'):
+                return HttpResponseRedirect(reverse("browser.views.home"))
+
     return render(request, 'index.html', locals())
