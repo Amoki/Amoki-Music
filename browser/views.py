@@ -16,13 +16,17 @@ def home(request):
         if request.POST.get('play_next'):
             Player.play_next()
 
+        if request.POST.get('suffle'):
+            Player.suffle = request.POST.get('suffle')
+
     playing = Player.actual
     musics = Music.get_unique()
     count_left = Player.get_number_remaining()
     nexts_music = Player.get_musics_remaining()
     time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
-    
+    suffle = Player.suffle
+
     if request.method == "POST":
             if request.POST.get('url'):
                 return HttpResponseRedirect(reverse("browser.views.home"))

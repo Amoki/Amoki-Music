@@ -1,7 +1,10 @@
 import isodate
+from urllib.parse import urlparse
 
 
 def get_youtube_id(url):
+    parsed = urlparse(url)
+    print parsed
     if not "v=" in url:
         return url
     else:
