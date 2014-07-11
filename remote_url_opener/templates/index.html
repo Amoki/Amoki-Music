@@ -46,8 +46,8 @@
 			<div class="add-music">
 				<form action="." method="post">
 					{% csrf_token %}
-					<input type="submit" name="shuffle" {%if shuffle%}class="shuffle shuffle_True" value="True"
-														{%else%}class="shuffle shuffle_False" value="False"
+					<input type="submit" name="shuffle" {%if shuffle%}class="shuffle shuffle_True" value="true"
+														{%else%}class="shuffle shuffle_False" value="false"
 														{%endif%} title="Shuffle" alt="Shuffle"/>
 				</form>
 				<form action="." method="post">
