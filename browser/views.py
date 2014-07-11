@@ -23,8 +23,8 @@ def home(request):
 
     # The object Music playing
     playing = Player.actual
-    # All objects Music, 1 time
-    musics = Music.get_unique()
+    # All objects Music
+    musics = Music.objects.all()
     # Objects of musics in queue
     nexts_music = Player.get_musics_remaining()
     # The number of music in queue

@@ -3,29 +3,29 @@ from django.db import models
 import webbrowser
 from datetime import datetime
 from threading import Timer
-from browser.helpers import get_youtube_link
+from browser import helpers
 
 
 class Music(models.Model):
+    # Youtube ID
     video_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     date = models.DateTimeField(auto_now_add=True)
-    playing_date = models.DateTimeField(null=True)
+    # Duration in second
     duration = models.PositiveIntegerField(editable=False)
+    # thumbnail in 480 * 360
     thumbnail = models.CharField(max_length=255, editable=False)
+    count = models.PositiveIntegerField(default=0, editable=False)
 
     @classmethod
-    def get_unique(self):
-        checked_musics = []
-        musics = []
-        for music in Music.objects.all().order_by('-date'):
-            if music.video_id not in checked_musics:
-                musics.append(music)
-                checked_musics.append(music.video_id)
-        return musics
-
-    def get_played_count(self):
-        return Music.objects.filter(video_id=self.video_id).count()
+    def add(cls, **kwargs):
+        existing_music = Music.objects.filter(video_id=kwargs['video_id']).first()
+        if existing_music:
+            return existing_music
+        else:
+            music = cls(**kwargs)
+            music.save()
+            return music
 
     def __unicode__(self):
         return self.name
@@ -43,10 +43,11 @@ class Player():
             Player.event.cancel()
 
         Player.actual = music
-        music.playing_date = datetime.now()
+        music.count += 1
+        music.date = datetime.now()
         music.save()
 
-        webbrowser.open(get_youtube_link(music.video_id))
+        webbrowser.open(helpers.get_youtube_link(music.video_id))
 
         Player.event = Timer(music.duration, Player.play_next, ())
         Player.event.start()
@@ -60,18 +61,17 @@ class Player():
             else:
                 music = Music.objects.filter(date__gt=Player.actual.date).first()
 
-        if not music and Player.suffle:
-            music = Music.objects.filter().order_by('?').first()
-
         if music:
             Player.play(music)
+        elif Player.suffle:
+            shuffled = Music.objects.filter().order_by('?').first()
+            Player.play(shuffled)
         else:
             Player.actual = None
 
     @classmethod
     def push(self, video_id):
-        music = Music(video_id=video_id)
-        music.save()
+        music = Music.add(video_id=video_id)
 
         if not Player.actual:
             Player.actual = music
@@ -81,7 +81,7 @@ class Player():
     def get_actual_remaining_time(self):
         if not Player.actual:
             return 0
-        return Player.actual.duration - int(((datetime.now() - Player.actual.playing_date)).total_seconds())
+        return Player.actual.duration - int(((datetime.now() - Player.actual.date)).total_seconds())
 
     @classmethod
     def get_remaining_time(self):
@@ -101,7 +101,7 @@ class Player():
             return
         nexts = Music.objects.filter(date__gt=Player.actual.date)
 
-        return map(str, nexts)
+        return nexts
 
     @classmethod
     def get_count_remaining(self):
