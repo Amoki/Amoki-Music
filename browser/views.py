@@ -18,8 +18,8 @@ def home(request):
             Player.play_next()
         if request.POST.get('suffle'):
             Player.suffle = request.POST.get('suffle')
-
-    return HttpResponseRedirect(reverse("browser.views.home"))
+            
+        return HttpResponseRedirect(reverse("browser.views.home"))
 
     # The object Music playing
     playing = Player.actual
