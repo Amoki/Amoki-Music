@@ -58,13 +58,13 @@ class Player():
             if forced:
                 music = Player.actual
             else:
-                music = Music.objects.filter(date__gt=Player.actual.date).first()
-
-        if not music and Player.suffle:
-            music = Music.objects.filter().order_by('?').first()
+                music = Music.objects.filter(date__gt=Player.actual.playing_date).first()
 
         if music:
             Player.play(music)
+        elif Player.suffle:
+            shuffled = Music.objects.filter().order_by('?').first()
+            Player.play(shuffled)
         else:
             Player.actual = None
 
@@ -87,7 +87,7 @@ class Player():
     def get_remaining_time(self):
         if not Player.actual:
             return 0
-        nexts = Music.objects.filter(date__gt=Player.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.actual.playing_date)
         time_left = 0
         for music in nexts:
             time_left += music.duration
@@ -99,7 +99,7 @@ class Player():
     def get_musics_remaining(self):
         if not Player.actual:
             return
-        nexts = Music.objects.filter(date__gt=Player.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.actual.playing_date)
 
         return map(str, nexts)
 
@@ -107,7 +107,7 @@ class Player():
     def get_count_remaining(self):
         if not Player.actual:
             return 0
-        return Music.objects.filter(date__gte=Player.actual.date).count()
+        return Music.objects.filter(date__gte=Player.actual.playing_date).count()
 
 
 from browser.signals import *

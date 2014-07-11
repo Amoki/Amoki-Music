@@ -5,7 +5,11 @@ import urlparse
 def get_youtube_id(url):
     url_data = urlparse.urlparse(url)
     query = urlparse.parse_qs(url_data.query)
-    return query["v"][0]
+    try:
+        return query["v"][0]
+    except:
+        # The url is already an id
+        return url
 
 
 def get_youtube_link(video_id):
