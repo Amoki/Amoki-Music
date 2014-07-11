@@ -104,7 +104,7 @@ class Player():
         return map(str, nexts)
 
     @classmethod
-    def get_number_remaining(self):
+    def get_count_remaining(self):
         if not Player.actual:
             return 0
         return Music.objects.filter(date__gte=Player.actual.date).count()
