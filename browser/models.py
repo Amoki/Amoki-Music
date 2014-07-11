@@ -34,7 +34,7 @@ class Music(models.Model):
 class Player():
     actual = None
     event = None
-    suffle = False
+    shuffle = False
 
     @classmethod
     def play(self, music):
@@ -63,7 +63,7 @@ class Player():
 
         if music:
             Player.play(music)
-        elif Player.suffle:
+        elif Player.shuffle:
             shuffled = Music.objects.filter().order_by('?').first()
             Player.play(shuffled)
         else:

@@ -16,9 +16,11 @@ def home(request):
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
         if request.POST.get('play_next'):
             Player.play_next()
-        if request.POST.get('suffle'):
-            Player.suffle = request.POST.get('suffle')
-            
+        if request.POST.get('shuffle'):
+            Player.shuffle = request.POST.get('shuffle')
+            print "shufle is now: " + Player.shuffle
+            if Player.shuffle and not Player.actual:
+                Player.play_next()
         return HttpResponseRedirect(reverse("browser.views.home"))
 
     # The object Music playing
@@ -34,6 +36,6 @@ def home(request):
     # Remaining time of the Music playing in hh:mm:ss
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
     # The actual state of the suffle. Can be True ou False
-    suffle = Player.suffle
+    shuffle = Player.shuffle
 
     return render(request, 'index.html', locals())
