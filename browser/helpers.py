@@ -1,11 +1,11 @@
 import isodate
+import urlparse
 
 
 def get_youtube_id(url):
-    if not "v=" in url:
-        return url
-    else:
-        return url.rsplit("v=", 1)[1]
+    url_data = urlparse.urlparse(url)
+    query = urlparse.parse_qs(url_data.query)
+    return query["v"][0]
 
 
 def get_youtube_link(video_id):
