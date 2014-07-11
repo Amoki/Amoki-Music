@@ -17,8 +17,7 @@ def home(request):
         if request.POST.get('play_next'):
             Player.play_next()
         if request.POST.get('shuffle'):
-            Player.shuffle = request.POST.get('shuffle')
-            print "shufle is now: " + Player.shuffle
+            Player.shuffle = (request.POST.get('shuffle') == 'true')
             if Player.shuffle and not Player.actual:
                 Player.play_next()
         return HttpResponseRedirect(reverse("browser.views.home"))
