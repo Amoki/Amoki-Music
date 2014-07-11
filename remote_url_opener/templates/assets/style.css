@@ -150,25 +150,25 @@ div.marquee:before, div.marquee:after {
 	height: 145px;
 }
 
-.add-music, .add-music input, .add-music select, .input-design{
+.add-music, .add-music input, .input-design{
 	float: left;
 }
 
 .input-design {
 	background-image: url("input.png");
 	background-repeat: no-repeat;
-	background-size: 323px 53px;
+	background-size: 230px 53px;
 	margin-top: 18px;
 	margin-left: 8px;
 }
 
 .input-design input {
-	width: 295px;
+	width: 205px;
 	height: 30px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-left: 15px;
-	margin-right: 35px;
+	margin-right: 20px;
 	border: none;
 }
 
@@ -184,6 +184,14 @@ div.marquee:before, div.marquee:after {
 	outline: none;
 }
 
+.malform {
+	border-color: red !important;
+	border-style: groove !important;
+	width: 210px !important;
+	margin-top: 7px !important;
+	margin-left: 7px !important;
+}
+
 .next-music {
 	text-indent: -9999px;
 	font-size: 0;
@@ -191,6 +199,18 @@ div.marquee:before, div.marquee:after {
 	width: 94px;
 	border: none;
 	background: transparent url('btn-next.png') no-repeat;
+	height: 96px;
+	cursor: pointer;
+	outline: none;
+}
+
+.shuffle {
+	text-indent: -9999px;
+	font-size: 0;
+	line-height: 0;
+	width: 94px;
+	border: none;
+	background: transparent url('btn-shuffle.png') no-repeat;
 	height: 96px;
 	cursor: pointer;
 	outline: none;
@@ -256,8 +276,7 @@ div.marquee:before, div.marquee:after {
 	left: 40%;
 	z-index: 0;
 }
-
-
+	
 
 #historique {
 	font-size: 15px;

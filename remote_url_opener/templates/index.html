@@ -29,7 +29,7 @@
 
 			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
 			<div class="center">
-				{% if playing %}
+				{% if playing and nexts_music|length > 0 %}
 					<h3>Playlist : </h3>
 					<div class="playlist bleu-scrollbar">
 						{% for music in nexts_music %}
@@ -37,7 +37,7 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					<h3>Playlist empty</h3>
+					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
 				{% endif %}
 			</div>
 
@@ -45,15 +45,19 @@
 
 			<div class="add-music">
 				<form action="." method="post">
+					{% csrf_token %}
+					<input class="shuffle" type="submit" name="shuffle" value="Shuffle" title="Shuffle" alt="Shuffle"/>
+				</form>
+				<form action="." method="post">
 						{% csrf_token %}
 						<div class="input-design">
-							<input type="text" value="" name="url" id="url">
+							<input {% if malform%}class="malform"{%endif%} type="text" value="" name="url" id="url">
 						</div>
 						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
 				</form>
 				<form action="." method="post">
 					{% csrf_token %}
-					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" />
+					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%}/>
 				</form>
 			</div>
 		</div>

@@ -10,17 +10,16 @@ import datetime
 
 @csrf_exempt
 def home(request):
-    do_not_resend_info = False
+
     if request.method == "POST":
         if request.POST.get('url'):
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
-            do_not_resend_info = True
-
         if request.POST.get('play_next'):
             Player.play_next()
-
         if request.POST.get('suffle'):
             Player.suffle = request.POST.get('suffle')
+            
+        return HttpResponseRedirect(reverse("browser.views.home"))
 
     # The object Music playing
     playing = Player.actual
@@ -36,8 +35,5 @@ def home(request):
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
     # The actual state of the suffle. Can be True ou False
     suffle = Player.suffle
-
-    if do_not_resend_info:
-        return HttpResponseRedirect(reverse("browser.views.home"))
 
     return render(request, 'index.html', locals())
