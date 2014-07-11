@@ -37,7 +37,7 @@ class Player():
     suffle = False
 
     @classmethod
-    def play(music):
+    def play(self, music):
         # clear the queue
         if Player.event:
             Player.event.cancel()
@@ -52,7 +52,7 @@ class Player():
         Player.event.start()
 
     @classmethod
-    def play_next(forced=False):
+    def play_next(self, forced=False):
         music = None
         if Player.actual:
             if forced:
@@ -65,9 +65,11 @@ class Player():
 
         if music:
             Player.play(music)
+        else:
+            Player.actual = None
 
     @classmethod
-    def push(video_id):
+    def push(self, video_id):
         music = Music(video_id=video_id)
         music.save()
 
@@ -76,13 +78,13 @@ class Player():
             Player.play_next(forced=True)
 
     @classmethod
-    def get_actual_remaining_time():
+    def get_actual_remaining_time(self):
         if not Player.actual:
             return 0
         return Player.actual.duration - int(((datetime.now() - Player.actual.playing_date)).total_seconds())
 
     @classmethod
-    def get_remaining_time():
+    def get_remaining_time(self):
         if not Player.actual:
             return 0
         nexts = Music.objects.filter(date__gt=Player.actual.date)
@@ -94,7 +96,7 @@ class Player():
         return time_left
 
     @classmethod
-    def get_musics_remaining():
+    def get_musics_remaining(self):
         if not Player.actual:
             return
         nexts = Music.objects.filter(date__gt=Player.actual.date)
@@ -102,7 +104,7 @@ class Player():
         return map(str, nexts)
 
     @classmethod
-    def get_number_remaining():
+    def get_number_remaining(self):
         if not Player.actual:
             return 0
         return Music.objects.filter(date__gte=Player.actual.date).count()
