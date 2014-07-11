@@ -14,10 +14,10 @@
 			<div class="title">
 				{% if playing %}
 					<div class="marquee">
-						<span class="now-playing">{{ playing }}</span>	
+						<span class="now-playing">{{ playing }}</span>
 					</div>
 					<span id="compteur_time_left" class="time-left">{{ actual_time_left }}</span>
-			
+
 				{% else %}
 				<div class="marquee">
 					<span class="now-playing">No music :'( Add yours now !</span>
@@ -32,8 +32,8 @@
 				{% if playing %}
 					<h3>Playlist : </h3>
 					<div class="playlist bleu-scrollbar">
-						{% for music in nexts_music %} 
-							<span class="gris">{{music}}</span><br/> 
+						{% for music in nexts_music %}
+							<span class="gris">{{music.name}}</span><br/>
 						{% endfor %}
 					</div>
 				{% else %}
@@ -55,7 +55,7 @@
 					{% csrf_token %}
 					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" />
 				</form>
-			</div>		
+			</div>
 		</div>
 
 		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="test(this)"></div>
@@ -63,7 +63,7 @@
 		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
 			<div id="scrolling">
 			{% for music in musics %}
-				<li>{{ music.name }} <i>({{ music.get_played_count }})</i></li>
+				<li>{{ music.name }} <i>({{ music.count }})</i></li>
 				<form action="." method="post">
 					{% csrf_token %}
 					<input type="hidden" value="{{ music.video_id }}" name="url">
@@ -123,12 +123,12 @@
 				doc.innerHTML = heures+':'
 			else
 				doc.innerHTML = heures+':'
-		  
+
 			if(minutes < 10)
 				doc.innerHTML += '0'+minutes+':'
 			else
 				doc.innerHTML += minutes+':'
-		  
+
 			if(secondes < 10)
 				doc.innerHTML += '0'+secondes
 			else
