@@ -9,12 +9,18 @@ import datetime
 
 @csrf_exempt
 def home(request):
+    malform = False
+
     if request.method == "POST":
         if request.POST.get('url'):
-            Player.push(video_id=get_youtube_id(request.POST.get('url')))
-
+            video_id = get_youtube_id(request.POST.get('url'))
+            if video_id == "":
+                malform_url = True
+            else:
+                Player.push(video_id)
         if request.POST.get('play_next'):
             Player.play_next()
+        return HttpResponseRedirect(reverse("browser.views.home"))
 
     playing = Player.actual
     musics = Music.get_unique()
@@ -22,9 +28,5 @@ def home(request):
     nexts_music = Player.get_musics_remaining()
     time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
-    
-    if request.method == "POST":
-            if request.POST.get('url'):
-                return HttpResponseRedirect(reverse("browser.views.home"))
 
     return render(request, 'index.html', locals())

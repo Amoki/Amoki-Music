@@ -184,6 +184,14 @@ div.marquee:before, div.marquee:after {
 	outline: none;
 }
 
+.malform {
+	border-color: red !important;
+	border-style: groove !important;
+	width: 297px !important;
+	margin-top: 7px !important;
+	margin-left: 10px !important;
+}
+
 .next-music {
 	text-indent: -9999px;
 	font-size: 0;
@@ -256,8 +264,7 @@ div.marquee:before, div.marquee:after {
 	left: 40%;
 	z-index: 0;
 }
-
-
+	
 
 #historique {
 	font-size: 15px;
