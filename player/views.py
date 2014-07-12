@@ -3,8 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from browser.models import Music, Player
-from browser.helpers import get_youtube_id
+from player.models import Music, Player
+from player.helpers import get_youtube_id
 import datetime
 
 
@@ -20,7 +20,7 @@ def home(request):
             Player.shuffle = (request.POST.get('shuffle') == 'true')
             if Player.shuffle and not Player.actual:
                 Player.play_next()
-        return HttpResponseRedirect(reverse("browser.views.home"))
+        return HttpResponseRedirect(reverse("player.views.home"))
 
     # The object Music playing
     playing = Player.actual

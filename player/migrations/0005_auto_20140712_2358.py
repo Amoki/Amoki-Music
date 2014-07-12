@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('browser', '0004_auto_20140712_0033'),
+        ('player', '0004_auto_20140712_0033'),
     ]
 
     operations = [

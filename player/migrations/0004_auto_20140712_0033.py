@@ -7,14 +7,18 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('browser', '0002_remove_music_thumbnail'),
+        ('player', '0003_music_thumbnail'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='music',
-            name='thumbnail',
-            field=models.CharField(default='http://i1.ytimg.com/vi/Z0X2FyRl-9s/sddefault.jpg', max_length=255, editable=False),
+            name='count',
+            field=models.PositiveIntegerField(default=1, editable=False),
             preserve_default=False,
+        ),
+        migrations.RemoveField(
+            model_name='music',
+            name='playing_date',
         ),
     ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from browser.models import Music
-from browser.helpers import get_youtube_link
+from player.models import Music
+from player.helpers import get_youtube_link
 
 
 class MusicAdmin(admin.ModelAdmin):

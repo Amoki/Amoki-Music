@@ -2,8 +2,8 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from browser.models import Music
-from browser.helpers import get_time_in_seconds
+from player.models import Music
+from player.helpers import get_time_in_seconds
 
 import urllib2
 import json

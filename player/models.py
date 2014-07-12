@@ -3,7 +3,7 @@ from django.db import models
 import webbrowser
 from datetime import datetime
 from threading import Timer
-from browser import helpers
+from player import helpers
 
 
 class Music(models.Model):
@@ -121,4 +121,4 @@ class Player():
         return Music.objects.filter(date__gte=Player.actual.date).count()
 
 
-from browser.signals import *
+from player.signals import *
