@@ -13,7 +13,7 @@ class Music(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     # Duration in second
     duration = models.PositiveIntegerField(editable=False)
-    # thumbnail in 480 * 360
+    # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255, editable=False)
     count = models.PositiveIntegerField(default=0, editable=False)
 
@@ -21,6 +21,8 @@ class Music(models.Model):
     def add(cls, **kwargs):
         existing_music = Music.objects.filter(video_id=kwargs['video_id']).first()
         if existing_music:
+            existing_music.date = datetime.now()
+            existing_music.save()
             return existing_music
         else:
             music = cls(**kwargs)
@@ -44,7 +46,6 @@ class Player():
 
         Player.actual = music
         music.count += 1
-        music.date = datetime.now()
         music.save()
 
         webbrowser.open(helpers.get_youtube_link(music.video_id))
@@ -53,7 +54,7 @@ class Player():
         Player.event.start()
 
     @classmethod
-    def play_next(self, forced=False):
+    def play_next(self):
         music = None
         if Player.actual:
             if forced:
@@ -65,6 +66,9 @@ class Player():
             Player.play(music)
         elif Player.shuffle:
             shuffled = Music.objects.filter().order_by('?').first()
+            shuffled.date = datetime.now()
+            shuffled.save()
+
             Player.play(shuffled)
         else:
             Player.actual = None
@@ -75,7 +79,7 @@ class Player():
 
         if not Player.actual:
             Player.actual = music
-            Player.play_next(forced=True)
+            Player.play_next()
 
     @classmethod
     def get_actual_remaining_time(self):
