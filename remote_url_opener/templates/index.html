@@ -13,7 +13,8 @@
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
-					<div id="thumbnail" style="background: transparent url('{{playing.thumbnail}}') no-repeat;"></div>
+					<!--<div id="thumbnail" style="background: transparent url('{{playing.thumbnail}}') no-repeat;"></div>-->
+					<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px"></img>
 					<div class="marquee">
 						<span class="now-playing">{{ playing }}</span>
 					</div>

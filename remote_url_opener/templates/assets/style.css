@@ -57,10 +57,9 @@ body {
 
 
 #thumbnail {
-	width: 120px;
-	height: 90px;
 	position: absolute;
-	top: 5px;
+	top: 2px;
+	left: 4px;
 	z-index: 200;
 }
 
