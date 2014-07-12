@@ -17,7 +17,7 @@
 					<div class="marquee">
 						<span class="now-playing">{{ playing }}</span>
 					</div>
-					<span id="compteur_time_left" class="time-left">{{actual_time_left}}</span>
+					<span id="compteur_time_left" class="time-left">{{current_time_left}}</span>
 
 				{% else %}
 				<div class="marquee">
@@ -107,11 +107,11 @@
 
 		{% if playing %}
 		var docCompteur = document.getElementById("compteur_time_left")
-		var actual_time = "{{actual_time_left}}"
-		var split_actual_time = actual_time.split(":")
-		var heures = parseInt(split_actual_time[0])
-		var minutes = parseInt(split_actual_time[1])
-		var secondes = parseInt(split_actual_time[2])
+		var current_time = "{{current_time_left}}"
+		var split_current_time = current_time.split(":")
+		var heures = parseInt(split_current_time[0])
+		var minutes = parseInt(split_current_time[1])
+		var secondes = parseInt(split_current_time[2])
 		function compteur() {
 			if(secondes == 0) {
 				secondes = 59

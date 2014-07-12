@@ -36,7 +36,7 @@ class Music(models.Model):
 
 
 class Player():
-    actual = None
+    current = None
     event = None
     shuffle = False
 
@@ -46,7 +46,7 @@ class Player():
         if Player.event:
             Player.event.cancel()
 
-        Player.actual = music
+        Player.current = music
         music.count += 1
         music.last_play = datetime.now()
         music.save()
@@ -59,11 +59,11 @@ class Player():
     @classmethod
     def play_next(self, forced=False):
         music = None
-        if Player.actual:
+        if Player.current:
             if forced:
-                music = Player.actual
+                music = Player.current
             else:
-                music = Music.objects.filter(date__gt=Player.actual.date).first()
+                music = Music.objects.filter(date__gt=Player.current.date).first()
 
         if music:
             Player.play(music)
@@ -78,47 +78,47 @@ class Player():
 
             Player.play(shuffled)
         else:
-            Player.actual = None
+            Player.current = None
 
     @classmethod
     def push(self, video_id):
         music = Music.add(video_id=video_id)
 
-        if not Player.actual:
-            Player.actual = music
+        if not Player.current:
+            Player.current = music
             Player.play_next(forced=True)
 
     @classmethod
-    def get_actual_remaining_time(self):
-        if not Player.actual:
+    def get_current_remaining_time(self):
+        if not Player.current:
             return 0
-        return Player.actual.duration - int(((datetime.now() - Player.actual.last_play)).total_seconds())
+        return Player.current.duration - int(((datetime.now() - Player.current.last_play)).total_seconds())
 
     @classmethod
     def get_remaining_time(self):
-        if not Player.actual:
+        if not Player.current:
             return 0
-        nexts = Music.objects.filter(date__gt=Player.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.current.date)
         time_left = 0
         for music in nexts:
             time_left += music.duration
-        time_left += Player.get_actual_remaining_time()
+        time_left += Player.get_current_remaining_time()
 
         return time_left
 
     @classmethod
     def get_musics_remaining(self):
-        if not Player.actual:
+        if not Player.current:
             return
-        nexts = Music.objects.filter(date__gt=Player.actual.date)
+        nexts = Music.objects.filter(date__gt=Player.current.date)
 
         return nexts
 
     @classmethod
     def get_count_remaining(self):
-        if not Player.actual:
+        if not Player.current:
             return 0
-        return Music.objects.filter(date__gte=Player.actual.date).count()
+        return Music.objects.filter(date__gte=Player.current.date).count()
 
 
 from player.signals import *
