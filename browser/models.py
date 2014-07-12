@@ -10,12 +10,14 @@ class Music(models.Model):
     # Youtube ID
     video_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
+    # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
     # Duration in second
     duration = models.PositiveIntegerField(editable=False)
     # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255, editable=False)
     count = models.PositiveIntegerField(default=0, editable=False)
+    last_play = models.DateTimeField(null=True)
 
     @classmethod
     def add(cls, **kwargs):
@@ -46,6 +48,7 @@ class Player():
 
         Player.actual = music
         music.count += 1
+        music.last_play = datetime.now()
         music.save()
 
         webbrowser.open(helpers.get_youtube_link(music.video_id))
@@ -68,7 +71,6 @@ class Player():
             # Select random music, excluding 5% last played musics
             count = Music.objects.all().count()
             limit = count / 20
-            print limit
             limit_date = Music.objects.all().order_by('-date')[limit].date
             shuffled = Music.objects.filter(date__lte=limit_date).order_by('?').first()
             shuffled.date = datetime.now()
@@ -90,7 +92,7 @@ class Player():
     def get_actual_remaining_time(self):
         if not Player.actual:
             return 0
-        return Player.actual.duration - int(((datetime.now() - Player.actual.date)).total_seconds())
+        return Player.actual.duration - int(((datetime.now() - Player.actual.last_play)).total_seconds())
 
     @classmethod
     def get_remaining_time(self):
