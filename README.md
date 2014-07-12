@@ -28,4 +28,4 @@ It will open new url in the current tab
 
 How to use
 ----------
-Connect to your server, it's easy
+Connect to your server and let you be guided by our awesome UI
