@@ -36,4 +36,4 @@ SET YOUTUBE_KEY="your youtube API key"
 
 How to use
 ----------
-Connect to your server, it's easy
+Connect to your server and let you be guided by our awesome UI
