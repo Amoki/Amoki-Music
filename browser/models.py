@@ -54,7 +54,7 @@ class Player():
         Player.event.start()
 
     @classmethod
-    def play_next(self):
+    def play_next(self, forced=False):
         music = None
         if Player.actual:
             if forced:
@@ -65,7 +65,12 @@ class Player():
         if music:
             Player.play(music)
         elif Player.shuffle:
-            shuffled = Music.objects.filter().order_by('?').first()
+            # Select random music, excluding 5% last played musics
+            count = Music.objects.all().count()
+            limit = count / 20
+            print limit
+            limit_date = Music.objects.all().order_by('-date')[limit].date
+            shuffled = Music.objects.filter(date__lte=limit_date).order_by('?').first()
             shuffled.date = datetime.now()
             shuffled.save()
 
@@ -79,7 +84,7 @@ class Player():
 
         if not Player.actual:
             Player.actual = music
-            Player.play_next()
+            Player.play_next(forced=True)
 
     @classmethod
     def get_actual_remaining_time(self):
