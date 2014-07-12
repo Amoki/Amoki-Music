@@ -312,19 +312,19 @@ div.marquee:before, div.marquee:after {
 }
 
 .historique-hide {
-width: 390px;
-height: 390px;
-position: absolute;
-margin: auto;
-z-index: 2000;
-border: 4px double #007fd5;
-border-radius: 10000px;
-padding: 80px;
-text-align: center;
-visibility: hidden;
-display: block;
+	width: 390px;
+	height: 390px;
+	position: absolute;
+	margin: auto;
+	z-index: 2000;
+	border: 4px double #007fd5;
+	border-radius: 10000px;
+	padding: 80px;
+	text-align: center;
+	visibility: hidden;
+	display: block;
 
-left: 40%;
+	left: 40%;
 }
 
 .historique-slide-out {
@@ -342,17 +342,17 @@ left: 40%;
 }
 
 .historique-visible {
-width: 390px;
-height: 390px;
-position: absolute;
-margin: auto;
-z-index: 2000;
-border: 4px double #007fd5;
-border-radius: 10000px;
-padding: 80px;
-text-align: center;
-visibility: visible;
-display: block;
+	width: 390px;
+	height: 390px;
+	position: absolute;
+	margin: auto;
+	z-index: 2000;
+	border: 4px double #007fd5;
+	border-radius: 10000px;
+	padding: 80px;
+	text-align: center;
+	visibility: visible;
+	display: block;
 }
 .historique-slide-in {
 	animation-name: histo-slide-in;
@@ -372,6 +372,7 @@ display: block;
     overflow: auto !important;
     height: 100%;
     padding-right: 100px;
+    margin-left: 10px;
 }
 
 .bleu-scrollbar::-webkit-scrollbar-track

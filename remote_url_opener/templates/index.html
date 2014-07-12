@@ -13,7 +13,7 @@
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
-					<div id="thumbnail" style="background: transparent url('{{actual_thumbnail}}') no-repeat;"></div>
+					<div id="thumbnail" style="background: transparent url('{{playing.thumbnail}}') no-repeat;"></div>
 					<div class="marquee">
 						<span class="now-playing">{{ playing }}</span>
 					</div>
@@ -117,7 +117,7 @@
 				clearInterval(intervalInit)
 			}
 		}
-		var intervalInit = setInterval(beautifullInit, 50)
+		var intervalInit = setInterval(beautifullInit, 20)
 		{% endif %}
 
 
