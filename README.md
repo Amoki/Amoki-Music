@@ -19,8 +19,10 @@ Install
 
 Configure
 ---------
-## Firefox
+* Firefox
+```
 In about:config set "browser.link.open_newwindow.override.external" to 1
+```
 It will open new url in the current tab
 
 
