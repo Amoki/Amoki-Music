@@ -18,4 +18,4 @@ def set_id_name_and_duration(sender, instance, **kwargs):
 
         instance.duration = get_time_in_seconds(time)
         instance.name = res["items"][0]["snippet"]["title"]
-        instance.thumbnail = res["items"][0]["snippet"]["thumbnails"]["default"]
+        instance.thumbnail = res["items"][0]["snippet"]["thumbnails"]["default"]["url"]

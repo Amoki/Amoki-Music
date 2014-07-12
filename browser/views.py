@@ -34,7 +34,7 @@ def home(request):
     time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
     # Remaining time of the Music playing in hh:mm:ss
     actual_time_left = str(datetime.timedelta(seconds=Player.get_actual_remaining_time()))
-    # The actual state of the suffle. Can be True ou False
+    # The actual state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
 
     return render(request, 'index.html', locals())

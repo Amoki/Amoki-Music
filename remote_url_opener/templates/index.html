@@ -13,6 +13,7 @@
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
+					<div id="thumbnail" style="background: transparent url('{{playing.thumbnail}}') no-repeat;"></div>
 					<div class="marquee">
 						<span class="now-playing">{{ playing }}</span>
 					</div>
@@ -36,6 +37,8 @@
 							<span class="gris">{{music.name}}</span><br/>
 						{% endfor %}
 					</div>
+				{% elif shuffle %}
+					<span id="iDshuffle" class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /> Let the music be your guide</span>
 				{% else %}
 					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
 				{% endif %}
@@ -46,7 +49,9 @@
 			<div class="add-music">
 				<form action="." method="post">
 					{% csrf_token %}
-					<input class="shuffle" type="submit" name="shuffle" value="Shuffle" title="Shuffle" alt="Shuffle"/>
+					<input type="submit" name="shuffle" {%if shuffle%}class="shuffle shuffle_true" value="false"
+														{%else%}class="shuffle shuffle_false" value="true"
+														{%endif%} title="Shuffle" alt="Shuffle"/>
 				</form>
 				<form action="." method="post">
 						{% csrf_token %}
@@ -100,8 +105,25 @@
 			}
 		}
 
+		{% if shuffle %}
+		var docShuffle = document.getElementById("iDshuffle")
+		var init = -1
+		function beautifullInit(){
+			init++
+			if(init<100){
+				docShuffle.innerHTML = "Shuffle loading... "+init+"%"
+			} else {
+				docShuffle.innerHTML = "Shuffle activated... "+init+"% !<br /><br />Let the music be your guide"
+				clearInterval(intervalInit)
+			}
+		}
+		var intervalInit = setInterval(beautifullInit, 20)
+		{% endif %}
+
+
+
 		{% if playing %}
-		var doc = document.getElementById("compteur_time_left")
+		var docCompteur = document.getElementById("compteur_time_left")
 		var actual_time = "{{actual_time_left}}"
 		var split_actual_time = actual_time.split(":")
 		var heures = parseInt(split_actual_time[0])
@@ -124,21 +146,21 @@
 				secondes--
 			}
 			if(heures < 10)
-				doc.innerHTML = heures+':'
+				docCompteur.innerHTML = heures+':'
 			else
-				doc.innerHTML = heures+':'
+				docCompteur.innerHTML = heures+':'
 
 			if(minutes < 10)
-				doc.innerHTML += '0'+minutes+':'
+				docCompteur.innerHTML += '0'+minutes+':'
 			else
-				doc.innerHTML += minutes+':'
+				docCompteur.innerHTML += minutes+':'
 
 			if(secondes < 10)
-				doc.innerHTML += '0'+secondes
+				docCompteur.innerHTML += '0'+secondes
 			else
-				doc.innerHTML += secondes
+				docCompteur.innerHTML += secondes
 		}
-		setInterval("compteur()",1000)
+		var intervalCompteur = setInterval("compteur()",1000)
 		{% endif %}
 	</script>
 </html>
