@@ -55,6 +55,15 @@ body {
 	100%  {left: 28.5%}
 }
 
+
+#thumbnail {
+	width: 120px;
+	height: 90px;
+	position: absolute;
+	top: 5px;
+	z-index: 200;
+}
+
 .now-playing {
 	font-weight: bold;
 	font-size: 25px;
@@ -66,7 +75,9 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	float: left;
-	width: 450px;
+	width: 355px;
+	position: absolute;
+	left: 125px;
 }
 
 .marquee span {
@@ -91,10 +102,9 @@ div.marquee:before {
 	background: -webkit-gradient(linear,left top,right top,from(rgba(35,35,35,1)),color-stop(0.2,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
 	background: -moz-linear-gradient(left,rgba(35,35,35,1),rgba(35,35,35,1) 20px,rgba(35,35,35,0));
 	z-index: 1;
-	left: 3px
 }
 div.marquee:after {
-	left: 355px;
+	left: 255px;
 	background: -webkit-gradient(linear,right top,left top,from(rgba(35,35,35,1)),color-stop(0.2,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
 	background: -moz-linear-gradient(right,rgba(35,35,35,1),rgba(35,35,35,1) 20px,rgba(35,35,35,0));
 }
@@ -183,6 +193,11 @@ div.marquee:before, div.marquee:after {
 	cursor: pointer;
 	outline: none;
 }
+.add-to-queue:active {
+	background: transparent url('btn-play-active.png') no-repeat;
+	width: 94px;
+	height: 96px;
+}
 
 .malform {
 	border-color: red !important;
@@ -203,6 +218,11 @@ div.marquee:before, div.marquee:after {
 	cursor: pointer;
 	outline: none;
 }
+.next-music:active{
+	background: transparent url('btn-next-active.png') no-repeat;
+	height: 96px;
+	width: 94px;
+}
 
 .shuffle {
 	text-indent: -9999px;
@@ -210,10 +230,16 @@ div.marquee:before, div.marquee:after {
 	line-height: 0;
 	width: 94px;
 	border: none;
-	background: transparent url('btn-shuffle.png') no-repeat;
 	height: 96px;
 	cursor: pointer;
 	outline: none;
+}
+
+.shuffle_true {
+	background: transparent url('btn-shuffle-true.png') no-repeat;
+}
+.shuffle_false {
+	background: transparent url('btn-shuffle-false.png') no-repeat;
 }
 
 .vinil{

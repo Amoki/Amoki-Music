@@ -25,7 +25,8 @@ def home(request):
     # The object Music playing
     playing = Player.actual
     # The thumbnail of the actual music
-    # actual_thumbnail = playing.thumbnail
+    if playing:
+        actual_thumbnail = playing.thumbnail
     # All objects Music
     musics = Music.objects.all()
     # Objects of musics in queue
