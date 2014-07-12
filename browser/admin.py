@@ -9,4 +9,7 @@ class MusicAdmin(admin.ModelAdmin):
     def url(self, music):
         return get_youtube_link(music.video_id)
 
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(Music, MusicAdmin)
