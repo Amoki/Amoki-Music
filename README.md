@@ -30,7 +30,7 @@ It will open new url in the current tab
 export YOUTUBE_KEY="your youtube API key"
 ```
 or
-```shell
+```bash
 SET YOUTUBE_KEY="your youtube API key"
 ```
 
