@@ -25,6 +25,14 @@ In about:config set "browser.link.open_newwindow.override.external" to 1
 ```
 It will open new url in the current tab
 
+#### env:
+```bash
+export YOUTUBE_KEY="your youtube API key"
+```
+or
+```shell
+SET YOUTUBE_KEY="your youtube API key"
+```
 
 How to use
 ----------

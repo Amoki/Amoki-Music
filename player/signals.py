@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-
+from amoki_music.settings import YOUTUBE_KEY
 from player.models import Music
 from player.helpers import get_time_in_seconds
 
@@ -11,7 +11,7 @@ import json
 
 @receiver(pre_save, sender=Music)
 def set_id_name_and_duration(sender, instance, **kwargs):
-        query = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + instance.video_id + "&key=AIzaSyCt5t3qv1MTXW5Vaq0KB9__0m7xP5bQNo4"
+        query = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + instance.video_id + "&key=" + YOUTUBE_KEY
         body = urllib2.urlopen(query).read()
         res = json.loads(body)
         time = res["items"][0]["contentDetails"]["duration"]
