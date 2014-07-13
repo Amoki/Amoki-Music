@@ -5,11 +5,13 @@
 
 html, body {
 	overflow: hidden !important;
+	margin: 0;
 }
 
 body {
 	background-image: url("background-2.png");
 	background-position: left top;
+	background-repeat: no-repeat;
 	color: #007fd5
 }
 

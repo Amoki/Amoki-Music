@@ -8,6 +8,47 @@
 		<meta http-equiv="content-language" content="fr" />
 		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+		<script type="text/javascript">
+			{% if playing %}
+			var docCompteur = document.getElementById("compteur_time_left")
+			var actual_time = "{{actual_time_left}}"
+			var split_actual_time = actual_time.split(":")
+			var heures = parseInt(split_actual_time[0])
+			var minutes = parseInt(split_actual_time[1])
+			var secondes = parseInt(split_actual_time[2])
+			function compteur() {
+				if(secondes == 0) {
+					secondes = 59
+					if(minutes == 0) {
+						minutes = 59
+						if(heures == 0){
+							window.location.reload()
+							clearInterval(intervalCompteur)
+							return true
+						}
+						else
+							heures--
+					}
+					else
+						minutes--
+				}
+				else {
+					secondes--
+				}
+				docCompteur.innerHTML = heures+':'
+				if(minutes < 10)
+					docCompteur.innerHTML += '0'+minutes+':'
+				else
+					docCompteur.innerHTML += minutes+':'
+
+				if(secondes < 10)
+					docCompteur.innerHTML += '0'+secondes
+				else
+					docCompteur.innerHTML += secondes
+			}
+			var intervalCompteur = setInterval("compteur()",1000)
+			{% endif %}
+		</script>
 	</head>
 	<body>
 		<div id="player-center" class="">
@@ -105,48 +146,5 @@
 				divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
 			}
 		}
-
-		{% if playing %}
-		var docCompteur = document.getElementById("compteur_time_left")
-		var actual_time = "{{actual_time_left}}"
-		var split_actual_time = actual_time.split(":")
-		var heures = parseInt(split_actual_time[0])
-		var minutes = parseInt(split_actual_time[1])
-		var secondes = parseInt(split_actual_time[2])
-		function compteur() {
-			if(secondes == 0) {
-				secondes = 59
-				if(minutes == 0) {
-					minutes = 59
-					if(heures == 0){
-						window.location.reload()
-						clearInterval(intervalCompteur)
-					}
-					else
-						heures--
-				}
-				else
-					minutes--
-			}
-			else {
-				secondes--
-			}
-			if(heures < 10)
-				docCompteur.innerHTML = heures+':'
-			else
-				docCompteur.innerHTML = heures+':'
-
-			if(minutes < 10)
-				docCompteur.innerHTML += '0'+minutes+':'
-			else
-				docCompteur.innerHTML += minutes+':'
-
-			if(secondes < 10)
-				docCompteur.innerHTML += '0'+secondes
-			else
-				docCompteur.innerHTML += secondes
-		}
-		var intervalCompteur = setInterval("compteur()",1000)
-		{% endif %}
 	</script>
 </html>
