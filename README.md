@@ -46,7 +46,3 @@ Connect to your server and let you be guided by our awesome UI
 Remotes
 -------
 You can download [Chrome](https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm) and [Firefox](https://addons.mozilla.org/fr/firefox/addon/amoki-music/) extensions to add musics to the server directly from Youtube !
-
-[Chrome :](https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm)
-
-[Firefox :](https://addons.mozilla.org/fr/firefox/addon/amoki-music/)
