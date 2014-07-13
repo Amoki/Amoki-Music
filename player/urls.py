@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('browser.views',
+urlpatterns = patterns('player.views',
     url(r'^$', 'home'),
 )

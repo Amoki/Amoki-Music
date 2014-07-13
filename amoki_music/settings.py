@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'browser',
+    'player',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'remote_url_opener.urls'
+ROOT_URLCONF = 'amoki_music.urls'
 
-WSGI_APPLICATION = 'remote_url_opener.wsgi.application'
+WSGI_APPLICATION = 'amoki_music.wsgi.application'
 
 
 # Database
