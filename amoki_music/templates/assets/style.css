@@ -155,6 +155,27 @@ div.marquee:before, div.marquee:after {
 	padding-left:22px;
 }
 
+/*	===================================================
+							Timeline
+	===================================================
+*/
+
+#timeline_background{
+	background: url("timeline_background.png") no-repeat left top;
+	width: 572px;
+	height: 24px;
+}
+
+.timeline {
+	background: url("timeline.png") no-repeat left top;
+}
+
+
+
+/*	===================================================
+				South panel input and button
+	===================================================
+*/
 .add-music {
 	width: 565px;
 	padding-top: 30px;

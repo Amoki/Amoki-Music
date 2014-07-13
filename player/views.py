@@ -30,10 +30,13 @@ def home(request):
     nexts_music = Player.get_musics_remaining()
     # The number of music in queue
     count_left = Player.get_count_remaining()
+    # Total time of current music in hh:mm:ss
+    if playing:
+        current_total_time = playing.duration
     # Remaining time of the queue in hh:mm:ss
     time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
     # Remaining time of the Music playing in hh:mm:ss
-    current_time_left = str(datetime.timedelta(seconds=Player.get_current_remaining_time()))
+    current_time_left = Player.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
 
