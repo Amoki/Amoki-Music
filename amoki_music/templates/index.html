@@ -64,7 +64,7 @@
 						{% endfor %}
 					</div>
 				{% elif shuffle %}
-					<span id="iDshuffle" class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
+					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
 				{% else %}
 					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
 				{% endif %}
@@ -99,9 +99,9 @@
 			</div>
 		</div>
 
-		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="switchbibli(this)"></div>
+		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="switchbibli()"></div>
 
-		<div id="historique" class="historique-hide no-scrollbar" onclick="switchbibli(this)">
+		<div id="historique" class="historique-hide no-scrollbar" onclick="switchbibli()">
 			<div id="scrolling">
 			{% for music in musics %}
 				<li>{{ music.name }} <i>({{ music.count }})</i></li>
@@ -119,7 +119,7 @@
 		function delai(e){
 			setTimeout(function(){e.submit()},1000)
 		}
-		function switchbibli(e){
+		function switchbibli(){
 			var divVinil = document.getElementById("vinil")
 			var divPlayer = document.getElementById("player-center")
 			var divHistorique = document.getElementById("historique")
@@ -171,17 +171,13 @@
 			}
 			doc.innerHTML = heures+":"
 			if(minutes < 10) {
-				doc.innerHTML += "0"+minutes+":"
+				doc.innetHTML += "0"
 			}
-			else {
-				doc.innerHTML += minutes+":"
-			}
+			doc.innerHTML += minutes+":"
 			if(secondes < 10){
-				doc.innerHTML += "0"+secondes
+				doc.innerHTML += "0"
 			}
-			else {
-				doc.innerHTML += secondes
-			}
+			doc.innerHTML += secondes
 		}
 		var intervalCompteur = setInterval("compteur()",1000)
 		{% endif %}
