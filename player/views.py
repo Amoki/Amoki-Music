@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from player.models import Music, Player
 from player.helpers import get_youtube_id
-import datetime
 
 
 @csrf_exempt
@@ -32,12 +31,16 @@ def home(request):
     count_left = Player.get_count_remaining()
     # Total time of current music in hh:mm:ss
     if playing:
-        current_total_time = playing.duration
+        current_total_time = int(playing.duration)
     # Remaining time of the queue in hh:mm:ss
-    time_left = str(datetime.timedelta(seconds=Player.get_remaining_time()))
+    time_left = Player.get_remaining_time()
     # Remaining time of the Music playing in hh:mm:ss
     current_time_left = Player.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
+
+    # Percent of current music time past
+    if playing:
+        current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
 
     return render(request, 'index.html', locals())
