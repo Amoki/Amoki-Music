@@ -92,7 +92,8 @@ class Player():
     def get_current_remaining_time(self):
         if not Player.current:
             return 0
-        return Player.current.duration - int(((datetime.now() - Player.current.last_play)).total_seconds())
+        time = Player.current.duration - int(((datetime.now() - Player.current.last_play)).total_seconds())
+        return int(time)
 
     @classmethod
     def get_remaining_time(self):
@@ -103,8 +104,7 @@ class Player():
         for music in nexts:
             time_left += music.duration
         time_left += Player.get_current_remaining_time()
-
-        return time_left
+        return int(time_left)
 
     @classmethod
     def get_musics_remaining(self):
