@@ -40,21 +40,27 @@ class Player():
     event = None
     shuffle = False
 
+    STOP_URL="https://www.google.fr"
+
     @classmethod
-    def play(self, music):
+    def play(self, music=None):
         # clear the queue
         if Player.event:
             Player.event.cancel()
 
-        Player.current = music
-        music.count += 1
-        music.last_play = datetime.now()
-        music.save()
+        if music:
+            Player.current = music
+            music.count += 1
+            music.last_play = datetime.now()
+            music.save()
 
-        webbrowser.open(helpers.get_youtube_link(music.video_id))
+            webbrowser.open(helpers.get_youtube_link(music.video_id))
 
-        Player.event = Timer(music.duration, Player.play_next, ())
-        Player.event.start()
+            Player.event = Timer(music.duration, Player.play_next, ())
+            Player.event.start()
+        else:
+            webbrowser.open(Player.STOP_URL)
+
 
     @classmethod
     def play_next(self, forced=False):
@@ -79,6 +85,7 @@ class Player():
             Player.play(shuffled)
         else:
             Player.current = None
+            Player.play(None)
 
     @classmethod
     def push(self, video_id):
