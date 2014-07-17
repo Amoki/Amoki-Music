@@ -8,27 +8,53 @@
 		<meta http-equiv="content-language" content="fr" />
 		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+		<style type="text/css">
+			#timeline {
+				animation-name: timeline-progress;
+				animation-duration: {{current_time_left}}s;
+				animation-iteration-count: 1;
+				animation-fill-mode: forwards;
+				animation-timing-function: linear;
+			}
+			@keyframes timeline-progress {
+				0%   {width: {{current_time_past_percent}}%;}
+			    100% {width: 100%;}
+			}
+			
+			#popup_timeline {
+				animation-name: popup-progress;
+				animation-duration: {{current_time_left}}s;
+				animation-iteration-count: 1;
+				animation-fill-mode: forwards;
+				animation-timing-function: linear;
+			}
+			@keyframes popup-progress {
+				0%   {left: {{current_time_past_percent}}%;}
+			    100% {left: 100%;}
+			}
+			
+			.hidden {
+				{% if not playing %}visibility : hidden;{% endif %}
+			}
+		</style>
 	</head>
 	<body>
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
-					<div id="thumbnail" style="background: transparent url('{{playing.thumbnail}}') no-repeat;"></div>
+					<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px"></img>
 					<div class="marquee">
 						<span class="now-playing">{{ playing }}</span>
 					</div>
-					<span id="compteur_time_left" class="time-left">{{current_time_left}}</span>
-
 				{% else %}
 				<div class="marquee">
 					<span class="now-playing">No music :'( Add yours now !</span>
 					</div>
 				{% endif %}
 			</div>
-
+			<img src="{% static 'btn-menu.png' %}" id="btn-menu" class="btn-menu" onclick="switchMenu(this)"></img>
 			<div class="separator"></div>
 
-			<!--<h3>Playlist : {{ count_left }} - {{ time_left }}</h3> -->
 			<div class="center">
 				{% if playing and nexts_music|length > 0 %}
 					<h3>Playlist : </h3>
@@ -38,13 +64,19 @@
 						{% endfor %}
 					</div>
 				{% elif shuffle %}
-					<span id="iDshuffle" class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
+					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
 				{% else %}
 					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
 				{% endif %}
 			</div>
 
 			<div class="separator"></div>
+			
+			<div id="timeline_background" class="hidden">
+				<div id="timeline"></div>
+				<div id="popup_timeline"></div>
+				
+			</div>
 
 			<div class="add-music">
 				<form action="." method="post">
@@ -67,9 +99,9 @@
 			</div>
 		</div>
 
-		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="test(this)"></div>
+		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="switchbibli()"></div>
 
-		<div id="historique" class="historique-hide no-scrollbar" onclick="test(this)">
+		<div id="historique" class="historique-hide no-scrollbar" onclick="switchbibli()">
 			<div id="scrolling">
 			{% for music in musics %}
 				<li>{{ music.name }} <i>({{ music.count }})</i></li>
@@ -85,10 +117,9 @@
 	</body>
 	<script type="text/javascript">
 		function delai(e){
-			console.log(e)
 			setTimeout(function(){e.submit()},1000)
 		}
-		function test(e){
+		function switchbibli(){
 			var divVinil = document.getElementById("vinil")
 			var divPlayer = document.getElementById("player-center")
 			var divHistorique = document.getElementById("historique")
@@ -104,14 +135,21 @@
 				divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
 			}
 		}
+		function switchMenu(e){
+			if (e.className.indexOf("btn-menu") > -1){
+				e.className = "menu-open"
+			}
+			else {
+				e.className = "btn-menu"
+			}
+		}
 
 		{% if playing %}
-		var docCompteur = document.getElementById("compteur_time_left")
-		var current_time = "{{current_time_left}}"
-		var split_current_time = current_time.split(":")
-		var heures = parseInt(split_current_time[0])
-		var minutes = parseInt(split_current_time[1])
-		var secondes = parseInt(split_current_time[2])
+		var doc = document.getElementById("popup_timeline")
+		var actual_time = parseInt("{{current_time_left}}")	
+		var heures = Math.floor(actual_time / 3600);
+		var minutes = Math.floor((actual_time - (heures * 3600)) / 60);
+		var secondes = actual_time - (heures * 3600) - (minutes * 60) - 1;
 		function compteur() {
 			if(secondes == 0) {
 				secondes = 59
@@ -120,6 +158,7 @@
 					if(heures == 0){
 						window.location.reload()
 						clearInterval(intervalCompteur)
+						return true
 					}
 					else
 						heures--
@@ -130,20 +169,15 @@
 			else {
 				secondes--
 			}
-			if(heures < 10)
-				docCompteur.innerHTML = heures+':'
-			else
-				docCompteur.innerHTML = heures+':'
-
-			if(minutes < 10)
-				docCompteur.innerHTML += '0'+minutes+':'
-			else
-				docCompteur.innerHTML += minutes+':'
-
-			if(secondes < 10)
-				docCompteur.innerHTML += '0'+secondes
-			else
-				docCompteur.innerHTML += secondes
+			doc.innerHTML = heures+":"
+			if(minutes < 10) {
+				doc.innetHTML += "0"
+			}
+			doc.innerHTML += minutes+":"
+			if(secondes < 10){
+				doc.innerHTML += "0"
+			}
+			doc.innerHTML += secondes
 		}
 		var intervalCompteur = setInterval("compteur()",1000)
 		{% endif %}

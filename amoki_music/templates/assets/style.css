@@ -5,11 +5,13 @@
 
 html, body {
 	overflow: hidden !important;
+	margin: 0;
 }
 
 body {
 	background-image: url("background-2.png");
 	background-position: left top;
+	background-repeat: no-repeat;
 	color: #007fd5
 }
 
@@ -57,10 +59,9 @@ body {
 
 
 #thumbnail {
-	width: 120px;
-	height: 90px;
 	position: absolute;
-	top: 5px;
+	top: 2px;
+	left: 5px;
 	z-index: 200;
 }
 
@@ -118,14 +119,6 @@ div.marquee:before, div.marquee:after {
 
 /*  ZONE TEST TEST TEST */
 
-.time-left {
-	font-weight: bold;
-	font-size: 25px;
-	font-family: Arial;
-	float: right;
-	margin-right: 25px;
-}
-
 .title {
 	overflow: hidden;
 	background-color: rgba(35,35,35,1);
@@ -133,6 +126,21 @@ div.marquee:before, div.marquee:after {
 	margin-right: 2px;
 	height: 31px;
 	margin-left: -20px;
+}
+
+.btn-menu {
+	position: absolute;
+	left: 485px;
+	top: 16px;
+
+	transition: left 1s, top 1s, ease-in-out;
+}
+.menu-open {
+	position: absolute;
+	left: 516px;
+	top: 0px;
+
+	transition: left 1s, top 1s, ease-in-out;
 }
 
 .center {
@@ -154,9 +162,85 @@ div.marquee:before, div.marquee:after {
 	padding-left:22px;
 }
 
+/*	===================================================
+							Timeline
+	===================================================
+*/
+
+#timeline_background{
+	background: url("timeline_background.png") no-repeat left top;
+	width: 572px;
+	height: 24px;
+	margin-left: -14px;
+			
+}
+#timeline {
+	background-image: url("timeline.png");
+	width: 0%;
+	height: 100%;
+}
+				
+#timeline_background:hover > #popup_timeline{
+	visibility: visible;
+}
+
+#popup_timeline {
+
+}
+
+#popup_timeline {
+	top: -70px;
+	left: 1%;
+	font-weight: bold;
+	position: relative;
+	width:80px;
+	color: #FFFFFF;
+	background: #000000;
+	border: 2px solid #0095F9;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	visibility: hidden;
+	border-radius: 10px;
+	box-shadow: 0px 0px 5px #000000;
+}
+#popup_timeline:before {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -12px;
+	width: 0;
+	height: 0;
+	border-top: 12px solid #0095F9;
+	border-right: 12px solid transparent;
+	border-left: 12px solid transparent;
+}
+#popup_timeline:after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -8px;
+	width: 0;
+	height: 0;
+	border-top: 8px solid #000000;
+	border-right: 8px solid transparent;
+	border-left: 8px solid transparent;
+}
+#timeline_background:hover #popup_timeline {
+	visibility: visible;
+	margin-left: -40px;
+	z-index: 999;
+}
+
+/*	===================================================
+				South panel input and button
+	===================================================
+*/
 .add-music {
 	width: 565px;
-	padding-top: 30px;
+	padding-top: 20px;
 	height: 145px;
 }
 
@@ -406,4 +490,3 @@ div.marquee:before, div.marquee:after {
 {
 	width: 0px;
 }
-
