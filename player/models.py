@@ -63,7 +63,7 @@ class Player():
             if forced:
                 music = Player.current
             else:
-                music = Music.objects.filter(date__gt=Player.current.date).first()
+                music = Music.objects.filter(date__gt=Player.current.date).order_by('date').first()
 
         if music:
             Player.play(music)
@@ -110,7 +110,7 @@ class Player():
     def get_musics_remaining(self):
         if not Player.current:
             return
-        nexts = Music.objects.filter(date__gt=Player.current.date)
+        nexts = Music.objects.filter(date__gt=Player.current.date).order_by('date')
 
         return nexts
 

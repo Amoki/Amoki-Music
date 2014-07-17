@@ -11,6 +11,7 @@ import json
 
 @receiver(pre_save, sender=Music)
 def set_id_name_and_duration(sender, instance, **kwargs):
+    if not instance.name or not instance.duration or not instance.thumbnail:
         query = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + instance.video_id + "&key=" + YOUTUBE_KEY
         body = urllib2.urlopen(query).read()
         res = json.loads(body)
