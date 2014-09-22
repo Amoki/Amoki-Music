@@ -40,7 +40,7 @@ class Player():
     event = None
     shuffle = False
 
-    STOP_URL="https://www.google.fr"
+    STOP_URL = "https://www.google.fr"
 
     @classmethod
     def play(self, music=None):
