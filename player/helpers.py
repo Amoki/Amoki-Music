@@ -3,6 +3,7 @@ import urlparse
 import subprocess
 from amoki_music.settings import PROJECT_ROOT
 import platform
+import os
 
 
 def get_youtube_id(url):
@@ -25,9 +26,11 @@ def get_time_in_seconds(time):
 
 def increase_volume():
     if platform.system() == "Windows":
-        subprocess.call([PROJECT_ROOT + '\\utils\\nircmd.exe', 'changesysvolume 4000'])
+        print(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume 4000')
+        os.system(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume 4000')
 
 
 def decrease_volume():
     if platform.system() == "Windows":
-        subprocess.call([PROJECT_ROOT + '\\utils\\nircmd.exe', 'changesysvolume -4000'])
+        print(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume -4000')
+        os.system(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume -4000')
