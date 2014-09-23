@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from player.models import Music, Player
-from player.helpers import get_youtube_id
+from player.helpers import get_youtube_id, increase_volume, decrease_volume
 
 
 @csrf_exempt
@@ -15,6 +15,10 @@ def home(request):
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
         if request.POST.get('play_next'):
             Player.play_next()
+        if request.POST.get('volume_up'):
+            increase_volume()
+        if request.POST.get('volume_down'):
+            decrease_volume()
         if request.POST.get('shuffle'):
             Player.shuffle = (request.POST.get('shuffle') == 'true')
             if Player.shuffle and not Player.current:

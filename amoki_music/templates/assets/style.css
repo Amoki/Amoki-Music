@@ -91,13 +91,13 @@ body {
 .marquee span:hover {
     animation-play-state: paused
 }
-/* Make it move */ 
+/* Make it move */
 @keyframes marquee {
     0%   { transform: translate(-2%, 0); }
     100% { transform: translate(-100%, 0); }
 }
 
-/*  ZONE TEST TEST TEST */ 
+/*  ZONE TEST TEST TEST */
 
 div.marquee:before {
 	background: -webkit-gradient(linear,left top,right top,from(rgba(35,35,35,1)),color-stop(0.2,rgba(35,35,35,1)),to(rgba(118,191,54,0)));
@@ -172,14 +172,14 @@ div.marquee:before, div.marquee:after {
 	width: 572px;
 	height: 24px;
 	margin-left: -14px;
-			
+
 }
 #timeline {
 	background-image: url("timeline.png");
 	width: 0%;
 	height: 100%;
 }
-				
+
 #timeline_background:hover > #popup_timeline{
 	visibility: visible;
 }
@@ -281,6 +281,31 @@ div.marquee:before, div.marquee:after {
 	background: transparent url('btn-play-active.png') no-repeat;
 	width: 94px;
 	height: 96px;
+}
+
+.volume_up {
+	position: absolute;
+    left: 0px;
+    top: 0px;
+
+	width: 94px;
+	border: none;
+	background: transparent url('btn-volume-up.png') no-repeat;
+	height: 94px;
+	cursor: pointer;
+	outline: none;
+}
+.volume_down {
+	position: absolute;
+    left: 0px;
+    top: 96px;
+
+	width: 94px;
+	border: none;
+	background: transparent url('btn-volume-down.png') no-repeat;
+	height: 94px;
+	cursor: pointer;
+	outline: none;
 }
 
 .malform {
@@ -386,7 +411,7 @@ div.marquee:before, div.marquee:after {
 	left: 40%;
 	z-index: 0;
 }
-	
+
 
 #historique {
 	font-size: 15px;

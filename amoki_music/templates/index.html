@@ -20,7 +20,7 @@
 				0%   {width: {{current_time_past_percent}}%;}
 			    100% {width: 100%;}
 			}
-			
+
 			#popup_timeline {
 				animation-name: popup-progress;
 				animation-duration: {{current_time_left}}s;
@@ -32,13 +32,23 @@
 				0%   {left: {{current_time_past_percent}}%;}
 			    100% {left: 100%;}
 			}
-			
+
 			.hidden {
 				{% if not playing %}visibility : hidden;{% endif %}
 			}
 		</style>
 	</head>
 	<body>
+		<div>
+			<form action="." method="post">
+				{% csrf_token %}
+				<input class="volume_up" type="submit" name="volume_up" value="volume_up" title="volume_up" alt="volume_up" />
+			</form>
+			<form action="." method="post">
+				{% csrf_token %}
+				<input class="volume_down" type="submit" name="volume_down" value="volume_down" title="volume_down" alt="volume_down" />
+			</form>
+		</div>
 		<div id="player-center" class="">
 			<div class="title">
 				{% if playing %}
@@ -71,24 +81,24 @@
 			</div>
 
 			<div class="separator"></div>
-			
+
 			<div id="timeline_background" class="hidden">
 				<div id="timeline"></div>
 				<div id="popup_timeline"></div>
-				
+
 			</div>
 
 			<div class="add-music">
 				<form action="." method="post">
 					{% csrf_token %}
-					<input type="submit" name="shuffle" {%if shuffle%}class="shuffle shuffle_true" value="false"
-														{%else%}class="shuffle shuffle_false" value="true"
-														{%endif%} title="Shuffle" alt="Shuffle"/>
+					<input type="submit" name="shuffle" {%if shuffle %}class="shuffle shuffle_true" value="false"
+														{% else %}class="shuffle shuffle_false" value="true"
+														{% endif %} title="Shuffle" alt="Shuffle"/>
 				</form>
 				<form action="." method="post">
 						{% csrf_token %}
 						<div class="input-design">
-							<input {% if malform%}class="malform"{%endif%} type="text" value="" name="url" id="url">
+							<input {% if malform %}class="malform"{% endif %} type="text" value="" name="url" id="url">
 						</div>
 						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
 				</form>
@@ -117,69 +127,69 @@
 	</body>
 	<script type="text/javascript">
 		function delai(e){
-			setTimeout(function(){e.submit()},1000)
+			setTimeout(function(){e.submit()},1000);
 		}
 		function switchbibli(){
-			var divVinil = document.getElementById("vinil")
-			var divPlayer = document.getElementById("player-center")
-			var divHistorique = document.getElementById("historique")
+			var divVinil = document.getElementById("vinil");
+			var divPlayer = document.getElementById("player-center");
+			var divHistorique = document.getElementById("historique");
 			if (divVinil.className.indexOf("vinil-center") > -1){
-				divVinil.className = "vinil vinil-base"
-				divPlayer.className = "player-slide-center"
-				divHistorique.className = "historique-hide historique-slide-out no-scrollbar"
-				{%if playing%}setTimeout(function(){divVinil.className += " spin"}, 1001);{%endif%}
+				divVinil.className = "vinil vinil-base";
+				divPlayer.className = "player-slide-center";
+				divHistorique.className = "historique-hide historique-slide-out no-scrollbar";
+				{%if playing %}setTimeout(function(){divVinil.className += " spin"}, 1001);{% endif %}
 			}
 			else {
-				divVinil.className = "vinil-center"
-				divPlayer.className = "player-slide-hide"
-				divHistorique.className = "historique-visible historique-slide-in no-scrollbar"
+				divVinil.className = "vinil-center";
+				divPlayer.className = "player-slide-hide";
+				divHistorique.className = "historique-visible historique-slide-in no-scrollbar";
 			}
 		}
 		function switchMenu(e){
 			if (e.className.indexOf("btn-menu") > -1){
-				e.className = "menu-open"
+				e.className = "menu-open";
 			}
 			else {
-				e.className = "btn-menu"
+				e.className = "btn-menu";
 			}
 		}
 
 		{% if playing %}
-		var doc = document.getElementById("popup_timeline")
-		var actual_time = parseInt("{{current_time_left}}")	
+		var doc = document.getElementById("popup_timeline");
+		var actual_time = parseInt("{{current_time_left}}")	;
 		var heures = Math.floor(actual_time / 3600);
 		var minutes = Math.floor((actual_time - (heures * 3600)) / 60);
 		var secondes = actual_time - (heures * 3600) - (minutes * 60) - 1;
 		function compteur() {
-			if(secondes == 0) {
-				secondes = 59
-				if(minutes == 0) {
-					minutes = 59
-					if(heures == 0){
-						window.location.reload()
-						clearInterval(intervalCompteur)
-						return true
+			if(secondes === 0) {
+				secondes = 59;
+				if(minutes === 0) {
+					minutes = 59;
+					if(heures === 0){
+						window.location.reload();
+						clearInterval(intervalCompteur);
+						return true;
 					}
 					else
-						heures--
+						heures--;
 				}
 				else
-					minutes--
+					minutes--;
 			}
 			else {
-				secondes--
+				secondes--;
 			}
-			doc.innerHTML = heures+":"
+			doc.innerHTML = heures+":";
 			if(minutes < 10) {
-				doc.innetHTML += "0"
+				doc.innetHTML += "0";
 			}
-			doc.innerHTML += minutes+":"
+			doc.innerHTML += minutes+":";
 			if(secondes < 10){
-				doc.innerHTML += "0"
+				doc.innerHTML += "0";
 			}
-			doc.innerHTML += secondes
+			doc.innerHTML += secondes;
 		}
-		var intervalCompteur = setInterval("compteur()",1000)
+		var intervalCompteur = setInterval("compteur()",1000);
 		{% endif %}
 	</script>
 </html>

@@ -1,5 +1,8 @@
 import isodate
 import urlparse
+import subprocess
+from amoki_music.settings import PROJECT_ROOT
+import platform
 
 
 def get_youtube_id(url):
@@ -18,3 +21,13 @@ def get_youtube_link(video_id):
 
 def get_time_in_seconds(time):
     return isodate.parse_duration(time).total_seconds()
+
+
+def increase_volume():
+    if platform.system() == "Windows":
+        subprocess.call([PROJECT_ROOT + '\\utils\\nircmd.exe', 'changesysvolume 4000'])
+
+
+def decrease_volume():
+    if platform.system() == "Windows":
+        subprocess.call([PROJECT_ROOT + '\\utils\\nircmd.exe', 'changesysvolume -4000'])
