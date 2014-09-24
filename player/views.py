@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from player.models import Music, Player
-from player.helpers import get_youtube_id, increase_volume, decrease_volume
+from player.helpers import get_youtube_id, increase_volume, decrease_volume, get_youtube_link
 
 
 @csrf_exempt
@@ -36,12 +36,15 @@ def home(request):
     # Total time of current music in hh:mm:ss
     if playing:
         current_total_time = int(playing.duration)
+        video_url = get_youtube_link(playing.video_id)
+
     # Remaining time of the queue in hh:mm:ss
     time_left = Player.get_remaining_time()
     # Remaining time of the Music playing in hh:mm:ss
     current_time_left = Player.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
+
 
     # Percent of current music time past
     if playing:
