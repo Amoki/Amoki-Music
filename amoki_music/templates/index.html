@@ -54,7 +54,7 @@
 				{% if playing %}
 					<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px"></img>
 					<div class="marquee">
-						<span class="now-playing">{{ playing }}</span>
+						<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
 					</div>
 				{% else %}
 				<div class="marquee">
