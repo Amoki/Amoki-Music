@@ -1,0 +1,114 @@
+
+
+body, html {
+margin: 0;
+color: #fff;
+text-align: center;
+}
+
+body {
+	background-image: url(../img/background-2.png);
+}
+
+[class*="col-"], header {
+		  border-radius: 12px;
+		}
+
+/********************** PLAYER STUFF ***********/
+.player {
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 12px #555;
+	background: rgba(34,34,34,0.7);
+}
+
+.title {
+	height: 50px;
+	margin-top: 10px;
+}
+
+.playlist {
+	margin-top: 20px;	
+}
+
+.playlist table {
+	color: black;
+}
+
+.panel-playlist {
+	overflow-y : auto;
+}
+
+.btn-play {
+	border-radius: 30px;
+	padding: 15px 18px;
+}
+
+.marquee {
+		margin-top: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.marquee span {
+
+    display: inline-block;
+    padding-left: 100%;
+    text-indent: 0;
+    animation: marquee 15s linear infinite;
+
+}
+.marquee span:hover {
+    animation-play-state: paused
+}
+/* Make it move */
+@keyframes marquee {
+    0%   { transform: translate(-2%, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+/********************** PLAYER STUFF ***********/
+
+/********************** LIBRARY STUFF ***********/
+
+.LIB {
+	margin-top: -18px;
+	background: rgba(34,34,34,0.7);
+	box-shadow: 1px 1px 12px #555;
+}
+.input-lib {
+	padding-top: 20px;
+}
+
+.list-group {
+	color: blue;
+}
+
+.list-lib {
+	overflow: auto;
+	margin-top: 20px;
+}
+
+
+/********************** LIBRARY STUFF ***********/
+
+.btn {
+	background-color: rgb(34,34,34);
+	color: blue;
+} 
+
+
+
+.foot {
+	height: 50px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background: rgba(34,34,34,0.7);
+	box-shadow: 1px 1px 12px #555;
+}
+
+
+#anime {
+	border: none;
+	box-shadow: 0px 0px 20px #0038ff;
+}

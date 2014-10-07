@@ -1,195 +1,151 @@
 {% load static %}
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
-	<head>
-		<title>Accueil</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="content-language" content="fr" />
-		<link href="{% static 'style.css' %}" title="Défaut" rel="stylesheet" type="text/css" media="screen" />
-		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
-		<style type="text/css">
-			#timeline {
-				animation-name: timeline-progress;
-				animation-duration: {{current_time_left}}s;
-				animation-iteration-count: 1;
-				animation-fill-mode: forwards;
-				animation-timing-function: linear;
-			}
-			@keyframes timeline-progress {
-				0%   {width: {{current_time_past_percent}}%;}
-			    100% {width: 100%;}
-			}
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Accueil</title>
+  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="content-language" content="fr" />
+	<link href="{% static assets/css/bootstrap.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/css/tuto.css' %}" rel="stylesheet">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			var hauteur = $(window).height() - 110;
+			$(".LIB").height(hauteur);
+			$(".player").height(hauteur - 50);
+			$(".list-lib").height(hauteur - 100);
+			$(".panel-playlist").height(hauteur - 300);		
+			$( window ).resize(function() {
+				if ($(window).height() > 400) {
+					var hauteur = $(window).height() - 110;
+					$(".LIB").height(hauteur);
+					$(".player").height(hauteur - 50);
+					$(".list-lib").height(hauteur - 100);
+					$(".panel-playlist").height(hauteur - 300);	
+				}
+			});
+		});
+	</script>
 
-			#popup_timeline {
-				animation-name: popup-progress;
-				animation-duration: {{current_time_left}}s;
-				animation-iteration-count: 1;
-				animation-fill-mode: forwards;
-				animation-timing-function: linear;
-			}
-			@keyframes popup-progress {
-				0%   {left: {{current_time_past_percent}}%;}
-			    100% {left: 100%;}
-			}
-
-			.hidden {
-				{% if not playing %}visibility : hidden;{% endif %}
-			}
-		</style>
+	<script>
+		  function timer(n) {
+		    $(".progress-bar").css("width", n + "%");
+		    if(n < 100) {
+		      setTimeout(function() {
+		        timer(n + 1);
+		      }, 100);
+		    }
+		  }
+		  $(function (){
+		    $("#anime").click(function() {
+		      timer(0);
+		    });
+		  });
+	</script>
 	</head>
 	<body>
-		<div>
-			<form action="." method="post">
-				{% csrf_token %}
-				<input class="volume_up" type="submit" name="volume_up" value="volume_up" title="volume_up" alt="volume_up" />
-			</form>
-			<form action="." method="post">
-				{% csrf_token %}
-				<input class="volume_down" type="submit" name="volume_down" value="volume_down" title="volume_down" alt="volume_down" />
-			</form>
+	<div class="container-fluid">
+		<div class="navbar navbar-inverse row">
+		  <ul class="nav navbar-nav">
+			<li class="active"> <a href="#">Accueil</a> </li>
+			<li> <a href="#">Aide</a> </li>
+			<li> <a href="#">Etc..</a> </li>
+		  </ul>
 		</div>
-		<div id="player-center" class="">
-			<div class="title">
-				{% if playing %}
-					<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px"></img>
-					<div class="marquee">
-						<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
-					</div>
-				{% else %}
-				<div class="marquee">
-					<span class="now-playing">No music :'( Add yours now !</span>
-					</div>
-				{% endif %}
-			</div>
-			<img src="{% static 'btn-menu.png' %}" id="btn-menu" class="btn-menu" onclick="switchMenu(this)"></img>
-			<div class="separator"></div>
-
-			<div class="center">
-				{% if playing and nexts_music|length > 0 %}
-					<h3>Playlist : </h3>
-					<div class="playlist bleu-scrollbar">
-						{% for music in nexts_music %}
-							<span class="gris">{{music.name}}</span><br/>
-						{% endfor %}
-					</div>
-				{% elif shuffle %}
-					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
-				{% else %}
-					<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
-				{% endif %}
-			</div>
-
-			<div class="separator"></div>
-
-			<div id="timeline_background" class="hidden">
-				<div id="timeline"></div>
-				<div id="popup_timeline"></div>
-
-			</div>
-
-			<div class="add-music">
-				<form action="." method="post">
-					{% csrf_token %}
-					<input type="submit" name="shuffle" {%if shuffle %}class="shuffle shuffle_true" value="false"
-														{% else %}class="shuffle shuffle_false" value="true"
-														{% endif %} title="Shuffle" alt="Shuffle"/>
-				</form>
-				<form action="." method="post">
-						{% csrf_token %}
-						<div class="input-design">
-							<input {% if malform %}class="malform"{% endif %} type="text" value="" name="url" id="url">
+		<div class="row ligne">
+			<div class="col-md-offset-1 col-md-6 player">
+				<div class="row">
+					<div class="col-md-12 title">
+					{% if playing %}
+						<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px"></img>
+						<div class="marquee">
+							<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
 						</div>
-						<input class="add-to-queue" type="submit" name="add_url" value="add_to_queue" title="Add to playlist" alt="Add to playlist" />
-				</form>
-				<form action="." method="post">
-					{% csrf_token %}
-					<input class="next-music" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%}/>
-				</form>
+					{% else %}
+						<div class="marquee">
+							<span class="now-playing">No music :'( Add yours now !</span>
+						</div>
+					{% endif %}
+					</div>
+				</div>
+				<div class="row playlist">
+					<div class="col-md-offset-1 col-md-10">
+					{% if playing and nexts_music|length > 0 %}
+						<div class="panel panel-default panel-playlist">
+							<table class="table table-striped table-condensed header-fixed">
+								<div class="panel-heading">
+									<h3 class="panel-title">Playlist</h3>
+								</div>
+								<tbody>
+									{% for music in nexts_music %}
+										<span class="gris"></span><br/>
+									  	<tr>
+											<td>{{music.name}}</td>
+											<td><span class="badge">00:00</span></td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% elif shuffle %}
+						<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center;position: relative;top: 120px;">Shuffle activated...<br /><br />Let the music be your guide</span>
+					{% else %}
+						<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center">No more musics in the playlist !</span>
+					{% endif %}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-offset-1 col-md-10">
+						<div class="progress progress-striped active">
+							<div class="progress-bar"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-offset-4 col-md-4">
+						<a href="#" class="btn btn-lg btn-primary btn-play" id="anime"><span class="glyphicon glyphicon-play"></span>  </a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-offset-1 col-md-4 LIB">
+				<div class="row input-lib">
+					<div class="input-group col-md-offset-1 col-md-10">
+						<input type="text" class="form-control" style="text-align:right" placeholder="Titre">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-ok-sign"></span> Valider</button>
+						</span>
+					</div>
+				</div>
+				<div class="row list-lib">
+					<div class="col-md-offset-1 col-md-10">
+						<ul class="list-group">
+							<li class="list-group-item"><span class="badge">00:00</span>Item 1 </li>
+							<li class="list-group-item"><span class="badge">00:00</span>Item 2 blblbl blb ler ger g long text again again super mega long BLBLBLBLLBLBLLBLBB LLLBLBL</li>
+							<li class="list-group-item"><span class="badge">00:00</span>Item 3</li>
+							<li class="list-group-item"><span class="badge">00:00</span>Item 4</li>
+							<li class="list-group-item"><span class="badge">00:00</span>Item 1</li>
+							<li class="list-group-item">Item 2</li>
+							<li class="list-group-item">Item 3</li>
+							<li class="list-group-item">Item 4</li>
+							<li class="list-group-item">Item 1</li>
+							<li class="list-group-item">Item 2</li>
+							<li class="list-group-item">Item 3</li>
+							<li class="list-group-item">Item 4</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
-
-		<div id="vinil" class="vinil vinil-firefox {%if playing%}spin{%endif%}" onclick="switchbibli()"></div>
-
-		<div id="historique" class="historique-hide no-scrollbar" onclick="switchbibli()">
-			<div id="scrolling">
-			{% for music in musics %}
-				<li>{{ music.name }} <i>({{ music.count }})</i></li>
-				<form action="." method="post">
-					{% csrf_token %}
-					<input type="hidden" value="{{ music.video_id }}" name="url">
-					<input type="button" name="add_url" value="Add to queue" onClick="delai(this.form)"/>
-				</form>
-			{% endfor %}
+	<footer class="row foot">
+			<div class="col-md-12">
+				FOOTER
 			</div>
-		</div>
+	</footer>
+	</div>
 
-	</body>
-	<script type="text/javascript">
-		function delai(e){
-			setTimeout(function(){e.submit()},1000);
-		}
-		function switchbibli(){
-			var divVinil = document.getElementById("vinil");
-			var divPlayer = document.getElementById("player-center");
-			var divHistorique = document.getElementById("historique");
-			if (divVinil.className.indexOf("vinil-center") > -1){
-				divVinil.className = "vinil vinil-base";
-				divPlayer.className = "player-slide-center";
-				divHistorique.className = "historique-hide historique-slide-out no-scrollbar";
-				{%if playing %}setTimeout(function(){divVinil.className += " spin"}, 1001);{% endif %}
-			}
-			else {
-				divVinil.className = "vinil-center";
-				divPlayer.className = "player-slide-hide";
-				divHistorique.className = "historique-visible historique-slide-in no-scrollbar";
-			}
-		}
-		function switchMenu(e){
-			if (e.className.indexOf("btn-menu") > -1){
-				e.className = "menu-open";
-			}
-			else {
-				e.className = "btn-menu";
-			}
-		}
 
-		{% if playing %}
-		var doc = document.getElementById("popup_timeline");
-		var actual_time = parseInt("{{current_time_left}}")	;
-		var heures = Math.floor(actual_time / 3600);
-		var minutes = Math.floor((actual_time - (heures * 3600)) / 60);
-		var secondes = actual_time - (heures * 3600) - (minutes * 60) - 1;
-		function compteur() {
-			if(secondes === 0) {
-				secondes = 59;
-				if(minutes === 0) {
-					minutes = 59;
-					if(heures === 0){
-						window.location.reload();
-						clearInterval(intervalCompteur);
-						return true;
-					}
-					else
-						heures--;
-				}
-				else
-					minutes--;
-			}
-			else {
-				secondes--;
-			}
-			doc.innerHTML = heures+":";
-			if(minutes < 10) {
-				doc.innetHTML += "0";
-			}
-			doc.innerHTML += minutes+":";
-			if(secondes < 10){
-				doc.innerHTML += "0";
-			}
-			doc.innerHTML += secondes;
-		}
-		var intervalCompteur = setInterval("compteur()",1000);
-		{% endif %}
-	</script>
+  </body>
 </html>
