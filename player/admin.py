@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import admin
 from player.models import Music, Player
 from player.helpers import get_youtube_link

@@ -14,6 +14,13 @@ body {
 		  border-radius: 12px;
 		}
 
+.navbar {
+	height: 52px;
+}
+.navbar-form {
+	margin-top: 4px !important;
+}
+
 /********************** PLAYER STUFF ***********/
 .player {
 	margin-bottom: 20px;
@@ -21,13 +28,34 @@ body {
 	background: rgba(34,34,34,0.7);
 }
 
-.title {
-	height: 50px;
+.title_playing {
 	margin-top: 10px;
 }
+.title{
+	height: 90px;
+}
 
-.playlist {
-	margin-top: 20px;	
+.marquee {
+	margin-top: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.marquee span, .marquee a {
+
+    display: inline-block;
+    padding-left: 100%;
+    text-indent: 0;
+    animation: marquee 15s linear infinite;
+    font-size: 2em;
+}
+.marquee span:hover, .marquee a:hover {
+    animation-play-state: paused
+}
+/* Make it move */
+@keyframes marquee {
+    0%   { transform: translate(-2%, 0); }
+    100% { transform: translate(-100%, 0); }
 }
 
 .playlist table {
@@ -38,40 +66,28 @@ body {
 	overflow-y : auto;
 }
 
-.btn-play {
-	border-radius: 30px;
-	padding: 15px 18px;
+.btn-control {
+	border-radius: 40px;
+	padding: 20px 20px;
+	box-shadow: 0px 0px 14px 6px;
+	outline: none !important;
+	border-color: rgba(0, 0, 0, 0.3);
+	border-width: 2px;
+	&:hover {outline: none !important;
+			box-shadow: 0px 0px 10px 15px;}
+	&:active {outline: none !important;}
+	&[disabled] {background-color: #646464;
+				border-color: rgba(0, 0, 0, 0.5);}
 }
-
-.marquee {
-		margin-top: 20px;
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-.marquee span {
-
-    display: inline-block;
-    padding-left: 100%;
-    text-indent: 0;
-    animation: marquee 15s linear infinite;
-
-}
-.marquee span:hover {
-    animation-play-state: paused
-}
-/* Make it move */
-@keyframes marquee {
-    0%   { transform: translate(-2%, 0); }
-    100% { transform: translate(-100%, 0); }
-}
-
 /********************** PLAYER STUFF ***********/
+
+
 
 /********************** LIBRARY STUFF ***********/
 
 .LIB {
 	margin-top: -18px;
+	margin-bottom: 10px;
 	background: rgba(34,34,34,0.7);
 	box-shadow: 1px 1px 12px #555;
 }
@@ -88,27 +104,26 @@ body {
 	margin-top: 20px;
 }
 
+.item-lib {
+	height: 65px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
 
 /********************** LIBRARY STUFF ***********/
 
 .btn {
 	background-color: rgb(34,34,34);
-	color: blue;
+	color: #4a9fff;
 } 
 
 
 
 .foot {
-	height: 50px;
+	height: 45px;
 	position: absolute;
-	bottom: 0;
 	width: 100%;
-	background: rgba(34,34,34,0.7);
+	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 1px 1px 12px #555;
-}
-
-
-#anime {
-	border: none;
-	box-shadow: 0px 0px 20px #0038ff;
 }
