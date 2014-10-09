@@ -26,8 +26,12 @@ $( document ).ready(function() {
 	//Recherche basée sur le champs input "input-search"
 	$("#input-search").keyup(function(){
 		var strToSearch = $("#input-search").val();
-		$(".list-music:not(:contains('"+strToSearch+"'))").slideUp();
-		$(".list-music:contains('"+strToSearch+"')").slideDown();
+		if (strToSearch.length > 2 ){
+			$(".list-music:not(:contains('"+strToSearch+"'))").slideUp();
+			$(".list-music:contains('"+strToSearch+"')").slideDown();
+		} else if (strToSearch.length === 0){
+			$(".list-music").slideDown();
+		}
 	});
 
 });
