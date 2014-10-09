@@ -12,13 +12,24 @@ body {
 
 [class*="col-"], header {
 		  border-radius: 12px;
-		}
+}
 
 .navbar {
 	height: 52px;
 }
 .navbar-form {
 	margin-top: 4px !important;
+}
+
+.btn-vol {
+	width: 50px;
+	box-shadow: 0px 0px 4px 1px;
+	outline: none !important;
+	border-color: rgba(0, 0, 0, 0.3);
+	border-width: 2px;
+	&:hover {outline: none !important;
+			box-shadow: 0px 0px 4px 1px #fff;}
+	&:active {outline: none !important;}
 }
 
 /********************** PLAYER STUFF ***********/
@@ -48,10 +59,12 @@ body {
     text-indent: 0;
     animation: marquee 15s linear infinite;
     font-size: 2em;
+
+    &:hover {
+    	animation-play-state: paused
+    };
 }
-.marquee span:hover, .marquee a:hover {
-    animation-play-state: paused
-}
+
 /* Make it move */
 @keyframes marquee {
     0%   { transform: translate(-2%, 0); }
@@ -64,6 +77,10 @@ body {
 
 .panel-playlist {
 	overflow-y : auto;
+}
+
+.popover {
+	color: black;
 }
 
 .btn-control {
@@ -126,4 +143,5 @@ body {
 	width: 100%;
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 1px 1px 12px #555;
+	padding-top: 10px;
 }
