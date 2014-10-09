@@ -1,4 +1,4 @@
-
+@gris: #7A7A7A;
 
 body, html {
 margin: 0;
@@ -93,8 +93,19 @@ body {
 	&:hover {outline: none !important;
 			box-shadow: 0px 0px 10px 15px;}
 	&:active {outline: none !important;}
-	&[disabled] {background-color: #646464;
-				border-color: rgba(0, 0, 0, 0.5);}
+	&[disabled] {background-color: @gris;
+				border-color: rgba(0, 0, 0, 0.5);
+				color : black !important;
+			}
+}
+
+.btn-shuffle-false {
+	box-shadow: 0px 0px 14px 6px @gris;
+}
+
+.fa-random {
+	position: relative;
+	top: 1px;
 }
 /********************** PLAYER STUFF ***********/
 
