@@ -15,23 +15,4 @@ $( document ).ready(function() {
 			}
 		}
 	});
-
-
-	//Override de la fonction "contains" pour permettre une recherche case-insensitive
-	jQuery.expr[':'].contains = jQuery.expr.createPseudo(function(arg) {
-		return function( elem ) {
-			return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-		};
-	});
-	//Recherche basée sur le champs input "input-search"
-	$("#input-search").keyup(function(){
-		var strToSearch = $("#input-search").val();
-		if (strToSearch.length > 2 ){
-			$(".list-music:not(:contains('"+strToSearch+"'))").slideUp();
-			$(".list-music:contains('"+strToSearch+"')").slideDown();
-		} else if (strToSearch.length === 0){
-			$(".list-music").slideDown();
-		}
-	});
-
 });
