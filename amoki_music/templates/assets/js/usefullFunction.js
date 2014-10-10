@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	var hauteur = $(window).height() - 110;
+	var hauteur = $(window).height() - 115;
 	$(".LIB").height(hauteur);
 //	$(".player").height(hauteur - 50);
 	$(".list-lib").height(hauteur - 100);
