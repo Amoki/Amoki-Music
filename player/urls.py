@@ -3,5 +3,5 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('player.views',
     url(r'^$', 'home'),
-	url(r'^test-post/$', 'test_post'),
+    url(r'^test-post/$', 'test_post'),
 )
