@@ -37,20 +37,20 @@ $( document ).ready(function() {
 
 
 	$("#ajax").submit( function() {
-				var urlSubmit = $(this).attr('action');
-				$.ajax({  
-					type: "POST",
-					url: urlSubmit,
-					dataType: "json",
-					success: function(data) {
-						$('.list-music').slideUp('fast', function(){
-							$.each(data, function(key, value){
+		var urlSubmit = $(this).attr('action');
+		$.ajax({  
+			type: "POST",
+			url: urlSubmit,
+			dataType: "json",
+			success: function(data) {
+				$('.list-music').slideUp('fast', function(){
+					$.each(data, function(key, value){
 
-							});
-						});
-					}
+					});
 				});
-				return false;
-			});
+			}
+		});
+		return false;
+	});
 */
 });
