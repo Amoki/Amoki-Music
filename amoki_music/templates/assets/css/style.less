@@ -1,5 +1,14 @@
 @gris: #7A7A7A;
 .shadow {box-shadow: 0px 0px 10px 4px #5a5a5a};
+.beauti-btn {
+	box-shadow: 0px 0px 4px 1px;
+	outline: none !important;
+	border-color: rgba(0, 0, 0, 0.3);
+	border-width: 2px;
+	&:hover {outline: none !important;
+			box-shadow: 0px 0px 4px 1px #fff;}
+	&:active {outline: none !important;}
+};
 
 body, html {
 margin: 0;
@@ -28,13 +37,7 @@ body {
 
 .btn-vol {
 	width: 50px;
-	box-shadow: 0px 0px 4px 1px;
-	outline: none !important;
-	border-color: rgba(0, 0, 0, 0.3);
-	border-width: 2px;
-	&:hover {outline: none !important;
-			box-shadow: 0px 0px 4px 1px #fff;}
-	&:active {outline: none !important;}
+	.beauti-btn;
 }
 
 /********************** PLAYER STUFF ***********/
@@ -168,4 +171,16 @@ body {
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 0px 0px 12px 2px #000;
 	padding-top: 10px;
+}
+
+.foot .btn {
+	margin-right: 15px;
+	bottom: 5px;
+	position: relative;
+	.beauti-btn;
+}
+
+.modal {
+	color: black;
+	top:30% !important;
 }

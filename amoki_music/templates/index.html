@@ -114,7 +114,7 @@
 			<div class="col-md-offset-1 col-md-4 LIB">
 				<div class="row input-lib">
 					<div class="col-md-offset-0 col-md-12">
-						<form action="." method="post" class="input-group">
+						<form id="ajax" action="." method="post" class="input-group">
 						{% csrf_token %}
 							<input id="input-search" type="text" name="url" class="form-control" style="text-align:right" placeholder="Titre">
 							<span class="input-group-btn">
@@ -126,7 +126,7 @@
 				<div class="row list-lib">
 					<div class="col-md-12">
 						<ul class="list-group">
-							{% for music in musics %}
+							{% for music in list_musics %}
 								<li class="list-group-item item-lib list-music">   
 									<form action="." method="post" class="pull-right">
 										{% csrf_token %}
@@ -134,7 +134,7 @@
 										<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
 											<span class="glyphicon glyphicon-headphones"></span>
 										</button>
-									</form>                             
+									</form>
 									{{ music.name }}
 								</li>
 							{% endfor %}
@@ -144,9 +144,38 @@
 			</div>
 		</div>
 		<footer class="row foot">
-				<div class="pull-right">
-					Wip...
+			<a class="btn btn-primary pull-right" href="#">
+				Mentions Légales
+			</a>
+			<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>
+			<div class="modal fade" id="extensions">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">x</button>
+							<h4 class="modal-title">Les extentions</h4>
+						</div>
+						<div class="modal-body">
+							Vous pouvez aussi utiliser nos extentions pour ajouter des musiques directement depuis Youtube !
+							<div class="row">
+								<div class="col-md-offset-1 col-md-4">Firefox :
+									<a href="https://addons.mozilla.org/fr/firefox/addon/amoki-music/" target="_blank">
+										<img src="{% static 'img/firefox-logo.png' %}" width="120px" height="120px">
+									</a>
+								</div>
+								<div class="col-md-offset-2 col-md-4">Google Chrome :
+									<a href="https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm" target="_blank">
+										<img src="{% static 'img/chrome-logo.png' %}" width="120px" height="120px">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-info" data-dismiss="modal">Fermer</button>
+						</div>
+					</div>
 				</div>
+			</div>
 		</footer>
 	</div>
 	{% if playing %}

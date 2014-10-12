@@ -33,6 +33,11 @@ class Music(models.Model):
             music.save()
             return music
 
+    @classmethod
+    def search(self, string):
+        list_music = Music.objects.filter(name__icontains=string)
+        return list_music
+
     def __unicode__(self):
         return self.name
 
