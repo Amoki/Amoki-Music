@@ -9,13 +9,7 @@ from player.helpers import get_youtube_id, increase_volume, decrease_volume, get
 def home(request):
 
     if request.method == "POST":
-        if request.is_ajax():
-            if request.POST.get('url'):
-                musics = Music.search(request.POST.get('url'))
-                return HttpResponse(musics)
-        
         if request.POST.get('url'):
-            #list_musics = Music.search(string=request.POST.get('url'))
             Player.push(video_id=get_youtube_id(request.POST.get('url')))
         if request.POST.get('play_next'):
             Player.play_next()
