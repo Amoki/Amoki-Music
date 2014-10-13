@@ -42,20 +42,21 @@
 		<!-- PLAYER ZONE -->
 		<div class="row ligne">
 			<div class="col-md-offset-1 col-md-6 player">
-				<div class="row">
+				<div class="row header-player">
 					{% if playing %}
 					<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img>
 					<div class="col-md-7 title_playing">
 						<div class="marquee">
 							<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
 						</div>
+					</div>
 					{% else %}
 					<div class="col-md-12 title">
 						<div class="marquee">
 							<span class="now-playing">No music :'( Add yours now !</span>
 						</div>
-					{% endif %}
 					</div>
+					{% endif %}
 				</div>
 				<!-- PLAYLIST -->
 				<div class="row playlist">
@@ -65,7 +66,7 @@
 								<div class="panel-heading">
 									<h3 class="panel-title">Playlist</h3>
 								</div>
-								<tbody>
+								<tbody class="playlist-ajax">
 									{% if playing and nexts_music|length > 0 %}
 										{% for music in nexts_music %}
 											<tr>
@@ -74,9 +75,9 @@
 											</tr>
 										{% endfor %}
 									{% elif shuffle %}
-										<span class="gris" style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span>
+										<span class="empty" style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span>
 									{% else %}
-										<span class="gris" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span>
+										<span class="empty" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span>
 									{% endif %}
 								</tbody>
 							</table>
@@ -114,11 +115,11 @@
 			<div class="col-md-offset-1 col-md-4 LIB">
 				<div class="row input-lib">
 					<div class="col-md-offset-0 col-md-12">
-						<form id="ajax" action="." method="post" class="input-group">
-						{% csrf_token %}
-							<input id="input-search" type="text" name="url" class="form-control" style="text-align:right" placeholder="Titre">
+						<form action="/search-music/" method="post" class="input-group ajax">
+							{% csrf_token %}
+							<input type="text" name="url" class="form-control video-id" style="text-align:right" placeholder="Titre">
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-moi</button>
+								<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-moi</button>
 							</span>
 						</form>
 					</div>
@@ -128,14 +129,12 @@
 						<ul class="list-group">
 							{% for music in list_musics %}
 								<li class="list-group-item item-lib list-music">   
-									<form action="." method="post" class="pull-right">
-										{% csrf_token %}
-										<input type="hidden" value="{{ music.video_id }}" name="url">
+									<form action="/add-music/" method="post" class="pull-right ajax">
+										<input type="hidden" value="{{ music.video_id }}" name="url" class="video-id">
 										<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
 											<span class="glyphicon glyphicon-headphones"></span>
 										</button>
-									</form>
-									{{ music.name }}
+									</form>{{ music.name }}
 								</li>
 							{% endfor %}
 						</ul>

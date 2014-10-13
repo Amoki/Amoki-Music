@@ -17,40 +17,43 @@ $( document ).ready(function() {
 			//$(".panel-playlist").height(hauteur - 300); 
 		}
 	});
-/*
-	//Override de la fonction "contains" pour permettre une recherche case-insensitive
-	jQuery.expr[':'].contains = jQuery.expr.createPseudo(function(arg) {
-		return function( elem ) {
-			return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-		};
-	});
-	//Recherche basée sur le champs input "input-search"
-	$("#input-search").keyup(function(){
-		var strToSearch = $("#input-search").val();
-		if (strToSearch.length > 2 ){
-			$(".list-music:not(:contains('"+strToSearch+"'))").slideUp();
-			$(".list-music:contains('"+strToSearch+"')").slideDown();
-		} else if (strToSearch.length === 0){
-			$(".list-music").slideDown();
-		}
-	});
 
-
-	$("#ajax").submit( function() {
+	$(".ajax").submit( function() {
 		var urlSubmit = $(this).attr('action');
-		$.ajax({  
+		var dataSend = 'url=' + $(this).children('.video-id').val();
+		alert(dataSend);
+		$.ajax({
 			type: "POST",
 			url: urlSubmit,
+			data: dataSend,
 			dataType: "json",
 			success: function(data) {
-				$('.list-music').slideUp('fast', function(){
-					$.each(data, function(key, value){
-
-					});
-				});
-			}
+						if (urlSubmit == '/search-music/') {
+							$(".list-music").slideUp();
+							$(".list-music").promise().done(function(){
+								$(".list-music").remove();
+								$.each(data, function(key, value){
+									$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><form action="/add-music/" method="post" class="pull-right ajax"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form>'+ value.fields.name +'</li>');
+								});
+								$(".list-music").slideDown();
+								$(".list-music").promise().done(function(){
+									$("#btn-search").children("i").attr("class", "fa fa-youtube-play");
+									$("#btn-search").removeAttr('disabled'); 
+								});
+							});
+						} else if (urlSubmit == '/add-music/') {
+							if($(".title_playing").length) {
+								$(".empty").remove();
+								$(".playlist-ajax").append('<tr><td>'+ data[0].fields.name +'</td><td><span class="badge">00:00</span></td></tr>');
+							} else {
+								$(".header-player").children().remove();
+								$(".player").children('.header-player').append('<img id="thumbnail" src="'+ data[0].fields.thumbnail +'" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img><div class="col-md-7 title_playing"><div class="marquee"><a href="https://www.youtube.com/watch?v='+ data[0].fields.video_id +'" class="now-playing">'+ data[0].fields.name +'</a></div></div>');
+								$("#btn-add-music").children("span").attr("class", "glyphicon glyphicon-headphones");
+								$("#btn-add-music").removeAttr('disabled');
+							}
+						}
+					}
 		});
 		return false;
 	});
-*/
 });

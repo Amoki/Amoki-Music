@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from player.models import Music, Player
 from player.helpers import get_youtube_id, increase_volume, decrease_volume, get_youtube_link
+from django.core import serializers
+import json
 
-
+@csrf_exempt
 def home(request):
 
     if request.method == "POST":
@@ -50,12 +53,23 @@ def home(request):
 
     return render(request, 'index.html', locals())
 
-def test_post(request):
+@csrf_exempt
+def search_music(request):
     if request.is_ajax():
         string = request.POST.get('url')
-        if string == None or string == "":
-            data = ''
+        if string is None or string == "":
+            data = Music.objects.all()
         else:
             data = Music.search(string=request.POST.get('url'))
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        json_data = serializers.serialize('json', data, fields=('video_id','name','count'));
+        return HttpResponse(json_data, content_type='application/json')
+    return redirect('/')
+
+@csrf_exempt
+def add_music(request):
+    if request.is_ajax():
+        Player.push(video_id=get_youtube_id(request.POST.get('url')))
+        nexts_music = Music.objects.filter(video_id=request.POST.get('url'))
+        json_data = serializers.serialize('json', nexts_music, fields=('name, duration, thumbnail'))
+        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
