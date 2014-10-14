@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.keyframes.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 	{% if playing %}
 		<style type="text/css">
@@ -95,7 +96,7 @@
 				<!-- CONTROL BUTTONS -->
 				<div class="row">
 					<div class="col-xs-offset-2 col-xs-3">
-						<form action="." method="post" class="input-group">
+						<form action="/shuffle/" method="post" class="input-group ajax">
 							{% csrf_token %}
 							<button type="submit" name="shuffle" {%if shuffle %}value="false" class="btn btn-default btn-control"{% else %} class="btn btn-default btn-control btn-shuffle-false" value="true"{% endif %} title="Shuffle" alt="Shuffle"/>
 								<i class="fa fa-random fa-2x"></i>
@@ -103,7 +104,7 @@
 						</form>
 					</div>
 					<div class="col-xs-offset-3 col-xs-4">
-						<form action="." method="post" class="input-group">
+						<form action="/next-music/" method="post" class="input-group ajax">
 							{% csrf_token %}
 							<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
 						</form>
