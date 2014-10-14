@@ -70,6 +70,11 @@ def add_music(request):
     if request.is_ajax():
         Player.push(video_id=get_youtube_id(request.POST.get('url')))
         nexts_music = Music.objects.filter(video_id=request.POST.get('url'))
-        json_data = serializers.serialize('json', nexts_music, fields=('name, duration, thumbnail'))
+        json_data = serializers.serialize('json', nexts_music, fields=('name, duration, thumbnail, video_id'))
         return HttpResponse(json_data, content_type='application/json')
+    return redirect('/')
+
+@csrf_exempt
+def lien_mort(request):
+    Player.signal_lien_mort()
     return redirect('/')

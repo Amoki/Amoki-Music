@@ -20,6 +20,8 @@ class Music(models.Model):
     thumbnail = models.CharField(max_length=255, editable=False)
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
+    # signalement de lien mort
+    lien_mort = models.BooleanField()
 
     @classmethod
     def add(cls, **kwargs):
@@ -134,5 +136,11 @@ class Player():
             return 0
         return Music.objects.filter(date__gte=Player.current.date).count()
 
+    @classmethod
+    def signal_lien_mort(self):
+        if not Player.current:
+            return
+        Player.current.lien_mort = True
+        Player.current.save()
 
 from player.signals import *
