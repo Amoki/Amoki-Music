@@ -6,7 +6,9 @@ from django.core.urlresolvers import reverse
 from player.models import Music, Player
 from player.helpers import get_youtube_id, increase_volume, decrease_volume, get_youtube_link
 from django.core import serializers
-import json
+import simplejson as json
+import re
+
 
 @csrf_exempt
 def home(request):
@@ -56,21 +58,14 @@ def home(request):
 @csrf_exempt
 def search_music(request):
     if request.is_ajax():
-        string = request.POST.get('url')
-        if string is None or string == "":
-            data = Music.objects.all()
-        else:
-            data = Music.search(string=request.POST.get('url'))
-        json_data = serializers.serialize('json', data, fields=('video_id','name','count'));
+        json_data = regExp(url=request.POST.get('url'), input='search')
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 @csrf_exempt
 def add_music(request):
     if request.is_ajax():
-        Player.push(video_id=get_youtube_id(request.POST.get('url')))
-        nexts_music = Music.objects.filter(video_id=request.POST.get('url'))
-        json_data = serializers.serialize('json', nexts_music, fields=('name, duration, thumbnail, video_id'))
+        json_data = regExp(url=request.POST.get('url'), input='add-music') 
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
@@ -78,3 +73,26 @@ def add_music(request):
 def lien_mort(request):
     Player.signal_lien_mort()
     return redirect('/')
+
+def regExp(**kwargs):
+    regExped = False
+    if kwargs['url'] is None or kwargs['url'] == "":
+        data = Music.objects.all()
+    else:
+        if kwargs['input'] == "search":
+            regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$",re.IGNORECASE|re.MULTILINE)
+            if regex.search(kwargs['url']) is None:
+                data = Music.search(string=kwargs['url'])
+            else :
+                Player.push(video_id=get_youtube_id(kwargs['url']))
+                data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
+                regExped = True
+        else:
+            Player.push(video_id=get_youtube_id(kwargs['url']))
+            data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
+            regExped = False
+    model_json = serializers.serialize('json', data, fields=('video_id','name','thumbnail','count'));
+    list_json = json.loads(model_json)
+    json_data = json.dumps({'music':list_json, 'regExp':regExped})
+    print(json_data)
+    return json_data
