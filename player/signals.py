@@ -3,7 +3,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from amoki_music.settings import YOUTUBE_KEY
 from player.models import Music
-from player.helpers import get_time_in_seconds
+from player.helpers.helpers import get_time_in_seconds
 
 import urllib2
 import json
