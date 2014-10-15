@@ -5,7 +5,7 @@ urlpatterns = patterns('player.views',
     url(r'^$', 'home'),
     url(r'^search-music/$', 'search_music'),
     url(r'^add-music/$', 'add_music'),
-    url(r'^lien-mort/$', 'lien_mort'),
+    url(r'^dead-link/$', 'dead_link'),
     url(r'^shuffle/$', 'trigger_shuffle'),
     url(r'^next-music/$', 'next_music'),
 )

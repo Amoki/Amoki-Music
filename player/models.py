@@ -17,11 +17,11 @@ class Music(models.Model):
     # Duration in second
     duration = models.PositiveIntegerField(editable=False)
     # thumbnail in 190 * 120
-    thumbnail = models.CharField(max_length=255, editable=False)
+    thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
     # signalement de lien mort
-    lien_mort = models.BooleanField(default=False)
+    dead_link = models.BooleanField(default=False)
 
     @classmethod
     def add(cls, **kwargs):

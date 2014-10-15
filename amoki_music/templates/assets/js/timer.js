@@ -43,4 +43,5 @@ function timeline(current_time_left, current_time_past_percent){
 		popover.$tip.addClass(popover.options.placement);
 	}
 	var intervalCompteur = setInterval(compteur,1000);
+	return intervalCompteur;
 }

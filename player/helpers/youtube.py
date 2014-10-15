@@ -32,8 +32,8 @@ def search(query):
         ).execute().get("items", [])[0]
 
         parsedVideo = {
-            'id': video["id"]["videoId"],
-            'title': video["snippet"]["title"],
+            'video_id': video["id"]["videoId"],
+            'name': video["snippet"]["title"],
             'description': video["snippet"]["description"],
             'thumbnail': video["snippet"]["thumbnails"]["default"],
             'views': details["statistics"]["viewCount"],

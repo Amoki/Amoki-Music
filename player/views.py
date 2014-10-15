@@ -90,7 +90,7 @@ def regExp(**kwargs):
             Player.push(video_id=youtube.get_id(kwargs['url']))
             data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
             regExped = False
-            
+
     model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
     query_search = json.loads(model_json)
     
@@ -104,13 +104,15 @@ def regExp(**kwargs):
         current_total_time = int(Player.current.duration)
         current_time_left = Player.get_current_remaining_time()
         current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
+        json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
+    else:
+        json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped})
 
-    json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
     return json_data
 
 
 @csrf_exempt
-def lien_mort(request):
+def dead_link(request):
     if request.is_ajax:
         Player.signal_lien_mort()
         Player.play_next()

@@ -1,10 +1,10 @@
 $( document ).ready(function() {
 	var hauteur = $(window).height() - 115;
 	if ($(window).height() > 765) {
-				hauteur = $(window).height() - 115;
-			} else {
-				hauteur = 650;
-			}
+		hauteur = $(window).height() - 115;
+	} else {
+		hauteur = 650;
+	}
 	$(".LIB").height(hauteur);
 //	$(".player").height(hauteur - 50);
 	$(".list-lib").height(hauteur - 90);
@@ -94,8 +94,9 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
-				} else if (urlSubmit == '/lien-mort/'){
+				} else if (urlSubmit == '/dead-link/'){
 					reset_timeline();
+					alert(data.current);
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
 					} else {
@@ -121,11 +122,12 @@ $( document ).ready(function() {
 		$(".header-player").children().remove();
 		$('.header-player').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
 		$("#btn-next").attr('disabled', 'disabled');
-		$("#lien-mort").attr('disabled', 'disabled');
+		$("#dead-link").attr('disabled', 'disabled');
 	}
 	function maj_playlist_current(data, url){
+		alert('dead function');
 		$("#btn-next").removeAttr('disabled');
-		$("#lien-mort").removeAttr('disabled');
+		$("#dead-link").removeAttr('disabled');
 		$('.playlist-ajax').children().remove();
 		if(data.playlist.length > 0){
 			$.each(data.playlist, function(key, value){
