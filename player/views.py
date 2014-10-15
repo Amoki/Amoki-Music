@@ -41,34 +41,36 @@ def home(request):
         current_total_time = int(playing.duration)
         video_url = get_youtube_link(playing.video_id)
 
-    # Remaining time of the queue in hh:mm:ss
+    #Remaining time of the queue in hh:mm:ss
     time_left = Player.get_remaining_time()
-    # Remaining time of the Music playing in hh:mm:ss
+    #Remaining time of the Music playing in hh:mm:ss
     current_time_left = Player.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
 
 
-    # Percent of current music time past
+    #Percent of current music time past
     if playing:
         current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
 
     return render(request, 'index.html', locals())
 
+
 @csrf_exempt
 def search_music(request):
     if request.is_ajax():
-        print(request.POST.get('url'))
         json_data = regExp(url=request.POST.get('url'), input='search')
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
+
 @csrf_exempt
 def add_music(request):
     if request.is_ajax():
-        json_data = regExp(url=request.POST.get('url'), input='add-music') 
+        json_data = regExp(url=request.POST.get('url'), input='add-music')
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
+
 
 def regExp(**kwargs):
     regExped = False
@@ -76,10 +78,10 @@ def regExp(**kwargs):
         data = Music.objects.all()
     else:
         if kwargs['input'] == "search":
-            regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$",re.IGNORECASE|re.MULTILINE)
+            regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = Music.search(string=kwargs['url'])
-            else :
+            else:
                 Player.push(video_id=get_youtube_id(kwargs['url']))
                 data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
                 regExped = True
@@ -87,17 +89,23 @@ def regExp(**kwargs):
             Player.push(video_id=get_youtube_id(kwargs['url']))
             data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
             regExped = False
-    model_json = serializers.serialize('json', data, fields=('video_id','name','thumbnail','count', 'duration'))
+    model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
     query_search = json.loads(model_json)
     
     if Player.get_musics_remaining():
         model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
         playlist = json.loads(model_json)
-    else :
+    else:
         playlist = []
 
-    json_data = json.dumps({'music':query_search,'playlist':playlist, 'regExp':regExped})
+    if Player.current:
+        current_total_time = int(Player.current.duration)
+        current_time_left = Player.get_current_remaining_time()
+        current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
+
+    json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
     return json_data
+
 
 @csrf_exempt
 def lien_mort(request):
@@ -108,6 +116,7 @@ def lien_mort(request):
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
+
 @csrf_exempt
 def trigger_shuffle(request):
     if request.is_ajax:
@@ -116,9 +125,10 @@ def trigger_shuffle(request):
             if Player.shuffle and not Player.current:
                 Player.play_next()
 
-            json_data = data_builder()       
+            json_data = data_builder()
             return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
+
 
 @csrf_exempt
 def next_music(request):
@@ -127,6 +137,7 @@ def next_music(request):
         json_data = data_builder()
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
+
 
 def data_builder(**kwargs):
     if Player.current:
@@ -147,9 +158,9 @@ def data_builder(**kwargs):
         shuffle_state = Player.shuffle
 
         json_data = json.dumps({'current': current,
-                                'music' : next_music,
-                                'playlist':playlist,
-                                'time_left' : current_time_left,
+                                'music': next_music,
+                                'playlist': playlist,
+                                'time_left': current_time_left,
                                 'time_past_percent': current_time_past_percent,
                                 'shuffle': shuffle_state})
     else:

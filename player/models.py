@@ -21,7 +21,7 @@ class Music(models.Model):
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
     # signalement de lien mort
-    lien_mort = models.BooleanField(default=True)
+    lien_mort = models.BooleanField(default=False)
 
     @classmethod
     def add(cls, **kwargs):
@@ -69,7 +69,6 @@ class Player():
             Player.event.start()
         else:
             webbrowser.open(Player.STOP_URL)
-
 
     @classmethod
     def play_next(self, forced=False):

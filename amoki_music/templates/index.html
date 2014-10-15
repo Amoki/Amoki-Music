@@ -13,9 +13,10 @@
 		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/jquery.keyframes.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 		{% if playing %}
-			<style type="text/css">
+		<!--	<style type="text/css">
 					.progress-bar {
 						animation: timeline-progress {{current_time_left}}s 1 forwards linear;
 					}
@@ -24,6 +25,7 @@
 						100% {width: 100%;}
 					}
 			</style>
+		-->
 		{% endif %}
 	</head>
 	<body>
@@ -198,54 +200,5 @@
 				</div>
 			</div>
 		</div>
-	{% if playing %}
-		<script type="text/javascript">
-			$(".popover-on-top").popover({
-					placement : 'top',
-					trigger : 'hover',
-					content : '0:00:00'
-			});
-			var popover = $('.popover-on-top').data('bs.popover');
-			var actual_time = parseInt("{{current_time_left}}");
-			var heures = Math.floor(actual_time / 3600);
-			var minutes = Math.floor((actual_time - (heures * 3600)) / 60);
-			var secondes = actual_time - (heures * 3600) - (minutes * 60) ;
-			var printedTime = "";
-			function compteur() {
-				if(secondes === 0) {
-					secondes = 59;
-					if(minutes === 0) {
-						minutes = 59;
-						if(heures === 0){
-							window.location.reload();
-							clearInterval(intervalCompteur);
-							return true;
-						}
-						else
-							heures--;
-					}
-					else
-						minutes--;
-				}
-				else {
-					secondes--;
-				}
-				var stantardize = function(num){
-					if (num < 10) {
-						printedTime += "0";
-					}
-				};
-				printedTime = heures+":";
-				stantardize(minutes);
-				printedTime += minutes+":";
-				stantardize(secondes);
-				printedTime += secondes;
-				$('.popover-on-top').attr('data-content', printedTime);
-				popover.setContent();
-				popover.$tip.addClass(popover.options.placement);
-			}
-			var intervalCompteur = setInterval("compteur()",1000);
-		</script>
-	{% endif %}
 	</body>
 </html>

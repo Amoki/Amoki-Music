@@ -28,6 +28,11 @@ $( document ).ready(function() {
 	$(".btn").click(function(){
 	    $(this).blur();
 	});
+	$(".popover-on-top").popover({
+		placement : 'top',
+		trigger : 'hover',
+		content : '0:00:00'
+	});
 
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
@@ -57,6 +62,8 @@ $( document ).ready(function() {
 						});
 						if(data.regExp === true){
 							maj_playlist_current(data, urlSubmit);
+							alert(data.time_left+ ' et le pourcent : '+ data.time_past_percent);
+							timeline(data.time_left, data.time_past_percent);
 						}
 						$(".list-music").slideDown();
 						$(".list-music").promise().done(function(){
@@ -66,9 +73,11 @@ $( document ).ready(function() {
 					});
 				} else if (urlSubmit == '/add-music/') {
 					maj_playlist_current(data, urlSubmit);
+					timeline(data.time_left, data.time_past_percent);
 					form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
 					form.children("button").removeAttr('disabled');
 				} else if (urlSubmit == '/shuffle/') {
+					reset_timeline();
 					if (data.shuffle === true){
 						form.children("button").attr("value", "false");
 						form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
@@ -79,12 +88,14 @@ $( document ).ready(function() {
 						maj_playlist_current(data, urlSubmit);
 					}
 				} else if (urlSubmit == '/next-music/') {
+					reset_timeline();
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
 					} else {
 						disabled_btn();
 					}
 				} else if (urlSubmit == '/lien-mort/'){
+					reset_timeline();
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
 					} else {
@@ -130,5 +141,9 @@ $( document ).ready(function() {
 		} else if ($('.title').length){
 			maj_header_player(data);
 		}
+	}
+	function reset_timeline(){
+		clearInterval(intervalCompteur);
+		$('.popover-on-top').css('width', '0%');
 	}
 });
