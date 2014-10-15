@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from player.models import Music, Player
-from player.helpers import get_youtube_id, increase_volume, decrease_volume, get_youtube_link
+from player.helpers import youtube, volume
 from django.core import serializers
 import simplejson as json
 import re
@@ -15,13 +15,13 @@ def home(request):
 
     if request.method == "POST":
         if request.POST.get('url'):
-            Player.push(video_id=get_youtube_id(request.POST.get('url')))
+            Player.push(video_id=youtube.get_id(request.POST.get('url')))
         if request.POST.get('play_next'):
             Player.play_next()
         if request.POST.get('volume_up'):
-            increase_volume()
+            volume.increase()
         if request.POST.get('volume_down'):
-            decrease_volume()
+            volume.decrease()
         if request.POST.get('shuffle'):
             Player.shuffle = (request.POST.get('shuffle') == 'true')
             if Player.shuffle and not Player.current:
@@ -39,7 +39,7 @@ def home(request):
     # Total time of current music in hh:mm:ss
     if playing:
         current_total_time = int(playing.duration)
-        video_url = get_youtube_link(playing.video_id)
+        video_url = youtube.get_link(playing.video_id)
 
     #Remaining time of the queue in hh:mm:ss
     time_left = Player.get_remaining_time()
@@ -82,13 +82,15 @@ def regExp(**kwargs):
             if regex.search(kwargs['url']) is None:
                 data = Music.search(string=kwargs['url'])
             else:
-                Player.push(video_id=get_youtube_id(kwargs['url']))
-                data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
+
+                Player.push(video_id=youtube.get_id(kwargs['url']))
+                data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
                 regExped = True
         else:
-            Player.push(video_id=get_youtube_id(kwargs['url']))
-            data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
+            Player.push(video_id=youtube.get_id(kwargs['url']))
+            data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
             regExped = False
+            
     model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
     query_search = json.loads(model_json)
     
@@ -166,5 +168,4 @@ def data_builder(**kwargs):
     else:
         current = False
         json_data = json.dumps({'current': False})
-
     return json_data

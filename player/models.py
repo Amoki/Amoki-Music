@@ -5,7 +5,7 @@ from django.db import models
 import webbrowser
 from datetime import datetime
 from threading import Timer
-from player import helpers
+from player.helpers import youtube
 
 
 class Music(models.Model):
@@ -63,7 +63,7 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open(helpers.get_youtube_link(music.video_id))
+            webbrowser.open(youtube.get_link(music.video_id))
 
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
@@ -86,7 +86,7 @@ class Player():
             count = Music.objects.all().count()
             limit = count / 20
             limit_date = Music.objects.all().order_by('-date')[limit].date
-            shuffled = Music.objects.filter(date__lte=limit_date).order_by('?').first()
+            shuffled = Music.objects.filter(date__lte=limit_date).exclude(lien_mort=False).order_by('?').first()
             shuffled.date = datetime.now()
             shuffled.save()
 
