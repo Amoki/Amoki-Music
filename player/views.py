@@ -58,6 +58,7 @@ def home(request):
 @csrf_exempt
 def search_music(request):
     if request.is_ajax():
+        print(request.POST.get('url'))
         json_data = regExp(url=request.POST.get('url'), input='search')
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
@@ -87,14 +88,24 @@ def regExp(**kwargs):
             data = Music.objects.filter(video_id=get_youtube_id(kwargs['url']))
             regExped = False
     model_json = serializers.serialize('json', data, fields=('video_id','name','thumbnail','count', 'duration'))
-    list_json = json.loads(model_json)
-    json_data = json.dumps({'music':list_json, 'regExp':regExped})
+    query_search = json.loads(model_json)
+    
+    if Player.get_musics_remaining():
+        model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        playlist = json.loads(model_json)
+    else :
+        playlist = []
+
+    json_data = json.dumps({'music':query_search,'playlist':playlist, 'regExp':regExped})
     return json_data
 
 @csrf_exempt
 def lien_mort(request):
-    Player.signal_lien_mort()
-    Player.play_next()
+    if request.is_ajax:
+        Player.signal_lien_mort()
+        Player.play_next()
+        json_data = data_builder()
+        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 @csrf_exempt
@@ -104,42 +115,45 @@ def trigger_shuffle(request):
             Player.shuffle = (request.POST.get('shuffle') == 'true')
             if Player.shuffle and not Player.current:
                 Player.play_next()
-        data = Music.objects.filter(video_id=Player.current.video_id)
-        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-        list_json = json.loads(model_json)       
-        shuffle_state = Player.shuffle
-        json_data = json.dumps({'music':list_json, 'shuffle':shuffle_state})          
-        return HttpResponse(json_data, content_type='application/json')
+
+            json_data = data_builder()       
+            return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 @csrf_exempt
 def next_music(request):
     if request.is_ajax:
-        if request.POST.get('play_next'):
-            Player.play_next()
-        if Player.current:
-            data = Music.objects.filter(video_id=Player.current.video_id)
-            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-            next_music = json.loads(model_json)
-
-            data = Player.get_musics_remaining()
-            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-            playlist = json.loads(model_json)
-
-            current = True
-
-            current_total_time = int(playing.duration)
-            current_time_left = Player.get_current_remaining_time()
-            current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
-
-            json_data = json.dumps({'music' : next_music,
-                                    'playlist':playlist ,
-                                    'current': current,
-                                    'time_past_percent': current_time_past_percent,
-                                    'time_left' : current_time_left})
-            print(json_data)
-        else:
-            current = False
-            json_data = json.dumps({'current': False})
+        Player.play_next()
+        json_data = data_builder()
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
+
+def data_builder(**kwargs):
+    if Player.current:
+        data = Music.objects.filter(video_id=Player.current.video_id)
+        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        next_music = json.loads(model_json)
+
+        data = Player.get_musics_remaining()
+        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        playlist = json.loads(model_json)
+
+        current = True
+
+        current_total_time = int(Player.current.duration)
+        current_time_left = Player.get_current_remaining_time()
+        current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
+
+        shuffle_state = Player.shuffle
+
+        json_data = json.dumps({'current': current,
+                                'music' : next_music,
+                                'playlist':playlist,
+                                'time_left' : current_time_left,
+                                'time_past_percent': current_time_past_percent,
+                                'shuffle': shuffle_state})
+    else:
+        current = False
+        json_data = json.dumps({'current': False})
+
+    return json_data

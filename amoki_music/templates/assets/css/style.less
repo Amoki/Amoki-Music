@@ -27,7 +27,16 @@ body {
 		background-color: rgb(34,34,34) !important;
 		color: #4a9fff !important;
 		border-color: rgba(0, 0, 0, 0.3);};
+	&[disabled] {background-color: @gris;
+				border-color: rgba(0, 0, 0, 0.5);
+				color : black !important;
+			}
 } 
+
+.list-group-item:first-child {
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+}
 
 [class*="col-"], header {
 		  border-radius: 12px;
@@ -118,10 +127,6 @@ body {
 	border-width: 2px;
 	&:hover {outline: none !important;}
 	&:active {outline: none !important;}
-	&[disabled] {background-color: @gris;
-				border-color: rgba(0, 0, 0, 0.5);
-				color : black !important;
-			}
 }
 
 .btn-shuffle-false {
@@ -154,8 +159,12 @@ body {
 }
 
 .list-lib {
-	overflow: auto;
+	overflow: hidden;
 	margin-top: 20px;
+}
+
+.tab-content {
+	overflow: auto;
 }
 
 .item-lib {
