@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from player.models import Music, Player
-from player.helpers import get_youtube_link
+from player.helpers import youtube
 
 
 class MusicAdmin(admin.ModelAdmin):
@@ -10,7 +10,7 @@ class MusicAdmin(admin.ModelAdmin):
     actions = ('add_music',)
 
     def url(self, music):
-        return get_youtube_link(music.video_id)
+        return youtube.get_link(music.video_id)
 
     def has_add_permission(self, request):
         return False
