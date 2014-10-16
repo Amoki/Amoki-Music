@@ -31,18 +31,18 @@ def search(query):
     ids = ','.join(ids)
 
     details = youtube.videos().list(
-        part='contentDetails,statistics',
-        id=ids
+        id=ids,
+        part='snippet, contentDetails, statistics'
     ).execute()
 
     for detail in details.get("items", []):
-        parsedVideo = {
-            'id': video["id"]["videoId"],
-            'title': video["snippet"]["title"],
-            'description': video["snippet"]["description"],
-            'thumbnail': video["snippet"]["thumbnails"]["default"],
+        parsedVideo = {'fields': {
+            'video_id': detail["id"],
+            'name': detail["snippet"]["title"],
+            'description': detail["snippet"]["description"],
+            'thumbnail': detail["snippet"]["thumbnails"]["default"],
             'views': detail["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(detail["contentDetails"]["duration"])
+            'duration': get_time_in_seconds(detail["contentDetails"]["duration"])}
         }
         videos.append(parsedVideo)
 
