@@ -20,26 +20,28 @@ def search(query):
     search_response = youtube.search().list(
         q=query,
         part="snippet",
+        type="video",
         maxResults=4
     ).execute()
 
     videos = []
 
     for video in search_response.get("items", []):
-        details = youtube.videos().list(
-            part='contentDetails,statistics',
-            id=video["id"]["videoId"],
-        ).execute().get("items", [])[0]
+        if video["id"]["kind"] == "youtube#video":
+            details = youtube.videos().list(
+                part='contentDetails,statistics',
+                id=video["id"]["videoId"],
+            ).execute().get("items", [])[0]
 
-        parsedVideo = {
-            'video_id': video["id"]["videoId"],
-            'name': video["snippet"]["title"],
-            'description': video["snippet"]["description"],
-            'thumbnail': video["snippet"]["thumbnails"]["default"],
-            'views': details["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(details["contentDetails"]["duration"])
-        }
-        videos.append(parsedVideo)
+            parsedVideo = {
+                'fields': {'video_id': video["id"]["videoId"],
+                'name': video["snippet"]["title"],
+                'description': video["snippet"]["description"],
+                'thumbnail': video["snippet"]["thumbnails"]["default"],
+                'views': details["statistics"]["viewCount"],
+                'duration': get_time_in_seconds(details["contentDetails"]["duration"])}
+            }
+            videos.append(parsedVideo)
 
     return videos
 

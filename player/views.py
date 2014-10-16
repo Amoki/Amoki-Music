@@ -76,23 +76,25 @@ def regExp(**kwargs):
     regExped = False
     if kwargs['url'] is None or kwargs['url'] == "":
         data = Music.objects.all()
+        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        query_search = json.loads(model_json)
     else:
         if kwargs['input'] == "search":
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
-                data = Music.search(string=kwargs['url'])
+                query_search = youtube.search(query=kwargs['url'])
             else:
-
                 Player.push(video_id=youtube.get_id(kwargs['url']))
                 data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+                query_search = json.loads(model_json)
                 regExped = True
         else:
             Player.push(video_id=youtube.get_id(kwargs['url']))
             data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+            query_search = json.loads(model_json)
             regExped = False
-
-    model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-    query_search = json.loads(model_json)
     
     if Player.get_musics_remaining():
         model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
@@ -107,7 +109,6 @@ def regExp(**kwargs):
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
     else:
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped})
-
     return json_data
 
 
