@@ -6,4 +6,4 @@ from player.helpers import youtube
 
 class testYoutube(TestCase):
 	def test_api(this):
-		print youtube.search(u"libérée")
+		youtube.search(u"libérée")

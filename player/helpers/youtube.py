@@ -19,7 +19,7 @@ def search(query):
         q=query,
         part="snippet",
         type="video",
-        maxResults=10
+        maxResults=15
     ).execute()
 
     videos = []
@@ -36,7 +36,6 @@ def search(query):
     ).execute()
 
     for detail in details.get("items", []):
-        print detail
         parsedVideo = {
             'id': video["id"]["videoId"],
             'title': video["snippet"]["title"],
