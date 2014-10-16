@@ -6,8 +6,6 @@ from amoki_music.settings import YOUTUBE_KEY
 from apiclient.discovery import build
 from player.helpers.helpers import get_time_in_seconds
 
-import json
-
 
 youtube = build(
     "youtube",
@@ -21,27 +19,33 @@ def search(query):
         q=query,
         part="snippet",
         type="video",
-        maxResults=4
+        maxResults=10
     ).execute()
 
     videos = []
 
+    ids = []
     for video in search_response.get("items", []):
-        if video["id"]["kind"] == "youtube#video":
-            details = youtube.videos().list(
-                part='contentDetails,statistics',
-                id=video["id"]["videoId"],
-            ).execute().get("items", [])[0]
+        ids.append(video["id"]["videoId"])
 
-            parsedVideo = {
-                'fields': {'video_id': video["id"]["videoId"],
-                'name': video["snippet"]["title"],
-                'description': video["snippet"]["description"],
-                'thumbnail': video["snippet"]["thumbnails"]["default"],
-                'views': details["statistics"]["viewCount"],
-                'duration': get_time_in_seconds(details["contentDetails"]["duration"])}
-            }
-            videos.append(parsedVideo)
+    ids = ','.join(ids)
+
+    details = youtube.videos().list(
+        part='contentDetails,statistics',
+        id=ids
+    ).execute()
+
+    for detail in details.get("items", []):
+        print detail
+        parsedVideo = {
+            'id': video["id"]["videoId"],
+            'title': video["snippet"]["title"],
+            'description': video["snippet"]["description"],
+            'thumbnail': video["snippet"]["thumbnails"]["default"],
+            'views': detail["statistics"]["viewCount"],
+            'duration': get_time_in_seconds(detail["contentDetails"]["duration"])
+        }
+        videos.append(parsedVideo)
 
     return videos
 
