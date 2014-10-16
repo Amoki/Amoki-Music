@@ -33,6 +33,9 @@ $( document ).ready(function() {
 		trigger : 'hover',
 		content : '0:00:00'
 	});
+	var myCounter = new Countdown({  
+	    onCounterEnd: function(){} // final action
+	});
 
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
@@ -57,12 +60,15 @@ $( document ).ready(function() {
 					$(".list-music").slideUp();
 					$(".list-music").promise().done(function(){
 						$(".list-music").remove();
-						$.each(data.music, function(key, value){
-							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><form action="/add-music/" method="post" class="pull-right ajax"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form>'+ value.fields.name +'</li>');
-						});
+						if(data.music.length > 0){
+							$.each(data.music, function(key, value){
+								$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><form action="/add-music/" method="post" class="pull-right ajax"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form>'+ value.fields.name +'</li>');
+							});
+						} else {
+							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
+						}
 						if(data.regExp === true){
 							maj_playlist_current(data, urlSubmit);
-							alert(data.time_left+ ' et le pourcent : '+ data.time_past_percent);
 							timeline(data.time_left, data.time_past_percent);
 						}
 						$(".list-music").slideDown();
@@ -76,6 +82,9 @@ $( document ).ready(function() {
 					timeline(data.time_left, data.time_past_percent);
 					form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
 					form.children("button").removeAttr('disabled');
+					if(data.playlist.length === 0){
+						myCounter.start(data.time_left);
+					}
 				} else if (urlSubmit == '/shuffle/') {
 					reset_timeline();
 					if (data.shuffle === true){
@@ -88,17 +97,16 @@ $( document ).ready(function() {
 						maj_playlist_current(data, urlSubmit);
 					}
 				} else if (urlSubmit == '/next-music/') {
-					reset_timeline();
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
+						timeline(data.time_left, data.time_past_percent);
 					} else {
 						disabled_btn();
 					}
 				} else if (urlSubmit == '/dead-link/'){
-					reset_timeline();
-					alert(data.current);
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
+						timeline(data.time_left, data.time_past_percent);
 					} else {
 						disabled_btn();
 					}
@@ -123,9 +131,12 @@ $( document ).ready(function() {
 		$('.header-player').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
 		$("#btn-next").attr('disabled', 'disabled');
 		$("#dead-link").attr('disabled', 'disabled');
+		$(".progress-bar").css('width', '0%');
+		myCounter.stop();
 	}
 	function maj_playlist_current(data, url){
-		alert('dead function');
+		myCounter.stop();
+		myCounter.start(data.time_left);
 		$("#btn-next").removeAttr('disabled');
 		$("#dead-link").removeAttr('disabled');
 		$('.playlist-ajax').children().remove();
@@ -143,9 +154,5 @@ $( document ).ready(function() {
 		} else if ($('.title').length){
 			maj_header_player(data);
 		}
-	}
-	function reset_timeline(){
-		clearInterval(intervalCompteur);
-		$('.popover-on-top').css('width', '0%');
 	}
 });

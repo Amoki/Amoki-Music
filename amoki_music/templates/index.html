@@ -16,24 +16,23 @@
 		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 		{% if playing %}
-		<!--	<style type="text/css">
-					.progress-bar {
-						animation: timeline-progress {{current_time_left}}s 1 forwards linear;
-					}
-					@keyframes timeline-progress {
-						0%   {width: {{current_time_past_percent}}%;}
-						100% {width: 100%;}
-					}
-			</style>
-		-->
+		<script type="text/javascript">
+			$( document ).ready(function() {
+				timeline({{current_time_left}}, {{current_time_past_percent}});
+				var myCounter = new Countdown({  
+					    seconds:{{current_time_left}},  // number of seconds to count down
+					    onCounterEnd: function(){} // final action
+				});
+				myCounter.start({{current_time_left}});
+			});
+		</script>
 		{% endif %}
 	</head>
 	<body>
 		<div class="container-fluid">
 			<div class="navbar navbar-inverse row">
 				<ul class="nav navbar-nav">
-					<li class="active"> <a href="#">Accueil</a> </li>
-					<li> <a href="#">WIP..</a> </li>
+					<li class="active"> <a href="#">Teamspeak</a> </li>
 				</ul>
 				<form action="." method="post" class="navbar-form pull-right">
 					{% csrf_token %}
@@ -93,7 +92,7 @@
 					<!-- PROGRESS BAR -->
 					<div class="row">
 						<div class="col-md-offset-1 col-md-10">
-							<div class="progress progress-striped popover-on-top">
+							<div class="progress progress-striped active popover-on-top">
 								<div class="progress-bar"></div>
 							</div>
 						</div>
@@ -127,7 +126,7 @@
 								{% csrf_token %}
 								<input type="text" name="url" class="form-control video-id" style="text-align:right" placeholder="Titre">
 								<span class="input-group-btn">
-									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-moi</button>
+									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-me</button>
 								</span>
 							</form>
 						</div>
@@ -135,22 +134,15 @@
 					<div class="row list-lib">
 						<div class="col-md-12">
 							<ul class="nav nav-tabs nav-justified">
-							    <li class="active"><a href="#accueil" data-toggle="tab">Bibliothèque</a></li>
+							    <li class="active"><a href="#accueil" data-toggle="tab">Library</a></li>
 							    <li class="disabled"><a href="#youtube">Youtube</a></li>
 							</ul>
 							<div class="tab-content">
 							    <div class="tab-pane fade active in" id="accueil">
 							    	<ul class="list-group">
-										{% for music in list_musics %}
-											<li class="list-group-item item-lib list-music">   
-												<form action="/add-music/" method="post" class="pull-right ajax">
-													<input type="hidden" value="{{ music.video_id }}" name="url" class="video-id">
-													<button class="btn btn-default btn-lg btn-add-playlist" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
-														<span class="glyphicon glyphicon-headphones"></span>
-													</button>
-												</form>{{ music.name }}
-											</li>
-										{% endfor %}
+										<li class="list-group-item item-lib list-music">   
+											<p>Enter your search in the field above</p>
+										</li>
 									</ul>
 							    </div>
 							    <div class="tab-pane fade" id="youtube"></div>
@@ -164,9 +156,9 @@
 			<!-- FOOTER  -->
 			<footer class="row foot">
 				<form action="/dead-link/" method="post" class="pull-left ajax">
-					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Lien mort ?</button>
+					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Dead link ?</button>
 				</form>
-				<a class="btn btn-primary pull-right" href="#">Mentions Légales</a>
+				<a class="btn btn-primary pull-right" href="#">Company Terms</a>
 				<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>
 			</footer>
 			<!-- END FOOTER -->
