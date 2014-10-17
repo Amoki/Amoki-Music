@@ -9,6 +9,7 @@ from threading import Timer
 
 class Music(models.Model):
     # Youtube ID
+    video_id = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     # Date is used for ordering musics
