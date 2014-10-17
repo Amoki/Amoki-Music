@@ -3,9 +3,8 @@
 from django.db import models
 
 import webbrowser
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Timer
-from player.helpers import youtube
 
 
 class Music(models.Model):
@@ -17,11 +16,11 @@ class Music(models.Model):
     # Duration in second
     duration = models.PositiveIntegerField(editable=False)
     # thumbnail in 190 * 120
-    thumbnail = models.CharField(max_length=255, editable=False)
+    thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
     # signalement de lien mort
-    lien_mort = models.BooleanField(default=True)
+    dead_link = models.BooleanField(default=False)
 
     @classmethod
     def add(cls, **kwargs):
@@ -44,6 +43,22 @@ class Music(models.Model):
         return self.name
 
 
+class TemporaryMusic(models.Model):
+    video_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now_add=True)
+    duration = models.PositiveIntegerField()
+    thumbnail = models.CharField(max_length=255)
+    views = models.PositiveIntegerField()
+    description = models.TextField()
+    requestId = models.CharField(max_length=64)
+
+    @classmethod
+    def clean(self, requestId):
+        TemporaryMusic.objects.filter(requestId=requestId).delete()
+        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(minutes=30)).delete()
+
+
 class Player():
     current = None
     event = None
@@ -63,7 +78,7 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open(youtube.get_link(music.video_id))
+            webbrowser.open("https://www.youtube.com/watch?v=" + music.video_id)
 
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
@@ -86,7 +101,7 @@ class Player():
             count = Music.objects.all().count()
             limit = count / 20
             limit_date = Music.objects.all().order_by('-date')[limit].date
-            shuffled = Music.objects.filter(date__lte=limit_date).exclude(lien_mort=False).order_by('?').first()
+            shuffled = Music.objects.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
             shuffled.date = datetime.now()
             shuffled.save()
 
@@ -139,7 +154,7 @@ class Player():
     def signal_lien_mort(self):
         if not Player.current:
             return
-        Player.current.lien_mort = True
+        Player.current.dead_link = True
         Player.current.save()
 
 from player.signals import *

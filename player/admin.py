@@ -6,7 +6,7 @@ from player.helpers import youtube
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'url', 'duration', 'date', 'last_play', 'lien_mort')
+    list_display = ('name', 'count', 'url', 'duration', 'date', 'last_play', 'dead_link')
     actions = ('add_music',)
 
     def url(self, music):

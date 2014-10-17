@@ -20,6 +20,47 @@ body {
 	background-image: url(../img/background-2.png);
 }
 
+.btn {
+	background-color: rgb(34,34,34);
+	color: #4a9fff;
+	&:focus {
+		background-color: rgb(34,34,34) !important;
+		color: #4a9fff !important;
+		border-color: rgba(0, 0, 0, 0.3);};
+	&[disabled] {background-color: @gris;
+				border-color: rgba(0, 0, 0, 0.5);
+				color : black !important;
+			}
+}
+
+.modal {
+	color: black;
+	top:25% !important;
+}
+
+.modal-on-top {
+	color: black;
+	top: -30px !important;
+	width: 300px;
+	margin-left: -150px;
+	left:50% !important;
+	bottom: auto !important;
+	/*opacity: 0.7 !important;*/
+}
+
+.modal-content-custom {
+	height: 55px !important;
+}
+
+.fa-stack-1x, .fa-stack-2x {
+	bottom: 5px !important;
+}
+
+.list-group-item:first-child {
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+}
+
 [class*="col-"], header {
 		  border-radius: 12px;
 }
@@ -107,17 +148,13 @@ body {
 	outline: none !important;
 	border-color: rgba(0, 0, 0, 0.3);
 	border-width: 2px;
-	&:hover {outline: none !important;
-			box-shadow: 0px 0px 10px 15px;}
+	&:hover {outline: none !important;}
 	&:active {outline: none !important;}
-	&[disabled] {background-color: @gris;
-				border-color: rgba(0, 0, 0, 0.5);
-				color : black !important;
-			}
 }
 
 .btn-shuffle-false {
 	box-shadow: 0px 0px 14px 6px @gris;
+	color: @gris !important;
 }
 
 .fa-random {
@@ -145,25 +182,26 @@ body {
 }
 
 .list-lib {
-	overflow: auto;
+	overflow: hidden;
 	margin-top: 20px;
 }
 
+.tab-content {
+	overflow: auto;
+}
+
 .item-lib {
-	height: 65px;
 	font-size: 16px;
 	font-weight: bold;
 }
 
+.row-list-item {
+	margin-right: 0px !important;
+	margin-left: 0px !important;
+}
+
 
 /********************** LIBRARY STUFF ***********/
-
-.btn {
-	background-color: rgb(34,34,34);
-	color: #4a9fff;
-} 
-
-
 
 .foot {
 	height: 45px;
@@ -172,7 +210,6 @@ body {
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 0px 0px 12px 2px #000;
 }
-
 .foot .btn {
 	margin-right: 15px;
 	margin-left: 15px;
@@ -181,7 +218,3 @@ body {
 	.beauti-btn;
 }
 
-.modal {
-	color: black;
-	top:30% !important;
-}

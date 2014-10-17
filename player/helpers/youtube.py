@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import urlparse
+import random
+import string
+from apiclient.discovery import build
 
 from amoki_music.settings import YOUTUBE_KEY
 
-from apiclient.discovery import build
 from player.helpers.helpers import get_time_in_seconds
-
-import json
+from player.models import TemporaryMusic
 
 
 youtube = build(
@@ -20,26 +21,38 @@ def search(query):
     search_response = youtube.search().list(
         q=query,
         part="snippet",
-        maxResults=4
+        type="video",
+        maxResults=15
     ).execute()
 
     videos = []
 
+    ids = []
     for video in search_response.get("items", []):
-        details = youtube.videos().list(
-            part='contentDetails,statistics',
-            id=video["id"]["videoId"],
-        ).execute().get("items", [])[0]
+        ids.append(video["id"]["videoId"])
 
-        parsedVideo = {
-            'id': video["id"]["videoId"],
-            'title': video["snippet"]["title"],
-            'description': video["snippet"]["description"],
-            'thumbnail': video["snippet"]["thumbnails"]["default"],
-            'views': details["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(details["contentDetails"]["duration"])
-        }
-        videos.append(parsedVideo)
+    ids = ','.join(ids)
+
+    details = youtube.videos().list(
+        id=ids,
+        part='snippet, contentDetails, statistics'
+    ).execute()
+
+    requestId = ''.join(random.choice(string.lowercase) for i in range(64))
+
+    for detail in details.get("items", []):
+        music = TemporaryMusic(
+            video_id=detail["id"],
+            name=detail["snippet"]["title"],
+            description=detail["snippet"]["description"],
+            thumbnail=detail["snippet"]["thumbnails"]["default"],
+            views=detail["statistics"]["viewCount"],
+            duration=get_time_in_seconds(detail["contentDetails"]["duration"]),
+            requestId=requestId
+        )
+        videos.append(music)
+
+    TemporaryMusic.objects.bulk_create(videos)
 
     return videos
 
