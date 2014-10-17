@@ -1,4 +1,4 @@
 Django==1.7
 google-api-python-client==1.2
 isodate==0.5.0
-simplejson=3.6.4
+simplejson==3.6.4
