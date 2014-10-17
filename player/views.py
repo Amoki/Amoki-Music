@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from player.models import Music, Player
+from player.models import Music, TemporaryMusic, Player
 from player.helpers import youtube, volume
 from django.core import serializers
 import simplejson as json
@@ -79,19 +79,18 @@ def regExp(**kwargs):
         if kwargs['input'] == "search":
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
-                query_search = youtube.search(query=kwargs['url'])
+                data = youtube.search(query=kwargs['url'])
             else:
                 Player.push(video_id=youtube.get_id(kwargs['url']))
                 data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
-                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-                query_search = json.loads(model_json)
                 regExped = True
         else:
             Player.push(video_id=youtube.get_id(kwargs['url']))
             data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
-            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-            query_search = json.loads(model_json)
             regExped = False
+
+    model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+    query_search = json.loads(model_json)
     
     if Player.get_musics_remaining():
         model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))

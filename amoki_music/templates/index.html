@@ -10,11 +10,6 @@
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/jquery.keyframes.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 		{% if playing %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
@@ -75,7 +70,7 @@
 											{% for music in nexts_music %}
 												<tr class="playlist-item" id="{{music.video_id}}">
 													<td>{{music.name}}</td>
-													<td><span class="badge">00:00</span></td>
+													<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>
 												</tr>
 											{% endfor %}
 										{% elif shuffle %}
@@ -248,5 +243,9 @@
 				</div>
 			</div>
 		</div>
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 	</body>
 </html>

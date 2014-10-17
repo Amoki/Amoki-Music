@@ -25,6 +25,11 @@ $( document ).ready(function() {
 		}
 	});
 
+    $('span[data-time]').each(function(){
+       $(this).html(updateTimePlaylistTemporaryFunction($(this).data("time")));
+	});
+
+
 	$(".btn").click(function(){
 	    $(this).blur();
 	});

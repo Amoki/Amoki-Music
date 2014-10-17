@@ -51,8 +51,6 @@ class TemporaryMusic(models.Model):
     thumbnail = models.CharField(max_length=255)
     views = models.PositiveIntegerField()
     description = models.TextField()
-
-    date = models.DateTimeField(auto_now_add=True)
     requestId = models.CharField(max_length=64)
 
     @classmethod

@@ -54,7 +54,7 @@ def search(query):
 
     TemporaryMusic.objects.bulk_create(videos)
 
-    return requestId
+    return videos
 
 
 def get_id(url):
