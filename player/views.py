@@ -57,6 +57,7 @@ def home(request):
 
 @csrf_exempt
 def search_music(request):
+    print(request)
     if request.is_ajax():
         json_data = regExp(url=request.POST.get('url'), input='search')
         return HttpResponse(json_data, content_type='application/json')
@@ -81,20 +82,21 @@ def regExp(**kwargs):
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
                 model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                query_search = json.loads(model_json)
             else:
                 Player.push(video_id=youtube.get_id(kwargs['url']))
                 data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
                 model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                query_search = json.loads(model_json)
                 regExped = True
         else:
             TemporaryMusic.clean(requestId=kwargs['requestId'])
             Player.push(video_id=youtube.get_id(kwargs['url']))
             data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
             model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+            query_search = json.loads(model_json)
             regExped = False
 
-    query_search = json.loads(model_json)
-    
     if Player.get_musics_remaining():
         model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
         playlist = json.loads(model_json)

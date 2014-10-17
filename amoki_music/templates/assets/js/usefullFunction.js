@@ -45,7 +45,7 @@ $( document ).ready(function() {
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
 		var form =  $(this);
-		var dataSend = 'url=' + $(this).children('.video-id').val();
+		var dataSend = 'url=' + encodeURIComponent($(this).children('.video-id').val());
 		if (urlSubmit == '/search-music/') {
 			if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
 				$(".list-music").slideUp();
@@ -61,9 +61,9 @@ $( document ).ready(function() {
 		} else if (urlSubmit == '/add-music/') {
 			form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 			form.children("button").attr('disabled', 'disabled');
-			dataSend = {'video_id':$(this).children('.video-id').val(), 'requestID':$(this).children('.requestid').val()};
+			dataSend = {'video_id':encodeURIComponent($(this).children('.video-id').val()), 'requestID':encodeURIComponent($(this).children('.requestid').val())};
 		} else if (urlSubmit == '/shuffle/') {
-			dataSend = 'shuffle=' + $(this).children("button").val();
+			dataSend = 'shuffle=' + encodeURIComponent($(this).children("button").val());
 		}
 		$.ajax({
 			type: "POST",
