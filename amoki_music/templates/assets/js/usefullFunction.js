@@ -43,6 +43,12 @@ $( document ).ready(function() {
 		var dataSend = 'url=' + $(this).children('.video-id').val();
 		if (urlSubmit == '/search-music/') {
 			if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
+				$(".list-music").slideUp();
+				$(".list-music").promise().done(function(){
+					$(".list-music").remove();
+					$(".list-group").append('<li class="list-group-item item-lib list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
+					$(".list-music").slideDown();
+				});
 				return false;
 			}
 			form.children("span").children("button").children("i").attr("class", "fa fa-refresh fa-spin");
@@ -85,18 +91,18 @@ $( document ).ready(function() {
 					timeline(data.time_left, data.time_past_percent);
 					form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
 					form.children("button").removeAttr('disabled');
-					if(data.playlist.length === 0){
-						myCounter.start(data.time_left);
-					}
+					modal_confirm($('#modal-add-music'));
 				} else if (urlSubmit == '/shuffle/') {
 					if (data.shuffle === true){
 						form.children("button").attr("value", "false");
 						form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
 						maj_playlist_current(data, urlSubmit);
+						modal_confirm($('#modal-shuffle-on'));
 					} else {
 						form.children("button").attr("value", "true");
 						form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-false");
 						maj_playlist_current(data, urlSubmit);
+						modal_confirm($('#modal-shuffle-off'));
 					}
 				} else if (urlSubmit == '/next-music/') {
 					if(data.current){
@@ -164,7 +170,7 @@ $( document ).ready(function() {
 			'show':true,
 			'backdrop':false
 		}).on('shown.bs.modal', function(){
-			setTimeout(function(){target.modal('hide');}, 1500);
+			setTimeout(function(){target.modal('hide');}, 1000);
 		});
 	}
 });
