@@ -139,7 +139,7 @@ class Player():
     def signal_lien_mort(self):
         if not Player.current:
             return
-        Player.current.lien_mort = True
+        Player.current.dead_link = True
         Player.current.save()
 
 from player.signals import *

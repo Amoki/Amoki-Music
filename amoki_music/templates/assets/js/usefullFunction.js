@@ -41,10 +41,10 @@ $( document ).ready(function() {
 		var urlSubmit = $(this).attr('action');
 		var form =  $(this);
 		var dataSend = 'url=' + $(this).children('.video-id').val();
-		if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
-			return false;
-		}
 		if (urlSubmit == '/search-music/') {
+			if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
+				return false;
+			}
 			form.children("span").children("button").children("i").attr("class", "fa fa-refresh fa-spin");
 			form.children("span").children("button").attr('disabled', 'disabled');
 		} else if (urlSubmit == '/add-music/') {
@@ -89,7 +89,6 @@ $( document ).ready(function() {
 						myCounter.start(data.time_left);
 					}
 				} else if (urlSubmit == '/shuffle/') {
-					reset_timeline();
 					if (data.shuffle === true){
 						form.children("button").attr("value", "false");
 						form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
@@ -106,6 +105,7 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
+					modal_confirm($('#modal-next-music'));
 				} else if (urlSubmit == '/dead-link/'){
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
@@ -113,6 +113,7 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
+					modal_confirm($('#modal-dead-link'));
 				}
 			},
 			error : function(resultat, statut, erreur){
@@ -157,5 +158,13 @@ $( document ).ready(function() {
 		} else if ($('.title').length){
 			maj_header_player(data);
 		}
+	}
+	function modal_confirm(target){
+		target.modal({
+			'show':true,
+			'backdrop':false
+		}).on('shown.bs.modal', function(){
+			setTimeout(function(){target.modal('hide');}, 1500);
+		});
 	}
 });
