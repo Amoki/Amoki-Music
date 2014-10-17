@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
- 	<head>
+	<head>
 		<title>{% if playing %}{{playing}}{% else %}Amoki's musics{% endif %}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="content-language" content="fr" />
@@ -14,9 +14,8 @@
 		<script type="text/javascript">
 			$( document ).ready(function() {
 				timeline({{current_time_left}}, {{current_time_past_percent}});
-				var myCounter = new Countdown({  
-					    seconds:{{current_time_left}},  // number of seconds to count down
-					    onCounterEnd: function(){} // final action
+				var myCounter = new Countdown({
+					onCounterEnd: function(){} // final action
 				});
 				myCounter.start({{current_time_left}});
 			});
@@ -129,11 +128,11 @@
 					<div class="row list-lib">
 						<div class="col-md-12">
 							<ul class="nav nav-tabs nav-justified">
-							    <li class="active"><a href="#accueil">Youtube</a></li>
+								<li class="active"><a href="#accueil">Youtube</a></li>
 							</ul>
 							<div class="tab-content">
-							    <div class="tab-pane active in" id="youtube">
-							    	<ul class="list-group">
+								<div class="tab-pane active in" id="youtube">
+									<ul class="list-group">
 										<li class="list-group-item item-lib list-music">
 											<div class="row">
 												<p class="col-xs-10">Enter your search in the field above</p>

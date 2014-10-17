@@ -56,7 +56,7 @@ class TemporaryMusic(models.Model):
     @classmethod
     def clean(self, requestId):
         TemporaryMusic.objects.filter(requestId=requestId).delete()
-        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(minutes=30))
+        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(minutes=30)).delete()
 
 
 class Player():
