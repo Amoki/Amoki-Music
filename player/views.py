@@ -57,7 +57,6 @@ def home(request):
 
 @csrf_exempt
 def search_music(request):
-    print(request)
     if request.is_ajax():
         json_data = regExp(url=request.POST.get('url'), input='search')
         return HttpResponse(json_data, content_type='application/json')
