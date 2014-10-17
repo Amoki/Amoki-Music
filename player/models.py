@@ -5,7 +5,6 @@ from django.db import models
 import webbrowser
 from datetime import datetime
 from threading import Timer
-from player.helpers import youtube
 
 
 class Music(models.Model):
@@ -44,6 +43,19 @@ class Music(models.Model):
         return self.name
 
 
+class TemporaryMusic(models.Model):
+    video_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now_add=True)
+    duration = models.PositiveIntegerField()
+    thumbnail = models.CharField(max_length=255)
+    views = models.PositiveIntegerField()
+    description = models.TextField()
+
+    date = models.DateTimeField(auto_now_add=True)
+    requestId = models.CharField(max_length=64)
+
+
 class Player():
     current = None
     event = None
@@ -63,7 +75,7 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open(youtube.get_link(music.video_id))
+            webbrowser.open("https://www.youtube.com/watch?v=" + music.video_id)
 
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import urlparse
+import random
+import string
+from apiclient.discovery import build
 
 from amoki_music.settings import YOUTUBE_KEY
 
-from apiclient.discovery import build
 from player.helpers.helpers import get_time_in_seconds
+from player.models import TemporaryMusic
 
 
 youtube = build(
@@ -35,18 +38,23 @@ def search(query):
         part='snippet, contentDetails, statistics'
     ).execute()
 
-    for detail in details.get("items", []):
-        parsedVideo = {'fields': {
-            'video_id': detail["id"],
-            'name': detail["snippet"]["title"],
-            'description': detail["snippet"]["description"],
-            'thumbnail': detail["snippet"]["thumbnails"]["default"],
-            'views': detail["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(detail["contentDetails"]["duration"])}
-        }
-        videos.append(parsedVideo)
+    requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
-    return videos
+    for detail in details.get("items", []):
+        music = TemporaryMusic(
+            video_id=detail["id"],
+            name=detail["snippet"]["title"],
+            description=detail["snippet"]["description"],
+            thumbnail=detail["snippet"]["thumbnails"]["default"],
+            views=detail["statistics"]["viewCount"],
+            duration=get_time_in_seconds(detail["contentDetails"]["duration"]),
+            requestId=requestId
+        )
+        videos.append(music)
+
+    TemporaryMusic.objects.bulk_create(videos)
+
+    return requestId
 
 
 def get_id(url):
