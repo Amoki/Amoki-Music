@@ -147,6 +147,7 @@ $( document ).ready(function() {
 		$('.header-player').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
 		$("#btn-next").attr('disabled', 'disabled');
 		$("#dead-link").attr('disabled', 'disabled');
+		$(".progress-bar").stop();
 		$(".progress-bar").css('width', '0%');
 		myCounter.stop();
 	}
