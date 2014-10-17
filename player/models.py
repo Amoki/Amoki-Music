@@ -9,7 +9,7 @@ from threading import Timer
 
 class Music(models.Model):
     # Youtube ID
-    video_id = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
@@ -24,7 +24,7 @@ class Music(models.Model):
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(video_id=kwargs['video_id']).first()
+        existing_music = Music.objects.filter(url=kwargs['url']).first()
         if existing_music:
             existing_music.date = datetime.now()
             existing_music.save()
@@ -33,11 +33,6 @@ class Music(models.Model):
             music = cls(**kwargs)
             music.save()
             return music
-
-    @classmethod
-    def search(self, string):
-        list_music = Music.objects.filter(name__icontains=string)
-        return list_music
 
     def __unicode__(self):
         return self.name
@@ -78,7 +73,7 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open("https://www.youtube.com/watch?v=" + music.video_id)
+            webbrowser.open(music.url)
 
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
@@ -111,8 +106,15 @@ class Player():
             Player.play(None)
 
     @classmethod
-    def push(self, video_id):
-        music = Music.add(video_id=video_id)
+    def push(self, url, requestId):
+        temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
+        music = Music.add(
+            name=temporaryMusic.name,
+            url="https://www.youtube.com/watch?v=" + temporaryMusic.video_id,
+            duration=temporaryMusic.duration,
+            thumbnail=temporaryMusic.thumbnail
+        )
+        TemporaryMusic.clean(requestId=requestId)
 
         if not Player.current:
             Player.current = music
@@ -156,5 +158,3 @@ class Player():
             return
         Player.current.dead_link = True
         Player.current.save()
-
-from player.signals import *

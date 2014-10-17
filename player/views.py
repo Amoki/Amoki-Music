@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from player.models import Music, TemporaryMusic, Player
+from player.models import Music, Player
 from player.helpers import youtube, volume
 from django.core import serializers
 import simplejson as json
@@ -12,10 +12,7 @@ import re
 
 @csrf_exempt
 def home(request):
-
     if request.method == "POST":
-        if request.POST.get('url'):
-            Player.push(video_id=youtube.get_id(request.POST.get('url')))
         if request.POST.get('play_next'):
             Player.play_next()
         if request.POST.get('volume_up'):
@@ -83,24 +80,23 @@ def regExp(**kwargs):
                 model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
                 query_search = json.loads(model_json)
             else:
-                Player.push(video_id=youtube.get_id(kwargs['url']))
-                data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+                # IL NOUS MANQUE PLEIN DE DATA
+                Player.push(url=kwargs['url'])
+                data = Music.objects.filter(url=kwargs['url'])
                 model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
                 query_search = json.loads(model_json)
                 regExped = True
         else:
-            TemporaryMusic.clean(requestId=kwargs['requestId'])
-            Player.push(video_id=youtube.get_id(kwargs['url']))
-            data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+            Player.push(requestId=kwargs['requestId'], url=kwargs['url'])
+            data = Music.objects.filter(url=kwargs['url'])
             model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
             query_search = json.loads(model_json)
             regExped = False
 
+    playlist = []
     if Player.get_musics_remaining():
         model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
         playlist = json.loads(model_json)
-    else:
-        playlist = []
 
     if Player.current:
         current_total_time = int(Player.current.duration)
@@ -109,7 +105,7 @@ def regExp(**kwargs):
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
     else:
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped})
-    
+
     return json_data
 
 
