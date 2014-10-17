@@ -86,7 +86,7 @@ class Player():
             count = Music.objects.all().count()
             limit = count / 20
             limit_date = Music.objects.all().order_by('-date')[limit].date
-            shuffled = Music.objects.filter(date__lte=limit_date).exclude(lien_mort=False).order_by('?').first()
+            shuffled = Music.objects.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
             shuffled.date = datetime.now()
             shuffled.save()
 

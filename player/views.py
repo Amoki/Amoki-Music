@@ -41,15 +41,14 @@ def home(request):
         current_total_time = int(playing.duration)
         video_url = youtube.get_link(playing.video_id)
 
-    #Remaining time of the queue in hh:mm:ss
+    # Remaining time of the queue in hh:mm:ss
     time_left = Player.get_remaining_time()
-    #Remaining time of the Music playing in hh:mm:ss
+    # Remaining time of the Music playing in hh:mm:ss
     current_time_left = Player.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = Player.shuffle
 
-
-    #Percent of current music time past
+    # Percent of current music time past
     if playing:
         current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
 
