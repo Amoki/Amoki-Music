@@ -66,7 +66,6 @@ def search_music(request):
 @csrf_exempt
 def add_music(request):
     if request.is_ajax():
-        print(request)
         json_data = regExp(url=request.POST.get('video_id'), input='add-music', requestId=request.POST.get('requestId'))
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
