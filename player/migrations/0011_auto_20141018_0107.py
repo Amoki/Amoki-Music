@@ -20,5 +20,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(transform_to_url)
+	migrations.AddField(
+            model_name='music',
+            name='url',
+            field=models.CharField(max_length=255),
+            preserve_default=True,
+        ),
+        migrations.RunPython(transform_to_url),
+        migrations.RemoveField(
+            model_name='music',
+            name='video_id',
+        )
     ]
