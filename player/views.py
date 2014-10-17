@@ -75,9 +75,7 @@ def add_music(request):
 def regExp(**kwargs):
     regExped = False
     if kwargs['url'] is None or kwargs['url'] == "":
-        data = Music.objects.all()
-        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
-        query_search = json.loads(model_json)
+        query_search = []
     else:
         if kwargs['input'] == "search":
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)

@@ -39,8 +39,11 @@ $( document ).ready(function() {
 
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
-		var dataSend = 'url=' + $(this).children('.video-id').val();
 		var form =  $(this);
+		var dataSend = 'url=' + $(this).children('.video-id').val();
+		if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
+			return false;
+		}
 		if (urlSubmit == '/search-music/') {
 			form.children("span").children("button").children("i").attr("class", "fa fa-refresh fa-spin");
 			form.children("span").children("button").attr('disabled', 'disabled');
@@ -62,7 +65,7 @@ $( document ).ready(function() {
 						$(".list-music").remove();
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><form action="/add-music/" method="post" class="pull-right ajax"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form>'+ value.fields.name +'</li>');
+								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
 							});
 						} else {
 							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
