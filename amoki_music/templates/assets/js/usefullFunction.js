@@ -152,7 +152,7 @@ $( document ).ready(function() {
 		$('.playlist-ajax').children().remove();
 		if(data.playlist.length > 0){
 			$.each(data.playlist, function(key, value){
-				$(".playlist-ajax").append('<tr class="playlist-item" id="'+ value.fields.video_id +'"><td>'+ value.fields.name +'</td><td><span class="badge">00:00</span></td></tr>');
+				$(".playlist-ajax").append('<tr class="playlist-item" id="'+ value.fields.video_id +'"><td>'+ value.fields.name +'</td><td><span class="badge">'+ updatePopover(value.fields.duration) +'</span></td></tr>');
 			});
 		} else if (data.shuffle) {
 			$(".playlist-ajax").append('<tr class="empty"><td><span style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span></td></tr>');

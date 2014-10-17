@@ -36,13 +36,16 @@ def search(query):
     ).execute()
 
     for detail in details.get("items", []):
-        parsedVideo = {'fields': {
-            'video_id': detail["id"],
-            'name': detail["snippet"]["title"],
-            'description': detail["snippet"]["description"],
-            'thumbnail': detail["snippet"]["thumbnails"]["default"],
-            'views': detail["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(detail["contentDetails"]["duration"])}
+        parsedVideo = {
+            'fields':
+            {
+                'video_id': detail["id"],
+                'name': detail["snippet"]["title"],
+                'description': detail["snippet"]["description"],
+                'thumbnail': detail["snippet"]["thumbnails"]["default"],
+                'views': detail["statistics"]["viewCount"],
+                'duration': get_time_in_seconds(detail["contentDetails"]["duration"])
+            }
         }
         videos.append(parsedVideo)
 

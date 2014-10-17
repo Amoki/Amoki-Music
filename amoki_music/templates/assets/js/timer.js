@@ -38,40 +38,42 @@ function Countdown(options) {
 		popover.$tip.addClass(popover.options.placement);
 		clearInterval(timer);
 	};
-	function updatePopover(sec){
-		var popover = $('.popover-on-top').data('bs.popover');
-		var heures = Math.floor(sec / 3600);
-		var minutes = Math.floor((sec - (heures * 3600)) / 60);
-		var secondes = sec - (heures * 3600) - (minutes * 60) ;
-		var printedTime = "";
-		if(secondes === 0) {
-			secondes = 59;
-			if(minutes === 0) {
-				minutes = 59;
-				if(heures === 0){
-					return true;
-				} else {
-					heures--;
-				}
-			} else {
-				minutes--;
-			}
-		} else {
-			secondes--;
-		}
-		var stantardize = function(num){
-			if (num < 10) {
-				printedTime += "0";
-			}
-		};
-		printedTime = heures+":";
-		stantardize(minutes);
-		printedTime += minutes+":";
-		stantardize(secondes);
-		printedTime += secondes;
-		$('.popover-on-top').attr('data-content', printedTime);
-		popover.setContent();
-		popover.$tip.addClass(popover.options.placement);
-	}
 }
 
+function updatePopover(sec){
+	var popover = $('.popover-on-top').data('bs.popover');
+	var heures = Math.floor(sec / 3600);
+	var minutes = Math.floor((sec - (heures * 3600)) / 60);
+	var secondes = sec - (heures * 3600) - (minutes * 60) ;
+	var printedTime = "";
+	if(secondes === 0) {
+		secondes = 59;
+		if(minutes === 0) {
+			minutes = 59;
+			if(heures === 0){
+				return true;
+			} else {
+				heures--;
+			}
+		} else {
+			minutes--;
+		}
+	} else {
+		secondes--;
+	}
+	var stantardize = function(num){
+		if (num < 10) {
+			printedTime += "0";
+		}
+	};
+	printedTime = heures+":";
+	stantardize(minutes);
+	printedTime += minutes+":";
+	stantardize(secondes);
+	printedTime += secondes;
+	$('.popover-on-top').attr('data-content', printedTime);
+	popover.setContent();
+	popover.$tip.addClass(popover.options.placement);
+
+	return printedTime;
+}
