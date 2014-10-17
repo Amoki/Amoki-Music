@@ -9,3 +9,7 @@ class testYoutube(TestCase):
 	def test_api(self):
 		requestId = youtube.search(u"libérée")
 		self.assertEqual(TemporaryMusic.objects.filter(requestId=requestId).count(), 15)
+
+		TemporaryMusic.clean(requestId)
+
+		self.assertEqual(TemporaryMusic.objects.filter(requestId=requestId).count(), 0)

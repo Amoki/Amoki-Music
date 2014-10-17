@@ -3,7 +3,7 @@
 from django.db import models
 
 import webbrowser
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Timer
 
 
@@ -54,6 +54,11 @@ class TemporaryMusic(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
     requestId = models.CharField(max_length=64)
+
+    @classmethod
+    def clean(self, requestId):
+        TemporaryMusic.objects.filter(requestId=requestId).delete()
+        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(minutes=30))
 
 
 class Player():
