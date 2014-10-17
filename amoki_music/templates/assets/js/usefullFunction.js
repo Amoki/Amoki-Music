@@ -61,6 +61,7 @@ $( document ).ready(function() {
 		} else if (urlSubmit == '/add-music/') {
 			form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 			form.children("button").attr('disabled', 'disabled');
+			dataSend = {'video_id':$(this).children('.video-id').val(), 'requestID':$(this).children('.requestid').val()};
 		} else if (urlSubmit == '/shuffle/') {
 			dataSend = 'shuffle=' + $(this).children("button").val();
 		}
@@ -76,7 +77,7 @@ $( document ).ready(function() {
 						$(".list-music").remove();
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
+								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
 							});
 						} else {
 							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');

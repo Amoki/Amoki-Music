@@ -66,7 +66,8 @@ def search_music(request):
 @csrf_exempt
 def add_music(request):
     if request.is_ajax():
-        json_data = regExp(url=request.POST.get('url'), input='add-music')
+        print(request)
+        json_data = regExp(url=request.POST.get('video_id'), input='add-music', requestId=request.POST.get('requestId'))
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
@@ -80,16 +81,19 @@ def regExp(**kwargs):
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
+                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
             else:
                 Player.push(video_id=youtube.get_id(kwargs['url']))
                 data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
                 regExped = True
         else:
+            TemporaryMusic.clean(requestId=kwargs['requestId'])
             Player.push(video_id=youtube.get_id(kwargs['url']))
             data = Music.objects.filter(video_id=youtube.get_id(kwargs['url']))
+            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
             regExped = False
 
-    model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
     query_search = json.loads(model_json)
     
     if Player.get_musics_remaining():
@@ -105,6 +109,7 @@ def regExp(**kwargs):
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
     else:
         json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped})
+    
     return json_data
 
 
