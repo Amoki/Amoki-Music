@@ -5,13 +5,13 @@ import platform
 import os
 
 
-def increase_volume():
+def increase():
     if platform.system() == "Windows":
         print(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume 4000')
         os.system(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume 4000')
 
 
-def decrease_volume():
+def decrease():
     if platform.system() == "Windows":
         print(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume -4000')
         os.system(PROJECT_ROOT + '\\utils\\nircmd.exe changesysvolume -4000')
