@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import urlparse
 import random
 import string
 from apiclient.discovery import build
@@ -42,10 +41,10 @@ def search(query):
 
     for detail in details.get("items", []):
         music = TemporaryMusic(
-            video_id=detail["id"],
+            url="https://www.youtube.com/watch?v=" + detail["id"],
             name=detail["snippet"]["title"],
             description=detail["snippet"]["description"],
-            thumbnail=detail["snippet"]["thumbnails"]["default"],
+            thumbnail=detail["snippet"]["thumbnails"]["default"]["url"],
             views=detail["statistics"]["viewCount"],
             duration=get_time_in_seconds(detail["contentDetails"]["duration"]),
             requestId=requestId
@@ -55,17 +54,3 @@ def search(query):
     TemporaryMusic.objects.bulk_create(videos)
 
     return videos
-
-
-def get_id(url):
-    url_data = urlparse.urlparse(url)
-    query = urlparse.parse_qs(url_data.query)
-    try:
-        return query["v"][0]
-    except:
-        # The url is already an id
-        return url
-
-
-def get_link(video_id):
-    return "https://www.youtube.com/watch?v=" + video_id

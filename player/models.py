@@ -8,8 +8,7 @@ from threading import Timer
 
 
 class Music(models.Model):
-    # Youtube ID
-    video_id = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
     # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
@@ -24,7 +23,7 @@ class Music(models.Model):
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(video_id=kwargs['video_id']).first()
+        existing_music = Music.objects.filter(url=kwargs['url']).first()
         if existing_music:
             existing_music.date = datetime.now()
             existing_music.save()
@@ -34,17 +33,12 @@ class Music(models.Model):
             music.save()
             return music
 
-    @classmethod
-    def search(self, string):
-        list_music = Music.objects.filter(name__icontains=string)
-        return list_music
-
     def __unicode__(self):
         return self.name
 
 
 class TemporaryMusic(models.Model):
-    video_id = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
     duration = models.PositiveIntegerField()
@@ -54,9 +48,8 @@ class TemporaryMusic(models.Model):
     requestId = models.CharField(max_length=64)
 
     @classmethod
-    def clean(self, requestId):
-        TemporaryMusic.objects.filter(requestId=requestId).delete()
-        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(minutes=30)).delete()
+    def clean(self):
+        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(hours=1)).delete()
 
 
 class Player():
@@ -78,7 +71,7 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open("https://www.youtube.com/watch?v=" + music.video_id)
+            webbrowser.open(music.url)
 
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
@@ -111,8 +104,18 @@ class Player():
             Player.play(None)
 
     @classmethod
-    def push(self, video_id):
-        music = Music.add(video_id=video_id)
+    def push(self, url, requestId=None):
+        if requestId:
+            temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
+            music = Music.add(
+                url=url,
+                name=temporaryMusic.name,
+                duration=temporaryMusic.duration,
+                thumbnail=temporaryMusic.thumbnail
+            )
+            TemporaryMusic.clean()
+        else:
+            music = Music.add(url=url)
 
         if not Player.current:
             Player.current = music
@@ -156,5 +159,3 @@ class Player():
             return
         Player.current.dead_link = True
         Player.current.save()
-
-from player.signals import *

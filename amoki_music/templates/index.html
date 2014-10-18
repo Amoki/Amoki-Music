@@ -71,7 +71,7 @@
 									<tbody class="playlist-ajax">
 										{% if playing and nexts_music|length > 0 %}
 											{% for music in nexts_music %}
-												<tr class="playlist-item" id="{{music.video_id}}">
+												<tr class="playlist-item" id="{{music.url}}">
 													<td>{{music.name}}</td>
 													<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>
 												</tr>
