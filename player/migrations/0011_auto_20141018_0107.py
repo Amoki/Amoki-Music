@@ -23,10 +23,15 @@ class Migration(migrations.Migration):
 	migrations.AddField(
             model_name='music',
             name='url',
-            field=models.CharField(max_length=255),
+            field=models.CharField(max_length=255, null=True),
             preserve_default=True,
         ),
         migrations.RunPython(transform_to_url),
+        migrations.AlterField(
+            model_name='music',
+            name='url',
+            field=models.CharField(max_length=255),
+        ),
         migrations.RemoveField(
             model_name='music',
             name='video_id',
