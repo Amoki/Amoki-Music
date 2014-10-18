@@ -105,16 +105,18 @@ class Player():
             Player.play(None)
 
     @classmethod
-    def push(self, url, requestId):
-        print url
-        temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
-        music = Music.add(
-            name=temporaryMusic.name,
-            url=temporaryMusic.url,
-            duration=temporaryMusic.duration,
-            thumbnail=temporaryMusic.thumbnail
-        )
-        TemporaryMusic.clean(requestId=requestId)
+    def push(self, url, requestId=None):
+        if requestId:
+            temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
+            music = Music.add(
+                url=url,
+                name=temporaryMusic.name,
+                duration=temporaryMusic.duration,
+                thumbnail=temporaryMusic.thumbnail
+            )
+            TemporaryMusic.clean(requestId=requestId)
+        else:
+            music = Music.add(url=url)
 
         if not Player.current:
             Player.current = music
