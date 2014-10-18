@@ -38,7 +38,7 @@ class Music(models.Model):
 
 
 class TemporaryMusic(models.Model):
-    video_id = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
     duration = models.PositiveIntegerField()
@@ -106,10 +106,11 @@ class Player():
 
     @classmethod
     def push(self, url, requestId):
+        print url
         temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
         music = Music.add(
             name=temporaryMusic.name,
-            url="https://www.youtube.com/watch?v=" + temporaryMusic.video_id,
+            url=temporaryMusic.url,
             duration=temporaryMusic.duration,
             thumbnail=temporaryMusic.thumbnail
         )

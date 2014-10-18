@@ -9,7 +9,7 @@ $( document ).ready(function() {
 //	$(".player").height(hauteur - 50);
 	$(".list-lib").height(hauteur - 90);
 	$(".tab-content").height(hauteur - 130);
-//	$(".panel-playlist").height(hauteur - 300);     
+//	$(".panel-playlist").height(hauteur - 300);
 	$( window ).resize(function() {
 		if ($(window).width() > 992) {
 			if ($(window).height() > 765) {
@@ -21,7 +21,7 @@ $( document ).ready(function() {
 			//$(".player").height(hauteur - 50);
 			$(".list-lib").height(hauteur - 90);
 			$(".tab-content").height(hauteur - 130);
-			//$(".panel-playlist").height(hauteur - 300); 
+			//$(".panel-playlist").height(hauteur - 300);
 		}
 	});
 
@@ -38,7 +38,7 @@ $( document ).ready(function() {
 		trigger : 'hover',
 		content : '0:00:00'
 	});
-	var myCounter = new Countdown({  
+	var myCounter = new Countdown({
 	    onCounterEnd: function(){} // final action
 	});
 
@@ -61,7 +61,7 @@ $( document ).ready(function() {
 		} else if (urlSubmit == '/add-music/') {
 			form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 			form.children("button").attr('disabled', 'disabled');
-			dataSend = {'video_id':encodeURIComponent($(this).children('.video-id').val()), 'requestID':encodeURIComponent($(this).children('.requestid').val())};
+			dataSend = {'url':encodeURIComponent($(this).children('.video-id').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
 		} else if (urlSubmit == '/shuffle/') {
 			dataSend = 'shuffle=' + encodeURIComponent($(this).children("button").val());
 		}
@@ -77,7 +77,7 @@ $( document ).ready(function() {
 						$(".list-music").remove();
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.video_id +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
+								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.url +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
 							});
 						} else {
 							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
@@ -139,7 +139,7 @@ $( document ).ready(function() {
 	function maj_header_player(data){
 		$(document).attr('title', data.music[0].fields.name);
 		$(".header-player").children().remove();
-		$(".player").children('.header-player').append('<img id="thumbnail" src="'+ data.music[0].fields.thumbnail +'" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img><div class="col-md-7 title_playing"><div class="marquee"><a href="https://www.youtube.com/watch?v='+ data.music[0].fields.video_id +'" class="now-playing">'+ data.music[0].fields.name +'</a></div></div>');
+		$(".player").children('.header-player').append('<img id="thumbnail" src="'+ data.music[0].fields.thumbnail +'" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img><div class="col-md-7 title_playing"><div class="marquee"><a href="'+ data.music[0].fields.url +'" class="now-playing">'+ data.music[0].fields.name +'</a></div></div>');
 	}
 	function disabled_btn(){
 		$(document).attr('title', 'Amoki\'s musics');
@@ -159,12 +159,12 @@ $( document ).ready(function() {
 		$('.playlist-ajax').children().remove();
 		if(data.playlist.length > 0){
 			$.each(data.playlist, function(key, value){
-				$(".playlist-ajax").append('<tr class="playlist-item" id="'+ value.fields.video_id +'"><td>'+ value.fields.name +'</td><td><span class="badge">'+ updatePopover(value.fields.duration) +'</span></td></tr>');
+				$(".playlist-ajax").append('<tr class="playlist-item" id="'+ value.fields.url +'"><td>'+ value.fields.name +'</td><td><span class="badge">'+ updatePopover(value.fields.duration) +'</span></td></tr>');
 			});
 		} else if (data.shuffle) {
 			$(".playlist-ajax").append('<tr class="empty"><td><span style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span></td></tr>');
 		} else {
-			$(".playlist-ajax").append('<tr class="empty"><td><span style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span></td></tr>');		
+			$(".playlist-ajax").append('<tr class="empty"><td><span style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span></td></tr>');
 		}
 		if (url !== '/add-music/' && url !== '/search-music/'){
 			maj_header_player(data);

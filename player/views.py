@@ -8,6 +8,7 @@ from player.helpers import youtube, volume
 from django.core import serializers
 import simplejson as json
 import re
+import urllib
 
 
 @csrf_exempt
@@ -36,7 +37,7 @@ def home(request):
     # Total time of current music in hh:mm:ss
     if playing:
         current_total_time = int(playing.duration)
-        video_url = youtube.get_link(playing.video_id)
+        video_url = playing.url
 
     # Remaining time of the queue in hh:mm:ss
     time_left = Player.get_remaining_time()
@@ -63,7 +64,7 @@ def search_music(request):
 @csrf_exempt
 def add_music(request):
     if request.is_ajax():
-        json_data = regExp(url=request.POST.get('video_id'), input='add-music', requestId=request.POST.get('requestId'))
+        json_data = regExp(url=urllib.unquote(request.POST.get('url')), input='add-music', requestId=request.POST.get('requestId'))
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
@@ -77,25 +78,25 @@ def regExp(**kwargs):
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
                 query_search = json.loads(model_json)
             else:
                 # IL NOUS MANQUE PLEIN DE DATA
                 Player.push(url=kwargs['url'])
                 data = Music.objects.filter(url=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
                 query_search = json.loads(model_json)
                 regExped = True
         else:
-            Player.push(requestId=kwargs['requestId'], url=kwargs['url'])
+            Player.push(url=kwargs['url'], requestId=kwargs['requestId'])
             data = Music.objects.filter(url=kwargs['url'])
-            model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+            model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
             query_search = json.loads(model_json)
             regExped = False
 
     playlist = []
     if Player.get_musics_remaining():
-        model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        model_json = serializers.serialize('json', Player.get_musics_remaining(), fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         playlist = json.loads(model_json)
 
     if Player.current:
@@ -143,12 +144,12 @@ def next_music(request):
 
 def data_builder(**kwargs):
     if Player.current:
-        data = Music.objects.filter(video_id=Player.current.video_id)
-        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        data = Music.objects.filter(url=Player.current.url)
+        model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         next_music = json.loads(model_json)
 
         data = Player.get_musics_remaining()
-        model_json = serializers.serialize('json', data, fields=('video_id', 'name', 'thumbnail', 'count', 'duration'))
+        model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         playlist = json.loads(model_json)
 
         current = True

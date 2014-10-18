@@ -41,10 +41,10 @@ def search(query):
 
     for detail in details.get("items", []):
         music = TemporaryMusic(
-            video_id=detail["id"],
+            url="https://www.youtube.com/watch?v=" + detail["id"],
             name=detail["snippet"]["title"],
             description=detail["snippet"]["description"],
-            thumbnail=detail["snippet"]["thumbnails"]["default"],
+            thumbnail=detail["snippet"]["thumbnails"]["default"]["url"],
             views=detail["statistics"]["viewCount"],
             duration=get_time_in_seconds(detail["contentDetails"]["duration"]),
             requestId=requestId
