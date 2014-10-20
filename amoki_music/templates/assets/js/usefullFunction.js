@@ -140,7 +140,19 @@ $( document ).ready(function() {
 								i++;
 							});
 						} else {
-							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
+							$('.list-group')
+							.append(
+								$('<li/>', {
+									id:'li-'+i,
+									class: 'list-group-item item-lib list-music row row-list-item',
+									style: 'display:none'
+								})
+								.append(
+									$('<p/>', {
+										text:'No result'
+									})
+								)
+							);
 						}
 						if(data.regExp === true){
 							maj_playlist_current(data, urlSubmit);
@@ -178,7 +190,11 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
-					modal_confirm($('#modal-next-music'));
+					if(!data.skipped){
+						modal_confirm($('#modal-next-music'));
+					} else {
+						modal_confirm($('#modal-next-error'));
+					}
 				} else if (urlSubmit == '/dead-link/'){
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
@@ -200,7 +216,32 @@ $( document ).ready(function() {
 	function maj_header_player(data){
 		$(document).attr('title', data.music[0].fields.name);
 		$(".header-player").children().remove();
-		$(".player").children('.header-player').append('<img id="thumbnail" src="'+ data.music[0].fields.thumbnail +'" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img><div class="col-md-7 title_playing"><div class="marquee"><a href="'+ data.music[0].fields.url +'" class="now-playing">'+ data.music[0].fields.name +'</a></div></div>');
+		$(".player").children('.header-player')
+		.append(
+			$('<img/>', {
+				id:'thumbnail',
+				src: data.music[0].fields.thumbnail,
+				width:'120px',
+				height:'90px',
+				class:'col-md-offset-1 col-md-3 img-responsive'
+			}),
+			$('<div/>', {
+				class:'col-md-7 title_playing'
+			})
+			.append(
+				$('<div/>', {
+					class:'marquee'
+				})
+				.append(
+					$('<a/>', {
+						href:data.music[0].fields.url,
+						class:'now-playing',
+						text:data.music[0].fields.name
+					})
+				)
+			)
+		);
+		$('#url-next').val(data.music[0].fields.url);
 	}
 	function disabled_btn(){
 		$(document).attr('title', 'Amoki\'s musics');
@@ -220,12 +261,30 @@ $( document ).ready(function() {
 		$('.playlist-ajax').children().remove();
 		if(data.playlist.length > 0){
 			$.each(data.playlist, function(key, value){
-				$(".playlist-ajax").append('<tr class="playlist-item" id="'+ value.fields.url +'"><td>'+ value.fields.name +'</td><td><span class="badge">'+ updatePopover(value.fields.duration) +'</span></td></tr>');
+				$(".playlist-ajax")
+				.append(
+					$('<tr/>', {
+						id:value.fields.url,
+						class:'playlist-item'
+					})
+					.append(
+						$('<td/>', {
+							text:value.fields.name
+						}),
+						$('<td/>')
+						.append(
+							$('<span/>', {
+								class:'badge',
+								text: updatePopover(value.fields.duration)
+							})
+						)
+					)
+				);
 			});
 		} else if (data.shuffle) {
-			$(".playlist-ajax").append('<tr class="empty"><td><span style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span></td></tr>');
+			$(".playlist-ajax").append('<tr class="empty"><td>Shuffle activated...<br /><br />Let the music be your guide</span></td></tr>');
 		} else {
-			$(".playlist-ajax").append('<tr class="empty"><td><span style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span></td></tr>');
+			$(".playlist-ajax").append('<tr class="empty"><td>No more musics in the playlist !</td></tr>');
 		}
 		if (url !== '/add-music/' && url !== '/search-music/'){
 			maj_header_player(data);
