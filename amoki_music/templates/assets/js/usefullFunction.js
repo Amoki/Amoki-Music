@@ -36,7 +36,7 @@ $( document ).ready(function() {
 	$(".popover-on-top").popover({
 		placement : 'top',
 		trigger : 'hover',
-		content : '0:00:00'
+		content : '00:00'
 	});
 	var myCounter = new Countdown({
 	    onCounterEnd: function(){} // final action
@@ -97,9 +97,39 @@ $( document ).ready(function() {
 										}),
 										$('<div/>', {
 											class: 'col-xs-7',
-											text: value.fields.name,
 											style:'padding-right:0px'
-										}),
+										})
+										.append(
+											$('<div/>', {
+												class:'row',
+											})
+											.append(
+												$('<div/>', {
+													class:'col-xs-12',
+													style:'min-height:45px',
+													text: value.fields.name,
+												})
+											),
+											$('<div/>', {
+												class:'row'
+											})
+											.append(
+												$('<div/>', {
+													class:'col-xs-8',
+													style:'color:black;font-weight:normal;',
+													text:value.fields.views+ ' views'
+												}),
+												$('<div/>', {
+													class:'col-xs-4'
+												})
+												.append(
+													$('<span/>', {
+														class:'badge',
+														text:updateTimePlaylistTemporaryFunction(value.fields.duration)
+													})
+												)
+											)
+										),
 										$('<form/>', {
 											class:'ajax col-xs-2',
 											action:'/add-music/',
@@ -129,13 +159,16 @@ $( document ).ready(function() {
 													class:'glyphicon glyphicon-headphones'
 												})
 											)
-										)
+										),
+										$('<div/>', {
+											class:'row'
+										})
 									)
 								);
 								$('#li-'+i).popover({
 									html:'true',
 									container: 'body',
-								    trigger: 'click'
+								    trigger: 'hover'
 								});
 								i++;
 							});
