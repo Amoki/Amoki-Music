@@ -45,9 +45,9 @@ $( document ).ready(function() {
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
 		var form =  $(this);
-		var dataSend = 'url=' + encodeURIComponent($(this).children('.video-id').val());
+		var dataSend = 'url=' + encodeURIComponent($(this).children('.url').val());
 		if (urlSubmit == '/search-music/') {
-			if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
+			if ($(this).children('.url').val().trim() === '' || $(this).children('.url').val().trim() === null){
 				$(".list-music").slideUp();
 				$(".list-music").promise().done(function(){
 					$(".list-music").remove();
@@ -61,7 +61,7 @@ $( document ).ready(function() {
 		} else if (urlSubmit == '/add-music/') {
 			form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 			form.children("button").attr('disabled', 'disabled');
-			dataSend = {'url':encodeURIComponent($(this).children('.video-id').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
+			dataSend = {'url':encodeURIComponent($(this).children('.url').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
 		} else if (urlSubmit == '/shuffle/') {
 			dataSend = 'shuffle=' + encodeURIComponent($(this).children("button").val());
 		}
@@ -77,7 +77,7 @@ $( document ).ready(function() {
 						$(".list-music").remove();
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.url +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
+								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="url" type="hidden" value="'+ value.fields.url +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
 							});
 						} else {
 							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
@@ -117,7 +117,11 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
-					modal_confirm($('#modal-next-music'));
+					if(data.skipped){
+						modal_confirm($('#modal-next-music'));
+					} else {
+						modal_confirm($('#modal-next-error'));
+					}
 				} else if (urlSubmit == '/dead-link/'){
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
@@ -140,6 +144,7 @@ $( document ).ready(function() {
 		$(document).attr('title', data.music[0].fields.name);
 		$(".header-player").children().remove();
 		$(".player").children('.header-player').append('<img id="thumbnail" src="'+ data.music[0].fields.thumbnail +'" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img><div class="col-md-7 title_playing"><div class="marquee"><a href="'+ data.music[0].fields.url +'" class="now-playing">'+ data.music[0].fields.name +'</a></div></div>');
+		$('#url-next').val(data.music[0].fields.url);
 	}
 	function disabled_btn(){
 		$(document).attr('title', 'Amoki\'s musics');

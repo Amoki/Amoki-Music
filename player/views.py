@@ -136,8 +136,12 @@ def trigger_shuffle(request):
 @csrf_exempt
 def next_music(request):
     if request.is_ajax:
-        Player.play_next()
-        json_data = data_builder()
+        if request.POST.get('url') == Player.current.url:
+            Player.play_next()
+            skipped = True
+            json_data = data_builder(skipped=skipped)
+        else:
+            json_data = data_builder()
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
@@ -160,12 +164,23 @@ def data_builder(**kwargs):
 
         shuffle_state = Player.shuffle
 
-        json_data = json.dumps({'current': current,
-                                'music': next_music,
-                                'playlist': playlist,
-                                'time_left': current_time_left,
-                                'time_past_percent': current_time_past_percent,
-                                'shuffle': shuffle_state})
+        if 'skipped' in kwargs:
+            json_data = json.dumps({'current': current,
+                                    'music': next_music,
+                                    'playlist': playlist,
+                                    'time_left': current_time_left,
+                                    'time_past_percent': current_time_past_percent,
+                                    'shuffle': shuffle_state,
+                                    'skipped': kwargs['skipped']
+                                    })
+        else:
+            json_data = json.dumps({'current': current,
+                                    'music': next_music,
+                                    'playlist': playlist,
+                                    'time_left': current_time_left,
+                                    'time_past_percent': current_time_past_percent,
+                                    'shuffle': shuffle_state
+                                    })
     else:
         current = False
         json_data = json.dumps({'current': False})
