@@ -75,9 +75,69 @@ $( document ).ready(function() {
 					$(".list-music").slideUp();
 					$(".list-music").promise().done(function(){
 						$(".list-music").remove();
+						var i=0;
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$(".list-group").append('<li class="list-group-item item-lib list-music row row-list-item" style="display:none;"><div class="col-xs-10">'+ value.fields.name +'</div><form action="/add-music/" method="post" class="ajax col-xs-2"><input class="video-id" type="hidden" value="'+ value.fields.url +'" name="url"><input class="requestid" type="hidden" value="'+ value.fields.requestId +'" name="url"><button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist"><span class="glyphicon glyphicon-headphones"></span></button></form></li>');
+								$('.list-group')
+								.append(
+									$('<li/>', {
+										id:'li-'+i,
+										class: 'list-group-item item-lib list-music row row-list-item',
+										style: 'display:none',
+										'data-toggle':'popover',
+										'data-placement':'left',
+										'data-content': '<p>'+value.fields.description+'</p>'
+
+									})
+									.append(
+										$('<img/>', {
+											class:'col-xs-3',
+											src:value.fields.thumbnail,
+											style:'padding:0px'
+										}),
+										$('<div/>', {
+											class: 'col-xs-7',
+											text: value.fields.name,
+											style:'padding-right:0px'
+										}),
+										$('<form/>', {
+											class:'ajax col-xs-2',
+											action:'/add-music/',
+											method:'post'
+										})
+										.append(
+											$('<input/>', {
+												class:'video-id',
+												type:'hidden',
+												value: value.fields.url,
+												name:'url'
+											}),
+											$('<input/>', {
+												class:'requestid',
+												type:'hidden',
+												value: value.fields.requestId,
+												name:'requestId'
+											}),
+											$('<button/>', {
+												class:'btn btn-default btn-lg',
+												type:'submit',
+												alt:'Ajouter à la playlist',
+												title:'Ajouter à la playlist'
+											})
+											.append(
+												$('<span/>',{
+													class:'glyphicon glyphicon-headphones'
+												})
+											)
+										)
+									)
+								);
+								$('#li-'+i).popover({
+									html:'true',
+									container: 'body',
+								    trigger: 'click'
+								});
+								i++;
 							});
 						} else {
 							$(".list-group").append('<li class="list-group-item item-lib list-music" style="display:none;"><p>No result</p></li>');
@@ -103,6 +163,7 @@ $( document ).ready(function() {
 						form.children("button").attr("value", "false");
 						form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
 						maj_playlist_current(data, urlSubmit);
+						timeline(data.time_left, data.time_past_percent);
 						modal_confirm($('#modal-shuffle-on'));
 					} else {
 						form.children("button").attr("value", "true");

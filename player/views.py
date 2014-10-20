@@ -78,13 +78,14 @@ def regExp(**kwargs):
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data)
                 query_search = json.loads(model_json)
+                print(model_json)
             else:
                 # IL NOUS MANQUE PLEIN DE DATA
                 Player.push(url=kwargs['url'])
                 data = Music.objects.filter(url=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
                 query_search = json.loads(model_json)
                 regExped = True
         else:
