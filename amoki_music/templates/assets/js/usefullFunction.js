@@ -48,11 +48,11 @@ $( document ).ready(function() {
 		var dataSend = 'url=' + encodeURIComponent($(this).children('.url').val());
 		if (urlSubmit == '/search-music/') {
 			if ($(this).children('.url').val().trim() === '' || $(this).children('.url').val().trim() === null){
-				$(".list-music").slideUp();
-				$(".list-music").promise().done(function(){
-					$(".list-music").remove();
-					$(".list-group").append('<li class="list-group-item item-lib list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
-					$(".list-music").slideDown();
+				$(".youtube-list-music").slideUp();
+				$(".youtube-list-music").promise().done(function(){
+					$(".youtube-list-music").remove();
+					$("#list-youtube").append('<li class="list-group-item item-lib youtube-list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
+					$(".youtube-list-music").slideDown();
 				});
 				return false;
 			}
@@ -72,17 +72,17 @@ $( document ).ready(function() {
 			dataType: "json",
 			success: function(data) {
 				if (urlSubmit == '/search-music/') {
-					$(".list-music").slideUp();
-					$(".list-music").promise().done(function(){
-						$(".list-music").remove();
+					$(".youtube-list-music").slideUp();
+					$(".youtube-list-music").promise().done(function(){
+						$(".youtube-list-music").remove();
 						var i=0;
 						if(data.music.length > 0){
 							$.each(data.music, function(key, value){
-								$('.list-group')
+								$('#list-youtube')
 								.append(
 									$('<li/>', {
 										id:'li-'+i,
-										class: 'list-group-item item-lib list-music row row-list-item',
+										class: 'list-group-item item-lib youtube-list-music row row-list-item',
 										style: 'display:none',
 										'data-toggle':'popover',
 										'data-placement':'left',
@@ -140,11 +140,11 @@ $( document ).ready(function() {
 								i++;
 							});
 						} else {
-							$('.list-group')
+							$('#list-youtube')
 							.append(
 								$('<li/>', {
 									id:'li-'+i,
-									class: 'list-group-item item-lib list-music row row-list-item',
+									class: 'list-group-item item-lib youtube-list-music row row-list-item',
 									style: 'display:none'
 								})
 								.append(
@@ -158,8 +158,8 @@ $( document ).ready(function() {
 							maj_playlist_current(data, urlSubmit);
 							timeline(data.time_left, data.time_past_percent);
 						}
-						$(".list-music").slideDown();
-						$(".list-music").promise().done(function(){
+						$(".youtube-list-music").slideDown();
+						$(".youtube-list-music").promise().done(function(){
 							$("#btn-search").children("i").attr("class", "fa fa-youtube-play");
 							$("#btn-search").removeAttr('disabled');
 						});
@@ -183,7 +183,7 @@ $( document ).ready(function() {
 						maj_playlist_current(data, urlSubmit);
 						modal_confirm($('#modal-shuffle-off'));
 					}
-				} else if (urlSubmit == '/next-music/') {
+				} else if (urlSubmit == '/next-music/' || urlSubmit == '/dead-link/') {
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
 						timeline(data.time_left, data.time_past_percent);
@@ -191,18 +191,12 @@ $( document ).ready(function() {
 						disabled_btn();
 					}
 					if(data.skipped){
-						modal_confirm($('#modal-next-music'));
-					} else {
-						modal_confirm($('#modal-next-error'));
+						if(urlSubmit == '/next-music'){
+							modal_confirm($('#modal-next-music'));
+						} else {
+							modal_confirm($('#modal-dead-link'));
+						}
 					}
-				} else if (urlSubmit == '/dead-link/'){
-					if(data.current){
-						maj_playlist_current(data, urlSubmit);
-						timeline(data.time_left, data.time_past_percent);
-					} else {
-						disabled_btn();
-					}
-					modal_confirm($('#modal-dead-link'));
 				}
 			},
 			error : function(resultat, statut, erreur){
@@ -300,4 +294,15 @@ $( document ).ready(function() {
 			setTimeout(function(){target.modal('hide');}, 1000);
 		});
 	}
+	/*
+	$(function() {
+		$('.library-list-music').endlessScroll({
+			fireOnce: true,
+			insertAfter: ".library-list-music:last",
+			content: function() {
+				return '<li>' + i + '</li>';
+			}
+		});
+	});
+	*/
 });

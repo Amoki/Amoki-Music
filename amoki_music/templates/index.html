@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery.endless-scroll.js' %}"></script>
 		{% if playing %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
@@ -133,14 +134,25 @@
 					<div class="row list-lib">
 						<div class="col-md-12">
 							<ul class="nav nav-tabs nav-justified">
-								<li class="active"><a href="#accueil">Youtube</a></li>
+								<li class="active"><a data-toggle="tab" href="#youtube">Youtube</a></li>
+								<li><a data-toggle="tab" href="#library">Library</a></li>
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane active in" id="youtube">
-									<ul class="list-group">
-										<li class="list-group-item item-lib list-music">
+								<div class="tab-pane active" id="youtube">
+									<ul id="list-youtube" class="list-group">
+										<li class="list-group-item item-lib youtube-list-music">
 											<div class="row">
 												<p class="col-xs-10">Enter your search in the field above</p>
+												<i class="fa fa-level-up fa-2x col-xs-2"></i>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="tab-pane" id="library">
+									<ul id="list-library" class="list-group">
+										<li class="list-group-item item-lib library-list-music">
+											<div class="row">
+												<p class="col-xs-10">MOVE LE TEXTE</p>
 												<i class="fa fa-level-up fa-2x col-xs-2"></i>
 											</div>
 										</li>
@@ -169,7 +181,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">x</button>
-						<h4 class="modal-title">Les extentions</h4>
+						<h4 class="modal-title">Les extensions</h4>
 					</div>
 					<div class="modal-body">
 						Vous pouvez aussi utiliser nos extentions pour ajouter des musiques directement depuis Youtube !
@@ -207,16 +219,6 @@
 				<div class="modal-content modal-content-custom">
 					<div class="modal-body">
 						Skipped !
-						<button type="button" class="close" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-next-error">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						This music is already skipped !
 						<button type="button" class="close" data-dismiss="modal">x</button>
 					</div>
 				</div>
