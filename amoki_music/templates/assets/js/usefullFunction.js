@@ -110,7 +110,7 @@ $( document ).ready(function() {
 						maj_playlist_current(data, urlSubmit);
 						modal_confirm($('#modal-shuffle-off'));
 					}
-				} else if (urlSubmit == '/next-music/') {
+				} else if (urlSubmit == '/next-music/' || urlSubmit == '/dead-link/') {
 					if(data.current){
 						maj_playlist_current(data, urlSubmit);
 						timeline(data.time_left, data.time_past_percent);
@@ -118,18 +118,18 @@ $( document ).ready(function() {
 						disabled_btn();
 					}
 					if(data.skipped){
-						modal_confirm($('#modal-next-music'));
+						if(urlSubmit == '/next-music/'){
+							modal_confirm($('#modal-next-music'));
+						} else {
+							modal_confirm($('#modal-dead-link'));
+						}
 					} else {
-						modal_confirm($('#modal-next-error'));
+						if(urlSubmit == '/next-music/'){
+							modal_confirm($('#modal-next-error'));
+						} else {
+							modal_confirm($('#modal-dead-link'));
+						}
 					}
-				} else if (urlSubmit == '/dead-link/'){
-					if(data.current){
-						maj_playlist_current(data, urlSubmit);
-						timeline(data.time_left, data.time_past_percent);
-					} else {
-						disabled_btn();
-					}
-					modal_confirm($('#modal-dead-link'));
 				}
 			},
 			error : function(resultat, statut, erreur){
