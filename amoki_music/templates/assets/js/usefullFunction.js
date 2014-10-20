@@ -45,9 +45,9 @@ $( document ).ready(function() {
 	$(document).on ('submit', '.ajax', function (){
 		var urlSubmit = $(this).attr('action');
 		var form =  $(this);
-		var dataSend = 'url=' + encodeURIComponent($(this).children('.video-id').val());
+		var dataSend = 'url=' + encodeURIComponent($(this).children('.url').val());
 		if (urlSubmit == '/search-music/') {
-			if ($(this).children('.video-id').val().trim() === '' || $(this).children('.video-id').val().trim() === null){
+			if ($(this).children('.url').val().trim() === '' || $(this).children('.url').val().trim() === null){
 				$(".list-music").slideUp();
 				$(".list-music").promise().done(function(){
 					$(".list-music").remove();
@@ -61,7 +61,7 @@ $( document ).ready(function() {
 		} else if (urlSubmit == '/add-music/') {
 			form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 			form.children("button").attr('disabled', 'disabled');
-			dataSend = {'url':encodeURIComponent($(this).children('.video-id').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
+			dataSend = {'url':encodeURIComponent($(this).children('.url').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
 		} else if (urlSubmit == '/shuffle/') {
 			dataSend = 'shuffle=' + encodeURIComponent($(this).children("button").val());
 		}
@@ -107,7 +107,7 @@ $( document ).ready(function() {
 										})
 										.append(
 											$('<input/>', {
-												class:'video-id',
+												class:'url',
 												type:'hidden',
 												value: value.fields.url,
 												name:'url'
@@ -190,7 +190,7 @@ $( document ).ready(function() {
 					} else {
 						disabled_btn();
 					}
-					if(!data.skipped){
+					if(data.skipped){
 						modal_confirm($('#modal-next-music'));
 					} else {
 						modal_confirm($('#modal-next-error'));
