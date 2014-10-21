@@ -110,6 +110,7 @@
 						<div class="col-xs-offset-3 col-xs-4">
 							<form action="/next-music/" method="post" class="input-group ajax">
 								{% csrf_token %}
+								<input id="url-next" class="url" type="hidden" name="url" value="{{playing.url}}">
 								<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
 							</form>
 						</div>
@@ -123,7 +124,7 @@
 						<div class="col-md-offset-0 col-md-12">
 							<form action="/search-music/" method="post" class="input-group ajax">
 								{% csrf_token %}
-								<input type="text" name="url" class="form-control video-id" style="text-align:right" placeholder="Titre">
+								<input type="text" name="url" class="form-control url" style="text-align:right" placeholder="Titre">
 								<span class="input-group-btn">
 									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-me</button>
 								</span>
@@ -207,6 +208,16 @@
 				<div class="modal-content modal-content-custom">
 					<div class="modal-body">
 						Skipped !
+						<button type="button" class="close" data-dismiss="modal">x</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade modal-on-top" id="modal-next-error">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content modal-content-custom">
+					<div class="modal-body">
+						This music is already skipped !
 						<button type="button" class="close" data-dismiss="modal">x</button>
 					</div>
 				</div>
