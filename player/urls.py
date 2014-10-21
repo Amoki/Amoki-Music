@@ -2,10 +2,13 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('player.views',
-    url(r'^$', 'home'),
-    url(r'^search-music/$', 'search_music'),
-    url(r'^add-music/$', 'add_music'),
-    url(r'^dead-link/$', 'dead_link'),
-    url(r'^shuffle/$', 'trigger_shuffle'),
-    url(r'^next-music/$', 'next_music'),
+    url(r'^$', 'client.home'),
+    url(r'^player/$', 'host.host'),
+    url(r'^socketio/', 'host.socketio'),
+
+    url(r'^search-music/$', 'client.search_music'),
+    url(r'^add-music/$', 'client.add_music'),
+    url(r'^dead-link/$', 'client.dead_link'),
+    url(r'^shuffle/$', 'client.trigger_shuffle'),
+    url(r'^next-music/$', 'client.next_music'),
 )

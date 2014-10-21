@@ -3,8 +3,12 @@
 from django.db import models
 
 import webbrowser
+import django_socketio
+import urlparse
 from datetime import datetime, timedelta
 from threading import Timer
+
+from player.sockets import sockets
 
 
 class Music(models.Model):
@@ -71,12 +75,21 @@ class Player():
             music.last_play = datetime.now()
             music.save()
 
-            webbrowser.open(music.url)
+            message = dict()
+            message['action'] = "play"
+            message['name'] = music.name
 
+            url_data = urlparse.urlparse(music.url)
+            video_id = urlparse.parse_qs(url_data.query)["v"][0]
+
+            message['video_id'] = video_id
+            django_socketio.broadcast_channel(message, "room-42")
             Player.event = Timer(music.duration, Player.play_next, ())
             Player.event.start()
         else:
-            webbrowser.open(Player.STOP_URL)
+            message = dict()
+            message['action'] = "stop"
+            django_socketio.broadcast_channel(message, "room-42")
 
     @classmethod
     def play_next(self, forced=False):
