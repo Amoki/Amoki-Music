@@ -1,19 +1,135 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-
-import webbrowser
 import django_socketio
 import urlparse
 from datetime import datetime, timedelta
 from threading import Timer
 
-from player.sockets import sockets
+
+class Room(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    password = models.CharField(max_length=128)
+    current_music = models.ForeignKey('player.Music', null=True, related_name="+", editable=False)
+    shuffle = models.BooleanField(default=False)
+
+    def play(self, music=None):
+        # clear the queue
+        if events[self.name]:
+            events[self.name].cancel()
+
+        if music:
+            self.current_music = music
+            self.save()
+            music.count += 1
+            music.last_play = datetime.now()
+            music.save()
+
+            message = dict()
+            message['action'] = "play"
+            message['name'] = music.name
+
+            url_data = urlparse.urlparse(music.url)
+            video_id = urlparse.parse_qs(url_data.query)["v"][0]
+
+            message['video_id'] = video_id
+            try:
+                django_socketio.broadcast_channel(message, self.name)
+                events[self.name] = Timer(music.duration, self.play_next, ())
+                events[self.name].start()
+            except:
+                pass
+        else:
+            message = dict()
+            message['action'] = "stop"
+            try:
+                django_socketio.broadcast_channel(message, self.name)
+            except:
+                pass
+
+    def play_next(self, forced=False):
+        music = None
+        if self.current_music:
+            if forced:
+                music = self.current_music
+            else:
+                music = self.music_set.filter(date__gt=self.current_music.date).order_by('date').first()
+
+        if music:
+            self.play(music)
+        elif self.shuffle:
+            # Select random music, excluding 5% last played musics
+            count = self.music_set.all().count()
+            limit = count / 20
+            limit_date = self.music_set.all().order_by('-date')[limit].date
+            shuffled = self.music_set.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
+            shuffled.date = datetime.now()
+            shuffled.save()
+
+            self.play(shuffled)
+        else:
+            self.current_music = None
+            self.save()
+            self.play(None)
+
+    def push(self, url, requestId=None):
+        if requestId:
+            temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
+            music = Music.add(
+                room=self,
+                url=url,
+                name=temporaryMusic.name,
+                duration=temporaryMusic.duration,
+                thumbnail=temporaryMusic.thumbnail
+            )
+            TemporaryMusic.clean()
+        else:
+            # TODO: get all video data
+            music = Music.add(url=url, room=self)
+
+        if not self.current_music:
+            self.current_music = music
+            self.save()
+            self.play_next(forced=True)
+
+    def get_current_remaining_time(self):
+        if not self.current_music:
+            return 0
+        time = self.current_music.duration - int(((datetime.now() - self.current_music.last_play)).total_seconds())
+        return int(time)
+
+    def get_remaining_time(self):
+        if not self.current_music:
+            return 0
+        nexts = self.music_set.filter(date__gt=self.current_music.date)
+        time_left = 0
+        for music in nexts:
+            time_left += music.duration
+        time_left += self.get_current_remaining_time()
+        return int(time_left)
+
+    def get_musics_remaining(self):
+        if not self.current_music:
+            return
+        return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
+
+    def get_count_remaining(self):
+        if not self.current_music:
+            return 0
+        return self.music_set.filter(date__gte=self.current_music.date).count()
+
+    def signal_dead_link(self):
+        if not self.current_music:
+            return
+        self.current_music.dead_link = True
+        self.current_music.save()
 
 
 class Music(models.Model):
+
     url = models.CharField(max_length=255)
     name = models.CharField(max_length=255, editable=False)
+    room = models.ForeignKey(Room)
     # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
     # Duration in second
@@ -56,119 +172,7 @@ class TemporaryMusic(models.Model):
         TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(hours=1)).delete()
 
 
-class Player():
-    current = None
-    event = None
-    shuffle = False
+events = dict()
 
-    STOP_URL = "https://www.google.fr"
 
-    @classmethod
-    def play(self, music=None):
-        # clear the queue
-        if Player.event:
-            Player.event.cancel()
-
-        if music:
-            Player.current = music
-            music.count += 1
-            music.last_play = datetime.now()
-            music.save()
-
-            message = dict()
-            message['action'] = "play"
-            message['name'] = music.name
-
-            url_data = urlparse.urlparse(music.url)
-            video_id = urlparse.parse_qs(url_data.query)["v"][0]
-
-            message['video_id'] = video_id
-            django_socketio.broadcast_channel(message, "room-42")
-            Player.event = Timer(music.duration, Player.play_next, ())
-            Player.event.start()
-        else:
-            message = dict()
-            message['action'] = "stop"
-            django_socketio.broadcast_channel(message, "room-42")
-
-    @classmethod
-    def play_next(self, forced=False):
-        music = None
-        if Player.current:
-            if forced:
-                music = Player.current
-            else:
-                music = Music.objects.filter(date__gt=Player.current.date).order_by('date').first()
-
-        if music:
-            Player.play(music)
-        elif Player.shuffle:
-            # Select random music, excluding 5% last played musics
-            count = Music.objects.all().count()
-            limit = count / 20
-            limit_date = Music.objects.all().order_by('-date')[limit].date
-            shuffled = Music.objects.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
-            shuffled.date = datetime.now()
-            shuffled.save()
-
-            Player.play(shuffled)
-        else:
-            Player.current = None
-            Player.play(None)
-
-    @classmethod
-    def push(self, url, requestId=None):
-        if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
-            music = Music.add(
-                url=url,
-                name=temporaryMusic.name,
-                duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail
-            )
-            TemporaryMusic.clean()
-        else:
-            music = Music.add(url=url)
-
-        if not Player.current:
-            Player.current = music
-            Player.play_next(forced=True)
-
-    @classmethod
-    def get_current_remaining_time(self):
-        if not Player.current:
-            return 0
-        time = Player.current.duration - int(((datetime.now() - Player.current.last_play)).total_seconds())
-        return int(time)
-
-    @classmethod
-    def get_remaining_time(self):
-        if not Player.current:
-            return 0
-        nexts = Music.objects.filter(date__gt=Player.current.date)
-        time_left = 0
-        for music in nexts:
-            time_left += music.duration
-        time_left += Player.get_current_remaining_time()
-        return int(time_left)
-
-    @classmethod
-    def get_musics_remaining(self):
-        if not Player.current:
-            return
-        nexts = Music.objects.filter(date__gt=Player.current.date).order_by('date')
-
-        return nexts
-
-    @classmethod
-    def get_count_remaining(self):
-        if not Player.current:
-            return 0
-        return Music.objects.filter(date__gte=Player.current.date).count()
-
-    @classmethod
-    def signal_lien_mort(self):
-        if not Player.current:
-            return
-        Player.current.dead_link = True
-        Player.current.save()
+from player.signals import *

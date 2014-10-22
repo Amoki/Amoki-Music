@@ -4,7 +4,6 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('player.views',
     url(r'^$', 'client.home'),
     url(r'^player/$', 'host.host'),
-    url(r'^socketio/', 'host.socketio'),
 
     url(r'^search-music/$', 'client.search_music'),
     url(r'^add-music/$', 'client.add_music'),

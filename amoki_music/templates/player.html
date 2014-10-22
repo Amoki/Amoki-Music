@@ -6,17 +6,17 @@
 		<title>Player</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="content-language" content="fr" />
-		{% socketio %}
 		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 		<link href="{% static 'css/style.less' %}" rel="stylesheet/less">
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		{% socketio %}
 		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
-		{% if logging %}
+		{% if not logging %}
+			<script type ="text/javascript">
+				var room = "{{ request.session.room|safe }}";
+			</script>
 			<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
 		{% endif %}
 	</head>
@@ -25,14 +25,16 @@
 		<form action="../player/" method="post">
 	        {% csrf_token %}
 	        <select name="room">
-	            <option VALUE="room-42">Room 42</option>
+	        	{% for room in rooms %}
+	            	<option VALUE="{{room}}">{{room}}</option>
+	        	{% endfor %}
 	        </select>
 	        Password: <input type="password" name="password">
 	        <input type="submit" class="btn btn-primary" value="Valider">
 	        </div>
 	    </form>
 	{% else %}
-		<div id="player"></div>
+		<div id="embed"></div>
 	{% endif %}
 	</body>
 </html>

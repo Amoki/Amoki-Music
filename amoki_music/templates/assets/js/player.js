@@ -5,14 +5,12 @@ var currentVolume;
 
 // Socket init
 var socket = new io.Socket();
-var roomID = 42;
 socket.connect("/socketio");
 socket.on('connect', function() {
-  socket.subscribe('room-' + roomID);
+  socket.subscribe(room);
 });
 
 socket.on('message', function(message) {
-  console.log('GOT MESSAGE', message);
   if(initialized) {
     if(message.action === 'play') {
       player.loadVideoById(message.video_id, 0, 'default');
@@ -55,13 +53,12 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
 function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
+  player = new YT.Player('embed', {
     height: '390',
     width: '640',
     videoId: 'M7lc1UVf-VE',
     events: {
       'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
     }
   });
   initialized = true;
@@ -70,7 +67,4 @@ function onYouTubeIframeAPIReady() {
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
   event.target.playVideo();
-}
-
-function onPlayerStateChange() {
 }
