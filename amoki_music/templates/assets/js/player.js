@@ -5,7 +5,7 @@ var currentVolume;
 
 // Socket init
 var socket = new io.Socket();
-socket.connect("/socketio");
+socket.connect();
 socket.on('connect', function() {
   socket.subscribe(room);
 });
@@ -43,7 +43,7 @@ socket.on('message', function(message) {
   }
 });
 
-//Youtube iframe init
+// Youtube iframe init
 var tag = document.createElement('script');
 
 tag.src = "https://www.youtube.com/iframe_api";
@@ -57,14 +57,7 @@ function onYouTubeIframeAPIReady() {
     height: '390',
     width: '640',
     videoId: 'M7lc1UVf-VE',
-    events: {
-      'onReady': onPlayerReady,
-    }
   });
   initialized = true;
 }
 
-// 4. The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-  event.target.playVideo();
-}
