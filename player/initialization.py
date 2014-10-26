@@ -12,3 +12,6 @@ class Init(AppConfig):
         Room = self.get_model('Room')
         for room in Room.objects.all():
             events[room.name] = None
+            room.current_music = None
+            room.suffle = False
+            room.save()

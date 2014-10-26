@@ -78,9 +78,9 @@
 												</tr>
 											{% endfor %}
 										{% elif shuffle %}
-											<tr class="empty"><td><span class="empty" style="font-size:22px;font-weight:bold;text-align:center;color:black;">Shuffle activated...<br /><br />Let the music be your guide</span></td></tr>
+											<tr class="empty"><td>Shuffle activated...<br /><br />Let the music be your guide</td></tr>
 										{% else %}
-											<tr class="empty"><td><span class="empty" style="margin-left:-22px;font-size:22px;font-weight:bold;text-align:center; color: black;">No more musics in the playlist !</span></td></tr>
+											<tr class="empty"><td>No more musics in the playlist !</td></tr>
 										{% endif %}
 									</tbody>
 								</table>
@@ -126,7 +126,7 @@
 								{% csrf_token %}
 								<input type="text" name="url" class="form-control url" style="text-align:right" placeholder="Titre">
 								<span class="input-group-btn">
-									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube-me</button>
+									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
 								</span>
 							</form>
 						</div>
@@ -134,12 +134,13 @@
 					<div class="row list-lib">
 						<div class="col-md-12">
 							<ul class="nav nav-tabs nav-justified">
-								<li class="active"><a href="#accueil">Youtube</a></li>
+								<li class="active"><a data-toggle="tab" href="#youtube">Youtube</a></li>
+								<!--<li><a data-toggle="tab" href="#library">Library</a></li>-->
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane active in" id="youtube">
-									<ul class="list-group">
-										<li class="list-group-item item-lib list-music">
+								<div class="tab-pane active" id="youtube">
+									<ul id="list-youtube" class="list-group">
+										<li class="list-group-item item-lib youtube-list-music">
 											<div class="row">
 												<p class="col-xs-10">Enter your search in the field above</p>
 												<i class="fa fa-level-up fa-2x col-xs-2"></i>
@@ -147,6 +148,16 @@
 										</li>
 									</ul>
 								</div>
+								<!--<div class="tab-pane" id="library">
+									<ul id="list-library" class="list-group">
+										<li class="list-group-item item-lib library-list-music">
+											<div class="row">
+												<p class="col-xs-10">MOVE LE TEXTE</p>
+												<i class="fa fa-level-up fa-2x col-xs-2"></i>
+											</div>
+										</li>
+									</ul>
+								</div>-->
 							</div>
 						</div>
 					</div>
@@ -170,7 +181,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">x</button>
-						<h4 class="modal-title">Les extentions</h4>
+						<h4 class="modal-title">Les extensions</h4>
 					</div>
 					<div class="modal-body">
 						Vous pouvez aussi utiliser nos extentions pour ajouter des musiques directement depuis Youtube !
@@ -189,16 +200,6 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-info" data-dismiss="modal">Fermer</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-dead-link">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						This dead link is now reported ;)
-						<button type="button" class="close" data-dismiss="modal">x</button>
 					</div>
 				</div>
 			</div>
