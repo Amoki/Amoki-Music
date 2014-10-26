@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Django settings for remote_url_opener project.
+Django settings for amoki_music project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/

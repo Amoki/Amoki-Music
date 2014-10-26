@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-WSGI config for remote_url_opener project.
+WSGI config for amoki_music project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "remote_url_opener.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "amoki_music.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
