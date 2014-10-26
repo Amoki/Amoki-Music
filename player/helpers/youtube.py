@@ -43,7 +43,7 @@ def search(query):
         music = TemporaryMusic(
             url="https://www.youtube.com/watch?v=" + detail["id"],
             name=detail["snippet"]["title"],
-            description=detail["snippet"]["description"],
+            description=detail["snippet"]["description"][:200] + "...",
             thumbnail=detail["snippet"]["thumbnails"]["default"]["url"],
             views=detail["statistics"]["viewCount"],
             duration=get_time_in_seconds(detail["contentDetails"]["duration"]),

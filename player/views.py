@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from player.models import Music, Player
 from player.helpers import youtube, volume
 from django.core import serializers
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 import simplejson as json
 import re
 import urllib
@@ -78,13 +79,12 @@ def regExp(**kwargs):
             regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data)
                 query_search = json.loads(model_json)
             else:
-                # IL NOUS MANQUE PLEIN DE DATA
                 Player.push(url=kwargs['url'])
                 data = Music.objects.filter(url=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
                 query_search = json.loads(model_json)
                 regExped = True
         else:
@@ -189,3 +189,24 @@ def data_builder(**kwargs):
         current = False
         json_data = json.dumps({'current': False})
     return json_data
+
+
+@csrf_exempt
+def music_inifi_scroll(request):
+    # If this isn't AJAX, just return the page
+    if request.is_ajax():
+        musics = Music.objects.all().order_by('-date')
+        # Get the paginator
+        paginator = Paginator(musics, 15)
+        try:
+            page = int(request.GET.get('page', 1))
+        except ValueError:
+            page = 1
+        try:
+            musics = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            musics = paginator.page(paginator.num_pages)
+        # Return a snippet
+        json_data = serializers.serialize('json', musics)
+        return HttpResponse(json_data, content_type='application/json')
+    return redirect('/')

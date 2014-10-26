@@ -33,7 +33,7 @@ function Countdown(options) {
 
 	this.stop = function () {
 		var popover = $('.popover-on-top').data('bs.popover');
-		$('.popover-on-top').attr('data-content', '0:00:00');
+		$('.popover-on-top').attr('data-content', '00:00');
 		popover.setContent();
 		popover.$tip.addClass(popover.options.placement);
 		clearInterval(timer);
@@ -67,8 +67,10 @@ function updatePopover(sec){
 			printedTime += "0";
 		}
 	};
-	printedTime = heures+":";
-	stantardize(minutes);
+	if(heures !== 0){
+		printedTime = heures+":";
+		stantardize(minutes);
+	}
 	printedTime += minutes+":";
 	stantardize(secondes);
 	printedTime += secondes;
@@ -89,7 +91,7 @@ function updateTimePlaylistTemporaryFunction(sec){
 		if(minutes === 0) {
 			minutes = 59;
 			if(heures === 0){
-				return true;
+				return '00:00';
 			} else {
 				heures--;
 			}
@@ -104,8 +106,10 @@ function updateTimePlaylistTemporaryFunction(sec){
 			printedTime += "0";
 		}
 	};
-	printedTime = heures+":";
-	stantardize(minutes);
+	if(heures !== 0){
+		printedTime = heures+":";
+		stantardize(minutes);
+	}
 	printedTime += minutes+":";
 	stantardize(secondes);
 	printedTime += secondes;

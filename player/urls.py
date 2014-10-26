@@ -8,4 +8,5 @@ urlpatterns = patterns('player.views',
     url(r'^dead-link/$', 'dead_link'),
     url(r'^shuffle/$', 'trigger_shuffle'),
     url(r'^next-music/$', 'next_music'),
+    url(r'^infinite-scroll/$', 'music_inifi_scroll'),
 )
