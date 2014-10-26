@@ -224,8 +224,14 @@ $( document ).ready(function() {
 						disabled_btn();
 					}
 					if(data.skipped){
-						if(urlSubmit == '/next-music'){
+						if(urlSubmit == '/next-music/'){
 							modal_confirm($('#modal-next-music'));
+						} else {
+							modal_confirm($('#modal-dead-link'));
+						}
+					} else {
+						if(urlSubmit == '/next-music/'){
+							modal_confirm($('#modal-next-error'));
 						} else {
 							modal_confirm($('#modal-dead-link'));
 						}

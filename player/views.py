@@ -111,16 +111,6 @@ def regExp(**kwargs):
 
 
 @csrf_exempt
-def dead_link(request):
-    if request.is_ajax:
-        Player.signal_lien_mort()
-        Player.play_next()
-        json_data = data_builder()
-        return HttpResponse(json_data, content_type='application/json')
-    return redirect('/')
-
-
-@csrf_exempt
 def trigger_shuffle(request):
     if request.is_ajax:
         if request.POST.get('shuffle'):
@@ -130,6 +120,20 @@ def trigger_shuffle(request):
 
             json_data = data_builder()
             return HttpResponse(json_data, content_type='application/json')
+    return redirect('/')
+
+
+@csrf_exempt
+def dead_link(request):
+    if request.is_ajax:
+        if request.POST.get('url') == Player.current.url:
+            Player.signal_lien_mort()
+            Player.play_next()
+            skipped = True
+            json_data = data_builder(skipped=skipped)
+        else:
+            json_data = data_builder()
+        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 

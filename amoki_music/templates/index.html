@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/jquery.endless-scroll.js' %}"></script>
 		{% if playing %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
@@ -219,6 +218,16 @@
 				<div class="modal-content modal-content-custom">
 					<div class="modal-body">
 						Skipped !
+						<button type="button" class="close" data-dismiss="modal">x</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade modal-on-top" id="modal-next-error">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content modal-content-custom">
+					<div class="modal-body">
+						This music is already skipped !
 						<button type="button" class="close" data-dismiss="modal">x</button>
 					</div>
 				</div>
