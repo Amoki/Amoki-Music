@@ -2,7 +2,10 @@
 
 from django.db import models
 
+import random
+import math
 import webbrowser
+
 from datetime import datetime, timedelta
 from threading import Timer
 
@@ -90,11 +93,16 @@ class Player():
         if music:
             Player.play(music)
         elif Player.shuffle:
+
             # Select random music, excluding 5% last played musics
-            count = Music.objects.all().count()
-            limit = count / 20
-            limit_date = Music.objects.all().order_by('-date')[limit].date
-            shuffled = Music.objects.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
+            musics = Music.objects.all().exclude(dead_link=True).order_by('-date')
+            count = musics.count()
+            a = count / 5  # Le point où ca commence à monter
+            b = count / 27  # La vitesse à laquelle ca monte
+            x = random.uniform(1, count - a - 1)
+            i = int(math.floor(x + a - a * math.exp(-x / b)))
+
+            shuffled = musics[i]
             shuffled.date = datetime.now()
             shuffled.save()
 
