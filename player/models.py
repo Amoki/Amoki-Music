@@ -7,6 +7,12 @@ import random
 import math
 from datetime import datetime, timedelta
 from threading import Timer
+import os
+import binascii
+
+
+def generate_token():
+    return binascii.b2a_hex(os.urandom(32))
 
 
 class Room(models.Model):
@@ -14,6 +20,7 @@ class Room(models.Model):
     password = models.CharField(max_length=128)
     current_music = models.ForeignKey('player.Music', null=True, related_name="+", editable=False)
     shuffle = models.BooleanField(default=False)
+    token = models.CharField(max_length=64, default=generate_token)
 
     def play(self, music=None):
         # clear the queue
@@ -36,7 +43,7 @@ class Room(models.Model):
 
             message['video_id'] = video_id
             try:
-                django_socketio.broadcast_channel(message, self.name)
+                django_socketio.broadcast_channel(message, self.token)
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
             except:
@@ -45,7 +52,7 @@ class Room(models.Model):
             message = dict()
             message['action'] = "stop"
             try:
-                django_socketio.broadcast_channel(message, self.name)
+                django_socketio.broadcast_channel(message, self.token)
             except:
                 pass
 
@@ -58,10 +65,9 @@ class Room(models.Model):
                 music = self.music_set.filter(date__gt=self.current_music.date).order_by('date').first()
 
         if music:
-            Player.play(music)
-        elif Player.shuffle:
-
-            # Select random music, excluding 5% last played musics
+            self.play(music)
+        elif self.shuffle:
+            # Select random music, excluding 10% last played musics
             musics = Music.objects.all().exclude(dead_link=True).order_by('-date')
             count = musics.count()
 

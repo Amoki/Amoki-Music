@@ -16,7 +16,18 @@ youtube = build(
 )
 
 
+def get_info(ids):
+    ids = ','.join(ids)
+    details = youtube.videos().list(
+        id=ids,
+        part='snippet, contentDetails, statistics'
+    ).execute()
+    return details.get("items", [])
+
+
 def search(query):
+    requestId = ''.join(random.choice(string.lowercase) for i in range(64))
+
     search_response = youtube.search().list(
         q=query,
         part="snippet",
@@ -30,16 +41,7 @@ def search(query):
     for video in search_response.get("items", []):
         ids.append(video["id"]["videoId"])
 
-    ids = ','.join(ids)
-
-    details = youtube.videos().list(
-        id=ids,
-        part='snippet, contentDetails, statistics'
-    ).execute()
-
-    requestId = ''.join(random.choice(string.lowercase) for i in range(64))
-
-    for detail in details.get("items", []):
+    for detail in get_info(ids):
         music = TemporaryMusic(
             url="https://www.youtube.com/watch?v=" + detail["id"],
             name=detail["snippet"]["title"],

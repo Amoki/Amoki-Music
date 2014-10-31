@@ -7,7 +7,7 @@ var currentVolume;
 var socket = new io.Socket();
 socket.connect();
 socket.on('connect', function() {
-  socket.subscribe(room);
+  socket.subscribe(token);
 });
 
 socket.on('message', function(message) {

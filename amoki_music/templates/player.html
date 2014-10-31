@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 		{% if not logging %}
 			<script type ="text/javascript">
-				var room = "{{ request.session.room|safe }}";
+				var token = "{{ request.session.token }}";
 			</script>
 			<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
 		{% endif %}

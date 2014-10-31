@@ -25,7 +25,7 @@ def home(request):
             logging = True
         else:
             request.session['room'] = room_name
-            request.session.set_expiry(0)
+            request.session['token'] = room[0].token
 
     if not request.session.get('room', False):
         rooms = Room.objects.values_list('name', flat=True).all()
