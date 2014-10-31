@@ -267,6 +267,7 @@ $( document ).ready(function() {
 			)
 		);
 		$('#url-next').val(data.music[0].fields.url);
+		$('#url-dead-link').val(data.music[0].fields.url);
 	}
 	function disabled_btn(){
 		$(document).attr('title', 'Amoki\'s musics');
