@@ -3,6 +3,8 @@
 from django.db import models
 import django_socketio
 import urlparse
+import random
+import math
 from datetime import datetime, timedelta
 from threading import Timer
 
@@ -56,13 +58,22 @@ class Room(models.Model):
                 music = self.music_set.filter(date__gt=self.current_music.date).order_by('date').first()
 
         if music:
-            self.play(music)
-        elif self.shuffle:
+            Player.play(music)
+        elif Player.shuffle:
+
             # Select random music, excluding 5% last played musics
-            count = self.music_set.all().count()
-            limit = count / 20
-            limit_date = self.music_set.all().order_by('-date')[limit].date
-            shuffled = self.music_set.filter(date__lte=limit_date).exclude(dead_link=True).order_by('?').first()
+            musics = Music.objects.all().exclude(dead_link=True).order_by('-date')
+            count = musics.count()
+
+            to_remove = int(count / 10)
+            count -= to_remove
+            musics = musics[to_remove:]
+            a = count / 5  # Le point où ca commence à monter
+            b = count / 27  # La vitesse à laquelle ca monte
+            x = random.uniform(1, count - a - 1)
+            i = int(math.floor(x + a - a * math.exp(-x / b)))
+
+            shuffled = musics[i]
             shuffled.date = datetime.now()
             shuffled.save()
 
