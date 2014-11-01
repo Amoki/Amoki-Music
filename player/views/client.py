@@ -105,18 +105,25 @@ def regExp(**kwargs):
         query_search = []
     else:
         if kwargs['input'] == "search":
-            regex = re.compile("(((\?v=)|youtu\.be\/)(.){11})$", re.IGNORECASE | re.MULTILINE)
+            regex = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
             if regex.search(kwargs['url']) is None:
                 data = youtube.search(query=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
+                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'views', 'duration', 'requestId'))
                 query_search = json.loads(model_json)
             else:
-                # IL NOUS MANQUE PLEIN DE DATA
-                room.push(url=kwargs['url'])
-                data = Music.objects.filter(url=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration', 'requestId'))
-                query_search = json.loads(model_json)
-                regExped = True
+                videos = youtube.get_info(regex.search(kwargs['url']).group(2))
+                print videos
+                if(videos):
+                    room.push(
+                        url=videos[0]['url'],
+                        name=videos[0]['name'],
+                        duration=videos[0]['duration'],
+                        thumbnail=videos[0]['thumbnail'],
+                    )
+                    data = Music.objects.filter(url=kwargs['url'])
+                    model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'views', 'duration', 'requestId'))
+                    query_search = json.loads(model_json)
+                    regExped = True
         else:
             room.push(url=kwargs['url'], requestId=kwargs['requestId'])
             data = Music.objects.filter(url=kwargs['url'])

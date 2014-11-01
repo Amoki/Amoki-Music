@@ -97,7 +97,7 @@ class Room(models.Model):
             self.save()
             self.play(None)
 
-    def push(self, url, requestId=None):
+    def push(self, url, requestId=None, **kwargs):
         if requestId:
             temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
             music = Music.add(
@@ -109,8 +109,13 @@ class Room(models.Model):
             )
             TemporaryMusic.clean()
         else:
-            # TODO: get all video data
-            music = Music.add(url=url, room=self)
+            music = Music.add(
+                room=self,
+                url=url,
+                name=kwargs['name'],
+                duration=kwargs['duration'],
+                thumbnail=kwargs['thumbnail']
+            )
 
         if not self.current_music:
             self.current_music = music

@@ -17,12 +17,27 @@ youtube = build(
 
 
 def get_info(ids):
-    ids = ','.join(ids)
+    if type(ids) is not unicode:
+        ids = ','.join(ids)
     details = youtube.videos().list(
         id=ids,
         part='snippet, contentDetails, statistics'
     ).execute()
-    return details.get("items", [])
+
+    videos = []
+
+    for detail in details.get("items", []):
+        detailedVideo = {
+            'url': "https://www.youtube.com/watch?v=" + detail["id"],
+            'name': detail["snippet"]["title"],
+            'description': detail["snippet"]["description"][:200] + "...",
+            'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
+            'views': detail["statistics"]["viewCount"],
+            'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
+        }
+        videos.append(detailedVideo)
+
+    return videos
 
 
 def search(query):
@@ -41,14 +56,14 @@ def search(query):
     for video in search_response.get("items", []):
         ids.append(video["id"]["videoId"])
 
-    for detail in get_info(ids):
+    for video in get_info(ids):
         music = TemporaryMusic(
-            url="https://www.youtube.com/watch?v=" + detail["id"],
-            name=detail["snippet"]["title"],
-            description=detail["snippet"]["description"][:200] + "...",
-            thumbnail=detail["snippet"]["thumbnails"]["default"]["url"],
-            views=detail["statistics"]["viewCount"],
-            duration=get_time_in_seconds(detail["contentDetails"]["duration"]),
+            url=video['url'],
+            name=video['name'],
+            description=video['description'],
+            thumbnail=video['thumbnail'],
+            views=video['views'],
+            duration=video['duration'],
             requestId=requestId
         )
         videos.append(music)
