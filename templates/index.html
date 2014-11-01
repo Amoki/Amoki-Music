@@ -168,6 +168,7 @@
 			<!-- FOOTER  -->
 			<footer class="row foot">
 				<form action="/dead-link/" method="post" class="pull-left ajax">
+					<input id="url-dead-link" class="url" type="hidden" name="url" value="{{playing.url}}">
 					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Dead link ?</button>
 				</form>
 				<a class="btn btn-primary pull-right" href="">Company Terms</a>
