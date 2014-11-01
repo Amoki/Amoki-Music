@@ -63,3 +63,4 @@ docs/_build/
 *.db
 *.cmd
 *.sh
+.directory
