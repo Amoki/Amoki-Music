@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from player.models import Room, Music
-from player.helpers import youtube, volume
+from player.helpers import youtube
 from django.core import serializers
 import simplejson as json
 import re
@@ -36,9 +36,9 @@ def home(request):
         if request.POST.get('play_next'):
             room.play_next()
         if request.POST.get('volume_up'):
-            volume.increase()
+            room.increase_volume()
         if request.POST.get('volume_down'):
-            volume.decrease()
+            room.decrease_volume()
         if request.POST.get('shuffle'):
             room.shuffle = (request.POST.get('shuffle') == 'true')
             if room.shuffle and not room.current_music:

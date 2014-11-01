@@ -14,8 +14,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-assert 'YOUTUBE_KEY' in os.environ, 'Set YOUTUBE_KEY in your .env file!'
-YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
+YOUTUBE_KEY = None
+if 'YOUTUBE_KEY' in os.environ:
+    YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
 
 
 # Quick-start development settings - unsuitable for production

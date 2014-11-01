@@ -2,6 +2,21 @@ var player;
 var initialized = false;
 var currentVolume;
 
+var playerControl = {
+  play: function(options) {
+    player.loadVideoById(options.videoId, 0, 'default');
+    $(document).attr('title', options.name);
+  },
+  stop: function() {
+    player.stopVideo();
+  },
+  volume_up: function() {
+    player.setVolume(Math.min(player.getVolume() + 10, 100));
+  },
+  volume_down: function() {
+    player.setVolume(Math.max(player.getVolume() - 10, 0));
+  }
+};
 
 // Socket init
 var socket = new io.Socket();
@@ -12,34 +27,7 @@ socket.on('connect', function() {
 
 socket.on('message', function(message) {
   if(initialized) {
-    if(message.action === 'play') {
-      player.loadVideoById(message.video_id, 0, 'default');
-      $(document).attr('title', message.name);
-    }
-    if(message.action === "volume_up") {
-      currentVolume = player.getVolume();
-      if(currentVolume >= 90) {
-        player.setVolume(100);
-      }
-      else {
-        player.setVolume(currentVolume + 10);
-      }
-    }
-    if(message.action === "volume_down") {
-      currentVolume = player.getVolume();
-      if(currentVolume <= 10) {
-        player.setVolume(0);
-      }
-      else {
-        player.setVolume(currentVolume - 10);
-      }
-    }
-  }
-  if(message.action === 'pause') {
-    player.pauseVideo();
-  }
-  if(message.action === 'resume') {
-    player.playVideo();
+    playerControl[message.action](message.options);
   }
 });
 

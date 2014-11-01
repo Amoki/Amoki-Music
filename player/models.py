@@ -22,6 +22,14 @@ class Room(models.Model):
     shuffle = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
+    def send_message(self, message, function=None):
+        try:
+            django_socketio.broadcast_channel(message, self.token)
+            if function:
+                function()
+        except:
+            pass
+
     def play(self, music=None):
         # clear the queue
         if events[self.name]:
@@ -34,27 +42,27 @@ class Room(models.Model):
             music.last_play = datetime.now()
             music.save()
 
-            message = dict()
-            message['action'] = "play"
-            message['name'] = music.name
-
             url_data = urlparse.urlparse(music.url)
             video_id = urlparse.parse_qs(url_data.query)["v"][0]
 
-            message['video_id'] = video_id
-            try:
-                django_socketio.broadcast_channel(message, self.token)
+            message = {
+                'action': 'play',
+                'options': {
+                    'name': music.name,
+                    'videoId': video_id
+                }
+            }
+
+            def play_music():
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
-            except:
-                pass
+
+            self.send_message(message, play_music)
         else:
-            message = dict()
-            message['action'] = "stop"
-            try:
-                django_socketio.broadcast_channel(message, self.token)
-            except:
-                pass
+            message = {
+                'action': 'stop',
+            }
+            self.send_message(message)
 
     def play_next(self, forced=False):
         music = None
@@ -140,6 +148,18 @@ class Room(models.Model):
             return
         self.current_music.dead_link = True
         self.current_music.save()
+
+    def increase_volume(self):
+        message = {
+            'action': 'volume_up',
+        }
+        self.send_message(message)
+
+    def decrease_volume(self):
+        message = {
+            'action': 'volume_down',
+        }
+        self.send_message(message)
 
 
 class Music(models.Model):

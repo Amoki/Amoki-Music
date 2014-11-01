@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-
-from django.contrib.sessions.models import Session
 from player.models import Room
-Session.objects.all().delete()
 
 
 def host(request):
