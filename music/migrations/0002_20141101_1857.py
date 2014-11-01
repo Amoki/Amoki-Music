@@ -15,7 +15,6 @@ def remove_errored_thumbnails(apps, schema_editor):
     Music = apps.get_model("music", "Music")
 
     for music in Music.objects.filter(thumbnail__contains="{u'url': u'"):
-        # {u'url': u'https://i1.ytimg.com/vi/xchGAzcDNlw/default.jpg', u'width': 120, u'height': 90}
         music.thumbnail = music.thumbnail.split("'")[3]
         music.save()
 
