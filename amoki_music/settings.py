@@ -55,6 +55,7 @@ INSTALLED_APPS = (
 
     # Our apps
     'player',
+    'music',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+
 import django_socketio
 import urlparse
 import random
 import math
-from datetime import datetime, timedelta
-from threading import Timer
 import os
 import binascii
+from datetime import datetime
+from threading import Timer
+
+from music.models import Music
 
 
 def generate_token():
@@ -18,7 +21,7 @@ def generate_token():
 class Room(models.Model):
     name = models.CharField(max_length=64, unique=True)
     password = models.CharField(max_length=128)
-    current_music = models.ForeignKey('player.Music', null=True, related_name="+", editable=False)
+    current_music = models.ForeignKey('music.Music', null=True, related_name="+", editable=False)
     shuffle = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
@@ -165,53 +168,6 @@ class Room(models.Model):
             'action': 'volume_down',
         }
         self.send_message(message)
-
-
-class Music(models.Model):
-    url = models.CharField(max_length=255)
-    name = models.CharField(max_length=255, editable=False)
-    room = models.ForeignKey(Room)
-    # Date is used for ordering musics
-    date = models.DateTimeField(auto_now_add=True)
-    # Duration in second
-    duration = models.PositiveIntegerField(editable=False)
-    # thumbnail in 190 * 120
-    thumbnail = models.CharField(max_length=255)
-    count = models.PositiveIntegerField(default=0, editable=False)
-    last_play = models.DateTimeField(null=True)
-    # signalement de lien mort
-    dead_link = models.BooleanField(default=False)
-
-    @classmethod
-    def add(cls, **kwargs):
-        existing_music = Music.objects.filter(url=kwargs['url']).first()
-        if existing_music:
-            existing_music.date = datetime.now()
-            existing_music.save()
-            return existing_music
-        else:
-            music = cls(**kwargs)
-            music.save()
-            return music
-
-    def __unicode__(self):
-        return self.name
-
-
-class TemporaryMusic(models.Model):
-    url = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now_add=True)
-    duration = models.PositiveIntegerField()
-    thumbnail = models.CharField(max_length=255)
-    views = models.PositiveIntegerField()
-    description = models.TextField()
-    requestId = models.CharField(max_length=64)
-
-    @classmethod
-    def clean(self):
-        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(hours=1)).delete()
-
 
 events = dict()
 

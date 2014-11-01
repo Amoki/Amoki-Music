@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import random
 import string
+import isodate
+
 from apiclient.discovery import build
 
 from amoki_music.settings import YOUTUBE_KEY
 
-from player.helpers.helpers import get_time_in_seconds
-from player.models import TemporaryMusic
+from music.models import TemporaryMusic
 
 
 youtube = build(
@@ -14,6 +15,10 @@ youtube = build(
     "v3",
     developerKey=YOUTUBE_KEY
 )
+
+
+def get_time_in_seconds(time):
+    return isodate.parse_duration(time).total_seconds()
 
 
 def get_info(ids):
