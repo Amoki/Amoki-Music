@@ -5,6 +5,6 @@ from player.models import Room
 
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('name', 'shuffle', 'current_music')
+    list_display = ('name', 'shuffle', 'current_music', 'can_adjust_volume')
 
 admin.site.register(Room, RoomAdmin)

@@ -23,15 +23,15 @@ class Room(models.Model):
     password = models.CharField(max_length=128)
     current_music = models.ForeignKey('music.Music', null=True, related_name="+", editable=False)
     shuffle = models.BooleanField(default=False)
+    can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
-    def send_message(self, message, function=None):
+    def send_message(self, message):
         try:
             django_socketio.broadcast_channel(message, self.token)
-            if function:
-                function()
+            return True
         except:
-            pass
+            return False
 
     def play(self, music=None):
         # clear the queue
@@ -56,11 +56,10 @@ class Room(models.Model):
                 }
             }
 
-            def play_music():
+            if self.send_message(message):
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
 
-            self.send_message(message, play_music)
         else:
             message = {
                 'action': 'stop',
@@ -158,16 +157,18 @@ class Room(models.Model):
         self.current_music.save()
 
     def increase_volume(self):
-        message = {
-            'action': 'volume_up',
-        }
-        self.send_message(message)
+        if self.can_adjust_volume:
+            message = {
+                'action': 'volume_up',
+            }
+            self.send_message(message)
 
     def decrease_volume(self):
-        message = {
-            'action': 'volume_down',
-        }
-        self.send_message(message)
+        if self.can_adjust_volume:
+            message = {
+                'action': 'volume_down',
+            }
+            self.send_message(message)
 
 events = dict()
 
