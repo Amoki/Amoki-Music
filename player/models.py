@@ -26,6 +26,10 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
+    def reset_token(self):
+        self.token = generate_token()
+        self.save()
+
     def send_message(self, message):
         try:
             django_socketio.broadcast_channel(message, self.token)
