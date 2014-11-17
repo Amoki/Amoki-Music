@@ -1,3 +1,7 @@
+var myCounter = new Countdown({
+	onCounterEnd: function(){} // final action
+});
+
 function timeline(current_time_left, current_time_past_percent){
 	$(".progress-bar").stop();
 	var actual_time = current_time_left;
