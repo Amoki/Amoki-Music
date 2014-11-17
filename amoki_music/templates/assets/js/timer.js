@@ -14,6 +14,7 @@ function timeline(current_time_left, current_time_past_percent){
 	});
 }
 
+
 function Countdown(options) {
 	var timer,
 	instance = this,
