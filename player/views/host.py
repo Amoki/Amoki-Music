@@ -29,4 +29,5 @@ def host(request):
 def logout(request):
     request.session.flush()
     logging = True
-    return render(request, 'player.html', locals())
+    rooms = Room.objects.values_list('name', flat=True).all()
+    return render(request, 'login.html', locals())
