@@ -28,5 +28,5 @@ def host(request):
 
 def logout(request):
     request.session.flush()
-
+    logging = True
     return render(request, 'player.html', locals())
