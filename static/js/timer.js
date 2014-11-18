@@ -16,7 +16,7 @@ function Countdown(options) {
 	counterEnd = options.onCounterEnd || function () {};
 
 	function decrementCounter() {
-		updatePopover(seconds);
+		updateDisplayTimeLeft(seconds);
 		if (seconds === 0) {
 		  counterEnd();
 		  instance.stop();
@@ -32,16 +32,14 @@ function Countdown(options) {
 	};
 
 	this.stop = function () {
-		var popover = $('.popover-on-top').data('bs.popover');
-		$('.popover-on-top').attr('data-content', '00:00');
-		popover.setContent();
-		popover.$tip.addClass(popover.options.placement);
+		var elementDisplay = $('.time-left-progress-bar');
+		elementDisplay.html("");
 		clearInterval(timer);
 	};
 }
 
-function updatePopover(sec){
-	var popover = $('.popover-on-top').data('bs.popover');
+function updateDisplayTimeLeft(sec){
+	var elementDisplay = $('.time-left-progress-bar');
 	var heures = Math.floor(sec / 3600);
 	var minutes = Math.floor((sec - (heures * 3600)) / 60);
 	var secondes = sec - (heures * 3600) - (minutes * 60) ;
@@ -74,9 +72,7 @@ function updatePopover(sec){
 	printedTime += minutes+":";
 	stantardize(secondes);
 	printedTime += secondes;
-	$('.popover-on-top').attr('data-content', printedTime);
-	popover.setContent();
-	popover.$tip.addClass(popover.options.placement);
+	elementDisplay.html(printedTime);
 
 	return printedTime;
 }

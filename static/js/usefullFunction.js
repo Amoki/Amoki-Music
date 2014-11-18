@@ -33,11 +33,7 @@ $( document ).ready(function() {
 	$(".btn").click(function(){
 	    $(this).blur();
 	});
-	$(".popover-on-top").popover({
-		placement : 'top',
-		trigger : 'hover',
-		content : '00:00'
-	});
+
 	var myCounter = new Countdown({
 	    onCounterEnd: function(){} // final action
 	});
@@ -301,7 +297,7 @@ $( document ).ready(function() {
 						.append(
 							$('<span/>', {
 								class:'badge',
-								text: updatePopover(value.fields.duration)
+								text: updateDisplayTimeLeft(value.fields.duration)
 							})
 						)
 					)

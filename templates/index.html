@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 		{% if playing %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
@@ -90,9 +91,10 @@
 					<!-- END PLAYLIST -->
 					<!-- PROGRESS BAR -->
 					<div class="row">
-						<div class="col-md-offset-1 col-md-10">
-							<div class="progress progress-striped active popover-on-top">
+						<div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
+							<div class="progress progress-striped active">
 								<div class="progress-bar"></div>
+								<span class="time-left-progress-bar"></span>
 							</div>
 						</div>
 					</div>
