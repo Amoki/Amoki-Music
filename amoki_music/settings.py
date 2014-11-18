@@ -17,7 +17,7 @@ BASE_DIR = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/..")
 
 ADMINS = (
     ('Amoki', 'hugo.duroux@gmail.com'),
-    ('Eïrika', 'chanove.tristan@gmail.com'),
+    ('Eirika', 'chanove.tristan@gmail.com'),
 )
 
 MANAGERS = ADMINS
