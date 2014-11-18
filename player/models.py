@@ -11,7 +11,7 @@ import binascii
 from datetime import datetime
 from threading import Timer
 
-from music.models import Music
+from music.models import Music, TemporaryMusic
 
 
 def generate_token():

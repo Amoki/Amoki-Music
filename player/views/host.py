@@ -24,3 +24,9 @@ def host(request):
         return render(request, 'player.html', locals())
 
     return render(request, 'player.html', locals())
+
+
+def logout(request):
+    request.session.flush()
+
+    return render(request, 'player.html', locals())
