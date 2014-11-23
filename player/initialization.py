@@ -14,5 +14,5 @@ class Init(AppConfig):
                 room.current_music = None
                 room.shuffle = False
                 room.save()
-        except:
-            print 'Error during initilization'
+        except Exception, e:
+            print ('Error during initilization: %s' % e)
