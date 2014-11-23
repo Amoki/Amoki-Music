@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 # BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../..")
-print BASE_DIR
 
 ADMINS = (
     ('Amoki', 'hugo.duroux@gmail.com'),

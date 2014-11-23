@@ -5,7 +5,7 @@ import isodate
 
 from apiclient.discovery import build
 
-from amoki_music.settings import YOUTUBE_KEY
+from amoki_music.settings.common import YOUTUBE_KEY
 
 from music.models import TemporaryMusic
 
