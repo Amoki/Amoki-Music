@@ -3,7 +3,9 @@ Amoki-Music
 
 External Requirements
 ---------------------
-* Firefox
+* libevent
+On ubuntu: `apt-get install libevent-dev`
+
 
 Install
 ---------
@@ -16,13 +18,9 @@ Install
 * `./manage.py migrate` : migrate DB
 
 
+
 Configure
 ---------
-#### Firefox :
-```
-In about:config set "browser.link.open_newwindow.override.external" to 1
-```
-It will open new url in the current tab
 
 #### env:
 ```bash
