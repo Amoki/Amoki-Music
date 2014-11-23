@@ -33,6 +33,12 @@
 			<div class="navbar navbar-inverse row">
 				<ul class="nav navbar-nav">
 					<li class="active"> <a href="">Teamspeak</a> </li>
+					<li>
+						<form action="/log-out/" method="post" class="">
+							{% csrf_token %}
+							<button id="log-out" class="btn btn-primary" type="submit">Change Room</button>
+						</form>
+					</li>
 				</ul>
 				<form action="." method="post" class="navbar-form pull-right">
 					{% csrf_token %}
