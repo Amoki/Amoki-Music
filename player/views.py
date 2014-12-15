@@ -193,7 +193,6 @@ def data_builder(**kwargs):
 
 @csrf_exempt
 def music_inifi_scroll(request):
-    # If this isn't AJAX, just return the page
     if request.is_ajax():
         musics = Music.objects.all().order_by('-date')
         # Get the paginator

@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
 		{% if playing %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
@@ -90,7 +91,7 @@
 					<!-- PROGRESS BAR -->
 					<div class="row">
 						<div class="col-md-offset-1 col-md-10">
-							<div class="progress progress-striped active popover-on-top">
+							<div class="progress progress-striped active">
 								<div class="progress-bar"></div>
 							</div>
 						</div>
@@ -99,7 +100,7 @@
 					<!-- CONTROL BUTTONS -->
 					<div class="row">
 						<div class="col-xs-offset-2 col-xs-3">
-							<form action="/shuffle/" method="post" class="input-group ajax">
+							<form action="/shuffle/" method="post" class="input-group ajax-shuffle">
 								{% csrf_token %}
 								<button type="submit" name="shuffle" {%if shuffle %}value="false" class="btn btn-default btn-control"{% else %} class="btn btn-default btn-control btn-shuffle-false" value="true"{% endif %} title="Shuffle" alt="Shuffle"/>
 									<i class="fa fa-random fa-2x"></i>
@@ -107,7 +108,7 @@
 							</form>
 						</div>
 						<div class="col-xs-offset-3 col-xs-4">
-							<form action="/next-music/" method="post" class="input-group ajax">
+							<form action="/next-music/" method="post" class="input-group ajax-next">
 								{% csrf_token %}
 								<input id="url-next" class="url" type="hidden" name="url" value="{{playing.url}}">
 								<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
@@ -121,7 +122,7 @@
 				<div class="col-md-offset-1 col-md-4 LIB">
 					<div class="row input-lib">
 						<div class="col-md-offset-0 col-md-12">
-							<form action="/search-music/" method="post" class="input-group ajax">
+							<form action="/search-music/" method="post" class="input-group ajax-search">
 								{% csrf_token %}
 								<input type="text" name="url" class="form-control url" style="text-align:right" placeholder="Titre">
 								<span class="input-group-btn">
@@ -134,7 +135,7 @@
 						<div class="col-md-12">
 							<ul class="nav nav-tabs nav-justified">
 								<li class="active"><a data-toggle="tab" href="#youtube">Youtube</a></li>
-								<!--<li><a data-toggle="tab" href="#library">Library</a></li>-->
+								<li><a data-toggle="tab" href="#library">Library</a></li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="youtube">
@@ -147,7 +148,7 @@
 										</li>
 									</ul>
 								</div>
-								<!--<div class="tab-pane" id="library">
+								<div class="tab-pane" id="library">
 									<ul id="list-library" class="list-group">
 										<li class="list-group-item item-lib library-list-music">
 											<div class="row">
@@ -156,7 +157,7 @@
 											</div>
 										</li>
 									</ul>
-								</div>-->
+								</div>
 							</div>
 						</div>
 					</div>
@@ -166,7 +167,7 @@
 
 			<!-- FOOTER  -->
 			<footer class="row foot">
-				<form action="/dead-link/" method="post" class="pull-left ajax">
+				<form action="/dead-link/" method="post" class="pull-left ajax-dead-link">
 					<input id="url-dead-link" class="url" type="hidden" name="url" value="{{playing.url}}">
 					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Dead link ?</button>
 				</form>
