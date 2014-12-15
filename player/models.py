@@ -49,8 +49,7 @@ class Room(models.Model):
             music.last_play = datetime.now()
             music.save()
 
-            url_data = urlparse.urlparse(music.url)
-            video_id = urlparse.parse_qs(url_data.query)["v"][0]
+            video_id = self.get_video_id()
 
             message = {
                 'action': 'play',
@@ -144,6 +143,12 @@ class Room(models.Model):
         time_left += self.get_current_remaining_time()
         return int(time_left)
 
+    def get_current_time_past(self):
+        if not self.current_music:
+            return 0
+        current_time_past = self.current_music.duration - self.get_current_remaining_time()
+        return current_time_past
+
     def get_musics_remaining(self):
         if not self.current_music:
             return
@@ -173,6 +178,12 @@ class Room(models.Model):
                 'action': 'volume_down',
             }
             self.send_message(message)
+
+    def get_video_id(self):
+        if self.current_music:
+            url_data = urlparse.urlparse(self.current_music.url)
+            video_id = urlparse.parse_qs(url_data.query)["v"][0]
+            return video_id
 
 events = dict()
 

@@ -44,7 +44,11 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('embed', {
     height: '390',
     width: '640',
-    videoId: 'M7lc1UVf-VE',
+    events: {
+      onReady : function(){
+        player.loadVideoById(current_music, current_time_past, 'default');
+      }
+    }
   });
   initialized = true;
 }

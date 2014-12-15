@@ -17,6 +17,12 @@
 			<script type ="text/javascript">
 				var token = "{{ request.session.token }}";
 			</script>
+			{% if playing %}
+				<script type="text/javascript">
+				var current_time_past = {{current_time_past}};
+				var current_music = '{{video_id}}';
+				</script>
+			{% endif %}
 			<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
 		{% endif %}
 	</head>

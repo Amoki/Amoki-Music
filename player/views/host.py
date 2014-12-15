@@ -22,6 +22,12 @@ def host(request):
         rooms = Room.objects.values_list('name', flat=True).all()
         logging = True
         return render(request, 'player.html', locals())
+    else:
+        room = Room.objects.get(name=request.session.get('room'))
+        playing = room.current_music
+        if playing:
+            current_time_past = room.get_current_time_past()
+            video_id = room.get_video_id()
 
     return render(request, 'player.html', locals())
 
