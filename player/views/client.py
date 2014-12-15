@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -73,6 +72,17 @@ def home(request):
 
     # TODO Do not return locals
     return render(request, 'index.html', locals())
+
+
+def volume_change(request):
+    if request.is_ajax():
+        room = Room.objects.get(name=request.session.get('room'))
+        if request.POST.get('volume_change') == 'up':
+            room.increase_volume
+        else:
+            room.decrease_volume
+        return HttpResponse(json.dumps({'ok': 'ok'}), content_type='application/json')
+    return redirect('/')
 
 
 def search_music(request):

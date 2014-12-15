@@ -264,3 +264,25 @@ $(document).on ('submit', '.ajax-add-music', function (e){
 	  	},
 	});
 });
+
+$(document).on ('submit', '.ajax-volume', function(e){
+	e.preventDefault();
+	var form =  $(this);
+	var urlSubmit = form.attr('action');
+	var dataSend = 'volume_change='+encodeURIComponent(form.children("volume_clicked").val());
+
+	$.ajax({
+		type: "POST",
+		url: urlSubmit,
+		data: dataSend,
+		dataType: "json",
+		success: function(data){
+			form.children(".volume_clicked").removeClass("volume_clicked");
+		},
+		error : function(resultat, statut, erreur){
+			console.log(resultat.responseText);
+			console.log(statut);
+			console.log(erreur);
+	  	},
+	});
+});
