@@ -14,7 +14,6 @@ import re
 import urllib
 
 
-@csrf_exempt
 def home(request):
     room_name = request.POST.get('room')
     password = request.POST.get('password')
@@ -76,7 +75,6 @@ def home(request):
     return render(request, 'index.html', locals())
 
 
-@csrf_exempt
 def search_music(request):
     if request.is_ajax() and request.session.get('room', False):
         json_data = regExp(
@@ -88,7 +86,6 @@ def search_music(request):
     return redirect('/')
 
 
-@csrf_exempt
 def add_music(request):
     if request.is_ajax() and request.session.get('room', False):
         json_data = regExp(
@@ -150,7 +147,6 @@ def regExp(**kwargs):
     return json_data
 
 
-@csrf_exempt
 def trigger_shuffle(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
@@ -165,7 +161,6 @@ def trigger_shuffle(request):
     return redirect('/')
 
 
-@csrf_exempt
 def dead_link(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
@@ -179,7 +174,6 @@ def dead_link(request):
     return redirect('/')
 
 
-@csrf_exempt
 def next_music(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
