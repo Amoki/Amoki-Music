@@ -21,7 +21,7 @@ def host(request):
     if not request.session.get('room', False):
         rooms = Room.objects.values_list('name', flat=True).all()
         logging = True
-        return render(request, 'player.html', locals())
+        return render(request, 'login.html', locals())
     else:
         room = Room.objects.get(name=request.session.get('room'))
         playing = room.current_music
