@@ -32,38 +32,39 @@ $( document ).ready(function() {
 	$(".btn").click(function(){
 	    $(this).blur();
 	});
+});
 
 	function maj_header_player(data){
-	$(document).attr('title', data.music[0].fields.name);
-	$(".header-player").children().remove();
-	$(".player").children('.header-player')
-	.append(
-		$('<img/>', {
-			id:'thumbnail',
-			src: data.music[0].fields.thumbnail,
-			width:'120px',
-			height:'90px',
-			class:'col-md-offset-1 col-md-3 img-responsive'
-		}),
-		$('<div/>', {
-			class:'col-md-7 title_playing'
-		})
+		$(document).attr('title', data.music[0].fields.name);
+		$(".header-player").children().remove();
+		$(".player").children('.header-player')
 		.append(
+			$('<img/>', {
+				id:'thumbnail',
+				src: data.music[0].fields.thumbnail,
+				width:'120px',
+				height:'90px',
+				class:'col-md-offset-1 col-md-3 img-responsive'
+			}),
 			$('<div/>', {
-				class:'marquee'
+				class:'col-md-7 title_playing'
 			})
 			.append(
-				$('<a/>', {
-					href:data.music[0].fields.url,
-					class:'now-playing',
-					text:data.music[0].fields.name
+				$('<div/>', {
+					class:'marquee'
 				})
+				.append(
+					$('<a/>', {
+						href:data.music[0].fields.url,
+						class:'now-playing',
+						text:data.music[0].fields.name
+					})
+				)
 			)
-		)
-	);
-	$('#url-next').val(data.music[0].fields.url);
-	$('#url-dead-link').val(data.music[0].fields.url);
-}
+		);
+		$('#url-next').val(data.music[0].fields.url);
+		$('#url-dead-link').val(data.music[0].fields.url);
+	}
 
 function disabled_btn(){
 	$(document).attr('title', 'Amoki\'s musics');
