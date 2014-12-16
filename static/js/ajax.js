@@ -286,3 +286,26 @@ $(document).on ('submit', '.ajax-volume', function(e){
 	  	},
 	});
 });
+
+$(document).on('submit', '.ajax_music_inifi_scroll', function(e){
+	e.preventDefault();
+	var form =  $(this);
+	var urlSubmit = form.attr('action');
+	var dataSend = 'page='+encodeURIComponent(form.children("page").val());
+
+	$.ajax({
+		type: "POST",
+		url: urlSubmit,
+		data: dataSend,
+		dataType: "text",
+		success: function(data){
+			form.parents('#list-library')
+			.append(data);
+		},
+		error : function(resultat, statut, erreur){
+			console.log(resultat.responseText);
+			console.log(statut);
+			console.log(erreur);
+	  	},
+	});
+});

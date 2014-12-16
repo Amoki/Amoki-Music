@@ -13,4 +13,5 @@ urlpatterns = patterns('player.views',
     url(r'^shuffle/$', 'client.trigger_shuffle'),
     url(r'^next-music/$', 'client.next_music'),
     url(r'^volume/$', 'client.volume_change'),
+    url(r'^music_inifi_scroll/$', 'client.music_inifi_scroll'),
 )

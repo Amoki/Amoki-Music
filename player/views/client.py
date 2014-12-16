@@ -250,8 +250,5 @@ def music_inifi_scroll(request):
             musics = paginator.page(page)
         except (EmptyPage, InvalidPage):
             musics = paginator.page(paginator.num_pages)
-        # Return a snippet
-        # json_data = serializers.serialize('json', musics)
         return render_to_response("include/library.html", {"musics": musics})
-        # return HttpResponse(json_data, content_type='application/json')
     return redirect('/')

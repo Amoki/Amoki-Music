@@ -1,0 +1,22 @@
+{%for music in musics%}
+<li id="li-0" class="list-group-item item-lib youtube-list-music row row-list-item" data-toggle="popover" data-placement="left" data-content="" data-original-title="" title="">
+	<img class="col-xs-3" src="{{music.thumbnail}}" style="padding:0px">
+	<div class="col-xs-7" style="padding-right:0px">
+		<div class="row">
+			<div class="col-xs-12" style="min-height:45px">{{music.name}}</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="color:black;font-weight:normal;">views</div>
+			<div class="col-xs-4">
+				<span class="badge">{{music.duration}}</span>
+			</div>
+		</div>
+	</div>
+	<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
+		<input class="url" type="hidden" value="{{music.url}}" name="url">
+		<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
+			<span class="glyphicon glyphicon-headphones"></span>
+		</button>
+	</form>
+</li>
+{%endfor%}
