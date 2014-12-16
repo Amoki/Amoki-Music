@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.core import serializers
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from player.models import Room
 from music.models import Music
@@ -122,7 +123,6 @@ def regExp(**kwargs):
                 query_search = json.loads(model_json)
             else:
                 videos = youtube.get_info(regex.search(kwargs['url']).group(2))
-                print videos
                 if(videos):
                     room.push(
                         url=videos[0]['url'],
@@ -235,3 +235,23 @@ def data_builder(**kwargs):
     else:
         json_data = json.dumps({'current': False})
     return json_data
+
+
+def music_inifi_scroll(request):
+    if request.is_ajax():
+        musics = Music.objects.all().order_by('-date')
+        # Get the paginator
+        paginator = Paginator(musics, 15)
+        try:
+            page = int(request.POST.get('page'))
+        except ValueError:
+            page = 1
+        try:
+            musics = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            musics = paginator.page(paginator.num_pages)
+        # Return a snippet
+        # json_data = serializers.serialize('json', musics)
+        return render_to_response("include/library.html", {"musics": musics})
+        # return HttpResponse(json_data, content_type='application/json')
+    return redirect('/')

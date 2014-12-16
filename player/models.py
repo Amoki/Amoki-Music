@@ -26,6 +26,9 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
+    def __unicode__(self):
+        return self.name
+
     def reset_token(self):
         self.token = generate_token()
         self.save()
