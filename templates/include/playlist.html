@@ -1,0 +1,12 @@
+{% if playing and playlist|length > 0 %}
+	{% for music in nexts_music %}
+		<tr class="playlist-item" id="{{music.url}}">
+			<td>{{music.name}}</td>
+			<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>
+		</tr>
+	{% endfor %}
+{% elif shuffle %}
+	<tr class="empty"><td>Shuffle activated...<br /><br />Let the music be your guide</td></tr>
+{% else %}
+	<tr class="empty"><td>No more musics in the playlist !</td></tr>
+{% endif %}

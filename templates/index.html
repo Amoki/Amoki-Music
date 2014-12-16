@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>{% if playing %}{{playing}}{% else %}Amoki's musics{% endif %}</title>
+		<title>{% if current_music %}{{current_music}}{% else %}Amoki's musics{% endif %}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="content-language" content="fr" />
 		{% socketio %}
@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
-		{% if playing %}
+		{% if current_music %}
 		<script type="text/javascript">
 			$( document ).ready(function() {
 				timeline({{current_time_left}}, {{current_time_past_percent}});
@@ -57,11 +57,11 @@
 				<div class="col-md-offset-1 col-md-6 player">
 					<!-- HEADER PLAYER -->
 					<div class="row header-player">
-						{% if playing %}
-						<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img>
+						{% if current_music %}
+						<img id="thumbnail" src="{{current_music.thumbnail}}" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img>
 						<div class="col-md-7 title_playing">
 							<div class="marquee">
-								<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
+								<a href="{{video_url}}" class="now-playing">{{ current_music }}</a>
 							</div>
 						</div>
 						{% else %}
@@ -82,7 +82,7 @@
 										<h3 class="panel-title">Playlist</h3>
 									</div>
 									<tbody class="playlist-ajax">
-										{% if playing and nexts_music|length > 0 %}
+										{% if current_music and nexts_music|length > 0 %}
 											{% for music in nexts_music %}
 												<tr class="playlist-item" id="{{music.url}}">
 													<td>{{music.name}}</td>
@@ -123,8 +123,8 @@
 						<div class="col-xs-offset-3 col-xs-4">
 							<form action="/next-music/" method="post" class="input-group ajax-next">
 								{% csrf_token %}
-								<input id="url-next" class="url" type="hidden" name="url" value="{{playing.url}}">
-								<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
+								<input id="url-next" class="url" type="hidden" name="url" value="{{video_url}}">
+								<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not current_music %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
 							</form>
 						</div>
 					</div>
@@ -185,8 +185,8 @@
 			<!-- FOOTER  -->
 			<footer class="row foot">
 				<form action="/dead-link/" method="post" class="pull-left ajax-dead-link">
-					<input id="url-dead-link" class="url" type="hidden" name="url" value="{{playing.url}}">
-					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Dead link ?</button>
+					<input id="url-dead-link" class="url" type="hidden" name="url" value="{{video_url}}">
+					<button id="dead-link" class="btn btn-primary" type="submit" {% if not current_music %}disabled="disabled"{%endif%}>Dead link ?</button>
 				</form>
 				<a class="btn btn-primary pull-right" href="">Company Terms</a>
 				<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>

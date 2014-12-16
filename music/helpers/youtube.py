@@ -53,7 +53,7 @@ def search(query):
         part="id",
         type="video",
         maxResults=15,
-        videoEmbeddable="true",
+        videoSyndicated="true",
         regionCode="fr",
     ).execute()
 

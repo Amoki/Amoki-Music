@@ -26,16 +26,15 @@ $(document).on ('submit', '.ajax-shuffle', function (e){
 		success: function(data) {
 			if (data.shuffle === true){
 				form.children("button").attr("value", "false");
-				form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
-				maj_playlist_current(data, urlSubmit);
-				timeline(data.time_left, data.time_past_percent);
+				form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");		
 				modal_confirm($('#modal-shuffle-on'));
 			} else {
 				form.children("button").attr("value", "true");
 				form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-false");
-				maj_playlist_current(data, urlSubmit);
 				modal_confirm($('#modal-shuffle-off'));
 			}
+			timeline(data.time_left, data.time_past_percent);
+			maj_playlist_current(data, urlSubmit);
 		},
 		error : function(resultat, statut, erreur){
 				console.log(resultat.responseText);
@@ -297,10 +296,10 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 		type: "POST",
 		url: urlSubmit,
 		data: dataSend,
-		dataType: "text",
+		dataType: "json",
 		success: function(data){
 			form.parents('#list-library')
-			.append(data);
+			.append(data.template);
 		},
 		error : function(resultat, statut, erreur){
 			console.log(resultat.responseText);

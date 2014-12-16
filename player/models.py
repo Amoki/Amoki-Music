@@ -152,6 +152,14 @@ class Room(models.Model):
         current_time_past = self.current_music.duration - self.get_current_remaining_time()
         return current_time_past
 
+    def get_current_time_past_percent(self):
+        if self.current_music:
+            current_total_time = int(self.current_music.duration)
+            current_time_left = self.get_current_remaining_time()
+            current_time_past_percent = ((current_total_time - current_time_left) * 100) / current_total_time
+            return current_time_past_percent
+        return 0
+
     def get_musics_remaining(self):
         if not self.current_music:
             return
