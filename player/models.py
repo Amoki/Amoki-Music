@@ -62,6 +62,9 @@ class Room(models.Model):
             if self.send_message(message):
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
+            else:
+                self.current_music = None
+                self.save()
 
         else:
             message = {
@@ -128,42 +131,40 @@ class Room(models.Model):
             self.play_next(forced=True)
 
     def get_current_remaining_time(self):
-        if not self.current_music:
-            return 0
-        time = self.current_music.duration - int(((datetime.now() - self.current_music.last_play)).total_seconds())
-        return int(time)
+        if self.current_music:
+            time = self.current_music.duration - int(((datetime.now() - self.current_music.last_play)).total_seconds())
+            return int(time)
+        return 0
 
     def get_remaining_time(self):
-        if not self.current_music:
-            return 0
-        nexts = self.music_set.filter(date__gt=self.current_music.date)
-        time_left = 0
-        for music in nexts:
-            time_left += music.duration
-        time_left += self.get_current_remaining_time()
-        return int(time_left)
+        if self.current_music:
+            nexts = self.music_set.filter(date__gt=self.current_music.date)
+            time_left = 0
+            for music in nexts:
+                time_left += music.duration
+            time_left += self.get_current_remaining_time()
+            return int(time_left)
+        return 0
 
     def get_current_time_past(self):
-        if not self.current_music:
-            return 0
-        current_time_past = self.current_music.duration - self.get_current_remaining_time()
-        return current_time_past
+        if self.current_music:
+            current_time_past = self.current_music.duration - self.get_current_remaining_time()
+            return current_time_past
+        return 0
 
     def get_musics_remaining(self):
-        if not self.current_music:
-            return
-        return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
+        if self.current_music:
+            return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
 
     def get_count_remaining(self):
-        if not self.current_music:
-            return 0
-        return self.music_set.filter(date__gte=self.current_music.date).count()
+        if self.current_music:
+            return self.music_set.filter(date__gte=self.current_music.date).count()
+        return 0
 
     def signal_dead_link(self):
-        if not self.current_music:
-            return
-        self.current_music.dead_link = True
-        self.current_music.save()
+        if self.current_music:
+            self.current_music.dead_link = True
+            self.current_music.save()
 
     def increase_volume(self):
         if self.can_adjust_volume:

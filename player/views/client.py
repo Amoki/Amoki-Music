@@ -51,7 +51,7 @@ def home(request):
     # The object Music playing
     playing = room.current_music
     # All objects Music
-    list_musics = Music.objects.all()
+    list_musics = Music.objects.filter(room=room)
     # Objects of musics in queue
     nexts_music = room.get_musics_remaining()
     # The number of music in queue

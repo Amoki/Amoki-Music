@@ -19,7 +19,7 @@ class Music(models.Model):
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(url=kwargs['url']).first()
+        existing_music = Music.objects.filter(url=kwargs['url'], room=kwargs['room']).first()
         if existing_music:
             existing_music.date = datetime.now()
             existing_music.save()
