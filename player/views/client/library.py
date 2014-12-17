@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.core import serializers
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 
@@ -44,63 +43,20 @@ def search_music(request):
 
 
 def add_music(request):
-    if request.is_ajax() and request.session.get('room', False):
-        json_data = regExp(
-            url=urllib.unquote(request.POST.get('url')),
-            input='add-music',
-            requestId=request.POST.get('requestId'),
-            room=Room.objects.get(name=request.session.get('room'))
-        )
-        return HttpResponse(json_data, content_type='application/json')
-    return redirect('/')
-
-
-def regExp(**kwargs):
-    room = kwargs['room']
-    regExped = False
-    if kwargs['url'] is None or kwargs['url'] == "":
-        query_search = []
-    else:
-        if kwargs['input'] == "search":
-            regex = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
-            if regex.search(kwargs['url']) is None:
-                data = youtube.search(query=kwargs['url'])
-                model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'views', 'duration', 'requestId'))
-                query_search = json.loads(model_json)
-            else:
-                videos = youtube.get_info(regex.search(kwargs['url']).group(2))
-                if(videos):
-                    room.push(
-                        url=videos[0]['url'],
-                        name=videos[0]['name'],
-                        duration=videos[0]['duration'],
-                        thumbnail=videos[0]['thumbnail'],
-                    )
-                    data = Music.objects.filter(url=kwargs['url'])
-                    model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'views', 'duration', 'requestId'))
-                    query_search = json.loads(model_json)
-                    regExped = True
+    if request.is_ajax() and request.session.get('room', False) and request.POST.get('url'):
+        room = Room.objects.get(name=request.session.get('room'))
+        if(request.POST.get('requestId') == "undefined"):
+            music_to_add = Music.objects.get(url=urllib.unquote(request.POST.get('url')), room=room)
+            room.push(
+                    url=music_to_add.url,
+                    name=music_to_add.name,
+                    duration=music_to_add.duration,
+                    thumbnail=music_to_add.thumbnail,
+            )
         else:
-            room.push(url=kwargs['url'], requestId=kwargs['requestId'])
-            data = Music.objects.filter(url=kwargs['url'])
-            model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
-            query_search = json.loads(model_json)
-            regExped = False
-
-    playlist = []
-    if room.get_musics_remaining():
-        model_json = serializers.serialize('json', room.get_musics_remaining(), fields=('url', 'name', 'thumbnail', 'count', 'duration'))
-        playlist = json.loads(model_json)
-
-    if room.current_music:
-        current_total_time = int(room.current_music.duration)
-        current_time_left = room.get_current_remaining_time()
-        current_time_past_percent = (((current_total_time - current_time_left) * 100) / current_total_time)
-        json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped, 'time_left': current_time_left, 'time_past_percent': current_time_past_percent})
-    else:
-        json_data = json.dumps({'music': query_search, 'playlist': playlist, 'regExp': regExped})
-
-    return json_data
+            room.push(url=urllib.unquote(request.POST.get('url')), requestId=request.POST.get('requestId'))
+        return HttpResponse(render_player(room), content_type='application/json')
+    return redirect('/')
 
 
 def music_inifi_scroll(request):

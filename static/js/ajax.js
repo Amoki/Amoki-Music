@@ -35,6 +35,7 @@ $(document).on ('submit', '.ajax-shuffle', function (e){
 			}
 			timeline(data.time_left, data.time_past_percent);
 			maj_playlist_current(data, urlSubmit);
+			updateDataTime();
 		},
 		error : function(resultat, statut, erreur){
 				console.log(resultat.responseText);
@@ -58,6 +59,7 @@ $(document).on ('submit', '.ajax-next, .ajax-dead-link', function (e){
 		success: function(data) {
 			if(data.current_music){
 				maj_playlist_current(data, urlSubmit);
+				updateDataTime();
 				timeline(data.time_left, data.time_past_percent);
 			} else {
 				disabled_btn();
@@ -99,6 +101,9 @@ $(document).on ('submit', '.ajax-search', function (e){
 			if(data.current_music){
 					maj_playlist_current(data, urlSubmit);
 					timeline(data.time_left, data.time_past_percent);
+					$("#btn-search").children("i").attr("class", "fa fa-youtube-play");
+					$("#btn-search").removeAttr('disabled');
+					modal_confirm($('#modal-add-music'));
 			} else {
 				$("#tab_btn_youtube").addClass("active");
 				$("#youtube").addClass("active");
@@ -115,6 +120,7 @@ $(document).on ('submit', '.ajax-search', function (e){
 					});
 				});
 			}
+			updateDataTime();
 		},
 		error : function(resultat, statut, erreur){
 			console.log(resultat.responseText);
@@ -128,8 +134,7 @@ $(document).on ('submit', '.ajax-add-music', function (e){
 	e.preventDefault();
 	var form =  $(this);
 	var urlSubmit = form.attr('action');
-	var dataSend = {'url':encodeURIComponent($(this).children('.url').val()), 'requestId':encodeURIComponent($(this).children('.requestid').val())};
-
+	var dataSend = {'url':encodeURIComponent($(this).children('.url').val()), 'requestId': encodeURIComponent($(this).children('.requestId').val())};
 	form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
 	form.children("button").attr('disabled', 'disabled');
 
@@ -140,6 +145,7 @@ $(document).on ('submit', '.ajax-add-music', function (e){
 		dataType: "json",
 		success: function(data) {
 			maj_playlist_current(data, urlSubmit);
+			updateDataTime();
 			timeline(data.time_left, data.time_past_percent);
 			form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
 			form.children("button").removeAttr('disabled');

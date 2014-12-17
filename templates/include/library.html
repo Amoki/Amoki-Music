@@ -14,6 +14,9 @@
 	</div>
 	<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
 		<input class="url" type="hidden" value="{{music.url}}" name="url">
+		{% if music.requestId %}
+		<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
+		{% endif %}
 		<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
 			<span class="glyphicon glyphicon-headphones"></span>
 		</button>
