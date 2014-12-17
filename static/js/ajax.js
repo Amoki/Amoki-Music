@@ -264,7 +264,7 @@ $(document).on ('submit', '.ajax-volume', function(e){
 	e.preventDefault();
 	var form =  $(this);
 	var urlSubmit = form.attr('action');
-	var dataSend = 'volume_change='+encodeURIComponent(form.children("volume_clicked").val());
+	var dataSend = 'volume_change='+encodeURIComponent(form.children(".volume_clicked").val());
 
 	$.ajax({
 		type: "POST",
