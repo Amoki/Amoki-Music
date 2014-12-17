@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 
 from player.models import Room
+from player.views.client.client_player import render_player
 from music.models import Music
 from music.helpers import youtube
 
@@ -16,11 +17,28 @@ import urllib
 
 def search_music(request):
     if request.is_ajax() and request.session.get('room', False):
-        json_data = regExp(
-            url=request.POST.get('url'),
-            input='search',
-            room=Room.objects.get(name=request.session.get('room'))
-        )
+
+        room = Room.objects.get(name=request.session.get('room'))
+        regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
+        if regexVideoId.search(request.POST.get('url')) is None:
+            musics_searched = youtube.search(query=request.POST.get('url'))
+        else:
+            videos = youtube.get_info(regexVideoId.search(request.POST.get('url')).group(2))
+            if(videos):
+                room.push(
+                    url=videos[0]['url'],
+                    name=videos[0]['name'],
+                    duration=videos[0]['duration'],
+                    thumbnail=videos[0]['thumbnail'],
+                )
+                return HttpResponse(render_player(room), content_type='application/json')
+
+        tab = "youtube-list-music"
+        template_library = render_to_string("include/library.html", {"musics": musics_searched, "tab": tab})
+        json_data = json.dumps({
+            'template_library': template_library
+        })
+
         return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
@@ -100,7 +118,9 @@ def music_inifi_scroll(request):
         except (EmptyPage, InvalidPage):
             musics = paginator.page(paginator.num_pages)
 
-        template = render_to_string("include/library.html", {"musics": musics})
+        tab = "library-list-music"
+
+        template = render_to_string("include/library.html", {"musics": musics, "tab": tab})
         json_data = json.dumps({
             'template': template
         })

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 
 from player.models import Room
 
@@ -26,18 +24,6 @@ def home(request):
         return render(request, 'login.html', locals())
 
     room = Room.objects.get(name=request.session.get('room'))
-    if request.method == "POST":
-        if request.POST.get('play_next'):
-            room.play_next()
-        if request.POST.get('volume_up'):
-            room.increase_volume()
-        if request.POST.get('volume_down'):
-            room.decrease_volume()
-        if request.POST.get('shuffle'):
-            room.shuffle = (request.POST.get('shuffle') == 'true')
-            if room.shuffle and not room.current_music:
-                room.play_next()
-        return HttpResponseRedirect(reverse("player.views.client.home"))
 
     # The object Music playing
     current_music = room.current_music

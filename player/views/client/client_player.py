@@ -53,18 +53,13 @@ def render_player(room):
         data = Music.objects.filter(url=room.current_music.url)
         model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         current_music = json.loads(model_json)
-
-        data_playlist = room.get_musics_remaining()
-        model_json = serializers.serialize('json', data_playlist)
-        playlist = json.loads(model_json)
     else:
-        current_music = []
-        playlist = []
-    
+        current_music = None
+        
     shuffle_state = room.shuffle
 
     template_playlist = render_to_string("include/playlist.html", {
-        "playlist": playlist,
+        "playlist": room.get_musics_remaining(),
         "shuffle": shuffle_state
     })
     template_header_player = render_to_string("include/header_player.html", {
@@ -76,7 +71,6 @@ def render_player(room):
 
     json_data = json.dumps({
         'current_music': current_music,
-        'playlist': playlist,
         'shuffle': shuffle_state,
         'template_playlist': template_playlist,
         'template_header_player': template_header_player,

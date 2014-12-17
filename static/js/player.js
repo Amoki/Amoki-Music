@@ -46,7 +46,9 @@ function onYouTubeIframeAPIReady() {
     width: '640',
     events: {
       onReady : function(){
-        player.loadVideoById(current_music, current_time_past, 'default');
+        if(typeof current_music !== "undefined"){
+          player.loadVideoById(current_music, current_time_past, 'default');
+        }
         initialized = true;
       }
     }
