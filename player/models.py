@@ -63,6 +63,7 @@ class Room(models.Model):
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
             else:
+                self.shuffle = None
                 self.current_music = None
                 self.save()
 
