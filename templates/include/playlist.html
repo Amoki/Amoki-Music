@@ -1,5 +1,5 @@
-{% if playing and playlist|length > 0 %}
-	{% for music in nexts_music %}
+{% if playlist|length > 0 %}
+	{% for music in playlist %}
 		<tr class="playlist-item" id="{{music.url}}">
 			<td>{{music.name}}</td>
 			<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>

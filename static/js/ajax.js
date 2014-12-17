@@ -56,17 +56,13 @@ $(document).on ('submit', '.ajax-next, .ajax-dead-link', function (e){
 		data: dataSend,
 		dataType: "json",
 		success: function(data) {
-			if(data.current){
+			if(data.current_music){
 				maj_playlist_current(data, urlSubmit);
 				timeline(data.time_left, data.time_past_percent);
 			} else {
 				disabled_btn();
 			}
-			if(data.skipped){
-				modal_confirm($('#modal-next-music'));
-			} else {
-				modal_confirm($('#modal-next-error'));
-			}
+			modal_confirm($('#modal-next-music'));
 		},
 		error : function(resultat, statut, erreur){
 				console.log(resultat.responseText);
