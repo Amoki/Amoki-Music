@@ -6,10 +6,10 @@ from player.models import Room, events, generate_token
 
 @receiver(pre_save, sender=Room)
 def add_event(sender, instance, **kwargs):
-	events[instance.name] = None
+    events[instance.name] = None
 
 
 @receiver(pre_save, sender=Room)
 def update_token_on_password_change(sender, instance, **kwargs):
-	if instance.password:
-		instance.token = generate_token()
+    if instance.password:
+        instance.token = generate_token()
