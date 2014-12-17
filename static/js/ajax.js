@@ -56,7 +56,7 @@ $(document).on ('submit', '.ajax-next, .ajax-dead-link', function (e){
 		data: dataSend,
 		dataType: "json",
 		success: function(data) {
-			if(data.current_music){
+			if(typeof data.current_music[0] !== 'undefined'){
 				maj_playlist_current(data, urlSubmit);
 				timeline(data.time_left, data.time_past_percent);
 			} else {
