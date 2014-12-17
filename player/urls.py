@@ -11,9 +11,9 @@ urlpatterns = patterns('player.views',
     url(r'^add-music/$', 'client.library.add_music'),
     url(r'^music_inifi_scroll/$', 'client.library.music_inifi_scroll'),
     
-    url(r'^shuffle/$', 'client.player.trigger_shuffle'),
-    url(r'^next-music/$', 'client.player.next_music'),
-    url(r'^dead-link/$', 'client.player.next_music'),
-    url(r'^volume/$', 'client.player.volume_change'),
+    url(r'^shuffle/$', 'client.client_player.trigger_shuffle'),
+    url(r'^next-music/$', 'client.client_player.next_music'),
+    url(r'^dead-link/$', 'client.client_player.next_music'),
+    url(r'^volume/$', 'client.client_player.volume_change'),
 
 )

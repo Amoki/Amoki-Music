@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.template.loader import render_to_string
 
-from ...models import Room
-from ...models import Music
+from player.models import Room
+from player.models import Music
 
 import simplejson as json
 

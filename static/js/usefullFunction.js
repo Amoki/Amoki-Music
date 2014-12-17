@@ -26,6 +26,7 @@ $( document ).ready(function() {
 	});
 
 	updateDataTime();
+	$('.ajax_music_inifi_scroll').submit();
 });
 
 function maj_header_player(data){

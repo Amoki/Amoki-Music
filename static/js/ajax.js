@@ -184,10 +184,7 @@ $(document).on ('submit', '.ajax-search', function (e){
 											class:'glyphicon glyphicon-headphones'
 										})
 									)
-								),
-								$('<div/>', {
-									class:'row'
-								})
+								)
 							)
 						);
 						$('#li-'+i).popover({
@@ -286,7 +283,7 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 	e.preventDefault();
 	var form =  $(this);
 	var urlSubmit = form.attr('action');
-	var dataSend = 'page='+encodeURIComponent(form.children("page").val());
+	var dataSend = 'page='+encodeURIComponent(form.children("#page").val());
 
 	$.ajax({
 		type: "POST",
@@ -294,8 +291,9 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 		data: dataSend,
 		dataType: "json",
 		success: function(data){
-			form.parents('#list-library')
-			.append(data.template);
+			$(data.template).insertBefore(form.closest('li'));
+			form.children("#page").val(parseInt(form.children("#page").val()) + 1);
+			updateDataTime();
 		},
 		error : function(resultat, statut, erreur){
 			console.log(resultat.responseText);
