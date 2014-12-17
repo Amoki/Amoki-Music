@@ -1,6 +1,4 @@
-var myCounter = new Countdown({
-	onCounterEnd: function(){} // final action
-});
+var myCounter = new Countdown();
 
 function timeline(current_time_left, current_time_past_percent){
 	$(".progress-bar").stop();
@@ -17,13 +15,13 @@ function timeline(current_time_left, current_time_past_percent){
 
 function Countdown(options) {
 	var timer,
-	instance = this,
-	counterEnd = options.onCounterEnd || function () {};
+	instance = this
+	// counterEnd = options.onCounterEnd || function () {};
 
 	function decrementCounter() {
 		updateDisplayTimeLeft(seconds);
 		if (seconds === 0) {
-		  counterEnd();
+		  // counterEnd();
 		  instance.stop();
 		}
 		seconds--;
@@ -33,6 +31,7 @@ function Countdown(options) {
 		clearInterval(timer);
 		timer = 0;
 		seconds = param_sec;
+		decrementCounter();
 		timer = setInterval(decrementCounter, 1000);
 	};
 

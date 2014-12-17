@@ -23,9 +23,6 @@
 		<script type="text/javascript">
 			$( document ).ready(function() {
 				timeline({{current_time_left}}, {{current_time_past_percent}});
-				var myCounter = new Countdown({
-					onCounterEnd: function(){} // final action
-				});
 				myCounter.start({{current_time_left}});
 			});
 		</script>

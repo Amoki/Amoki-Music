@@ -48,7 +48,6 @@ function disabled_btn(){
 
 function maj_playlist_current(data, url){
 	myCounter.stop();
-	myCounter.start(data.time_left);
 	$("#btn-next").removeAttr('disabled');
 	$("#dead-link").removeAttr('disabled');
 	$('.playlist-ajax').html(data.template_playlist);
@@ -58,6 +57,7 @@ function maj_playlist_current(data, url){
 	} else if ($('.title').length){
 		maj_header_player(data);
 	}
+	myCounter.start(data.time_left);
 }
 
 function modal_confirm(target){
