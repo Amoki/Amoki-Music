@@ -1,34 +1,32 @@
-{% if musics %}
-	{%for music in musics%}
-	<li class="list-group-item item-lib {{tab}} row row-list-item" title="">
-		<img class="col-xs-3" src="{{music.thumbnail}}" style="padding:0px">
-		<div class="col-xs-7" style="padding-right:0px">
-			<div class="row">
-				<div class="col-xs-12" style="min-height:45px">{{music.name}}</div>
+{% for music in musics %}
+<li class="list-group-item item-lib {{tab}} row row-list-item" title="">
+	<img class="col-xs-3" src="{{music.thumbnail}}" style="padding:0px">
+	<div class="col-xs-7" style="padding-right:0px">
+		<div class="row">
+			<div class="col-xs-12" style="min-height:45px">{{music.name}}</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="color:black;font-weight:normal;">
+				{% if tab == "youtube-list-music" %}{{music.views}} views{% else %}Played {{music.count}} times{% endif %}
 			</div>
-			<div class="row">
-				<div class="col-xs-8" style="color:black;font-weight:normal;">
-					{% if tab == "youtube-list-music" %}{{music.views}} views{% else %}Played {{music.count}} times{% endif %}
-				</div>
-				<div class="col-xs-4">
-					<span class="badge" data-time="{{music.duration}}">00:00</span>
-				</div>
+			<div class="col-xs-4">
+				<span class="badge" data-time="{{music.duration}}">00:00</span>
 			</div>
 		</div>
-		<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
-			<input class="url" type="hidden" value="{{music.url}}" name="url">
-			{% if music.requestId %}
-			<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
-			{% endif %}
-			<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
-				<span class="glyphicon glyphicon-headphones"></span>
-			</button>
-		</form>
-	</li>
-	{%endfor%}
-	{% if more_music != None %}
-	<li class="list-group-item item-lib {{tab}} row row-list-item" title="">
-		<div><p>No more musics</p></div>
-	</li>
-	{% endif %}
+	</div>
+	<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
+		<input class="url" type="hidden" value="{{music.url}}" name="url">
+		{% if music.requestId %}
+		<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
+		{% endif %}
+		<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
+			<span class="glyphicon glyphicon-headphones"></span>
+		</button>
+	</form>
+</li>
+{% endfor %}
+{% if more_music != None %}
+<li class="list-group-item item-lib {{tab}} row row-list-item" title="">
+	<div><p>No more musics</p></div>
+</li>
 {% endif %}

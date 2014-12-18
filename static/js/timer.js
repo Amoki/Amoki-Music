@@ -19,44 +19,32 @@ function Countdown(options) {
   var timer,
   instance = this
   counterEnd = options.onCounterEnd || function () {};
-  
+
   function decrementCounter() {
+    if(seconds === 0) {
+      counterEnd();
+      instance.stop();
+    } else {
+      seconds--;
+    }
     var elementDisplay = $('.time-left-progress-bar');
     var heures = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds - (heures * 3600)) / 60);
     var secondes = seconds - (heures * 3600) - (minutes * 60) ;
     var printedTime = "";
-    if(secondes === 0) {
-        secondes = 59;
-        if(minutes === 0) {
-            minutes = 59;
-            if(heures === 0){
-                counterEnd();
-                instance.stop();
-            } else {
-                heures--;
-            }
-        } else {
-            minutes--;
-        }
-    } else {
-        secondes--;
-    }
     var stantardize = function(num){
-        if (num < 10) {
-            printedTime += "0";
-        }
+      if (num < 10) {
+          printedTime += "0";
+      }
     };
     if(heures !== 0){
-        printedTime = heures+":";
-        stantardize(minutes);
+      printedTime = heures+":";
+      stantardize(minutes);
     }
     printedTime += minutes+":";
     stantardize(secondes);
     printedTime += secondes;
     elementDisplay.html(printedTime);
-
-    seconds--;
   }
 
   this.start = function (param_sec) {
@@ -77,11 +65,6 @@ function Countdown(options) {
   };
 }
 
-function updateDisplayTimeLeft(sec){
-  
-
-  return false;
-}
 
 function updateTimePlaylistTemporaryFunction(sec){
   var heures = Math.floor(sec / 3600);

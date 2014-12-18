@@ -1,0 +1,74 @@
+{% load static %}
+<div class="modal fade" id="extensions">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">x</button>
+				<h4 class="modal-title">Les extensions</h4>
+			</div>
+			<div class="modal-body">
+				Vous pouvez aussi utiliser nos extentions pour ajouter des musiques directement depuis Youtube !
+				<div class="row">
+					<div class="col-md-offset-1 col-md-4">Firefox :
+						<a href="https://addons.mozilla.org/fr/firefox/addon/amoki-music/" target="_blank">
+							<img src="{% static 'img/firefox-logo.png' %}" width="120px" height="120px">
+						</a>
+					</div>
+					<div class="col-md-offset-2 col-md-4">Google Chrome :
+						<a href="https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm" target="_blank">
+							<img src="{% static 'img/chrome-logo.png' %}" width="120px" height="120px">
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-info" data-dismiss="modal">Fermer</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade modal-on-top" id="modal-next-music">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-body">
+				Skipped !
+				<button type="button" class="close" data-dismiss="modal">x</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade modal-on-top" id="modal-shuffle-on">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-body">
+				<p class="col-xs-8">Everyday i'm shuffling</p>
+				<i class="fa fa-music fa-2x col-xs-1"></i>
+				<button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade modal-on-top" id="modal-shuffle-off">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-body">
+				<p class="col-xs-8">Shuffle is off</p>
+				<span class="fa-stack fa-lg col-xs-1">
+					<i class="fa fa-music fa-stack-1x"></i>
+					<i class="fa fa-ban fa-stack-2x"></i>
+				</span>
+				<button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade modal-on-top" id="modal-add-music">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-body">
+				Music added to the playlist ;)
+				<button type="button" class="close" data-dismiss="modal">x</button>
+			</div>
+		</div>
+	</div>
+</div>
