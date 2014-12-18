@@ -62,23 +62,29 @@ def add_music(request):
 def music_inifi_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        musics = Music.objects.all().filter(room=room).order_by('-date')
+        musics = Music.objects.filter(room=room).order_by('-date')
         # Get the paginator
-        paginator = Paginator(musics, 15)
+        paginator = Paginator(musics, 8)
+        more_musics = False
         try:
             page = int(request.POST.get('page'))
         except ValueError:
             page = 1
         try:
             musics = paginator.page(page)
+            if(paginator.page(page).has_next()):
+                more_musics = True
+            else:
+                more_musics = False
         except (EmptyPage, InvalidPage):
-            musics = paginator.page(paginator.num_pages)
+            musics = None
 
         tab = "library-list-music"
 
-        template = render_to_string("include/library.html", {"musics": musics, "tab": tab})
+        template = render_to_string("include/library.html", {"musics": musics, "tab": tab, "more_musics": more_musics})
         json_data = json.dumps({
-            'template': template
+            'template': template,
+            'more_musics': more_musics
         })
         return HttpResponse(json_data, content_type="application/json")
     return redirect('/')

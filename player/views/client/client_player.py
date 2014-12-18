@@ -17,7 +17,7 @@ def volume_change(request):
             room.increase_volume()
         else:
             room.decrease_volume()
-        return HttpResponse(json.dumps({'ok': 'ok'}), content_type='application/json')
+        return HttpResponse('{}', content_type='application/json')
     return redirect('/')
 
 

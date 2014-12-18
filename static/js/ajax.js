@@ -196,7 +196,11 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 		dataType: "json",
 		success: function(data){
 			$(data.template).insertBefore(form.closest('li'));
-			form.children("#page").val(parseInt(form.children("#page").val()) + 1);
+			if (data.more_musics){
+				form.children("#page").val(parseInt(form.children("#page").val()) + 1);
+			} else {
+				form.children("#page").addClass('disabled');
+			}
 			updateDataTime();
 			$("#spinner_Library").remove();
 		},
