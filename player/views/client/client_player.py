@@ -57,7 +57,7 @@ def update_player(request):
 
 def render_player(room):
     if room.current_music:
-        data = Music.objects.filter(url=room.current_music.url)
+        data = Music.objects.filter(url=room.current_music.url, room=room)
         model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         current_music = json.loads(model_json)
     else:
