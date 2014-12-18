@@ -187,6 +187,7 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 	var form =  $(this);
 	var urlSubmit = form.attr('action');
 	var dataSend = 'page='+encodeURIComponent(form.children("#page").val());
+	$("<li id='spinner_Library' class='list-group-item item-lib library-list-music row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore(form.closest('li'));
 
 	$.ajax({
 		type: "POST",
@@ -197,6 +198,7 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 			$(data.template).insertBefore(form.closest('li'));
 			form.children("#page").val(parseInt(form.children("#page").val()) + 1);
 			updateDataTime();
+			$("#spinner_Library").remove();
 		},
 		error : function(resultat, statut, erreur){
 			console.log(resultat.responseText);
@@ -220,7 +222,7 @@ function update_player(){
 				$("#btn-shuffle").attr("value", "true");
 				$("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
 			}
-			
+
 			if(data.current_music){
 				timeline(data.time_left, data.time_past_percent);
 				maj_playlist_current(data);
