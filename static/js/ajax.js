@@ -213,14 +213,6 @@ function maj_player(){
 		data: "",
 		dataType: "json",
 		success: function(data){
-			if (data.shuffle === true){
-				$("#btn-shuffle").attr("value", "false");
-				$("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-true");		
-			} else {
-				$("#btn-shuffle").attr("value", "true");
-				$("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
-			}
-
 			if(data.current_music){
 				timeline(data.time_left, data.time_past_percent);
 				maj_playlist_current(data);
