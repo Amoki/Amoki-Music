@@ -11,5 +11,5 @@ def add_event(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Room)
 def update_token_on_password_change(sender, instance, **kwargs):
-    if instance.password != Room.object.get(pk=instance.pk).password:
+    if instance.password != Room.objects.get(pk=instance.pk).password:
         instance.token = generate_token()
