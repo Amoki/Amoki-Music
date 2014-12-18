@@ -48,6 +48,13 @@ def next_music(request):
     return redirect('/')
 
 
+def maj_player(request):
+    if request.is_ajax and request.session.get('room', False):
+        room = Room.objects.get(name=request.session.get('room'))
+        player_maj = render_player(room=room)
+        return HttpResponse(player_maj, content_type='application/json')
+
+
 def render_player(room):
     if room.current_music:
         data = Music.objects.filter(url=room.current_music.url)
@@ -55,7 +62,7 @@ def render_player(room):
         current_music = json.loads(model_json)
     else:
         current_music = None
-        
+
     shuffle_state = room.shuffle
 
     template_playlist = render_to_string("include/playlist.html", {

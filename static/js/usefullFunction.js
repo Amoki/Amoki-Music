@@ -30,10 +30,14 @@ $( document ).ready(function() {
 });
 
 function maj_header_player(data){
-	$(document).attr('title', data.current_music[0].fields.name);
+	if(data.current_music){
+		$(document).attr('title', data.current_music[0].fields.name);
+		$('#url-next').val(data.current_music[0].fields.url);
+		$('#url-dead-link').val(data.current_music[0].fields.url);
+	} else {
+		disabled_btn();
+	}
 	$(".player").children('.header-player').html(data.template_header_player);
-	$('#url-next').val(data.current_music[0].fields.url);
-	$('#url-dead-link').val(data.current_music[0].fields.url);
 }
 
 function disabled_btn(){
@@ -47,18 +51,16 @@ function disabled_btn(){
 	myCounter.stop();
 }
 
-function maj_playlist_current(data, url){
+function maj_playlist_current(data){
 	myCounter.stop();
 	$("#btn-next").removeAttr('disabled');
 	$("#dead-link").removeAttr('disabled');
 	$('.playlist-ajax').html(data.template_playlist);
 	updateDataTime();
-	if (url !== '/add-music/' && url !== '/search-music/'){
-		maj_header_player(data);
-	} else if ($('.title').length){
-		maj_header_player(data);
+	maj_header_player(data);
+	if(data.current_music){
+		myCounter.start(data.time_left);
 	}
-	myCounter.start(data.time_left);
 }
 
 function modal_confirm(target){

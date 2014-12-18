@@ -99,11 +99,12 @@ $(document).on ('submit', '.ajax-search', function (e){
 		dataType: "json",
 		success: function(data) {
 			if(data.current_music){
-					maj_playlist_current(data, urlSubmit);
+					maj_playlist_current(data);
 					timeline(data.time_left, data.time_past_percent);
 					$("#btn-search").children("i").attr("class", "fa fa-youtube-play");
 					$("#btn-search").removeAttr('disabled');
 					modal_confirm($('#modal-add-music'));
+					updateDataTime();
 			} else {
 				$("#tab_btn_youtube").addClass("active");
 				$("#youtube").addClass("active");
@@ -113,6 +114,7 @@ $(document).on ('submit', '.ajax-search', function (e){
 				$("#list-youtube").promise().done(function(){
 					$(".youtube-list-music").remove();
 					$("#list-youtube").html(data.template_library);
+					updateDataTime();
 					$("#list-youtube").slideDown();
 					$("#list-youtube").promise().done(function(){
 						$("#btn-search").children("i").attr("class", "fa fa-youtube-play");
@@ -120,7 +122,6 @@ $(document).on ('submit', '.ajax-search', function (e){
 					});
 				});
 			}
-			updateDataTime();
 		},
 		error : function(resultat, statut, erreur){
 			console.log(resultat.responseText);
@@ -144,7 +145,7 @@ $(document).on ('submit', '.ajax-add-music', function (e){
 		data: dataSend,
 		dataType: "json",
 		success: function(data) {
-			maj_playlist_current(data, urlSubmit);
+			maj_playlist_current(data);
 			updateDataTime();
 			timeline(data.time_left, data.time_past_percent);
 			form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
@@ -204,3 +205,34 @@ $(document).on('submit', '.ajax_music_inifi_scroll', function(e){
 	  	},
 	});
 });
+
+function maj_player(){
+	$.ajax({
+		type: "POST",
+		url: "/maj-player/",
+		data: "",
+		dataType: "json",
+		success: function(data){
+			if (data.shuffle === true){
+				$("#btn-shuffle").attr("value", "false");
+				$("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-true");		
+			} else {
+				$("#btn-shuffle").attr("value", "true");
+				$("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
+			}
+
+			if(data.current_music){
+				timeline(data.time_left, data.time_past_percent);
+				maj_playlist_current(data);
+			} else {
+				disabled_btn();
+			}
+			updateDataTime();
+		},
+		error : function(resultat, statut, erreur){
+			console.log(resultat.responseText);
+			console.log(statut);
+			console.log(erreur);
+	  	},
+	});
+}

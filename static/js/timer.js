@@ -17,11 +17,12 @@ function Countdown(options) {
 	var timer,
 	instance = this
 	// counterEnd = options.onCounterEnd || function () {};
-
 	function decrementCounter() {
-		updateDisplayTimeLeft(seconds);
+		if (updateDisplayTimeLeft(seconds)){
+			maj_player();
+			return;
+		}
 		if (seconds === 0) {
-		  // counterEnd();
 		  instance.stop();
 		}
 		seconds--;
@@ -31,6 +32,9 @@ function Countdown(options) {
 		clearInterval(timer);
 		timer = 0;
 		seconds = param_sec;
+		if (seconds === 0) {
+		  return;
+		}
 		decrementCounter();
 		timer = setInterval(decrementCounter, 1000);
 	};
@@ -53,7 +57,6 @@ function updateDisplayTimeLeft(sec){
 		if(minutes === 0) {
 			minutes = 59;
 			if(heures === 0){
-				window.location.href=window.location.href;
 				return true;
 			} else {
 				heures--;
@@ -78,7 +81,7 @@ function updateDisplayTimeLeft(sec){
 	printedTime += secondes;
 	elementDisplay.html(printedTime);
 
-	return printedTime;
+	return false;
 }
 
 function updateTimePlaylistTemporaryFunction(sec){

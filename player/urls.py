@@ -15,5 +15,6 @@ urlpatterns = patterns('player.views',
     url(r'^next-music/$', 'client.client_player.next_music'),
     url(r'^dead-link/$', 'client.client_player.next_music'),
     url(r'^volume/$', 'client.client_player.volume_change'),
+    url(r'^maj-player/$', 'client.client_player.maj_player')
 
 )
