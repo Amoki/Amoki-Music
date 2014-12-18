@@ -48,11 +48,11 @@ def next_music(request):
     return redirect('/')
 
 
-def maj_player(request):
+def update_player(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
-        player_maj = render_player(room=room)
-        return HttpResponse(player_maj, content_type='application/json')
+        player_updated = render_player(room=room)
+        return HttpResponse(player_updated, content_type='application/json')
 
 
 def render_player(room):

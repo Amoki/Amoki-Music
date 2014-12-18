@@ -1,4 +1,6 @@
-var myCounter = new Countdown();
+var myCounter = new Countdown({
+	onCounterEnd: function(){update_player();}
+});
 
 function timeline(current_time_left, current_time_past_percent){
 	$(".progress-bar").stop();
@@ -16,15 +18,44 @@ function timeline(current_time_left, current_time_past_percent){
 function Countdown(options) {
 	var timer,
 	instance = this
-	// counterEnd = options.onCounterEnd || function () {};
+	counterEnd = options.onCounterEnd || function () {};
+	
 	function decrementCounter() {
-		if (updateDisplayTimeLeft(seconds)){
-			maj_player();
-			return;
+		var elementDisplay = $('.time-left-progress-bar');
+		var heures = Math.floor(seconds / 3600);
+		var minutes = Math.floor((seconds - (heures * 3600)) / 60);
+		var secondes = seconds - (heures * 3600) - (minutes * 60) ;
+		var printedTime = "";
+		if(secondes === 0) {
+			secondes = 59;
+			if(minutes === 0) {
+				minutes = 59;
+				if(heures === 0){
+					counterEnd();
+					instance.stop();
+				} else {
+					heures--;
+				}
+			} else {
+				minutes--;
+			}
+		} else {
+			secondes--;
 		}
-		if (seconds === 0) {
-		  instance.stop();
+		var stantardize = function(num){
+			if (num < 10) {
+				printedTime += "0";
+			}
+		};
+		if(heures !== 0){
+			printedTime = heures+":";
+			stantardize(minutes);
 		}
+		printedTime += minutes+":";
+		stantardize(secondes);
+		printedTime += secondes;
+		elementDisplay.html(printedTime);
+
 		seconds--;
 	}
 
@@ -47,39 +78,7 @@ function Countdown(options) {
 }
 
 function updateDisplayTimeLeft(sec){
-	var elementDisplay = $('.time-left-progress-bar');
-	var heures = Math.floor(sec / 3600);
-	var minutes = Math.floor((sec - (heures * 3600)) / 60);
-	var secondes = sec - (heures * 3600) - (minutes * 60) ;
-	var printedTime = "";
-	if(secondes === 0) {
-		secondes = 59;
-		if(minutes === 0) {
-			minutes = 59;
-			if(heures === 0){
-				return true;
-			} else {
-				heures--;
-			}
-		} else {
-			minutes--;
-		}
-	} else {
-		secondes--;
-	}
-	var stantardize = function(num){
-		if (num < 10) {
-			printedTime += "0";
-		}
-	};
-	if(heures !== 0){
-		printedTime = heures+":";
-		stantardize(minutes);
-	}
-	printedTime += minutes+":";
-	stantardize(secondes);
-	printedTime += secondes;
-	elementDisplay.html(printedTime);
+	
 
 	return false;
 }
