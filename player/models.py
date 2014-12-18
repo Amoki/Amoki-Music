@@ -136,7 +136,7 @@ class Room(models.Model):
 
     def get_current_remaining_time(self):
         if self.current_music:
-            time = self.current_music.duration - int(((datetime.now() - self.current_music.last_play)).total_seconds())
+            time = self.current_music.duration - int((datetime.now() - self.current_music.last_play).total_seconds())
             return int(time)
         return 0
 
