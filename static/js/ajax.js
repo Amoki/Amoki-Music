@@ -182,7 +182,7 @@ $(document).on ('submit', '.ajax-volume', function(e){
 	});
 });
 
-$(document).on('submit', '.ajax_music_inifi_scroll', function(e){
+$(document).on('submit', '.ajax_music_inifite_scroll', function(e){
 	e.preventDefault();
 	var form =  $(this);
 	var urlSubmit = form.attr('action');

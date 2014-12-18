@@ -59,7 +59,7 @@ def add_music(request):
     return redirect('/')
 
 
-def music_inifi_scroll(request):
+def music_inifite_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
         musics = Music.objects.filter(room=room).order_by('-date')

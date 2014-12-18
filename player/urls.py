@@ -9,7 +9,7 @@ urlpatterns = patterns('player.views',
     # AJAX urls
     url(r'^search-music/$', 'client.library.search_music'),
     url(r'^add-music/$', 'client.library.add_music'),
-    url(r'^music_inifi_scroll/$', 'client.library.music_inifi_scroll'),
+    url(r'^music_inifite_scroll/$', 'client.library.music_inifite_scroll'),
     
     url(r'^shuffle/$', 'client.client_player.trigger_shuffle'),
     url(r'^next-music/$', 'client.client_player.next_music'),
