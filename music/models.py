@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 
 class Music(models.Model):
-    url = models.CharField(max_length=255)
+    music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255, editable=False)
     room = models.ForeignKey('player.Room')
     # Date is used for ordering musics
@@ -19,7 +19,7 @@ class Music(models.Model):
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(url=kwargs['url'], room=kwargs['room']).first()
+        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
         if existing_music:
             existing_music.date = datetime.now()
             existing_music.save()
@@ -34,7 +34,7 @@ class Music(models.Model):
 
 
 class TemporaryMusic(models.Model):
-    url = models.CharField(max_length=255)
+    music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
     duration = models.PositiveIntegerField()

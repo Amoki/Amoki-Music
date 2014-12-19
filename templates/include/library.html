@@ -16,7 +16,7 @@
 		</div>
 	</div>
 	<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
-		<input class="url" type="hidden" value="{{music.url}}" name="url">
+		<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
 		{% if music.requestId %}
 		<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
 		{% endif %}
