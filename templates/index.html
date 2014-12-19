@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 {% block pre_end_head %}
-	<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'js/jquery.plugin.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.countdown.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+
 	<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
 	{% if current_music %}
 	<script type="text/javascript">
 		$( document ).ready(function() {
 			timeline({{current_time_left}}, {{current_time_past_percent}});
-			myCounter.start({{current_time_left}});
+			$('#time-left-progress-bar').countdown({
+				until: {{current_time_left}}
+			});
 		});
 	</script>
 	{% endif %}
@@ -45,7 +51,7 @@
 			<div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
 				<div class="progress progress-striped active">
 					<div class="progress-bar"></div>
-					<span class="time-left-progress-bar"></span>
+					<span id="time-left-progress-bar"></span>
 				</div>
 			</div>
 		</div>
