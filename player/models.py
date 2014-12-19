@@ -52,13 +52,11 @@ class Room(models.Model):
             music.last_play = datetime.now()
             music.save()
 
-            video_id = self.get_video_id()
-
             message = {
                 'action': 'play',
                 'options': {
                     'name': music.name,
-                    'videoId': video_id
+                    'musicId': music.music_id
                 }
             }
 
@@ -109,12 +107,12 @@ class Room(models.Model):
             self.save()
             self.play(None)
 
-    def push(self, url, requestId=None, **kwargs):
+    def push(self, music_id, requestId=None, **kwargs):
         if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(url=url, requestId=requestId)
+            temporaryMusic = TemporaryMusic.objects.get(music_id=music_id, requestId=requestId)
             music = Music.add(
                 room=self,
-                url=url,
+                music_id=music_id,
                 name=temporaryMusic.name,
                 duration=temporaryMusic.duration,
                 thumbnail=temporaryMusic.thumbnail
@@ -123,7 +121,7 @@ class Room(models.Model):
         else:
             music = Music.add(
                 room=self,
-                url=url,
+                music_id=music_id,
                 name=kwargs['name'],
                 duration=kwargs['duration'],
                 thumbnail=kwargs['thumbnail']
@@ -192,12 +190,6 @@ class Room(models.Model):
                 'action': 'volume_down',
             }
             self.send_message(message)
-
-    def get_video_id(self):
-        if self.current_music:
-            url_data = urlparse.urlparse(self.current_music.url)
-            video_id = urlparse.parse_qs(url_data.query)["v"][0]
-            return video_id
 
 events = dict()
 

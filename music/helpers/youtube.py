@@ -33,7 +33,7 @@ def get_info(ids):
 
     for detail in details.get("items", []):
         detailedVideo = {
-            'url': "https://www.youtube.com/watch?v=" + detail["id"],
+            'id': detail["id"],
             'name': detail["snippet"]["title"],
             'description': detail["snippet"]["description"][:200] + "...",
             'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
@@ -65,7 +65,7 @@ def search(query):
 
     for video in get_info(ids):
         music = TemporaryMusic(
-            url=video['url'],
+            music_id=video['id'],
             name=video['name'],
             description=video['description'],
             thumbnail=video['thumbnail'],

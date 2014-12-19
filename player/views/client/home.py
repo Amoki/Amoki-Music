@@ -35,7 +35,7 @@ def home(request):
     # Total time of current music in hh:mm:ss
     if current_music:
         current_total_time = current_music.duration
-        video_url = current_music.url
+        music_id = current_music.music_id
 
     # Remaining time of the queue in hh:mm:ss
     time_left = room.get_remaining_time()
