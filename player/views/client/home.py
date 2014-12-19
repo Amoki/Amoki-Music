@@ -29,7 +29,7 @@ def home(request):
     current_music = room.current_music
 
     # Objects of musics in queue
-    nexts_music = room.get_musics_remaining()
+    playlist = room.get_musics_remaining()
     # The number of music in queue
     count_left = room.get_count_remaining()
     # Total time of current music in hh:mm:ss
@@ -46,7 +46,7 @@ def home(request):
 
     # Percent of current music time past
     if current_music:
-        room.get_current_time_past_percent
+        current_time_past_percent = room.get_current_time_past_percent
 
     # TODO Do not return locals
     return render(request, 'index.html', locals())

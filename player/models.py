@@ -167,6 +167,7 @@ class Room(models.Model):
     def get_musics_remaining(self):
         if self.current_music:
             return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
+        return None
 
     def get_count_remaining(self):
         if self.current_music:
