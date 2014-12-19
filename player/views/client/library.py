@@ -31,7 +31,13 @@ def search_music(request):
                     thumbnail=videos[0]['thumbnail'],
                 )
                 return HttpResponse(render_player(room), content_type='application/json')
-
+            else:
+                error = "wrong-link"
+                template_library = render_to_string("include/errors.html", {"error": error})
+                json_data = json.dumps({
+                    'template_library': template_library
+                })
+                return HttpResponse(json_data, content_type='application/json')
         tab = "youtube-list-music"
         template_library = render_to_string("include/library.html", {"musics": musics_searched, "tab": tab})
         json_data = json.dumps({

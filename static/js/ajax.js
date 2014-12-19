@@ -79,7 +79,7 @@ var form =  $(this);
 if (form.children('.url').val().trim() === '' || form.children('.url').val().trim() === null){
     $("#list-youtube").slideUp();
     $("#list-youtube").promise().done(function(){
-        $(".youtube-list-music").remove();
+        $("#list-youtube").children().remove();
         $("#list-youtube").append('<li class="list-group-item item-lib youtube-list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
         $("#list-youtube").slideDown();
     });
@@ -96,28 +96,28 @@ $.ajax({
     data: dataSend,
     dataType: "json",
     success: function(data) {
-        if(data.current_music){
-                maj_playlist_current(data);
-                timeline(data.time_left, data.time_past_percent);
-                $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
-                $("#btn-search").removeAttr('disabled');
-                modal_confirm($('#modal-add-music'));
-        } else {
-            $("#tab_btn_youtube").addClass("active");
-            $("#youtube").addClass("active");
-            $("#tab_btn_library").removeClass("active");
-            $("#library").removeClass("active");
-            $("#list-youtube").slideUp();
-            $("#list-youtube").promise().done(function(){
-                $(".youtube-list-music").remove();
-                $("#list-youtube").html(data.template_library);
-                $("#list-youtube").slideDown();
-                $("#list-youtube").promise().done(function(){
-                    $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
-                    $("#btn-search").removeAttr('disabled');
-                });
-            });
-        }
+      if(data.current_music){
+        maj_playlist_current(data);
+        timeline(data.time_left, data.time_past_percent);
+        $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
+        $("#btn-search").removeAttr('disabled');
+        modal_confirm($('#modal-add-music'));
+      } else {
+        $("#tab_btn_youtube").addClass("active");
+        $("#youtube").addClass("active");
+        $("#tab_btn_library").removeClass("active");
+        $("#library").removeClass("active");
+        $("#list-youtube").slideUp();
+        $("#list-youtube").promise().done(function(){
+          $(".youtube-list-music").remove();
+          $("#list-youtube").html(data.template_library);
+          $("#list-youtube").slideDown();
+          $("#list-youtube").promise().done(function(){
+            $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
+            $("#btn-search").removeAttr('disabled');
+          });
+        });
+      }
     },
     error : function(resultat, statut, erreur){
         console.log(resultat.responseText);

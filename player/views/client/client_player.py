@@ -5,7 +5,6 @@ from django.core import serializers
 from django.template.loader import render_to_string
 
 from player.models import Room
-from player.models import Music
 
 import simplejson as json
 
@@ -57,7 +56,7 @@ def update_player(request):
 
 def render_player(room):
     if room.current_music:
-        data = Music.objects.filter(url=room.current_music.url, room=room)
+        data = room.music_set.filter(url=room.current_music.url)
         model_json = serializers.serialize('json', data, fields=('url', 'name', 'thumbnail', 'count', 'duration'))
         current_music = json.loads(model_json)
     else:
@@ -84,5 +83,5 @@ def render_player(room):
         'time_left': current_time_left,
         'time_past_percent': current_time_past_percent,
     })
-    
+
     return json_data
