@@ -4,7 +4,7 @@ var currentVolume;
 
 var playerControl = {
   play: function(options) {
-    player.loadVideoById(options.videoId, 0, 'default');
+    player.loadVideoById(options.musicId, 0, 'default');
     $(document).attr('title', options.name);
   },
   stop: function() {

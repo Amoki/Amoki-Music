@@ -63,7 +63,7 @@
 			<div class="col-xs-offset-3 col-xs-4">
 				<form action="/next-music/" method="post" class="ajax-next">
 					{% csrf_token %}
-					<input id="url-next" class="url" type="hidden" name="url" value="{{video_url}}">
+					<input id="music_id-next" class="music_id" type="hidden" name="music_id" value="{{music_id}}">
 					<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not current_music %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
 				</form>
 			</div>

@@ -11,7 +11,6 @@ from music.helpers import youtube
 
 import simplejson as json
 import re
-import urllib
 
 
 def search_music(request):
@@ -25,7 +24,7 @@ def search_music(request):
             videos = youtube.get_info(regexVideoId.search(request.POST.get('url')).group(2))
             if(videos):
                 room.push(
-                    url=videos[0]['url'],
+                    id=videos[0]['id'],
                     name=videos[0]['name'],
                     duration=videos[0]['duration'],
                     thumbnail=videos[0]['thumbnail'],
@@ -49,18 +48,18 @@ def search_music(request):
 
 
 def add_music(request):
-    if request.is_ajax() and request.session.get('room', False) and request.POST.get('url'):
+    if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
         if(request.POST.get('requestId') == "undefined"):
-            music_to_add = Music.objects.get(url=urllib.unquote(request.POST.get('url')), room=room)
+            music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room)
             room.push(
-                    url=music_to_add.url,
+                    music_id=music_to_add.music_id,
                     name=music_to_add.name,
                     duration=music_to_add.duration,
                     thumbnail=music_to_add.thumbnail,
             )
         else:
-            room.push(url=urllib.unquote(request.POST.get('url')), requestId=request.POST.get('requestId'))
+            room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
         return HttpResponse(render_player(room), content_type='application/json')
     return redirect('/')
 
