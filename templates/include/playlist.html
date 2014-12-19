@@ -1,13 +1,11 @@
 {% load filters %}
-{% if playlist %}
-	{% if playlist|length > 0 %}
-		{% for music in playlist %}
-			<tr class="playlist-item" id="{{music.url}}">
-				<td>{{music.name}}</td>
-				<td><span class="badge">{{music.duration|secToDuration}}</span></td>
-			</tr>
-		{% endfor %}
-	{% endif %}
+{% if playlist|length > 0 %}
+	{% for music in playlist %}
+		<tr class="playlist-item" id="{{music.url}}">
+			<td>{{music.name}}</td>
+			<td><span class="badge">{{music.duration|secToDuration}}</span></td>
+		</tr>
+	{% endfor %}
 {% elif shuffle %}
 	<tr class="empty"><td>Shuffle activated...<br /><br />Let the music be your guide</td></tr>
 {% else %}
