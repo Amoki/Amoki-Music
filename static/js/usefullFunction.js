@@ -50,17 +50,17 @@ function disabled_btn() {
   $("#dead-link").attr('disabled', 'disabled');
   $(".progress-bar").stop();
   $(".progress-bar").css('width', '0%');
-  myCounter.stop();
+  $('#time-left-progress-bar').countdown('destroy');
 }
 
 function maj_playlist_current(data) {
-  myCounter.stop();
+  $('#time-left-progress-bar').countdown('destroy');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_player(data);
   if(data.current_music) {
-    myCounter.start(data.time_left);
+    $('#time-left-progress-bar').countdown({until: data.time_left});
   }
 }
 
