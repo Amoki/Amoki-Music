@@ -18,10 +18,10 @@ def search_music(request):
 
         room = Room.objects.get(name=request.session.get('room'))
         regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
-        if regexVideoId.search(request.POST.get('url')) is None:
-            musics_searched = youtube.search(query=request.POST.get('url'))
+        if regexVideoId.search(request.POST.get('query')) is None:
+            musics_searched = youtube.search(query=request.POST.get('query'))
         else:
-            videos = youtube.get_info(regexVideoId.search(request.POST.get('url')).group(2))
+            videos = youtube.get_info(regexVideoId.search(request.POST.get('query')).group(2))
             if(videos):
                 room.push(
                     id=videos[0]['id'],

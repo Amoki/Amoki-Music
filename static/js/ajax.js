@@ -78,7 +78,7 @@ $(document).on('submit', '.ajax-search', function(e) {
   e.preventDefault();
   var form =  $(this);
 
-  if(form.children('.url').val().trim() === '' || form.children('.url').val().trim() === null) {
+  if(form.children('.query').val().trim() === '' || form.children('.query').val().trim() === null) {
     $("#list-youtube").slideUp();
     $("#list-youtube").promise().done(function() {
       $("#list-youtube").children().remove();
@@ -90,7 +90,7 @@ $(document).on('submit', '.ajax-search', function(e) {
   form.children("span").children("button").children("i").attr("class", "fa fa-refresh fa-spin");
   form.children("span").children("button").attr('disabled', 'disabled');
   var urlSubmit = form.attr('action');
-  var dataSend = 'url=' + encodeURIComponent(form.children('.url').val());
+  var dataSend = 'query=' + encodeURIComponent(form.children('.query').val());
 
   $.ajax({
       type: "POST",
