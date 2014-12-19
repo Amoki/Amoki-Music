@@ -25,7 +25,6 @@ $( document ).ready(function() {
       $(this).blur();
   });
 
-  updateDataTime();
   $('.ajax_music_inifite_scroll').submit();
 });
 
@@ -56,7 +55,6 @@ function maj_playlist_current(data){
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
-  updateDataTime();
   maj_header_player(data);
   if(data.current_music){
       myCounter.start(data.time_left);
@@ -69,11 +67,5 @@ function modal_confirm(target){
       'backdrop':false
   }).on('shown.bs.modal', function(){
       setTimeout(function(){target.modal('hide');}, 1000);
-  });
-}
-
-function updateDataTime(){
-  $('span[data-time]').each(function(){
-     $(this).html(updateTimePlaylistTemporaryFunction($(this).data("time")));
   });
 }

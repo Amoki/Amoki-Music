@@ -1,9 +1,10 @@
+{% load filters %}
 {% if playlist %}
 	{% if playlist|length > 0 %}
 		{% for music in playlist %}
 			<tr class="playlist-item" id="{{music.url}}">
 				<td>{{music.name}}</td>
-				<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>
+				<td><span class="badge">{{music.duration|secToDuration}}</span></td>
 			</tr>
 		{% endfor %}
 	{% endif %}

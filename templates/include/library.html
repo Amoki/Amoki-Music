@@ -1,3 +1,4 @@
+{% load filters %}
 {% for music in musics %}
 <li class="list-group-item item-lib {{tab}} row row-list-item" title="">
 	<img class="col-xs-3" src="{{music.thumbnail}}" style="padding:0px">
@@ -10,7 +11,7 @@
 				{% if tab == "youtube-list-music" %}{{music.views}} views{% else %}Played {{music.count}} times{% endif %}
 			</div>
 			<div class="col-xs-4">
-				<span class="badge" data-time="{{music.duration}}">00:00</span>
+				<span class="badge">{{music.duration|secToDuration}}</span>
 			</div>
 		</div>
 	</div>
