@@ -54,10 +54,10 @@ def add_music(request):
         if(request.POST.get('requestId') == "undefined"):
             music_to_add = Music.objects.get(url=urllib.unquote(request.POST.get('url')), room=room)
             room.push(
-                    url=music_to_add.url,
-                    name=music_to_add.name,
-                    duration=music_to_add.duration,
-                    thumbnail=music_to_add.thumbnail,
+                url=music_to_add.url,
+                name=music_to_add.name,
+                duration=music_to_add.duration,
+                thumbnail=music_to_add.thumbnail,
             )
         else:
             room.push(url=urllib.unquote(request.POST.get('url')), requestId=request.POST.get('requestId'))
