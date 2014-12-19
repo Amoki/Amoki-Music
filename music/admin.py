@@ -3,7 +3,7 @@ from music.models import Music
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'url', 'duration', 'date', 'last_play', 'dead_link', 'thumbnail')
+    list_display = ('name', 'count', 'url', 'duration', 'date', 'last_play', 'dead_link', 'thumbnail', 'room')
     actions = ('add_music',)
 
     def has_add_permission(self, request):

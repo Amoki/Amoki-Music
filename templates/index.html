@@ -1,272 +1,127 @@
+{% extends "base.html" %}
 {% load static %}
-{% load socketio_tags %}
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>{% if playing %}{{playing}}{% else %}Amoki's musics{% endif %}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="content-language" content="fr" />
-		{% socketio %}
-		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-		<link href="{% static 'css/style.less' %}" rel="stylesheet/less">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
-		{% if playing %}
-		<script type="text/javascript">
-			$( document ).ready(function() {
-				timeline({{current_time_left}}, {{current_time_past_percent}});
-				var myCounter = new Countdown({
-					onCounterEnd: function(){} // final action
-				});
-				myCounter.start({{current_time_left}});
-			});
-		</script>
-		{% endif %}
-	</head>
-	<body>
-		<div class="container-fluid">
-			<div class="navbar navbar-inverse row">
-				<ul class="nav navbar-nav">
-					<li class="active"><a class="navbar-brand">{{room.name}}</a></li>
-					<li>
-						<form action="/log-out/" method="post" class="">
-							{% csrf_token %}
-							<button id="log-out" class="btn btn-primary" type="submit">Change Room</button>
-						</form>
-					</li>
-				</ul>
-				<form action="." method="post" class="navbar-form pull-right">
+{% block pre_end_head %}
+	<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
+	{% if current_music %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			timeline({{current_time_left}}, {{current_time_past_percent}});
+			myCounter.start({{current_time_left}});
+		});
+	</script>
+	{% endif %}
+{% endblock pre_end_head %}
+{% block navbar %}
+	{% include "generic-part/navbar.html" %}
+{% endblock navbar %}
+{% block first_Col %}
+	<!-- PLAYER ZONE -->
+	<div class="col-md-offset-1 col-md-6 player">
+		<!-- HEADER PLAYER -->
+		<div class="row header-player">
+			{% include "include/header_player.html" %}
+		</div>
+		<!-- END HEADER PLAYER -->
+		<!-- PLAYLIST -->
+		<div class="row playlist">
+			<div class="col-md-offset-1 col-md-10">
+				<div class="panel panel-default panel-playlist">
+					<table class="table table-striped table-condensed header-fixed">
+						<div class="panel-heading">
+							<h3 class="panel-title">Playlist</h3>
+						</div>
+						<tbody class="playlist-ajax">
+							{% include "include/playlist.html" %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- END PLAYLIST -->
+		<!-- PROGRESS BAR -->
+		<div class="row">
+			<div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
+				<div class="progress progress-striped active">
+					<div class="progress-bar"></div>
+					<span class="time-left-progress-bar"></span>
+				</div>
+			</div>
+		</div>
+		<!-- END PROGRESS BAR -->
+		<!-- CONTROL BUTTONS -->
+		<div class="row">
+			<div class="col-xs-offset-2 col-xs-2">
+				<form action="/shuffle/" method="post" class="ajax-shuffle">
 					{% csrf_token %}
-					<button type="submit" class="btn btn-default btn-vol"name="volume_down" value="volume_down" title="volume_down" alt="volume_down"><i class="fa fa-volume-down fa-2x"></i></span></button>
-					<button type="submit" class="btn btn-default btn-vol" name="volume_up" value="volume_up" title="volume_up" alt="volume_up"><i class="fa fa-volume-up fa-2x"></i></span></button>
+					<button id="btn-shuffle" type="submit" name="shuffle" {%if shuffle %}value="false" class="btn btn-default btn-control"{% else %} class="btn btn-default btn-control btn-shuffle-false" value="true"{% endif %} title="Shuffle" alt="Shuffle"/>
+						<i class="fa fa-random fa-2x"></i>
+					</button>
 				</form>
 			</div>
-			<div class="row ligne">
-
-				<!-- PLAYER ZONE -->
-				<div class="col-md-offset-1 col-md-6 player">
-					<!-- HEADER PLAYER -->
-					<div class="row header-player">
-						{% if playing %}
-						<img id="thumbnail" src="{{playing.thumbnail}}" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive"></img>
-						<div class="col-md-7 title_playing">
-							<div class="marquee">
-								<a href="{{video_url}}" class="now-playing">{{ playing }}</a>
-							</div>
-						</div>
-						{% else %}
-						<div class="col-md-12 title">
-							<div class="marquee">
-								<span class="now-playing">No music :'( Add yours now !</span>
-							</div>
-						</div>
-						{% endif %}
-					</div>
-					<!-- END HEADER PLAYER -->
-					<!-- PLAYLIST -->
-					<div class="row playlist">
-						<div class="col-md-offset-1 col-md-10">
-							<div class="panel panel-default panel-playlist">
-								<table class="table table-striped table-condensed header-fixed">
-									<div class="panel-heading">
-										<h3 class="panel-title">Playlist</h3>
-									</div>
-									<tbody class="playlist-ajax">
-										{% if playing and nexts_music|length > 0 %}
-											{% for music in nexts_music %}
-												<tr class="playlist-item" id="{{music.url}}">
-													<td>{{music.name}}</td>
-													<td><span class="badge" data-time="{{music.duration}}">00:00</span></td>
-												</tr>
-											{% endfor %}
-										{% elif shuffle %}
-											<tr class="empty"><td>Shuffle activated...<br /><br />Let the music be your guide</td></tr>
-										{% else %}
-											<tr class="empty"><td>No more musics in the playlist !</td></tr>
-										{% endif %}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<!-- END PLAYLIST -->
-					<!-- PROGRESS BAR -->
-					<div class="row">
-						<div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
-							<div class="progress progress-striped active">
-								<div class="progress-bar"></div>
-								<span class="time-left-progress-bar"></span>
-							</div>
-						</div>
-					</div>
-					<!-- END PROGRESS BAR -->
-					<!-- CONTROL BUTTONS -->
-					<div class="row">
-						<div class="col-xs-offset-2 col-xs-3">
-							<form action="/shuffle/" method="post" class="input-group ajax">
-								{% csrf_token %}
-								<button type="submit" name="shuffle" {%if shuffle %}value="false" class="btn btn-default btn-control"{% else %} class="btn btn-default btn-control btn-shuffle-false" value="true"{% endif %} title="Shuffle" alt="Shuffle"/>
-									<i class="fa fa-random fa-2x"></i>
-								</button>
-							</form>
-						</div>
-						<div class="col-xs-offset-3 col-xs-4">
-							<form action="/next-music/" method="post" class="input-group ajax">
-								{% csrf_token %}
-								<input id="url-next" class="url" type="hidden" name="url" value="{{playing.url}}">
-								<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not playing %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
-							</form>
-						</div>
-					</div>
-					<!-- END CONTROL BUTTONS -->
-				</div>
-				<!-- END PLAYER ZONE -->
-				<!-- LIBRARY  -->
-				<div class="col-md-offset-1 col-md-4 LIB">
-					<div class="row input-lib">
-						<div class="col-md-offset-0 col-md-12">
-							<form action="/search-music/" method="post" class="input-group ajax">
-								{% csrf_token %}
-								<input type="text" name="url" class="form-control url" style="text-align:right" placeholder="Titre">
-								<span class="input-group-btn">
-									<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
-								</span>
-							</form>
-						</div>
-					</div>
-					<div class="row list-lib">
-						<div class="col-md-12">
-							<ul class="nav nav-tabs nav-justified">
-								<li class="active"><a data-toggle="tab" href="#youtube">Youtube</a></li>
-								<!--<li><a data-toggle="tab" href="#library">Library</a></li>-->
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="youtube">
-									<ul id="list-youtube" class="list-group">
-										<li class="list-group-item item-lib youtube-list-music">
-											<div class="row">
-												<p class="col-xs-10">Enter your search in the field above</p>
-												<i class="fa fa-level-up fa-2x col-xs-2"></i>
-											</div>
-										</li>
-									</ul>
+			<div class="col-xs-offset-3 col-xs-4">
+				<form action="/next-music/" method="post" class="ajax-next">
+					{% csrf_token %}
+					<input id="url-next" class="url" type="hidden" name="url" value="{{video_url}}">
+					<button id="btn-next" type="submit" name="play_next" value="Next music" title="Next Music" alt="Next Music" {% if not current_music %}disabled="disabled"{%endif%} class="btn btn-default btn-control"><i class="fa fa-fast-forward fa-2x"></i></button>
+				</form>
+			</div>
+		</div>
+		<!-- END CONTROL BUTTONS -->
+	</div>
+	<!-- END PLAYER ZONE -->
+{% endblock first_Col %}
+{% block second_Col %}
+	<!-- LIBRARY  -->
+	<div class="col-md-offset-1 col-md-4 LIB">
+		<div class="row input-lib">
+			<div class="col-md-offset-0 col-md-12">
+				<form action="/search-music/" method="post" class="input-group ajax-search">
+					{% csrf_token %}
+					<input type="text" name="url" class="form-control url" style="text-align:right" placeholder="Titre">
+					<span class="input-group-btn">
+						<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
+					</span>
+				</form>
+			</div>
+		</div>
+		<div class="row list-lib">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs nav-justified">
+					<li id="tab_btn_youtube"><a data-toggle="tab" href="#youtube">Youtube</a></li>
+					<li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane" id="youtube">
+						<ul id="list-youtube" class="list-group">
+							<li class="list-group-item item-lib youtube-list-music">
+								<div class="row">
+									<p class="col-xs-10">Enter your search in the field above</p>
+									<i class="fa fa-level-up fa-2x col-xs-2"></i>
 								</div>
-								<!--<div class="tab-pane" id="library">
-									<ul id="list-library" class="list-group">
-										<li class="list-group-item item-lib library-list-music">
-											<div class="row">
-												<p class="col-xs-10">MOVE LE TEXTE</p>
-												<i class="fa fa-level-up fa-2x col-xs-2"></i>
-											</div>
-										</li>
-									</ul>
-								</div>-->
-							</div>
-						</div>
+							</li>
+						</ul>
 					</div>
-				</div>
-				<!-- END LIBRARY -->
-			</div>
-
-			<!-- FOOTER  -->
-			<footer class="row foot">
-				<form action="/dead-link/" method="post" class="pull-left ajax">
-					<input id="url-dead-link" class="url" type="hidden" name="url" value="{{playing.url}}">
-					<button id="dead-link" class="btn btn-primary" type="submit" {% if not playing %}disabled="disabled"{%endif%}>Dead link ?</button>
-				</form>
-				<a class="btn btn-primary pull-right" href="">Company Terms</a>
-				<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>
-			</footer>
-			<!-- END FOOTER -->
-		</div>
-		<!-- END PAGE -->
-		<div class="modal fade" id="extensions">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">x</button>
-						<h4 class="modal-title">Les extensions</h4>
-					</div>
-					<div class="modal-body">
-						Vous pouvez aussi utiliser nos extentions pour ajouter des musiques directement depuis Youtube !
-						<div class="row">
-							<div class="col-md-offset-1 col-md-4">Firefox :
-								<a href="https://addons.mozilla.org/fr/firefox/addon/amoki-music/" target="_blank">
-									<img src="{% static 'img/firefox-logo.png' %}" width="120px" height="120px">
-								</a>
-							</div>
-							<div class="col-md-offset-2 col-md-4">Google Chrome :
-								<a href="https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm" target="_blank">
-									<img src="{% static 'img/chrome-logo.png' %}" width="120px" height="120px">
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-info" data-dismiss="modal">Fermer</button>
+					<div class="tab-pane active" id="library">
+						<ul id="list-library" class="list-group">
+							<li class="list-group-item item-lib library-list-music row row-list-item">
+								<form id="form_infini_scroll" action="/music_inifite_scroll/" method="post" class="ajax_music_inifite_scroll">
+									{% csrf_token %}
+									<button id="page" class="btn btn-default" type="submit" name="page" value="1">Next musics</button>
+								</form>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="modal fade modal-on-top" id="modal-next-music">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						Skipped !
-						<button type="button" class="close" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-next-error">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						This music is already skipped !
-						<button type="button" class="close" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-shuffle-on">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						<p class="col-xs-8">Everyday i'm shuffling</p>
-						<i class="fa fa-music fa-2x col-xs-1"></i>
-						<button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-shuffle-off">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						<p class="col-xs-8">Shuffle is off</p>
-						<span class="fa-stack fa-lg col-xs-1">
-							<i class="fa fa-music fa-stack-1x"></i>
-							<i class="fa fa-ban fa-stack-2x"></i>
-						</span>
-						<button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade modal-on-top" id="modal-add-music">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content modal-content-custom">
-					<div class="modal-body">
-						Music added to the playlist ;)
-						<button type="button" class="close" data-dismiss="modal">x</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+	</div>
+	<!-- END LIBRARY -->
+{% endblock second_Col %}
+{% block footer %}
+	{% include "generic-part/footer.html" %}
+{% endblock footer %}
+{% block pre_end_body %}
+	{% include "include/modals.html" %}
+{% endblock pre_end_body %}

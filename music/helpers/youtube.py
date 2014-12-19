@@ -50,9 +50,11 @@ def search(query):
 
     search_response = youtube.search().list(
         q=query,
-        part="snippet",
+        part="id",
         type="video",
-        maxResults=15
+        maxResults=15,
+        videoSyndicated="true",
+        regionCode="fr",
     ).execute()
 
     videos = []

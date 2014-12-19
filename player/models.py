@@ -26,6 +26,9 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
 
+    def __unicode__(self):
+        return self.name
+
     def reset_token(self):
         self.token = generate_token()
         self.save()
@@ -133,7 +136,7 @@ class Room(models.Model):
 
     def get_current_remaining_time(self):
         if self.current_music:
-            time = self.current_music.duration - int(((datetime.now() - self.current_music.last_play)).total_seconds())
+            time = self.current_music.duration - int((datetime.now() - self.current_music.last_play).total_seconds())
             return int(time)
         return 0
 
@@ -153,9 +156,18 @@ class Room(models.Model):
             return current_time_past
         return 0
 
+    def get_current_time_past_percent(self):
+        if self.current_music:
+            current_total_time = self.current_music.duration
+            current_time_left = self.get_current_remaining_time()
+            current_time_past_percent = ((current_total_time - current_time_left) * 100) / current_total_time
+            return current_time_past_percent
+        return 0
+
     def get_musics_remaining(self):
         if self.current_music:
             return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
+        return []
 
     def get_count_remaining(self):
         if self.current_music:
