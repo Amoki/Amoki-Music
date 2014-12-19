@@ -44,6 +44,7 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('embed', {
     height: '390',
     width: '640',
+    playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',},
     events: {
       onReady : function(){
         if(typeof current_music !== "undefined"){
