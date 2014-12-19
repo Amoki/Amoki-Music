@@ -45,31 +45,31 @@ $.ajax({
 });
 
 $(document).on ('submit', '.ajax-next, .ajax-dead-link', function (e){
-e.preventDefault();
-var form =  $(this);
-var urlSubmit = form.attr('action');
-var dataSend = 'url=' + encodeURIComponent(form.children('.url').val());
+  e.preventDefault();
+  var form =  $(this);
+  var urlSubmit = form.attr('action');
+  var dataSend = 'url=' + encodeURIComponent(form.children('.url').val());
 
-$.ajax({
-    type: "POST",
-    url: urlSubmit,
-    data: dataSend,
-    dataType: "json",
-    success: function(data) {
-        if(data.current_music){
-            maj_playlist_current(data, urlSubmit);
-            timeline(data.time_left, data.time_past_percent);
-        } else {
-            disabled_btn();
-        }
-        modal_confirm($('#modal-next-music'));
-    },
-    error : function(resultat, statut, erreur){
-            console.log(resultat.responseText);
-            console.log(statut);
-            console.log(erreur);
-    },
-});
+  $.ajax({
+      type: "POST",
+      url: urlSubmit,
+      data: dataSend,
+      dataType: "json",
+      success: function(data) {
+          if(data.current_music){
+              maj_playlist_current(data, urlSubmit);
+              timeline(data.time_left, data.time_past_percent);
+          } else {
+              disabled_btn();
+          }
+          modal_confirm($('#modal-next-music'));
+      },
+      error : function(resultat, statut, erreur){
+              console.log(resultat.responseText);
+              console.log(statut);
+              console.log(erreur);
+      },
+  });
 });
 
 $(document).on ('submit', '.ajax-search', function (e){

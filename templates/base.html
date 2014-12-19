@@ -20,18 +20,16 @@
 		{% endblock pre_end_head %}
 	</head>
 	<body>
-		<div class="container-fluid">
-			{% block navbar %}
-			{% endblock navbar %}
-			<div class="row ligne">
-				{% block first_Col %}
-				{% endblock first_Col %}
-				{% block second_Col %}
-				{% endblock second_Col %}
-			</div>
-			{% block footer %}
-			{% endblock footer %}
+		{% block navbar %}
+		{% endblock navbar %}
+		<div class="container-fluid ligne">
+			{% block first_Col %}
+			{% endblock first_Col %}
+			{% block second_Col %}
+			{% endblock second_Col %}
 		</div>
+		{% block footer %}
+		{% endblock footer %}
 		<!-- END PAGE -->
 		{% block pre_end_body %}
 		{% endblock pre_end_body %}
