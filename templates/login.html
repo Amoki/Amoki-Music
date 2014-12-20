@@ -22,14 +22,16 @@
                 <form class="form-inline" role="form" action="/" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                            <select class="form-control" name="room">
-                                {% for room in rooms %}
-                                    <option VALUE="{{room}}">{{room}}</option>
-                                {% endfor %}
-                            </select>
+                        <label for="rooms">Rooms:</label>
+                        <select id="rooms" class="form-control" name="room">
+                            {% for room in rooms %}
+                                <option VALUE="{{room}}">{{room}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                            Password: <input type="password" name="password">
+                        <label for="password">Password:</label>
+                        <input id="password" type="password" name="password">
                     </div>
                     <input type="submit" class="btn btn-primary" value="Valider">
                 </form>

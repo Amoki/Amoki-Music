@@ -1,27 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
 from player.models import Room
 
 
 def home(request):
-    room_name = request.POST.get('room')
-    password = request.POST.get('password')
-    if request.method == "POST" and room_name and password:
-        room = Room.objects.filter(name=room_name)
-        if room.count() == 0:
-            bad_password = True
-            logging = True
-        elif room[0].password != password:
-            bad_password = True
-            logging = True
-        else:
-            request.session['room'] = room_name
-            request.session['token'] = room[0].token
-
     if not request.session.get('room', False):
-        rooms = Room.objects.values_list('name', flat=True).all()
-        return render(request, 'login.html', locals())
+        return redirect('login', permanent=True)
 
     room = Room.objects.get(name=request.session.get('room'))
 
