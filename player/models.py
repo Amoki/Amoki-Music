@@ -3,7 +3,6 @@
 from django.db import models
 
 import django_socketio
-import urlparse
 import random
 import math
 import os
@@ -190,6 +189,16 @@ class Room(models.Model):
                 'action': 'volume_down',
             }
             self.send_message(message)
+
+    def toggle_shuffle(self, to_active):
+        if to_active:
+            self.shuffle = True
+            self.save()
+            if not self.current_music:
+                self.play_next()
+        else:
+            self.shuffle = False
+            self.save()
 
 events = dict()
 
