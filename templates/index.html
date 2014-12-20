@@ -20,7 +20,7 @@
 	{% endif %}
 {% endblock pre_end_head %}
 {% block navbar %}
-	{% include "generic-part/navbar.html" %}
+	{% include "generic-part/navbar.html" with parent="remote" %}
 {% endblock navbar %}
 {% block first_Col %}
 	<!-- PLAYER ZONE -->
@@ -28,7 +28,7 @@
 		<div class="col-md-offset-1 col-md-10 player">
 			<!-- HEADER PLAYER -->
 			<div class="row header-player">
-				{% include "include/header_player.html" %}
+				{% include "include/remote/header_remote.html" %}
 			</div>
 			<!-- END HEADER PLAYER -->
 			<!-- PLAYLIST -->
@@ -40,7 +40,7 @@
 								<h3 class="panel-title">Playlist</h3>
 							</div>
 							<tbody class="playlist-ajax">
-								{% include "include/playlist.html" %}
+								{% include "include/remote/playlist.html" %}
 							</tbody>
 						</table>
 					</div>
@@ -131,5 +131,5 @@
 	{% include "generic-part/footer.html" %}
 {% endblock footer %}
 {% block pre_end_body %}
-	{% include "include/modals.html" %}
+	{% include "include/remote/modals.html" %}
 {% endblock pre_end_body %}

@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
 {% endblock pre_end_head %}
 {% block navbar %}
-	{% include "generic-part/navbar.html" %}
+	{% include "generic-part/navbar.html" with parent="player" %}
 {% endblock navbar %}
 {% block first_Col %}
 	<div class="col-xs-12">

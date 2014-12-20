@@ -64,11 +64,11 @@ def render_player(room):
 
     shuffle_state = room.shuffle
 
-    template_playlist = render_to_string("include/playlist.html", {
+    template_playlist = render_to_string("include/remote/playlist.html", {
         "playlist": room.get_musics_remaining(),
         "shuffle": shuffle_state
     })
-    template_header_player = render_to_string("include/header_player.html", {
+    template_header_remote = render_to_string("include/remote/header_remote.html", {
         "current_music": room.current_music
     })
     current_time_left = room.get_current_remaining_time()
@@ -79,7 +79,7 @@ def render_player(room):
         'current_music': current_music,
         'shuffle': shuffle_state,
         'template_playlist': template_playlist,
-        'template_header_player': template_header_player,
+        'template_header_remote': template_header_remote,
         'time_left': current_time_left,
         'time_past_percent': current_time_past_percent,
     })

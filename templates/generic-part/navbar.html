@@ -12,16 +12,10 @@
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li class="active"><a class="navbar-brand">{{room.name}}</a></li>
-				<li><a href="/log-out/">Change Room</a></li>
-			</ul>
-			{% if room.can_adjust_volume %}
-			<form action="/volume/" method="post" class="navbar-form navbar-right ajax-volume">
-				{% csrf_token %}
-				<button type="submit" class="btn btn-default btn-vol" name="volume" value="down" title="volume_down" alt="volume_down" onclick="$(this).addClass('volume_clicked')"><i class="fa fa-volume-down fa-2x"></i></span></button>
-				<button type="submit" class="btn btn-default btn-vol" name="volume" value="up" title="volume_up" alt="volume_up" onclick="$(this).addClass('volume_clicked')"><i class="fa fa-volume-up fa-2x"></i></span></button>
-			</form>
+			{% if parent == "remote" %}
+				{% include "include/remote/navbar_remote.html" %}
+			{% elif parent == "player" %}
+				{% include "include/player/navbar_player.html" %}
 			{% endif %}
 		</div><!-- /.navbar-collapse -->
 	</div>
