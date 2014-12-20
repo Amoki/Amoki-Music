@@ -38,7 +38,7 @@ def search_music(request):
                 })
                 return HttpResponse(json_data, content_type='application/json')
         tab = "youtube-list-music"
-        template_library = render_to_string("include/library.html", {"musics": musics_searched, "tab": tab})
+        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": tab})
         json_data = json.dumps({
             'template_library': template_library
         })
@@ -53,10 +53,10 @@ def add_music(request):
         if(request.POST.get('requestId') == "undefined"):
             music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room)
             room.push(
-                    music_id=music_to_add.music_id,
-                    name=music_to_add.name,
-                    duration=music_to_add.duration,
-                    thumbnail=music_to_add.thumbnail,
+                music_id=music_to_add.music_id,
+                name=music_to_add.name,
+                duration=music_to_add.duration,
+                thumbnail=music_to_add.thumbnail,
             )
         else:
             room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
@@ -86,7 +86,7 @@ def music_inifite_scroll(request):
 
         tab = "library-list-music"
 
-        template = render_to_string("include/library.html", {"musics": musics, "tab": tab, "more_musics": more_musics})
+        template = render_to_string("include/remote/library.html", {"musics": musics, "tab": tab, "more_musics": more_musics})
         json_data = json.dumps({
             'template': template,
             'more_musics': more_musics

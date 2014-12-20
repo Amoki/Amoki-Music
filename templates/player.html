@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% load socketio_tags %}
 {% block pre_end_head %}
+	{% socketio %}
 	<script type ="text/javascript">
 		var token = "{{ request.session.token }}";
 	</script>
@@ -13,7 +15,7 @@
 	<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
 {% endblock pre_end_head %}
 {% block navbar %}
-	{% include "generic-part/navbar.html" %}
+	{% include "generic-part/navbar.html" with parent="player" %}
 {% endblock navbar %}
 {% block first_Col %}
 	<div class="col-xs-12">

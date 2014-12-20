@@ -30,7 +30,7 @@ $(document).ready(function() {
   $('.ajax_music_inifite_scroll').submit();
 });
 
-function maj_header_player(data) {
+function maj_header_remote(data) {
   if(data.current_music) {
     $(document).attr('title', data.current_music[0].fields.name);
     $('#music_id-next').val(data.current_music[0].fields.music_id);
@@ -39,7 +39,7 @@ function maj_header_player(data) {
   else {
     disabled_btn();
   }
-  $(".player").children('.header-player').html(data.template_header_player);
+  $(".player").children('.header-player').html(data.template_header_remote);
 }
 
 function disabled_btn() {
@@ -58,7 +58,7 @@ function maj_playlist_current(data) {
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
-  maj_header_player(data);
+  maj_header_remote(data);
   if(data.current_music) {
     $('#time-left-progress-bar').countdown({until: data.time_left});
   }

@@ -45,6 +45,7 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
   });
 });
 
+
 $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   e.preventDefault();
   var form =  $(this);

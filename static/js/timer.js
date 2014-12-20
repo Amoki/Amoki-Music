@@ -16,6 +16,5 @@ function timeline(current_time_left, current_time_past_percent){
   $(".progress-bar").animate({ 'width' : '100%'} , {
       duration: actual_time,
       easing: 'linear',
-      complete:function() {}
   });
 }
