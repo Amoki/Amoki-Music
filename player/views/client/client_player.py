@@ -23,10 +23,7 @@ def volume_change(request):
 def trigger_shuffle(request):
     if request.is_ajax and request.session.get('room', False) and request.POST.get('shuffle'):
         room = Room.objects.get(name=request.session.get('room'))
-        room.shuffle = (request.POST.get('shuffle') == 'true')
-        room.save()
-        if room.shuffle and not room.current_music:
-            room.play_next()
+        room.toggle_shuffle((request.POST.get('shuffle') == 'true'))
 
         player_template_rendered = render_player(room=room)
 
