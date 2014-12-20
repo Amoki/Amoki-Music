@@ -6,7 +6,7 @@
 	<script type ="text/javascript">
 		var token = "{{ request.session.token }}";
 	</script>
-	{% if playing %}
+	{% if current_music %}
 		<script type="text/javascript">
 		var current_time_past = {{current_time_past}};
 		var current_music = '{{music_id}}';
