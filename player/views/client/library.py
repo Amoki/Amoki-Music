@@ -82,9 +82,7 @@ def music_inifite_scroll(request):
         except (EmptyPage, InvalidPage):
             musics = None
 
-        tab = "library-list-music"
-
-        template = render_to_string("include/remote/library.html", {"musics": musics, "tab": tab, "more_musics": more_musics})
+        template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
         json_data = json.dumps({
             'template': template,
             'more_musics': more_musics
