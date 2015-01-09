@@ -1,6 +1,5 @@
 $( document ).ready(function() {
   $('#time-left-progress-bar').countdown('destroy');
-
   $.countdown.setDefaults({
     compact: true,
   });
