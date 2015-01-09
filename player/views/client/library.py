@@ -15,7 +15,6 @@ import re
 
 def search_music(request):
     if request.is_ajax() and request.session.get('room', False):
-
         room = Room.objects.get(name=request.session.get('room'))
         regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
         if regexVideoId.search(request.POST.get('query')) is None:
@@ -37,8 +36,7 @@ def search_music(request):
                     'template_library': template_library
                 })
                 return HttpResponse(json_data, content_type='application/json')
-        tab = "youtube-list-music"
-        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": tab})
+        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
         json_data = json.dumps({
             'template_library': template_library
         })
@@ -60,7 +58,29 @@ def add_music(request):
             )
         else:
             room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
-        return HttpResponse(render_player(room), content_type='application/json')
+
+        musics = room.music_set.all().order_by('-date')
+        # Get the paginator
+        paginator = Paginator(musics, 16)
+        more_musics = False
+        try:
+            page = int(request.POST.get('page')) - 1
+        except ValueError:
+            page = 1
+            print("Error on page requested")
+        try:
+            musics = []
+            for i in range(0, page):
+                musics += paginator.page(i + 1).object_list
+            if(paginator.page(page).has_next()):
+                more_musics = True
+            else:
+                more_musics = False
+        except (EmptyPage, InvalidPage):
+            musics = None
+        response = json.loads(render_player(room))
+        response['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
+        return HttpResponse(json.dumps(response), content_type='application/json')
     return redirect('/')
 
 

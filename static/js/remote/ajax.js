@@ -116,7 +116,8 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   var urlSubmit = form.attr('action');
   var dataSend = {
     'music_id': encodeURIComponent($(this).children('.music_id').val()),
-    'requestId': encodeURIComponent($(this).children('.requestId').val())
+    'requestId': encodeURIComponent($(this).children('.requestId').val()),
+    'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
   };
   form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
   form.children("button").attr('disabled', 'disabled');
@@ -127,6 +128,8 @@ $(document).on('submit', '.ajax-add-music', function(e) {
       data: dataSend,
       dataType: "json",
       success: function(data) {
+        $('.library-list-music').remove();
+        $('#list-library').prepend(data.template_library);
         form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
         form.children("button").removeAttr('disabled');
         modal_confirm($('#modal-add-music'));
@@ -162,7 +165,7 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
   var form =  $(this);
   var urlSubmit = form.attr('action');
   var dataSend = 'page=' + encodeURIComponent(form.children("#page").val());
-  $("<li id='spinner_library' class='list-group-item item-lib library-list-music row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore(form.closest('li'));
+  $("<li id='spinner_library' class='list-group-item item-lib row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore(form.closest('li'));
 
   $.ajax({
     type: "POST",

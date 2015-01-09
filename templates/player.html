@@ -3,7 +3,7 @@
 {% load socketio_tags %}
 {% block pre_end_head %}
 	{% socketio %}
-	<script type="text/javascript" src="{% static 'js/socketIO.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/lib/socketIO.js' %}"></script>
 	<script type ="text/javascript">
 		var token = "{{ request.session.token }}";
 	</script>
@@ -13,7 +13,7 @@
 		var current_music = '{{music_id}}';
 		</script>
 	{% endif %}
-	<script type="text/javascript" src="{% static 'js/player.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/player/player.js' %}"></script>
 {% endblock pre_end_head %}
 {% block navbar %}
 	{% include "generic-part/navbar.html" with parent="player" %}

@@ -8,7 +8,7 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-8" style="color:black;font-weight:normal;">
-				{% if tab == "youtube-list-music" %}{{music.views}} views{% else %}Played {{music.count}} times{% endif %}
+				{% if tab == "youtube-list-music" %}<b>{{music.views}}</b> views{% else %}Played <b>{{music.count}}</b> times{% endif %}
 			</div>
 			<div class="col-xs-4">
 				<span class="badge">{{music.duration|secToDuration}}</span>
