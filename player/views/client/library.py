@@ -30,8 +30,7 @@ def search_music(request):
                 )
                 return HttpResponse(render_player(room), content_type='application/json')
             else:
-                error = "wrong-link"
-                template_library = render_to_string("include/errors.html", {"error": error})
+                template_library = render_to_string("include/errors.html", {"error": "wrong-link"})
                 json_data = json.dumps({
                     'template_library': template_library
                 })
