@@ -117,7 +117,6 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   var dataSend = {
     'music_id': encodeURIComponent($(this).children('.music_id').val()),
     'requestId': encodeURIComponent($(this).children('.requestId').val()),
-    'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
   };
   form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
   form.children("button").attr('disabled', 'disabled');
@@ -128,8 +127,6 @@ $(document).on('submit', '.ajax-add-music', function(e) {
       data: dataSend,
       dataType: "json",
       success: function(data) {
-        $('.library-list-music').remove();
-        $('#list-library').prepend(data.template_library);
         form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
         form.children("button").removeAttr('disabled');
         modal_confirm($('#modal-add-music'));
@@ -189,10 +186,13 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
 });
 
 function update_player() {
+  var dataSend = {
+      'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
+    };
   $.ajax({
     type: "POST",
     url: "/update-player/",
-    data: "",
+    data: dataSend,
     dataType: "json",
     success: function(data) {
       if(data.shuffle === true) {
@@ -203,6 +203,9 @@ function update_player() {
         $("#btn-shuffle").attr("value", "true");
         $("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
       }
+
+      $('.library-list-music').remove();
+      $('#list-library').prepend(data.template_library);
 
       if(data.current_music) {
         timeline(data.time_left, data.time_past_percent);
