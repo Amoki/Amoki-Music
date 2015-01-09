@@ -25,22 +25,14 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
     dataType: "json",
     success: function(data) {
       if(data.shuffle === true) {
-        form.children("button").attr("value", "false");
-        form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
         modal_confirm($('#modal-shuffle-on'));
       }
       else {
-        form.children("button").attr("value", "true");
-        form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-false");
         modal_confirm($('#modal-shuffle-off'));
       }
-      timeline(data.time_left, data.time_past_percent);
-      maj_playlist_current(data, urlSubmit);
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -58,19 +50,10 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
     data: dataSend,
     dataType: "json",
     success: function(data) {
-      if(data.current_music) {
-        maj_playlist_current(data, urlSubmit);
-        timeline(data.time_left, data.time_past_percent);
-      }
-      else {
-        disabled_btn();
-      }
       modal_confirm($('#modal-next-music'));
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -100,8 +83,6 @@ $(document).on('submit', '.ajax-search', function(e) {
       dataType: "json",
       success: function(data) {
         if(data.current_music) {
-          maj_playlist_current(data);
-          timeline(data.time_left, data.time_past_percent);
           $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
           $("#btn-search").removeAttr('disabled');
           modal_confirm($('#modal-add-music'));
@@ -124,9 +105,7 @@ $(document).on('submit', '.ajax-search', function(e) {
         }
       },
       error: function(resultat, statut, erreur) {
-        console.log(resultat.responseText);
-        console.log(statut);
-        console.log(erreur);
+        log_errors(resultat, statut, erreur);
       },
   });
 });
@@ -148,16 +127,12 @@ $(document).on('submit', '.ajax-add-music', function(e) {
       data: dataSend,
       dataType: "json",
       success: function(data) {
-        maj_playlist_current(data);
-        timeline(data.time_left, data.time_past_percent);
         form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
         form.children("button").removeAttr('disabled');
         modal_confirm($('#modal-add-music'));
       },
       error: function(resultat, statut, erreur) {
-        console.log(resultat.responseText);
-        console.log(statut);
-        console.log(erreur);
+        log_errors(resultat, statut, erreur);
       },
   });
 });
@@ -177,9 +152,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
       form.children(".volume_clicked").removeClass("volume_clicked");
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -207,9 +180,7 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
       $("#spinner_Library").remove();
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -239,9 +210,19 @@ function update_player() {
       }
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 }
+
+function log_errors(resultat, statut, erreur){
+  console.log(resultat.responseText);
+  console.log("Statut : "+statut);
+  console.log("Error : "+erreur);
+}
+
+socket.on('message', function(message) {
+  if(message.action !== 'volume_up' && message.action !== 'volume_down'){
+    update_player();
+  }
+});

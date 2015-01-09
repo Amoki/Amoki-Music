@@ -3,7 +3,6 @@ $( document ).ready(function() {
 
   $.countdown.setDefaults({
     compact: true,
-    onExpiry: update_player,
   });
 });
 

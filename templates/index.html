@@ -3,6 +3,10 @@
 {% load socketio_tags %}
 {% block pre_end_head %}
 	{% socketio %}
+	<script type="text/javascript" src="{% static 'js/socketIO.js' %}"></script>
+	<script type ="text/javascript">
+		var token = "{{ request.session.token }}";
+	</script>
 	<script type="text/javascript" src="{% static 'js/jquery.plugin.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.countdown.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>

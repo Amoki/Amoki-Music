@@ -69,7 +69,7 @@ def music_inifite_scroll(request):
         room = Room.objects.get(name=request.session.get('room'))
         musics = room.music_set.all().order_by('-date')
         # Get the paginator
-        paginator = Paginator(musics, 8)
+        paginator = Paginator(musics, 16)
         more_musics = False
         try:
             page = int(request.POST.get('page'))
