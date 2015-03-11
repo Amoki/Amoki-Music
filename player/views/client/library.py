@@ -64,7 +64,7 @@ def add_music(request):
 def music_inifite_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        musics = room.music_set.all().order_by('-date')
+        musics = room.music_set.filter(dead_link=False).order_by('-date')
         # Get the paginator
         paginator = Paginator(musics, 16)
         more_musics = False
