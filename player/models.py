@@ -131,10 +131,7 @@ class Room(models.Model):
             self.save()
             self.play_next(forced=True)
         else:
-            message = {
-                'action': 'update',
-            }
-            self.send_message(message)
+            send_update_message()
 
     def get_current_remaining_time(self):
         if self.current_music:
@@ -202,17 +199,17 @@ class Room(models.Model):
             if not self.current_music:
                 self.play_next()
             else:
-                message = {
-                    'action': 'update',
-                }
-                self.send_message(message)
+                send_update_message()
         else:
             self.shuffle = False
             self.save()
-            message = {
+            send_update_message()
+
+    def send_update_message(self):
+        message = {
                 'action': 'update',
-            }
-            self.send_message(message)
+        }
+        self.send_message(message)
 
 events = dict()
 

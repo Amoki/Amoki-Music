@@ -57,7 +57,6 @@ def update_player(request):
             page = int(request.POST.get('page')) - 1
         except ValueError:
             page = 1
-            print("Error on page requested")
         try:
             musics = []
             for i in range(0, page):
