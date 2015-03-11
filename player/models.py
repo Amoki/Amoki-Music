@@ -53,6 +53,7 @@ class Room(models.Model):
 
             message = {
                 'action': 'play',
+                'update': 'true',
                 'options': {
                     'name': music.name,
                     'musicId': music.music_id
@@ -70,6 +71,7 @@ class Room(models.Model):
         else:
             message = {
                 'action': 'stop',
+                'update': 'true',
             }
             self.send_message(message)
 
@@ -91,8 +93,8 @@ class Room(models.Model):
             to_remove = int(count / 10)
             count -= to_remove
             musics = musics[to_remove:]
-            a = count / 5  # Le point où ca commence à monter
-            b = count / 27  # La vitesse à laquelle ca monte
+            a = count / float(5)  # Le point où ca commence à monter
+            b = count / float(27)  # La vitesse à laquelle ca monte
             x = random.uniform(1, count - a - 1)
             i = int(math.floor(x + a - a * math.exp(-x / b)))
 
@@ -131,7 +133,7 @@ class Room(models.Model):
             self.save()
             self.play_next(forced=True)
         else:
-            send_update_message()
+            self.send_update_message()
 
     def get_current_remaining_time(self):
         if self.current_music:
@@ -199,15 +201,16 @@ class Room(models.Model):
             if not self.current_music:
                 self.play_next()
             else:
-                send_update_message()
+                self.send_update_message()
         else:
             self.shuffle = False
             self.save()
-            send_update_message()
+            self.send_update_message()
 
     def send_update_message(self):
         message = {
                 'action': 'update',
+                'update': 'true',
         }
         self.send_message(message)
 

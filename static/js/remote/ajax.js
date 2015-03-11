@@ -228,7 +228,7 @@ function log_errors(resultat, statut, erreur){
 }
 
 socket.on('message', function(message) {
-  if(message.action !== 'volume_up' && message.action !== 'volume_down'){
+  if(message.update == 'true'){
     update_player();
   }
 });
