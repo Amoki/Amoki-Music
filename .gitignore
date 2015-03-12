@@ -1,3 +1,6 @@
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+
 *.sqlite3
 .v_env/*
 *.sublime-project
