@@ -2,6 +2,7 @@
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.core import serializers
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 
 from player.models import Room
@@ -47,8 +48,29 @@ def next_music(request):
 def update_player(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
-        player_updated = render_player(room=room)
-        return HttpResponse(player_updated, content_type='application/json')
+
+        musics = room.music_set.filter(dead_link=False).order_by('-date')
+        paginator = Paginator(musics, 16)
+        more_musics = False
+        try:
+            page = int(request.POST.get('page')) - 1
+        except ValueError:
+            page = 1
+        try:
+            musics = []
+            for i in range(0, page):
+                musics += paginator.page(i + 1).object_list
+            if(paginator.page(page).has_next()):
+                more_musics = True
+            else:
+                more_musics = False
+        except (InvalidPage, EmptyPage):
+            return HttpResponse("Error while refreshing the library, please reload the page", status=409)
+
+        player_updated = json.loads(render_player(room))
+        player_updated['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
+
+        return HttpResponse(json.dumps(player_updated), content_type='application/json')
 
 
 def render_player(room):

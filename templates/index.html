@@ -3,11 +3,15 @@
 {% load socketio_tags %}
 {% block pre_end_head %}
 	{% socketio %}
-	<script type="text/javascript" src="{% static 'js/jquery.plugin.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery.countdown.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/usefullFunction.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/lib/socketIO.js' %}"></script>
+	<script type ="text/javascript">
+		var token = "{{ request.session.token }}";
+	</script>
+	<script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/remote/ajax.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/remote/timer.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
 	{% if current_music %}
 	<script type="text/javascript">
 		$( document ).ready(function() {
@@ -113,7 +117,7 @@
 					</div>
 					<div class="tab-pane active" id="library">
 						<ul id="list-library" class="list-group">
-							<li class="list-group-item item-lib library-list-music row row-list-item">
+							<li class="list-group-item item-lib row row-list-item">
 								<form id="form_infini_scroll" action="/music_inifite_scroll/" method="post" class="ajax_music_inifite_scroll">
 									{% csrf_token %}
 									<button id="page" class="btn btn-default" type="submit" name="page" value="1">Next musics</button>

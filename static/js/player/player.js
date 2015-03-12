@@ -18,16 +18,11 @@ var playerControl = {
   }
 };
 
-// Socket init
-var socket = new io.Socket();
-socket.connect();
-socket.on('connect', function() {
-  socket.subscribe(token);
-});
-
 socket.on('message', function(message) {
   if(initialized) {
-    playerControl[message.action](message.options);
+    if(message.action){
+      playerControl[message.action](message.options);
+    }
   }
 });
 

@@ -15,7 +15,6 @@ import re
 
 def search_music(request):
     if request.is_ajax() and request.session.get('room', False):
-
         room = Room.objects.get(name=request.session.get('room'))
         regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
         if regexVideoId.search(request.POST.get('query')) is None:
@@ -31,14 +30,12 @@ def search_music(request):
                 )
                 return HttpResponse(render_player(room), content_type='application/json')
             else:
-                error = "wrong-link"
-                template_library = render_to_string("include/errors.html", {"error": error})
+                template_library = render_to_string("include/errors.html", {"error": "wrong-link"})
                 json_data = json.dumps({
                     'template_library': template_library
                 })
                 return HttpResponse(json_data, content_type='application/json')
-        tab = "youtube-list-music"
-        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": tab})
+        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
         json_data = json.dumps({
             'template_library': template_library
         })
@@ -67,26 +64,22 @@ def add_music(request):
 def music_inifite_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        musics = room.music_set.all().order_by('-date')
+        musics = room.music_set.filter(dead_link=False).order_by('-date')
         # Get the paginator
-        paginator = Paginator(musics, 8)
+        paginator = Paginator(musics, 16)
         more_musics = False
         try:
             page = int(request.POST.get('page'))
-        except ValueError:
-            page = 1
-        try:
+
             musics = paginator.page(page)
             if(paginator.page(page).has_next()):
                 more_musics = True
             else:
                 more_musics = False
-        except (EmptyPage, InvalidPage):
-            musics = None
+        except (InvalidPage, EmptyPage, ValueError):
+            return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
-        tab = "library-list-music"
-
-        template = render_to_string("include/remote/library.html", {"musics": musics, "tab": tab, "more_musics": more_musics})
+        template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
         json_data = json.dumps({
             'template': template,
             'more_musics': more_musics

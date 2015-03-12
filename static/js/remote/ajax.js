@@ -25,22 +25,14 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
     dataType: "json",
     success: function(data) {
       if(data.shuffle === true) {
-        form.children("button").attr("value", "false");
-        form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-true");
         modal_confirm($('#modal-shuffle-on'));
       }
       else {
-        form.children("button").attr("value", "true");
-        form.children("button").attr("class", "btn btn-default btn-control btn-shuffle-false");
         modal_confirm($('#modal-shuffle-off'));
       }
-      timeline(data.time_left, data.time_past_percent);
-      maj_playlist_current(data, urlSubmit);
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -58,19 +50,10 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
     data: dataSend,
     dataType: "json",
     success: function(data) {
-      if(data.current_music) {
-        maj_playlist_current(data, urlSubmit);
-        timeline(data.time_left, data.time_past_percent);
-      }
-      else {
-        disabled_btn();
-      }
       modal_confirm($('#modal-next-music'));
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -100,8 +83,6 @@ $(document).on('submit', '.ajax-search', function(e) {
       dataType: "json",
       success: function(data) {
         if(data.current_music) {
-          maj_playlist_current(data);
-          timeline(data.time_left, data.time_past_percent);
           $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
           $("#btn-search").removeAttr('disabled');
           modal_confirm($('#modal-add-music'));
@@ -124,9 +105,7 @@ $(document).on('submit', '.ajax-search', function(e) {
         }
       },
       error: function(resultat, statut, erreur) {
-        console.log(resultat.responseText);
-        console.log(statut);
-        console.log(erreur);
+        log_errors(resultat, statut, erreur);
       },
   });
 });
@@ -137,7 +116,7 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   var urlSubmit = form.attr('action');
   var dataSend = {
     'music_id': encodeURIComponent($(this).children('.music_id').val()),
-    'requestId': encodeURIComponent($(this).children('.requestId').val())
+    'requestId': encodeURIComponent($(this).children('.requestId').val()),
   };
   form.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
   form.children("button").attr('disabled', 'disabled');
@@ -148,16 +127,12 @@ $(document).on('submit', '.ajax-add-music', function(e) {
       data: dataSend,
       dataType: "json",
       success: function(data) {
-        maj_playlist_current(data);
-        timeline(data.time_left, data.time_past_percent);
         form.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
         form.children("button").removeAttr('disabled');
         modal_confirm($('#modal-add-music'));
       },
       error: function(resultat, statut, erreur) {
-        console.log(resultat.responseText);
-        console.log(statut);
-        console.log(erreur);
+        log_errors(resultat, statut, erreur);
       },
   });
 });
@@ -177,9 +152,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
       form.children(".volume_clicked").removeClass("volume_clicked");
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
@@ -189,7 +162,7 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
   var form =  $(this);
   var urlSubmit = form.attr('action');
   var dataSend = 'page=' + encodeURIComponent(form.children("#page").val());
-  $("<li id='spinner_Library' class='list-group-item item-lib library-list-music row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore(form.closest('li'));
+  $("<li id='spinner_library' class='list-group-item item-lib row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore(form.closest('li'));
 
   $.ajax({
     type: "POST",
@@ -204,21 +177,22 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
       else {
         form.children("#page").addClass('disabled');
       }
-      $("#spinner_Library").remove();
+      $("#spinner_library").remove();
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 });
 
 function update_player() {
+  var dataSend = {
+      'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
+    };
   $.ajax({
     type: "POST",
     url: "/update-player/",
-    data: "",
+    data: dataSend,
     dataType: "json",
     success: function(data) {
       if(data.shuffle === true) {
@@ -230,6 +204,9 @@ function update_player() {
         $("#btn-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
       }
 
+      $('.library-list-music').remove();
+      $('#list-library').prepend(data.template_library);
+
       if(data.current_music) {
         timeline(data.time_left, data.time_past_percent);
         maj_playlist_current(data);
@@ -239,9 +216,19 @@ function update_player() {
       }
     },
     error: function(resultat, statut, erreur) {
-      console.log(resultat.responseText);
-      console.log(statut);
-      console.log(erreur);
+      log_errors(resultat, statut, erreur);
     },
   });
 }
+
+function log_errors(resultat, statut, erreur){
+  console.log(resultat.responseText);
+  console.log("Statut : "+statut);
+  console.log("Error : "+erreur);
+}
+
+socket.on('message', function(message) {
+  if(message.update === true){
+    update_player();
+  }
+});
