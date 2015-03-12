@@ -49,8 +49,7 @@ def update_player(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
 
-        musics = room.music_set.all().order_by('-date')
-        # Get the paginator
+        musics = room.music_set.filter(dead_link=False).order_by('-date')
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
@@ -65,8 +64,9 @@ def update_player(request):
                 more_musics = True
             else:
                 more_musics = False
-        except (EmptyPage, InvalidPage):
-            musics = None
+        except (InvalidPage, EmptyPage):
+            return HttpResponse("Error while refreshing the library, please reload the page", status=409)
+
         player_updated = json.loads(render_player(room))
         player_updated['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
 

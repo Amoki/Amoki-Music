@@ -70,16 +70,14 @@ def music_inifite_scroll(request):
         more_musics = False
         try:
             page = int(request.POST.get('page'))
-        except ValueError:
-            page = 1
-        try:
+
             musics = paginator.page(page)
             if(paginator.page(page).has_next()):
                 more_musics = True
             else:
                 more_musics = False
-        except (EmptyPage, InvalidPage):
-            musics = None
+        except (InvalidPage, EmptyPage, ValueError):
+            return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
         template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
         json_data = json.dumps({

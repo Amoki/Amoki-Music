@@ -20,7 +20,7 @@ var playerControl = {
 
 socket.on('message', function(message) {
   if(initialized) {
-    if(message.action !== 'update'){
+    if(message.action){
       playerControl[message.action](message.options);
     }
   }

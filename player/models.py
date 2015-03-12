@@ -53,7 +53,7 @@ class Room(models.Model):
 
             message = {
                 'action': 'play',
-                'update': 'true',
+                'update': True,
                 'options': {
                     'name': music.name,
                     'musicId': music.music_id
@@ -71,7 +71,7 @@ class Room(models.Model):
         else:
             message = {
                 'action': 'stop',
-                'update': 'true',
+                'update': True,
             }
             self.send_message(message)
 
@@ -87,7 +87,7 @@ class Room(models.Model):
             self.play(music)
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
-            musics = self.music_set.all().exclude(dead_link=True).order_by('-date')
+            musics = self.music_set.exclude(dead_link=True).order_by('-date')
             count = musics.count()
 
             to_remove = int(count / 10)
@@ -209,8 +209,7 @@ class Room(models.Model):
 
     def send_update_message(self):
         message = {
-                'action': 'update',
-                'update': 'true',
+                'update': True,
         }
         self.send_message(message)
 
