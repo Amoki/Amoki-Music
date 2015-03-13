@@ -19,6 +19,9 @@ def search_music(request):
         regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
         if regexVideoId.search(request.POST.get('query')) is None:
             musics_searched = youtube.search(query=request.POST.get('query'))
+            template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
+            json_data = json.dumps({'template_library': template_library})
+            return HttpResponse(json_data, content_type='application/json')
         else:
             videos = youtube.get_info(regexVideoId.search(request.POST.get('query')).group(2))
             if(videos):
@@ -35,12 +38,6 @@ def search_music(request):
                     'template_library': template_library
                 })
                 return HttpResponse(json_data, content_type='application/json')
-        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
-        json_data = json.dumps({
-            'template_library': template_library
-        })
-
-        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 
