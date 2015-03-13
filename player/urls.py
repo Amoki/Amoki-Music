@@ -2,8 +2,8 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('player.views',
-    url(r'^$', 'login.login', name='login'),
-    url(r'^log-out/$', 'login.logout'),
+    url(r'^$', 'login.login.login', name='login'),
+    url(r'^log-out/$', 'login.login.logout'),
 
     url(r'^player/$', 'player.host.host', name='player'),
     url(r'^remote/$', 'remote.home.home', name='remote'),
