@@ -5,18 +5,18 @@ urlpatterns = patterns('player.views',
     url(r'^$', 'login.login', name='login'),
     url(r'^log-out/$', 'login.logout'),
 
-    url(r'^player/$', 'viewer.host.host', name='player'),
-    url(r'^remote/$', 'client.home.home', name='remote'),
+    url(r'^player/$', 'player.host.host', name='player'),
+    url(r'^remote/$', 'remote.home.home', name='remote'),
 
     # AJAX urls
-    url(r'^search-music/$', 'client.library.search_music'),
-    url(r'^add-music/$', 'client.library.add_music'),
-    url(r'^music_inifite_scroll/$', 'client.library.music_inifite_scroll'),
+    url(r'^search-music/$', 'remote.library.search_music'),
+    url(r'^add-music/$', 'remote.library.add_music'),
+    url(r'^music_inifite_scroll/$', 'remote.library.music_inifite_scroll'),
 
-    url(r'^shuffle/$', 'client.client_player.trigger_shuffle'),
-    url(r'^next-music/$', 'client.client_player.next_music'),
-    url(r'^dead-link/$', 'client.client_player.next_music'),
-    url(r'^volume/$', 'client.client_player.volume_change'),
-    url(r'^update-player/$', 'client.client_player.update_player')
+    url(r'^shuffle/$', 'remote.remote.trigger_shuffle'),
+    url(r'^next-music/$', 'remote.remote.next_music'),
+    url(r'^dead-link/$', 'remote.remote.next_music'),
+    url(r'^volume/$', 'remote.remote.volume_change'),
+    url(r'^update-player/$', 'remote.remote.update_remote')
 
 )

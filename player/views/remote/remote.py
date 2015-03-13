@@ -26,7 +26,7 @@ def trigger_shuffle(request):
         room = Room.objects.get(name=request.session.get('room'))
         room.toggle_shuffle((request.POST.get('shuffle') == 'true'))
 
-        player_template_rendered = render_player(room=room)
+        player_template_rendered = render_remote(room=room)
 
         return HttpResponse(player_template_rendered, content_type='application/json')
     return redirect('/')
@@ -40,12 +40,12 @@ def next_music(request):
             if request.path == "/dead-link/":
                 room.signal_dead_link()
             room.play_next()
-        player_template_rendered = render_player(room=room)
+        player_template_rendered = render_remote(room=room)
         return HttpResponse(player_template_rendered, content_type='application/json')
     return redirect('/')
 
 
-def update_player(request):
+def update_remote(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
 
@@ -67,13 +67,13 @@ def update_player(request):
         except (InvalidPage, EmptyPage):
             return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
-        player_updated = json.loads(render_player(room))
+        player_updated = json.loads(render_remote(room))
         player_updated['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
 
         return HttpResponse(json.dumps(player_updated), content_type='application/json')
 
 
-def render_player(room):
+def render_remote(room):
     if room.current_music:
         data = room.music_set.filter(music_id=room.current_music.music_id)
         model_json = serializers.serialize('json', data, fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))

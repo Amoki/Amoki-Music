@@ -5,7 +5,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 
 from player.models import Room
-from player.views.client.client_player import render_player
+from player.views.remote.remote import render_remote
 from music.models import Music
 from music.helpers import youtube
 
@@ -28,7 +28,7 @@ def search_music(request):
                     duration=videos[0]['duration'],
                     thumbnail=videos[0]['thumbnail'],
                 )
-                return HttpResponse(render_player(room), content_type='application/json')
+                return HttpResponse(render_remote(room), content_type='application/json')
             else:
                 template_library = render_to_string("include/errors.html", {"error": "wrong-link"})
                 json_data = json.dumps({
@@ -57,7 +57,7 @@ def add_music(request):
             )
         else:
             room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
-        return HttpResponse(render_player(room), content_type='application/json')
+        return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')
 
 
