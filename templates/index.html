@@ -9,8 +9,11 @@
 	</script>
 	<script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
+	<link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css/jquery-ui.structure.min.css' %}" rel="stylesheet">
+
 	<script type="text/javascript" src="{% static 'js/remote/ajax.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/remote/timer.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
 	{% if current_music %}
 	<script type="text/javascript">
@@ -91,7 +94,7 @@
 			<div class="col-md-offset-0 col-md-12">
 				<form action="/search-music/" method="post" class="input-group ajax-search">
 					{% csrf_token %}
-					<input type="text" name="query" class="form-control query" style="text-align:right" placeholder="Titre">
+					<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
 					<span class="input-group-btn">
 						<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
 					</span>
