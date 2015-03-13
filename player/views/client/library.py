@@ -23,7 +23,7 @@ def search_music(request):
             videos = youtube.get_info(regexVideoId.search(request.POST.get('query')).group(2))
             if(videos):
                 room.push(
-                    id=videos[0]['id'],
+                    music_id=videos[0]['id'],
                     name=videos[0]['name'],
                     duration=videos[0]['duration'],
                     thumbnail=videos[0]['thumbnail'],
