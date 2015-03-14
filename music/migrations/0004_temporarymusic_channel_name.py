@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='temporarymusic',
             name='channel_name',
-            field=models.CharField(max_length=255, null=True),
-            preserve_default=True,
+            field=models.CharField(default='', max_length=255),
+            preserve_default=False,
         ),
     ]

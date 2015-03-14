@@ -36,7 +36,7 @@ class Music(models.Model):
 class TemporaryMusic(models.Model):
     music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255)
-    channel_name = models.CharField(max_length=255, null=True)
+    channel_name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
     duration = models.PositiveIntegerField()
     thumbnail = models.CharField(max_length=255)
