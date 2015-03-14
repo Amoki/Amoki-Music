@@ -70,8 +70,8 @@ $(document).ready(function() {
     compact: true,
   });
 
-  $(document).on('click', '.youtube-list-music', function(e) {
-    $(this).children('.video-info').slideToggle();
+  $(document).on("click", ".row-list-item, .show-more", function(e) {
+    $(this).siblings('.video-info').slideToggle();
   });
   $(document).on("mouseenter", ".youtube-list-music", function(e) {
     if($(this).children(".video-info").is(":hidden")){

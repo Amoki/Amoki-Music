@@ -56,7 +56,13 @@ def add_music(request):
                 # timer_end
             )
         else:
-            room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
+            room.push(
+                music_id=request.POST.get('music_id'),
+                requestId=request.POST.get('requestId'),
+                # WIP
+                # timer_start
+                # timer_end
+            )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')
 

@@ -57,6 +57,9 @@ class Room(models.Model):
                 'options': {
                     'name': music.name,
                     'musicId': music.music_id
+                    # WIP
+                    # 'timer_start': music.timer_start
+                    # 'timer_end': music.timer_end
                 }
             }
 
