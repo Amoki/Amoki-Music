@@ -44,6 +44,7 @@ Update production
 ggpull
 pyhton manage.py collectstatic
 yes
+python manage.py migrate
 sudo killall python
 
 (into root window) pyhton manage.py runserver_socketio 0.0.0.0:9500
