@@ -46,5 +46,5 @@ pyhton manage.py collectstatic
 yes
 sudo killall python
 
-(into root windows) pyhton manage.py runserver_socketio 0.0.0.0:9500
+(into root window) pyhton manage.py runserver_socketio 0.0.0.0:9500
 ```
