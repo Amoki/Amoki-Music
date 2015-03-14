@@ -35,6 +35,7 @@ def get_info(ids):
         detailedVideo = {
             'id': detail["id"],
             'name': detail["snippet"]["title"],
+            'channel_name': detail["snippet"]["channelTitle"],
             'description': detail["snippet"]["description"][:200] + "...",
             'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
             'views': detail["statistics"]["viewCount"],
@@ -54,7 +55,8 @@ def search(query):
         type="video",
         maxResults=15,
         videoSyndicated="true",
-        regionCode="fr",
+        regionCode="FR",
+        relevanceLanguage="fr"
     ).execute()
 
     videos = []
@@ -67,6 +69,7 @@ def search(query):
         music = TemporaryMusic(
             music_id=video['id'],
             name=video['name'],
+            channel_name=video['channel_name'],
             description=video['description'],
             thumbnail=video['thumbnail'],
             views=video['views'],

@@ -48,7 +48,7 @@ $(document).ready(function() {
             val[0] = val[0].substr(0,40);
             suggestions.push({"value":val[0]});
           });
-          suggestions.length = 8; // prune suggestions list to only 5 items
+          suggestions.length = 8; // prune suggestions list to only 8 items
           response(suggestions);
         }else{
           $("#query").autocomplete( "close" );
@@ -56,18 +56,32 @@ $(document).ready(function() {
       };
     },
     select: function(event, ui) {
-        //assign value back to the form element
-        if(ui.item){
-            $(event.target).val(ui.item.value);
-        }
-        //submit the form
-        $(event.target.form).submit();
+      //assign value back to the form element
+      if(ui.item){
+          $(event.target).val(ui.item.value);
+      }
+      //submit the form
+      $(event.target.form).submit();
     }
   });
 
   $('#time-left-progress-bar').countdown('destroy');
   $.countdown.setDefaults({
     compact: true,
+  });
+
+  $(document).on('click', '.youtube-list-music', function(e) {
+    $(this).children('.video-info').slideToggle();
+  });
+  $(document).on("mouseenter", ".youtube-list-music", function(e) {
+    if($(this).children(".video-info").is(":hidden")){
+      $(this).children('.show-more').slideDown();
+    };
+  });
+  $(document).on("mouseleave", ".youtube-list-music", function(e) {
+    if($(this).children(".video-info").is(":hidden")){
+      $(this).children('.show-more').slideUp();
+    };
   });
 
 });
