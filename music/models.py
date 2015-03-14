@@ -16,6 +16,9 @@ class Music(models.Model):
     last_play = models.DateTimeField(null=True)
     # signalement de lien mort
     dead_link = models.BooleanField(default=False)
+    # WIP
+    # timer_start
+    # timer_end
 
     @classmethod
     def add(cls, **kwargs):

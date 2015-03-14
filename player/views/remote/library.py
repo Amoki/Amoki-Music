@@ -51,6 +51,9 @@ def add_music(request):
                 name=music_to_add.name,
                 duration=music_to_add.duration,
                 thumbnail=music_to_add.thumbnail,
+                # WIP
+                # timer_start
+                # timer_end
             )
         else:
             room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
