@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-	migrations.AddField(
+        migrations.AddField(
             model_name='music',
             name='url',
             field=models.CharField(max_length=255, null=True),

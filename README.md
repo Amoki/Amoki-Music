@@ -3,7 +3,9 @@ Amoki-Music
 
 External Requirements
 ---------------------
-* Firefox
+* libevent
+On ubuntu: `apt-get install libevent-dev`
+
 
 Install
 ---------
@@ -16,13 +18,9 @@ Install
 * `./manage.py migrate` : migrate DB
 
 
+
 Configure
 ---------
-#### Firefox :
-```
-In about:config set "browser.link.open_newwindow.override.external" to 1
-```
-It will open new url in the current tab
 
 #### env:
 ```bash
@@ -37,11 +35,17 @@ How to use
 ----------
 #### Start the server 
 ```bash
-pyhton manage.py runserver <ip:port>
+pyhton manage.py runserver_socketio <ip:port>
 ```
 Connect to your server and let you be guided by our awesome UI
 
+Update production
+```bash
+ggpull
+pyhton manage.py collectstatic
+yes
+python manage.py migrate
+sudo killall python
 
-Remotes
--------
-You can download [Chrome](https://chrome.google.com/webstore/detail/amoki-music/ieinfogigllinbiihpecpopcmkdopadm) and [Firefox](https://addons.mozilla.org/fr/firefox/addon/amoki-music/) extensions to add musics to the server directly from Youtube !
+(into root window) pyhton manage.py runserver_socketio 0.0.0.0:9500
+```

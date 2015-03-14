@@ -1,0 +1,10 @@
+<!-- FOOTER  -->
+<footer class="foot">
+	<form action="/dead-link/" method="post" class="pull-left ajax-dead-link">
+		<input id="music_id-dead-link" class="music_id" type="hidden" name="music_id" value="{{music_id}}">
+		<button id="dead-link" class="btn btn-primary" type="submit" {% if not current_music %}disabled="disabled"{%endif%}>Dead link ?</button>
+	</form>
+	<a class="btn btn-primary pull-right" href="">Company Terms</a>
+	<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>
+</footer>
+<!-- END FOOTER -->

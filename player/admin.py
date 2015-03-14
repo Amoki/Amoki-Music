@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from player.models import Music, Player
+from player.models import Room
 
 
-class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'url', 'duration', 'date', 'last_play', 'dead_link')
-    actions = ('add_music',)
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('name', 'shuffle', 'current_music', 'can_adjust_volume')
 
-    def has_add_permission(self, request):
-        return False
-
-    def add_music(self, request, queryset):
-        for music in queryset:
-            Player.push(music.url)
-        return
-
-admin.site.register(Music, MusicAdmin)
+admin.site.register(Room, RoomAdmin)
