@@ -4,12 +4,6 @@ from django.test import TestCase
 from player.models import Room
 from music.models import Music
 
-# Music base: https://www.youtube.com/watch?v=E-p6l9nioNI
-# Duration: 211
-# Name: Mulan - Comme un homme
-# Thumbnail: https://i.ytimg.com/vi/E-p6l9nioNI/default.jpg
-
-
 class TestTimer(TestCase):
 
     def setUp(self):
