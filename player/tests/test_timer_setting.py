@@ -2,8 +2,7 @@
 from django.test import TestCase
 
 from player.models import Room
-from music.models import Music, TemporaryMusic
-from music.helpers import youtube
+from music.models import Music
 
 # Music base: https://www.youtube.com/watch?v=E-p6l9nioNI
 # Duration: 211
