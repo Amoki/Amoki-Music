@@ -30,6 +30,10 @@ class Music(models.Model):
             return existing_music
         else:
             music = cls(**kwargs)
+            if music.timer_end:
+                music.duration = music.duration - (music.duration - music.timer_end)
+            music.duration = music.duration - music.timer_start
+
             music.save()
             return music
 
