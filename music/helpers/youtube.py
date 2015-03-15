@@ -46,25 +46,24 @@ def get_info(ids):
     return videos
 
 
-def search(query):
+def search(query=None, ids=[], direct_link=False):
     requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
-    search_response = youtube.search().list(
-        q=query,
-        part="id",
-        type="video",
-        maxResults=15,
-        videoSyndicated="true",
-        regionCode="FR",
-        relevanceLanguage="fr"
-    ).execute()
+    if not direct_link:
+        search_response = youtube.search().list(
+            q=query,
+            part="id",
+            type="video",
+            maxResults=15,
+            videoSyndicated="true",
+            regionCode="FR",
+            relevanceLanguage="fr"
+        ).execute()
+        ids = []
+        for video in search_response.get("items", []):
+            ids.append(video["id"]["videoId"])
 
     videos = []
-
-    ids = []
-    for video in search_response.get("items", []):
-        ids.append(video["id"]["videoId"])
-
     for video in get_info(ids):
         music = TemporaryMusic(
             music_id=video['music_id'],
@@ -74,7 +73,7 @@ def search(query):
             thumbnail=video['thumbnail'],
             views=video['views'],
             duration=video['duration'],
-            requestId=requestId
+            requestId=requestId,
         )
         videos.append(music)
 

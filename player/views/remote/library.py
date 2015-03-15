@@ -19,8 +19,7 @@ def search_music(request):
         if regexVideoId.search(request.POST.get('query')) is None:
             musics_searched = youtube.search(query=request.POST.get('query'))
         else:
-            musics_searched = youtube.get_info(regexVideoId.search(request.POST.get('query')).group(1))
-            print(musics_searched)
+            musics_searched = youtube.search(ids=regexVideoId.search(request.POST.get('query')).group(1), direct_link=True)
         template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
         json_data = json.dumps({'template_library': template_library})
         return HttpResponse(json_data, content_type='application/json')
@@ -28,7 +27,6 @@ def search_music(request):
 
 
 def add_music(request):
-    print(request.session.get('room', False))
     if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
         if(request.POST.get('requestId') is None):
@@ -45,12 +43,12 @@ def add_music(request):
             if request.POST.get('timer-start') is None:
                 timer_start = 0
             else:
-                timer_start = request.POST.get('timer-start')
+                timer_start = int(request.POST.get('timer-start'))
             room.push(
                 music_id=request.POST.get('music_id'),
                 requestId=request.POST.get('requestId'),
                 timer_start=timer_start,
-                timer_end=request.POST.get('timer-end'),
+                timer_end=int(request.POST.get('timer-end')),
             )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')
