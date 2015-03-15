@@ -17,6 +17,10 @@ class Music(models.Model):
     # signalement de lien mort
     dead_link = models.BooleanField(default=False)
 
+    # WIP
+    timer_start = models.PositiveIntegerField(editable=False, default=0)
+    timer_end = models.PositiveIntegerField(editable=False, null=True)
+
     @classmethod
     def add(cls, **kwargs):
         existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
@@ -26,6 +30,10 @@ class Music(models.Model):
             return existing_music
         else:
             music = cls(**kwargs)
+            if music.timer_end:
+                music.duration = music.duration - (music.duration - music.timer_end)
+            music.duration = music.duration - music.timer_start
+
             music.save()
             return music
 
