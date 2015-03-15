@@ -33,7 +33,7 @@ def get_info(ids):
 
     for detail in details.get("items", []):
         detailedVideo = {
-            'id': detail["id"],
+            'music_id': detail["id"],
             'name': detail["snippet"]["title"],
             'channel_name': detail["snippet"]["channelTitle"],
             'description': detail["snippet"]["description"][:200] + "...",
@@ -67,7 +67,7 @@ def search(query):
 
     for video in get_info(ids):
         music = TemporaryMusic(
-            music_id=video['id'],
+            music_id=video['music_id'],
             name=video['name'],
             channel_name=video['channel_name'],
             description=video['description'],
