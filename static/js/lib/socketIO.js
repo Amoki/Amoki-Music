@@ -6,8 +6,6 @@ var socket = new io.Socket();
 
 socket.on('connect', function() {
   socket.subscribe(token);
-  connected = true;
-  clearTimeout(timeout);
 });
 
 socket.on('disconnect', function() {
@@ -17,12 +15,15 @@ socket.on('disconnect', function() {
 });
 
 var retryConnectOnFailure = function(retryInMilliseconds) {
-  timeout = setTimeout(function() {
-    if (!connected) {
+  if(!connected) {
+    timeout = setTimeout(function() {
       socket.connect();
       retryConnectOnFailure(retryInMilliseconds);
-    }
-  }, retryInMilliseconds);
+    }, retryInMilliseconds);
+  }
+  else {
+    clearTimeout(timeout);
+  }
 }
 
 socket.connect();
