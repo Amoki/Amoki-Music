@@ -13,7 +13,7 @@ socket.on('connect', function() {
 
 socket.on('disconnect', function() {
   connected = false;
-  console.log('SocketIo disconnected, trying to automatically to reconnect in ' + RETRY_INTERVAL/1000 + ' seconds.');
+  console.log('SocketIo disconnected, trying to automatically reconnect in ' + RETRY_INTERVAL/1000 + ' seconds.');
   retryConnectOnFailure(RETRY_INTERVAL);
 });
 
