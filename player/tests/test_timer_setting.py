@@ -4,6 +4,7 @@ from django.test import TestCase
 from player.models import Room
 from music.models import Music
 
+
 class TestTimer(TestCase):
 
     def setUp(self):
