@@ -178,7 +178,7 @@ function ajax(source){
   return $.ajax({
     url: source.attr('action'),
     type: source.attr('method'),
-    data: source.serialize(),
+    data: source.serialize().replace(/.[^&]+=\.?(?:&|$)/gm, ''),
     dataType: "json",
   });
 }

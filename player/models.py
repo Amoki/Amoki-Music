@@ -56,12 +56,12 @@ class Room(models.Model):
                 'update': True,
                 'options': {
                     'name': music.name,
-                    'musicId': music.music_id
-                    # WIP
-                    # 'timer_start': music.timer_start
-                    # 'timer_end': music.timer_end
+                    'musicId': music.music_id,
+                    'timer_start': music.timer_start,
                 }
             }
+            if music.timer_end:
+                message['options']['timer_end'] = music.timer_end
 
             if self.send_message(message):
                 events[self.name] = Timer(music.duration, self.play_next, ())
@@ -119,7 +119,9 @@ class Room(models.Model):
                 music_id=music_id,
                 name=temporaryMusic.name,
                 duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail
+                thumbnail=temporaryMusic.thumbnail,
+                timer_start=kwargs['timer_start'],
+                timer_end=kwargs['timer_end'],
             )
             TemporaryMusic.clean()
         else:
@@ -128,7 +130,9 @@ class Room(models.Model):
                 music_id=music_id,
                 name=kwargs['name'],
                 duration=kwargs['duration'],
-                thumbnail=kwargs['thumbnail']
+                thumbnail=kwargs['thumbnail'],
+                timer_start=kwargs['timer_start'],
+                timer_end=kwargs['timer_end'],
             )
 
         if not self.current_music:

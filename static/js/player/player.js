@@ -29,13 +29,13 @@ function onYouTubeIframeAPIReady() {
 
 var playerControl = {
   play: function(options) {
-    var my_obj = {
+    var music_options = {
       videoId: options.musicId,
       suggestedQuality:'default',
     };
-    if(options.timer_start){my_obj.startSeconds = options.timer_start};
-    if(options.timer_end){my_obj.endSeconds = options.timer_end};
-    player.loadVideoById(my_obj);
+    if(options.timer_start){music_options.startSeconds = options.timer_start};
+    if(options.timer_end){music_options.endSeconds = options.timer_end};
+    player.loadVideoById(music_options);
     $(document).attr('title', options.name);
   },
   stop: function() {

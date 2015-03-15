@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</div>
-		<form class="ajax-add-music col-xs-2" action="/add-music/" method="post">
+		<form id="form-add-{{music.music_id}}" class="ajax-add-music col-xs-2" action="/add-music/" method="post">
 			<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
 			{% if music.requestId %}
 			<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
@@ -47,11 +47,11 @@
 		<div class="col-xs-4">
 			<div>
 				<label for="timer-start">Start</label>
-				<input type="text" id="timer-start" name="timer-start" size="4" pattern='[0-9]{1,3}'>
+				<input type="text" form="form-add-{{music.music_id}}" id="timer-start" name="timer-start" size="4" pattern='[0-9]{1,3}'>
 			</div>
 			<div>
 				<label for="timer-end">End</label>
-				<input type="text" id="timer-end" name="timer-end" size="4" pattern='[0-9]{1,3}'>
+				<input type="text" form="form-add-{{music.music_id}}" id="timer-end" name="timer-end" size="4" pattern='[0-9]{1,3}'>
 			</div>
 		</div>
 	</div>

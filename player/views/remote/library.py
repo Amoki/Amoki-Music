@@ -44,7 +44,7 @@ def search_music(request):
 def add_music(request):
     if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
-        if(request.POST.get('requestId') == "undefined"):
+        if(request.POST.get('requestId') is None):
             music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room)
             room.push(
                 music_id=music_to_add.music_id,
@@ -54,14 +54,20 @@ def add_music(request):
                 # WIP
                 # timer_start
                 # timer_end
+                timer_start=music_to_add.timer_start,
+                timer_end=music_to_add.timer_end,
             )
         else:
+            if request.POST.get('timer-start') is None:
+                timer_start = 0
             room.push(
                 music_id=request.POST.get('music_id'),
                 requestId=request.POST.get('requestId'),
                 # WIP
                 # timer_start
                 # timer_end
+                timer_start=timer_start,
+                timer_end=request.POST.get('timer-end'),
             )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')
