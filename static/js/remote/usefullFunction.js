@@ -84,11 +84,13 @@ $(document).ready(function() {
     };
   });
 
+  var target;
   $(document).on("click", "#btn-preview-duration", function(e) {
     var duration = $(this).data("duration");
     $( "#slider" ).slider( "option", "max", duration );
     $( "#slider" ).slider( "option", "values", [ 0, duration ] );
     playerControl["play"]({musicId:$(this).data("musicid")});
+    target = $(this).data("musicid");
   });
   $('#music_preview').on('hide.bs.modal', function (e) {
     playerControl["stop"]({});
@@ -134,15 +136,13 @@ $(document).ready(function() {
 
       $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
       $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-      /*$( "#timer-start" ).val( humanize_seconds(ui.values[ 0 ]) );
-      $( "#timer-end" ).val( humanize_seconds(ui.values[ 1 ]) );*/
       playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
     },
     change: function( event, ui ) {
       $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
       $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-      /*$( "#timer-start" ).val( humanize_seconds(ui.values[ 0 ]) );
-      $( "#timer-end" ).val( humanize_seconds(ui.values[ 1 ]) );*/
+      $( "#timer-start-"+target ).val( humanize_seconds(ui.values[ 0 ]) );
+      $( "#timer-end-"+target ).val( humanize_seconds(ui.values[ 1 ]) );
     },
     start: function(event,ui) {
       tooltip.fadeIn('fast');
