@@ -6,6 +6,7 @@ var socket = new io.Socket();
 
 socket.on('connect', function() {
   socket.subscribe(token);
+  connected = true;
 });
 
 socket.on('disconnect', function() {
