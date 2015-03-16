@@ -21,9 +21,6 @@ var retryConnectOnFailure = function(retryInMilliseconds) {
       retryConnectOnFailure(retryInMilliseconds);
     }, retryInMilliseconds);
   }
-  else {
-    clearTimeout(timeout);
-  }
 }
 
 socket.connect();
