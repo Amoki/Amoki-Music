@@ -84,6 +84,75 @@ $(document).ready(function() {
     };
   });
 
+  $(document).on("click", "#btn-preview-duration", function(e) {
+    var duration = $(this).data("duration");
+    $( "#slider" ).slider( "option", "max", duration );
+    $( "#slider" ).slider( "option", "values", [ 0, duration ] );
+    playerControl["play"]({musicId:$(this).data("musicid")});
+  });
+  $('#music_preview').on('hide.bs.modal', function (e) {
+    playerControl["stop"]({});
+  });
+
+  var playerControl = {
+    play: function(options) {
+      var music_options = {
+        videoId: options.musicId,
+        suggestedQuality:'default',
+      };
+      if(options.timer_start){music_options.startSeconds = options.timer_start};
+      if(options.timer_end){music_options.endSeconds = options.timer_end};
+      player.loadVideoById(music_options);
+      $(document).attr('title', options.name);
+    },
+    stop: function() {
+      player.stopVideo();
+    },
+    seekTo: function(options){
+      player.seekTo(options.secondes, options.seekAhead);
+    },
+    volume_up: function() {
+      player.setVolume(Math.min(player.getVolume() + 10, 100));
+    },
+    volume_down: function() {
+      player.setVolume(Math.max(player.getVolume() - 10, 0));
+    }
+  };
+
+  var tooltip = $('.tooltip');
+  var slider = $( "#slider" );
+  tooltip.hide()
+  slider.slider({
+    range: true,
+    min: 0,
+    max: 1,
+    slide: function( event, ui ) {
+      var offset1 = $(this).children('.ui-slider-handle').first().offset();
+      var offset2 = $(this).children('.ui-slider-handle').last().offset();
+      $(".tooltip1").css('top',offset1.top+30).css('left',offset1.left-5).text(humanize_seconds(ui.values[ 0 ]));
+      $(".tooltip2").css('top',offset2.top+30).css('left',offset2.left-5).text(humanize_seconds(ui.values[ 1 ]));
+
+      $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
+      $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
+      /*$( "#timer-start" ).val( humanize_seconds(ui.values[ 0 ]) );
+      $( "#timer-end" ).val( humanize_seconds(ui.values[ 1 ]) );*/
+      playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
+    },
+    change: function( event, ui ) {
+      $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
+      $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
+      /*$( "#timer-start" ).val( humanize_seconds(ui.values[ 0 ]) );
+      $( "#timer-end" ).val( humanize_seconds(ui.values[ 1 ]) );*/
+    },
+    start: function(event,ui) {
+      tooltip.fadeIn('fast');
+    },
+    stop: function( event, ui ) {
+      tooltip.fadeOut('fast');
+      playerControl["seekTo"]({secondes: ui.value, seekAhead: true});
+    }
+  });
+
 });
 
 function maj_header_remote(data) {
@@ -131,7 +200,6 @@ function modal_confirm(target) {
   });
 }
 
-
 function timeline(current_time_left, current_time_past_percent){
   $(".progress-bar").stop();
   var actual_time = current_time_left;
@@ -141,4 +209,13 @@ function timeline(current_time_left, current_time_past_percent){
       duration: actual_time,
       easing: 'linear',
   });
+}
+
+function humanize_seconds(s) {
+  var fm = [
+    Math.floor(s / 60) % 60,
+    s % 60
+  ];
+  if(Math.floor(s / 60 / 60) % 24 > 0){fm.unshift(Math.floor(s / 60 / 60) % 24)};
+  return $.map(fm, function(v, i) { return ((v < 10) ? '0' : '') + v; }).join(':');
 }

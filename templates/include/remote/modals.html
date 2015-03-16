@@ -72,3 +72,43 @@
 		</div>
 	</div>
 </div>
+<div class="tooltip tooltip1"></div>
+<div class="tooltip tooltip2"></div>
+<div class="modal fade" id="music_preview">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">x</button>
+				<h4 class="modal-title">Preview</h4>
+			</div>
+			<div id="preview_player">Youtube Player</div>
+			<div class="modal-body">
+				<div id="slider"></div>
+				<p>
+				  <label for="">Time range:</label>
+				  <span id="time_start" style="border:0; color:#f6931f; font-weight:bold;"></span>
+				  <span> - </span>
+				  <span id="time_end" style="border:0; color:#f6931f; font-weight:bold;"></span>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-info" data-dismiss="modal">Valider</button>
+				<button class="btn btn-info" data-dismiss="modal">Annuler</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+  var player;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('preview_player', {
+      height: '300px',
+      width: '100%',
+      playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',autoplay:'0'},
+    });
+  }
+</script>
