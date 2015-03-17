@@ -25,6 +25,11 @@ class Music(models.Model):
     def add(cls, **kwargs):
         existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
         if existing_music:
+            if existing_music.timer_end:
+                duration = existing_music.duration - (existing_music.duration - existing_music.timer_end)
+            duration = existing_music.duration - existing_music.timer_start
+            if existing_music.duration != duration:
+                existing_music.duration = duration
             existing_music.date = datetime.now()
             existing_music.save()
             return existing_music
@@ -33,7 +38,6 @@ class Music(models.Model):
             if music.timer_end:
                 music.duration = music.duration - (music.duration - music.timer_end)
             music.duration = music.duration - music.timer_start
-
             music.save()
             return music
 

@@ -84,16 +84,21 @@ $(document).ready(function() {
     };
   });
 
-  var target;
   $(document).on("click", "#btn-preview-duration", function(e) {
     var duration = $(this).data("duration");
-    $( "#slider" ).slider( "option", "max", duration );
-    $( "#slider" ).slider( "option", "values", [ 0, duration ] );
-    playerControl["play"]({musicId:$(this).data("musicid")});
-    target = $(this).data("musicid");
+    var musicId = $(this).data("musicid");
+    custom_slider["slide"]({
+      element:$( "#slider" ),
+      max:duration,
+      values:[0, duration],
+      formTarget:musicId,
+    });
+    playerControl["play"]({musicId:musicId});
   });
+
+
   $('#music_preview').on('hide.bs.modal', function (e) {
-    playerControl["stop"]({});
+    playerControl["stop"]();
   });
 
   var playerControl = {
@@ -104,7 +109,7 @@ $(document).ready(function() {
       };
       if(options.timer_start){music_options.startSeconds = options.timer_start};
       if(options.timer_end){music_options.endSeconds = options.timer_end};
-      player.loadVideoById(music_options);
+      player.cueVideoById(music_options);
       $(document).attr('title', options.name);
     },
     stop: function() {
@@ -122,38 +127,44 @@ $(document).ready(function() {
   };
 
   var tooltip = $('.tooltip');
-  var slider = $( "#slider" );
-  tooltip.hide()
-  slider.slider({
-    range: true,
-    min: 0,
-    max: 1,
-    slide: function( event, ui ) {
-      var offset1 = $(this).children('.ui-slider-handle').first().offset();
-      var offset2 = $(this).children('.ui-slider-handle').last().offset();
-      $(".tooltip1").css('top',offset1.top+30).css('left',offset1.left-5).text(humanize_seconds(ui.values[ 0 ]));
-      $(".tooltip2").css('top',offset2.top+30).css('left',offset2.left-5).text(humanize_seconds(ui.values[ 1 ]));
+  tooltip.hide();
 
-      $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
-      $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-      playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
-    },
-    change: function( event, ui ) {
-      $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
-      $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-      $( "#timer-start-"+target ).val( humanize_seconds(ui.values[ 0 ]) );
-      $( "#timer-end-"+target ).val( humanize_seconds(ui.values[ 1 ]) );
-    },
-    start: function(event,ui) {
-      tooltip.fadeIn('fast');
-    },
-    stop: function( event, ui ) {
-      tooltip.fadeOut('fast');
-      playerControl["seekTo"]({secondes: ui.value, seekAhead: true});
+  var custom_slider = {
+    slide: function(options){
+      options.element.slider({
+        range: true,
+        min: 0,
+        max: options.max,
+        values: [options.values[0], options.values[1]],
+        slide: function( event, ui ) {
+          var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
+          var offset2 = $(this).children( '.ui-slider-handle' ).last().offset();
+          $( ".tooltip1" ).css('top',offset1.top+30).css('left',offset1.left-5).text(humanize_seconds(ui.values[ 0 ]));
+          $( ".tooltip2" ).css('top',offset2.top+30).css('left',offset2.left-5).text(humanize_seconds(ui.values[ 1 ]));
+
+          $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
+          $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
+          playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
+        },
+        change: function( event, ui ) {
+          $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
+          $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
+          $( "#timer-start-"+options.formTarget ).val( humanize_seconds(ui.values[ 0 ]) );
+          $( "#timer-end-"+options.formTarget ).val( humanize_seconds(ui.values[ 1 ]) );
+        },
+        start: function( event, ui ) {
+          tooltip.fadeIn('fast');
+        },
+        stop: function( event, ui ) {
+          tooltip.fadeOut('fast');
+          playerControl["seekTo"]({secondes: ui.value, seekAhead: true});
+        }
+      });
     }
-  });
+  }
 
 });
+
 
 function maj_header_remote(data) {
   if(data.current_music) {

@@ -24,6 +24,11 @@
 			<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
 				<span class="glyphicon glyphicon-headphones"></span>
 			</button>
+			<div>
+				<input type="text" readonly="readonly" id="timer-start-{{music.music_id}}" name="timer-start" size="4" pattern='[0-9]{1,3}' style="border:0; color:#f6931f; font-size:10px;">
+				<span> - </span>
+				<input type="text" readonly="readonly" id="timer-end-{{music.music_id}}" name="timer-end" size="4" pattern='[0-9]{1,3}' style="border:0; color:#f6931f; font-size:10px;">
+			</div>
 		</form>
 	</div>
 	{% if music.channel_name %}
@@ -42,12 +47,6 @@
 		<div class="col-xs-4">
 			<div>
 				<a id="btn-preview-duration" data-toggle="modal" data-duration="{{music.duration}}" data-musicid="{{music.music_id}}" href="#music_preview" class="btn btn-primary">PREVIEW</a>
-				<label for="timer-start">Start</label>
-				<input type="text" form="form-add-{{music.music_id}}" id="timer-start-{{music.music_id}}" name="timer-start" size="4" pattern='[0-9]{1,3}'>
-			</div>
-			<div>
-				<label for="timer-end">End</label>
-				<input type="text" form="form-add-{{music.music_id}}" id="timer-end-{{music.music_id}}" name="timer-end" size="4" pattern='[0-9]{1,3}'>
 			</div>
 		</div>
 	</div>
