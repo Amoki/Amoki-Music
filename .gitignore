@@ -12,3 +12,5 @@
 
 # Static files
 collected-static/*
+
+bootstrap_init/*
