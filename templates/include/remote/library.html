@@ -1,9 +1,9 @@
 {% load filters %}
 {% for music in musics %}
-<li class="list-group-item item-lib {{tab}}">
+<li class="list-group-item item-lib item-lib-{{music.music_id}} {{tab}}">
 	<div class="row row-list-item">
-		<img class="col-xs-3" src="{{music.thumbnail}}" style="padding:0px">
-		<div class="col-xs-7" style="padding-right:0px">
+		<img class="col-md-3 col-lg-4" src="{{music.thumbnail}}" style="padding:0px">
+		<div class="col-md-7 col-lg-6" style="padding-right:0px">
 			<div class="row">
 				<div class="col-xs-12" style="min-height:45px">{{music.name}}</div>
 			</div>
@@ -18,17 +18,14 @@
 		</div>
 		<form id="form-add-{{music.music_id}}" class="ajax-add-music col-xs-2" action="/add-music/" method="post">
 			<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
+			<input type="hidden" readonly="readonly" id="timer-start-{{music.music_id}}" name="timer-start">
+			<input type="hidden" readonly="readonly" id="timer-end-{{music.music_id}}" name="timer-end">
 			{% if music.requestId %}
 			<input class="requestId" type="hidden" value="{{music.requestId}}" name="requestId">
 			{% endif %}
 			<button class="btn btn-default btn-lg" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
 				<span class="glyphicon glyphicon-headphones"></span>
 			</button>
-			<div>
-				<input type="text" readonly="readonly" id="timer-start-{{music.music_id}}" name="timer-start" size="4" pattern='[0-9]{1,3}' style="border:0; color:#f6931f; font-size:10px;">
-				<span> - </span>
-				<input type="text" readonly="readonly" id="timer-end-{{music.music_id}}" name="timer-end" size="4" pattern='[0-9]{1,3}' style="border:0; color:#f6931f; font-size:10px;">
-			</div>
 		</form>
 	</div>
 	{% if music.channel_name %}
