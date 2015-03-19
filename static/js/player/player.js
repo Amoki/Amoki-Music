@@ -2,30 +2,6 @@ var player;
 var initialized = false;
 var currentVolume;
 
-var playerControl = {
-  play: function(options) {
-    player.loadVideoById(options.musicId, 0, 'default');
-    $(document).attr('title', options.name);
-  },
-  stop: function() {
-    player.stopVideo();
-  },
-  volume_up: function() {
-    player.setVolume(Math.min(player.getVolume() + 10, 100));
-  },
-  volume_down: function() {
-    player.setVolume(Math.max(player.getVolume() - 10, 0));
-  }
-};
-
-socket.on('message', function(message) {
-  if(initialized) {
-    if(message.action !== 'update'){
-      playerControl[message.action](message.options);
-    }
-  }
-});
-
 // Youtube iframe init
 var tag = document.createElement('script');
 
@@ -33,8 +9,8 @@ tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// 3. This function creates an <iframe> (and YouTube player)
-//    after the API code downloads.
+// This function creates an <iframe> (and YouTube player)
+// after the API code downloads.
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('embed', {
     height: '390',
@@ -51,3 +27,32 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
+var playerControl = {
+  play: function(options) {
+    var music_options = {
+      videoId: options.musicId,
+      suggestedQuality:'default',
+    };
+    if(options.timer_start){music_options.startSeconds = options.timer_start};
+    if(options.timer_end){music_options.endSeconds = options.timer_end};
+    player.loadVideoById(music_options);
+    $(document).attr('title', options.name);
+  },
+  stop: function() {
+    player.stopVideo();
+  },
+  volume_up: function() {
+    player.setVolume(Math.min(player.getVolume() + 10, 100));
+  },
+  volume_down: function() {
+    player.setVolume(Math.max(player.getVolume() - 10, 0));
+  }
+};
+
+socket.on('message', function(message) {
+  if(initialized) {
+    if(message.action){
+      playerControl[message.action](message.options);
+    }
+  }
+});
