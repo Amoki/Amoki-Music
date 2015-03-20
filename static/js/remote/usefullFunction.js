@@ -93,6 +93,10 @@ $(document).ready(function() {
       values:[0, duration],
       formTarget:musicId,
     });
+    custom_slider["update_options"]({
+      element:$( "#slider" ),
+      option_with_value: {values:[0,duration]},
+    });
     playerControl["play"]({musicId:musicId});
   });
 
@@ -123,6 +127,13 @@ $(document).ready(function() {
     },
     volume_down: function() {
       player.setVolume(Math.max(player.getVolume() - 10, 0));
+    },
+    get_state: function() {
+      if([-1,0,5].indexOf(player.getPlayerState()) > -1){
+        return 0
+      } else {
+        return player.getPlayerState();
+      }
     }
   };
 
@@ -130,12 +141,11 @@ $(document).ready(function() {
   tooltip.hide();
 
   var custom_slider = {
-    slide: function(options){
+    slide: function( options ){
       options.element.slider({
         range: true,
         min: 0,
         max: options.max,
-        values: [options.values[0], options.values[1]],
         slide: function( event, ui ) {
           var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
           var offset2 = $(this).children( '.ui-slider-handle' ).last().offset();
@@ -144,7 +154,9 @@ $(document).ready(function() {
 
           $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
           $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-          playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
+          if(playerControl["get_state"]() !== 0) {
+            playerControl["seekTo"]({secondes: ui.value, seekAhead: false});
+          }
         },
         change: function( event, ui ) {
           $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
@@ -157,10 +169,18 @@ $(document).ready(function() {
         },
         stop: function( event, ui ) {
           tooltip.fadeOut('fast');
-          playerControl["seekTo"]({secondes: ui.value, seekAhead: true});
-        }
+          if(playerControl["get_state"]() !== 0) {
+            playerControl["seekTo"]({secondes: ui.value, seekAhead: true});
+          }
+        },
       });
-    }
+    },
+    update_options: function( options ){
+      var option_to_update = options.option_with_value;
+      for(option_value in option_to_update) {
+        options.element.slider( "option", option_value, option_to_update[option_value]);
+      }
+    },
   }
 
 });
