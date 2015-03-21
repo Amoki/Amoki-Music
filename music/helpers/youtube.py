@@ -33,7 +33,7 @@ def get_info(ids):
 
     for detail in details.get("items", []):
         detailedVideo = {
-            'id': detail["id"],
+            'music_id': detail["id"],
             'name': detail["snippet"]["title"],
             'channel_name': detail["snippet"]["channelTitle"],
             'description': detail["snippet"]["description"][:200] + "...",
@@ -46,35 +46,33 @@ def get_info(ids):
     return videos
 
 
-def search(query):
+def search(query=None, ids=[]):
     requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
-    search_response = youtube.search().list(
-        q=query,
-        part="id",
-        type="video",
-        maxResults=15,
-        videoSyndicated="true",
-        regionCode="FR",
-        relevanceLanguage="fr"
-    ).execute()
+    if query:
+        search_response = youtube.search().list(
+            q=query,
+            part="id",
+            type="video",
+            maxResults=15,
+            videoSyndicated="true",
+            regionCode="FR",
+            relevanceLanguage="fr"
+        ).execute()
+        for video in search_response.get("items", []):
+            ids.append(video["id"]["videoId"])
 
     videos = []
-
-    ids = []
-    for video in search_response.get("items", []):
-        ids.append(video["id"]["videoId"])
-
     for video in get_info(ids):
         music = TemporaryMusic(
-            music_id=video['id'],
+            music_id=video['music_id'],
             name=video['name'],
             channel_name=video['channel_name'],
             description=video['description'],
             thumbnail=video['thumbnail'],
             views=video['views'],
             duration=video['duration'],
-            requestId=requestId
+            requestId=requestId,
         )
         videos.append(music)
 

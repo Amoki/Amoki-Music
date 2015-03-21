@@ -15,45 +15,41 @@ import re
 
 def search_music(request):
     if request.is_ajax() and request.session.get('room', False):
-        room = Room.objects.get(name=request.session.get('room'))
-        regexVideoId = re.compile("(v=|youtu\.be\/)([^&]*)", re.IGNORECASE | re.MULTILINE)
+        regexVideoId = re.compile("(?:v=|youtu\.be\/)([^&?]+)", re.IGNORECASE | re.MULTILINE)
         if regexVideoId.search(request.POST.get('query')) is None:
             musics_searched = youtube.search(query=request.POST.get('query'))
-            template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
-            json_data = json.dumps({'template_library': template_library})
-            return HttpResponse(json_data, content_type='application/json')
         else:
-            videos = youtube.get_info(regexVideoId.search(request.POST.get('query')).group(2))
-            if(videos):
-                room.push(
-                    music_id=videos[0]['id'],
-                    name=videos[0]['name'],
-                    duration=videos[0]['duration'],
-                    thumbnail=videos[0]['thumbnail'],
-                )
-                return HttpResponse(render_remote(room), content_type='application/json')
-            else:
-                template_library = render_to_string("include/errors.html", {"error": "wrong-link"})
-                json_data = json.dumps({
-                    'template_library': template_library
-                })
-                return HttpResponse(json_data, content_type='application/json')
+            musics_searched = youtube.search(ids=regexVideoId.search(request.POST.get('query')).group(1), direct_link=True)
+        template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
+        json_data = json.dumps({'template_library': template_library})
+        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
 
 
 def add_music(request):
     if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
-        if(request.POST.get('requestId') == "undefined"):
+        if(request.POST.get('requestId') is None):
             music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room)
             room.push(
                 music_id=music_to_add.music_id,
                 name=music_to_add.name,
                 duration=music_to_add.duration,
                 thumbnail=music_to_add.thumbnail,
+                timer_start=music_to_add.timer_start,
+                timer_end=music_to_add.timer_end,
             )
         else:
-            room.push(music_id=request.POST.get('music_id'), requestId=request.POST.get('requestId'))
+            try:
+                timer_end = int(request.POST.get('timer-end'))
+            except Exception, e:
+                timer_end = None
+            room.push(
+                music_id=request.POST.get('music_id'),
+                requestId=request.POST.get('requestId'),
+                timer_start=int(request.POST.get('timer-start', 0)),
+                timer_end=timer_end,
+            )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')
 

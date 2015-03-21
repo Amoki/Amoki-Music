@@ -3,7 +3,7 @@ from music.models import Music
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'music_id', 'duration', 'date', 'last_play', 'dead_link', 'thumbnail', 'room')
+    list_display = ('name', 'count', 'music_id', 'duration', 'date', 'last_play', 'dead_link', 'thumbnail', 'room', 'timer_start', 'timer_end')
     actions = ('add_music',)
 
     def has_add_permission(self, request):
@@ -11,7 +11,7 @@ class MusicAdmin(admin.ModelAdmin):
 
     def add_music(self, request, queryset):
         for music in queryset:
-            music.room.push(music.url)
+            music.room.push(music.music_id)
         return
 
 admin.site.register(Music, MusicAdmin)

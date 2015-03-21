@@ -24,6 +24,10 @@ body, html {
 	color:black;
 }
 
+button > .glyphicon, a > .glyphicon {
+	top: 2px;
+}
+
 .btn {
 	background-color: rgb(34,34,34);
 	color: @bleu;
@@ -76,7 +80,35 @@ body, html {
 .error {
 	color: red;
 }
+#music_preview .ui-state-default,
+#music_preview .ui-widget-content .ui-state-default,
+#music_preview .ui-widget-header .ui-state-default {
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+  background: #e6e6e6;
+  font-weight: normal;
+  color: #555555;
+}
+#music_preview .ui-state-hover,
+#music_preview .ui-widget-content .ui-state-hover,
+#music_preview .ui-widget-header .ui-state-hover,
+#music_preview .ui-state-focus,
+#music_preview .ui-widget-content .ui-state-focus,
+#music_preview .ui-widget-header .ui-state-focus {
+	border: 1px solid #999999;
+	background: #dadada;
+	font-weight: normal;
+	color: #212121;
+}
 
+#music_preview .ui-state-active,
+#music_preview .ui-widget-content .ui-state-active,
+#music_preview .ui-widget-header .ui-state-active {
+	border: 1px solid #aaaaaa;
+	background: #ffffff;
+	font-weight: normal;
+	color: #212121;
+}
 /***************** NAVBAR STUFF ****************/
 
 .navbar {
@@ -94,19 +126,21 @@ body, html {
 	.beauti-btn;
 }
 
-.navbar-inverse .navbar-nav>li>a>button {
-	.beauti-btn;
-}
-.navbar-inverse .navbar-nav>li>a#btn-navbar {
-	padding-left: 12px;
-	padding-top: 8px;
+.navbar-inverse {
+	.navbar-nav>li>a>button{
+		.beauti-btn;
+	}
+	.navbar-nav>li>a#btn-navbar{
+		padding-left: 12px;
+		padding-top: 8px;
+	}
 }
 
 .ligne {
 	padding-bottom: 40px;
 }
 
-/********************** PLAYER STUFF ***********/
+/********************** REMOTE STUFF ***********/
 .player {
 	border-radius: 50px;
 	margin-bottom: 20px;
@@ -213,7 +247,7 @@ body, html {
 	position: relative;
 	top: 1px;
 }
-/********************** PLAYER STUFF ***********/
+/********************** REMOTE STUFF ***********/
 
 
 
@@ -247,14 +281,38 @@ body, html {
 	font-weight: bold;
 }
 
+.list-group-item{
+	padding: initial;
+}
+
 .row-list-item {
 	margin-right: 0px !important;
 	margin-left: 0px !important;
+	padding: 10px 10px;
+}
+
+.show-more{
+	cursor: pointer;
+}
+
+.youtube-list-music {
+	word-wrap:break-word;
+	hr{
+		margin-bottom: 5px;
+		margin-top: 5px;
+	}
 }
 
 .popover img {
 	float: left;
 	margin-right: 10px;
+}
+
+.popover-content {
+	padding: 10px;
+	#wrapper-popover-add-music button{
+		width: 100%;
+	}
 }
 
 .ui-autocomplete{
@@ -278,6 +336,21 @@ body, html {
 	background: #4a9fff;
 	font-weight: bold;
 	color: #ffffff;
+}
+
+.tooltip {
+	position: absolute;
+	display: block;
+	min-width: 30px;
+	background-color: #222222;
+	color: #4a9fff;
+	text-align: center;
+	opacity: 1;
+	border-radius: 5px;
+	.beauti-btn;
+	line-height: 1.7;
+	padding: 0px 5px 0px 5px;
+	font-size: 14px;
 }
 
 
