@@ -24,6 +24,10 @@ body, html {
 	color:black;
 }
 
+button > .glyphicon, a > .glyphicon {
+	top: 2px;
+}
+
 .btn {
 	background-color: rgb(34,34,34);
 	color: @bleu;
@@ -304,8 +308,11 @@ body, html {
 	margin-right: 10px;
 }
 
-.popover-content{
-	z-index: 9999;
+.popover-content {
+	padding: 10px;
+	#wrapper-popover-add-music button{
+		width: 100%;
+	}
 }
 
 .ui-autocomplete{

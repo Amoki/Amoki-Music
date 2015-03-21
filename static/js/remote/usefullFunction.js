@@ -28,11 +28,11 @@ $(document).ready(function() {
   });
 
   $('body').popover({
-    container: 'body',
+    container: '#list-youtube',
     selector: '[data-toggle="popover"]',
     trigger: 'focus',
     html: true,
-    placement: "left",
+    placement: 'left',
   });
 
   $('.ajax_music_inifite_scroll').submit();
