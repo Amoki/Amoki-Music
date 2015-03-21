@@ -46,7 +46,11 @@ def get_info(ids):
     return videos
 
 
-def search(query=None, ids=[]):
+def search(query=None, ids=None):
+    # see https://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument
+    if not ids:
+        ids = []
+
     requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
     if query:
