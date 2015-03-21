@@ -19,7 +19,7 @@ def search_music(request):
         if regexVideoId.search(request.POST.get('query')) is None:
             musics_searched = youtube.search(query=request.POST.get('query'))
         else:
-            musics_searched = youtube.search(ids=regexVideoId.search(request.POST.get('query')).group(1), direct_link=True)
+            musics_searched = youtube.search(ids=[regexVideoId.search(request.POST.get('query')).group(1),])
         template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
         json_data = json.dumps({'template_library': template_library})
         return HttpResponse(json_data, content_type='application/json')
