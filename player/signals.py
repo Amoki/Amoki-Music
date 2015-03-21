@@ -21,10 +21,6 @@ def update_token_on_password_change(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Music)
 def update_duration(sender, instance, **kwargs):
-    new_duration = instance.duration
     if instance.timer_end:
-        new_duration = new_duration - (instance.duration - instance.timer_end)
-    new_duration = new_duration - instance.timer_start
-
-    if new_duration != instance.duration:
-        instance.duration = new_duration
+        instance.duration = instance.duration - (instance.duration - instance.timer_end)
+    instance.duration -=  instance.timer_start

@@ -46,10 +46,10 @@ def get_info(ids):
     return videos
 
 
-def search(query=None, ids=[], direct_link=False):
+def search(query=None, ids=[]):
     requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
-    if not direct_link:
+    if query:
         search_response = youtube.search().list(
             q=query,
             part="id",
@@ -59,7 +59,6 @@ def search(query=None, ids=[], direct_link=False):
             regionCode="FR",
             relevanceLanguage="fr"
         ).execute()
-        ids = []
         for video in search_response.get("items", []):
             ids.append(video["id"]["videoId"])
 
