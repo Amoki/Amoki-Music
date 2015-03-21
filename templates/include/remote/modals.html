@@ -78,7 +78,6 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">x</button>
 				<h4 class="modal-title">Preview</h4>
 			</div>
 			<div id="preview_player">Youtube Player</div>
@@ -86,14 +85,16 @@
 				<div id="slider"></div>
 				<p>
 					<label for="">Time range:</label>
-					<span id="time_start" style="border:0; color:#f6931f; font-weight:bold;"></span>
+					<span id="time_start" style="font-weight:bold;"></span>
 					<span> - </span>
-					<span id="time_end" style="border:0; color:#f6931f; font-weight:bold;"></span>
+					<span id="time_end" style="font-weight:bold;"></span>
 				</p>
+				<div id="music-channel"></div>
+				<div id="music-description"></div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-info" data-dismiss="modal">Valider</button>
-				<button class="btn btn-info" data-dismiss="modal">Annuler</button>
+				<button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal">Valider</button>
+				<button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal">Annuler</button>
 			</div>
 		</div>
 	</div>

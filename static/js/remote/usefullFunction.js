@@ -27,6 +27,14 @@ $(document).ready(function() {
     $(this).blur();
   });
 
+  $('body').popover({
+    container: 'body',
+    selector: '[data-toggle="popover"]',
+    trigger: 'focus',
+    html: true,
+    placement: "left",
+  });
+
   $('.ajax_music_inifite_scroll').submit();
 
   $("#query").autocomplete({
@@ -70,28 +78,20 @@ $(document).ready(function() {
     compact: true,
   });
 
-  $(document).on("click", ".row-list-item, .show-more", function(e) {
-    $(this).siblings('.video-info').slideToggle();
-  });
-  $(document).on("mouseenter", ".youtube-list-music", function(e) {
-    if($(this).children(".video-info").is(":hidden")){
-      $(this).children('.show-more').slideDown();
-    };
-  });
-  $(document).on("mouseleave", ".youtube-list-music", function(e) {
-    if($(this).children(".video-info").is(":hidden")){
-      $(this).children('.show-more').slideUp();
-    };
-  });
-
-  $(document).on("click", "#btn-preview-duration", function(e) {
-    var duration = $(this).data("duration");
-    var musicId = $(this).data("musicid");
+  $('#music_preview').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var duration = button.data("duration");
+    var musicId = button.data("musicid");
+    var channel_name = button.data("channelname");
+    var description = button.data("description");
+    $("#btn-modal-preview-valid").data("musicId", musicId);
+    $("#music_preview #music-channel").html("<p>Posted by : "+ channel_name +"</p>");
+    $("#music_preview #music-description").html("<p>"+ description +"</p>");
     custom_slider["slide"]({
       element:$( "#slider" ),
       max:duration,
       values:[0, duration],
-      formTarget:musicId,
+      musicId:musicId,
     });
     custom_slider["update_options"]({
       element:$( "#slider" ),
@@ -99,10 +99,14 @@ $(document).ready(function() {
     });
     playerControl["play"]({musicId:musicId});
   });
-
-
   $('#music_preview').on('hide.bs.modal', function (e) {
     playerControl["stop"]();
+  });
+  $(document).on("click", "#btn-modal-preview-cancel", function(e){
+    $( ".input-reset" ).val("");
+  });
+  $(document).on('click', '#btn-modal-preview-valid', function(e){
+    $( "#form-add-"+$(this).data("musicId") ).submit();
   });
 
   var playerControl = {
@@ -114,7 +118,6 @@ $(document).ready(function() {
       if(options.timer_start){music_options.startSeconds = options.timer_start};
       if(options.timer_end){music_options.endSeconds = options.timer_end};
       player.cueVideoById(music_options);
-      $(document).attr('title', options.name);
     },
     stop: function() {
       player.stopVideo();
@@ -139,9 +142,9 @@ $(document).ready(function() {
 
   var tooltip = $('.tooltip');
   tooltip.hide();
-
   var custom_slider = {
     slide: function( options ){
+      var musicId = options.musicId;
       options.element.slider({
         range: true,
         min: 0,
@@ -161,8 +164,8 @@ $(document).ready(function() {
         change: function( event, ui ) {
           $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
           $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
-          $( "#timer-start-"+options.formTarget ).val( humanize_seconds(ui.values[ 0 ]) );
-          $( "#timer-end-"+options.formTarget ).val( humanize_seconds(ui.values[ 1 ]) );
+          $( "#timer-start-"+musicId ).val(ui.values[ 0 ]);
+          $( "#timer-end-"+musicId ).val(ui.values[ 1 ]);
         },
         start: function( event, ui ) {
           tooltip.fadeIn('fast');
@@ -182,9 +185,7 @@ $(document).ready(function() {
       }
     },
   }
-
 });
-
 
 function maj_header_remote(data) {
   if(data.current_music) {
