@@ -40,18 +40,14 @@ def add_music(request):
                 timer_end=music_to_add.timer_end,
             )
         else:
-            if request.POST.get('timer-start') is None:
-                timer_start = 0
-            else:
-                timer_start = int(request.POST.get('timer-start'))
-            if request.POST.get('timer-end') is None:
-                timer_end = None
-            else:
+            try:
                 timer_end = int(request.POST.get('timer-end'))
+            except Exception, e:
+                timer_end = None
             room.push(
                 music_id=request.POST.get('music_id'),
                 requestId=request.POST.get('requestId'),
-                timer_start=timer_start,
+                timer_start=int(request.POST.get('timer-start', 0)),
                 timer_end=timer_end,
             )
         return HttpResponse(render_remote(room), content_type='application/json')
