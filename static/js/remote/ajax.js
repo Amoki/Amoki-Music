@@ -175,7 +175,6 @@ function log_errors(resultat, statut, erreur){
 }
 
 function ajax(source){
-  console.log(source.serialize());
   return $.ajax({
     url: source.attr('action'),
     type: source.attr('method'),
