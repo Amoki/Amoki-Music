@@ -356,6 +356,16 @@ button > .glyphicon, a > .glyphicon {
 	font-size: 14px;
 }
 
+#music_preview {
+	transition: all 200ms linear;
+	visibility: hidden;
+	display: block;
+}
+
+#music_preview.modal.fade.in {
+	visibility: visible;
+	z-index: 9999;
+}
 
 /********************** LIBRARY STUFF ***********/
 
