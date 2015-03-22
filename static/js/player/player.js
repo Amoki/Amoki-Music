@@ -33,8 +33,8 @@ var playerControl = {
       videoId: options.musicId,
       suggestedQuality:'default',
     };
-    if(options.timer_start){music_options.startSeconds = options.timer_start};
-    if(options.timer_end){music_options.endSeconds = options.timer_end};
+    if(options.timer_start){music_options.startSeconds = options.timer_start;}
+    if(options.timer_end){music_options.endSeconds = options.timer_end;}
     player.loadVideoById(music_options);
     $(document).attr('title', options.name);
   },

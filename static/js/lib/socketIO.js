@@ -1,6 +1,6 @@
 var connected = false;
 var timeout;
-const RETRY_INTERVAL = 5000;
+var RETRY_INTERVAL = 5000;
 
 var socket = new io.Socket();
 
@@ -22,7 +22,7 @@ var retryConnectOnFailure = function(retryInMilliseconds) {
       retryConnectOnFailure(retryInMilliseconds);
     }, retryInMilliseconds);
   }
-}
+};
 
 socket.connect();
 retryConnectOnFailure(RETRY_INTERVAL);
