@@ -17,7 +17,6 @@
 			</div>
 		</div>
 		<form id="form-add-{{music.music_id}}" class="ajax-add-music col-xs-2 col-lg-2" action="/add-music/" method="post">
-			{% csrf_token %}
 			<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
 			<input type="hidden" class="input-reset" id="timer-start-{{music.music_id}}" name="timer-start">
 			<input type="hidden" class="input-reset" id="timer-end-{{music.music_id}}" name="timer-end">
