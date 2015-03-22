@@ -23,6 +23,10 @@ class Music(models.Model):
     def add(cls, **kwargs):
         existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
         if existing_music:
+            if kwargs['timer_start']:
+                existing_music.timer_start = kwargs['timer_start']
+            if kwargs['timer_end']:
+                existing_music.timer_end = kwargs['timer_end']
             existing_music.date = datetime.now()
             existing_music.save()
             return existing_music
