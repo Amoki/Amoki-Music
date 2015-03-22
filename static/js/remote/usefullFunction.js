@@ -233,7 +233,7 @@ function modal_confirm(target) {
 }
 
 function timeline(current_time_left, current_time_past_percent){
-  $(".progress-bar").stop();
+  $(".progress-bar").finish();
   var actual_time = current_time_left;
   actual_time *= 1000;
   $(".progress-bar").width(current_time_past_percent+'%');
