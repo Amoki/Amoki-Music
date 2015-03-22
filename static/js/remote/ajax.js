@@ -16,16 +16,17 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
   e.preventDefault();
   var $this = $(this);
   ajax($this).done(function(data) {
-    if(data.shuffle === true) {
+    if(data.error) {
+      modal_confirm($('#modal-shuffle-error'));
+    }
+    else if(data.shuffle === true) {
       modal_confirm($('#modal-shuffle-on'));
     }
     else {
       modal_confirm($('#modal-shuffle-off'));
     }
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 
@@ -35,9 +36,7 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   ajax($this).done(function(data) {
     modal_confirm($('#modal-next-music'));
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 $(document).on('submit', '.ajax-search', function(e) {
@@ -79,9 +78,7 @@ $(document).on('submit', '.ajax-search', function(e) {
       });
     }
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 $(document).on('submit', '.ajax-add-music', function(e) {
@@ -95,9 +92,7 @@ $(document).on('submit', '.ajax-add-music', function(e) {
     $this.children("button").removeAttr('disabled');
     modal_confirm($('#modal-add-music'));
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 $(document).on('submit', '.ajax-volume', function(e) {
@@ -107,9 +102,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
   ajax($this).done(function(data) {
     $this.children(".volume_clicked").removeClass("volume_clicked");
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
@@ -127,9 +120,7 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
       }
       $("#spinner_library").remove();
   })
-  .fail(function(resultat, statut, erreur) {
-    log_errors(resultat, statut, erreur);
-  });
+  .fail(log_errors);
 });
 
 function update_player() {
@@ -162,16 +153,14 @@ function update_player() {
         disabled_btn();
       }
     },
-    error: function(resultat, statut, erreur) {
-      log_errors(resultat, statut, erreur);
-    },
+    error: log_errors
   });
 }
 
 function log_errors(resultat, statut, erreur){
-  console.log(resultat.responseText);
-  console.log("Statut : "+statut);
-  console.log("Error : "+erreur);
+  console.error(resultat.responseText);
+  console.error("Statut : " + statut);
+  console.error("Error: " + erreur.stack);
 }
 
 function ajax(source){
