@@ -17,6 +17,6 @@ urlpatterns = patterns('player.views',
     url(r'^next-music/$', 'remote.remote.next_music'),
     url(r'^dead-link/$', 'remote.remote.next_music'),
     url(r'^volume/$', 'remote.remote.volume_change'),
-    url(r'^update-player/$', 'remote.remote.update_remote')
+    url(r'^update-remote/$', 'remote.remote.update_remote')
 
 )
