@@ -1,4 +1,5 @@
 var csrftoken = $.cookie('csrftoken');
+var current_page = 0;
 
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
@@ -115,7 +116,8 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
     if(data.more_musics === false) {
       $this.children("#load-more-musics").addClass('disabled');
     }
-    $this.children("#page").val(parseInt($this.children("#page").val()) + 1);
+    current_page ++;
+    $("#page").val(current_page);
     $("#spinner_library").remove();
   })
   .fail(log_errors);
