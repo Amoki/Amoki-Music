@@ -4,8 +4,8 @@ from player.models import Room
 
 
 def home(request):
-    if not request.session.get('room', False):
-        return redirect('login', permanent=True)
+    if not request.session.get('room', False) or not Room.objects.filter(name=request.session.get('room')).exists():
+        return redirect('logout', permanent=True)
 
     room = Room.objects.get(name=request.session.get('room'))
 
