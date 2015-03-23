@@ -20,7 +20,7 @@ def generate_token():
 class Room(models.Model):
     name = models.CharField(max_length=64, unique=True)
     password = models.CharField(max_length=128)
-    current_music = models.ForeignKey('music.Music', null=True, related_name="+", editable=False)
+    current_music = models.ForeignKey('music.Music', null=True, related_name="+", editable=False, on_delete=models.PROTECT)
     shuffle = models.BooleanField(default=False)
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
