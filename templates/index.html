@@ -124,8 +124,8 @@
 							<li class="list-group-item item-lib row row-list-item">
 								<form id="form_infini_scroll" action="/music_inifite_scroll/" method="post" class="ajax_music_inifite_scroll">
 									{% csrf_token %}
-									<input type="hidden" id="page" name="page" value="1">
-									<button title="Load more" class="btn btn-default" type="submit" value="1">Next musics</button>
+									<input type="hidden" id="page" name="page" value="">
+									<button id="load-more-musics" title="Load more" class="btn btn-default" type="submit">Next musics</button>
 								</form>
 							</li>
 						</ul>

@@ -35,6 +35,7 @@ $(document).ready(function() {
     placement: 'left',
   });
 
+  $("#page").val(current_page);
   $('.ajax_music_inifite_scroll').submit();
 
   $("#query").autocomplete({

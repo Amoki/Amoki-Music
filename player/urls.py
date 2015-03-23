@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('player.views',
     url(r'^$', 'login.login.login', name='login'),
-    url(r'^log-out/$', 'login.login.logout'),
+    url(r'^log-out/$', 'login.login.logout', name='logout'),
 
     url(r'^player/$', 'player.host.host', name='player'),
     url(r'^remote/$', 'remote.home.home', name='remote'),
@@ -17,6 +17,5 @@ urlpatterns = patterns('player.views',
     url(r'^next-music/$', 'remote.remote.next_music'),
     url(r'^dead-link/$', 'remote.remote.next_music'),
     url(r'^volume/$', 'remote.remote.volume_change'),
-    url(r'^update-player/$', 'remote.remote.update_remote')
-
+    url(r'^update-remote/$', 'remote.remote.update_remote')
 )
