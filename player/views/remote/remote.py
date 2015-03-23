@@ -55,13 +55,13 @@ def update_remote(request):
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
-            page = int(request.POST.get('page')) - 1
+            page = int(request.POST.get('page'))
         except ValueError:
             page = 1
         try:
             musics = []
-            for i in range(0, page):
-                musics += paginator.page(i + 1).object_list
+            for i in range(1, page + 1):
+                musics += paginator.page(i).object_list
             if(paginator.page(page).has_next()):
                 more_musics = True
             else:
@@ -71,6 +71,7 @@ def update_remote(request):
 
         player_updated = json.loads(render_remote(room))
         player_updated['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
+        player_updated['more_musics'] = more_musics
 
         return HttpResponse(json.dumps(player_updated), content_type='application/json')
 

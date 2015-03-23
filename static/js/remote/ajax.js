@@ -112,24 +112,22 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
 
   ajax($this).done(function(data) {
     $(data.template).insertBefore($this.closest('li'));
-      if(data.more_musics) {
-        $this.children("#page").val(parseInt($this.children("#page").val()) + 1);
-      }
-      else {
-        $this.children("#page").addClass('disabled');
-      }
-      $("#spinner_library").remove();
+    if(data.more_musics === false) {
+      $this.children("#load-more-musics").addClass('disabled');
+    }
+    $this.children("#page").val(parseInt($this.children("#page").val()) + 1);
+    $("#spinner_library").remove();
   })
   .fail(log_errors);
 });
 
-function update_player() {
+function update_remote() {
   var dataSend = {
       'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
     };
   $.ajax({
     type: "POST",
-    url: "/update-player/",
+    url: "/update-remote/",
     data: dataSend,
     dataType: "json",
     success: function(data) {
@@ -140,6 +138,10 @@ function update_player() {
       else {
         $("#btn-shuffle").attr("value", "true");
         $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
+      }
+
+      if(data.more_musics === true && $("#load-more-musics").hasClass('disabled')) {
+        $("#load-more-musics").removeClass('disabled');
       }
 
       $('.library-list-music').remove();
@@ -174,6 +176,6 @@ function ajax(source){
 
 socket.on('message', function(message) {
   if(message.update === true){
-    update_player();
+    update_remote();
   }
 });
