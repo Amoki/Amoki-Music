@@ -55,7 +55,8 @@ def add_music(request):
                 requestId=request.POST.get('requestId'),
                 timer_start=int(request.POST.get('timer-start', 0)),
                 timer_end=timer_end,
-                source=Source.objects.get(name=request.POST.get('provider'))
+                # source=Source.objects.get(name=request.POST.get('provider'))
+                source=Source.objects.get(name="Youtube")
             )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')

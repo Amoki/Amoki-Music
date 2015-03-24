@@ -1,5 +1,5 @@
 from django.contrib import admin
-from music.models import Music
+from music.models import Music, Source
 
 
 class MusicAdmin(admin.ModelAdmin):
@@ -15,3 +15,9 @@ class MusicAdmin(admin.ModelAdmin):
         return
 
 admin.site.register(Music, MusicAdmin)
+
+
+class SourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'regex')
+
+admin.site.register(Source, SourceAdmin)
