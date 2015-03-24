@@ -58,6 +58,7 @@ class Room(models.Model):
                     'name': music.name,
                     'musicId': music.music_id,
                     'timer_start': music.timer_start,
+                    'source': music.source.name
                 }
             }
             if music.timer_end:
@@ -122,6 +123,7 @@ class Room(models.Model):
                 thumbnail=temporaryMusic.thumbnail,
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
+                source=kwargs['source']
             )
             TemporaryMusic.clean()
         else:
@@ -133,8 +135,10 @@ class Room(models.Model):
                 thumbnail=kwargs['thumbnail'],
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
+                source=kwargs['source']
             )
 
+        # Autoplay
         if not self.current_music:
             self.current_music = music
             self.save()

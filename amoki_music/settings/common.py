@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     # Our apps
     'player',
     'music',
+    'source_modules.youtube'
 )
 
 MIDDLEWARE_CLASSES = (

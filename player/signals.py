@@ -19,8 +19,9 @@ def update_token_on_password_change(sender, instance, **kwargs):
         if instance.password != Room.objects.get(pk=instance.pk).password:
             instance.token = generate_token()
 
+
 @receiver(pre_save, sender=Music)
 def update_duration(sender, instance, **kwargs):
     if instance.timer_end:
         instance.duration = instance.duration - (instance.duration - instance.timer_end)
-    instance.duration -=  instance.timer_start
+    instance.duration -= instance.timer_start

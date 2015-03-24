@@ -2,6 +2,22 @@ from django.db import models
 from datetime import datetime, timedelta
 
 
+class Source(models.Model):
+    name = models.CharField(max_length=255)
+    regex = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+    def search(self, query=None, ids=None):
+        Provider = None
+        for cls in Source.__subclasses__():
+            if cls.__name__ == self.name:
+                Provider = cls
+
+        return Provider.search(query=query, ids=ids)
+
+
 class Music(models.Model):
     music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255, editable=False)
@@ -18,10 +34,11 @@ class Music(models.Model):
     dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
     timer_end = models.PositiveIntegerField(null=True)
+    source = models.ForeignKey(Source)
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
+        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room'], source=kwargs['source']).first()
         if existing_music:
             if kwargs['timer_start']:
                 existing_music.timer_start = kwargs['timer_start']
