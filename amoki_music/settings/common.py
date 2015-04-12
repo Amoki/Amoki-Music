@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'player',
     'music',
     'source_modules.youtube'
+    'source_modules.soundcloud'
 )
 
 MIDDLEWARE_CLASSES = (

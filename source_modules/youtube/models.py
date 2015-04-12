@@ -2,14 +2,14 @@
 import random
 import string
 
-from apiclient.discovery import build
+from apiclient.discovery import build as youtube_api
 
 from amoki_music.settings.common import YOUTUBE_KEY
 
 from music.models import TemporaryMusic, Source
 from utils.time import get_time_in_seconds
 
-youtube = build(
+youtube = youtube_api(
     "youtube",
     "v3",
     developerKey=YOUTUBE_KEY
