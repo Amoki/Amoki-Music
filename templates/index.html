@@ -93,25 +93,36 @@
 	<div class="col-md-4 LIB">
 		<div class="row input-lib">
 			<div class="col-md-offset-0 col-md-12">
-				<form action="/search-music/" method="post" class="input-group ajax-search">
+				<form action="/search-music/" method="post" class="input-group form-inline ajax-search">
 					{% csrf_token %}
-					<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
-					<span class="input-group-btn">
-						<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
-					</span>
+					<div class="form-group col-sm-11 query">
+						<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
+					</div>
+					<div class="form-group col-sm-1 provider">
+						<select id="btn-search"  class="btn btn-default provider" name='provider' title="Rechercher une musique" alt="Rechercher une musique">
+						{% for provider in providers %}
+							<span class="input-group-btn">
+								<option {% if provider.name == "Youtube" %}selected{% endif %} value="{{ provider.name }}">{{ provider.name }}</option>
+							</span>
+						{% endfor %}
+						</select>
+					</div>
 				</form>
 			</div>
 		</div>
 		<div class="row list-lib">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs nav-justified">
-					<li id="tab_btn_youtube"><a data-toggle="tab" href="#youtube">Youtube</a></li>
+					{% for provider in providers %}
+					<li id="tab_btn_{{ provider.name|lower }}"><a data-toggle="tab" href="#{{ provider.name|lower }}">{{ provider.name }}</a></li>
+					{% endfor %}
 					<li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane" id="youtube">
-						<ul id="list-youtube" class="list-group">
-							<li class="list-group-item item-lib youtube-list-music">
+					{% for provider in providers %}
+					<div class="tab-pane" id="{{ provider.name|lower }}">
+						<ul id="list-{{ provider.name|lower }}" class="list-group">
+							<li class="list-group-item item-lib {{ provider.name|lower }}-list-music">
 								<div class="row row-list-item">
 									<p class="col-xs-10">Enter your search in the field above</p>
 									<i class="fa fa-level-up fa-2x col-xs-2"></i>
@@ -119,6 +130,7 @@
 							</li>
 						</ul>
 					</div>
+					{% endfor %}
 					<div class="tab-pane active" id="library">
 						<ul id="list-library" class="list-group">
 							<li class="list-group-item item-lib row row-list-item">

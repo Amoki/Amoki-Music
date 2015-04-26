@@ -6,3 +6,5 @@ from .common import *
 DEBUG = True
 
 TEMPLATE_DEBUG = True
+
+SITE_URL = 'localhost:9500'

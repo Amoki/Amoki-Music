@@ -16,3 +16,5 @@ TEMPLATE_DEBUG = False
 INSTALLED_APPS += (
     'gunicorn',
 )
+
+SITE_URL = 'music.amoki.fr'

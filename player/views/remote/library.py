@@ -11,10 +11,8 @@ import simplejson as json
 
 
 def search_music(request):
-    # if request.is_ajax() and request.session.get('room', False) and request.POST.get('provider'):
-    if request.is_ajax() and request.session.get('room', False):
-        # provider = Source.objects.get(name=request.POST.get('provider'))
-        provider = Source.objects.get(name="Youtube")
+    if request.is_ajax() and request.session.get('room', False) and request.POST.get('provider'):
+        provider = Source.objects.get(name=request.POST.get('provider'))
 
         musics_searched = provider.search(query=request.POST.get('query'))
 
@@ -25,12 +23,10 @@ def search_music(request):
 
 
 def add_music(request):
-    # if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id') and request.POST.get('provider'):
-    if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
+    if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id') and request.POST.get('provider'):
         room = Room.objects.get(name=request.session.get('room'))
         if not request.POST.get('requestId'):
-            # music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room, source__name=request.POST.get('provider'))
-            music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room, source__name="Youtube")
+            music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room, source__name=request.POST.get('provider'))
             room.push(
                 music_id=music_to_add.music_id,
                 name=music_to_add.name,
@@ -38,8 +34,7 @@ def add_music(request):
                 thumbnail=music_to_add.thumbnail,
                 timer_start=music_to_add.timer_start,
                 timer_end=music_to_add.timer_end,
-                # source=Source.objects.get(name=request.POST.get('provider'))
-                source=Source.objects.get(name="Youtube")
+                source=Source.objects.get(name=request.POST.get('provider'))
             )
         else:
             try:
@@ -51,8 +46,7 @@ def add_music(request):
                 requestId=request.POST.get('requestId'),
                 timer_start=int(request.POST.get('timer-start', 0)),
                 timer_end=timer_end,
-                # source=Source.objects.get(name=request.POST.get('provider'))
-                source=Source.objects.get(name="Youtube")
+                source=Source.objects.get(name=request.POST.get('provider'))
             )
         return HttpResponse(render_remote(room), content_type='application/json')
     return redirect('/')

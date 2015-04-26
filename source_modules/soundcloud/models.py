@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
+
 import random
 import string
 import re
-
 import soundcloud
 
-from amoki_music.settings.common import SOUNDCLOUD_KEY
+from django.conf import settings
+
 
 from music.models import TemporaryMusic, Source
 
-client = soundcloud.Client(client_id=SOUNDCLOUD_KEY)
+client = soundcloud.Client(client_id=settings.SOUNDCLOUD_KEY)
 
 URL_REGEX = "^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$"
 
@@ -30,13 +31,13 @@ class Soundcloud(Source):
         videos = []
         for video in search_response:
             music = TemporaryMusic(
-                music_id=video['id'],
-                name=video['title'],
-                channel_name=video['user']['username'],
-                description=video['description'][:200] + "...",
-                thumbnail=video['artwork_url'],
-                views=video['playback_count'],
-                duration=video['duration'] / 1000,
+                music_id=video.id,
+                name=video.title,
+                channel_name=video.user['username'],
+                description=unicode(video.description)[:200] + "...",
+                thumbnail=video.artwork_url if video.artwork_url else "http://" + settings.SITE_URL + "/static/img/soundcloud-100x100.jpg",
+                views=video.playback_count,
+                duration=video.duration / 1000,
                 requestId=requestId,
             )
             videos.append(music)
