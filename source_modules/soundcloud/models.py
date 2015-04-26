@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import string
+import re
 
 import soundcloud
 
@@ -10,17 +11,21 @@ from music.models import TemporaryMusic, Source
 
 client = soundcloud.Client(client_id=SOUNDCLOUD_KEY)
 
+URL_REGEX = "^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$"
+
 
 class Soundcloud(Source):
     @staticmethod
-    def search(query=None, ids=None):
-        # see https://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument
-        if not ids:
-            ids = []
+    def search(query):
+        regexVideoId = re.compile(URL_REGEX, re.IGNORECASE | re.MULTILINE)
+        if regexVideoId.search(query) is None:
+            # The query is not an url
+            search_response = client.get('/tracks', q=query, limit=15)
+        else:
+            # Get the id from url
+            search_response = client.get('/resolve.json', url=query)
 
         requestId = ''.join(random.choice(string.lowercase) for i in range(64))
-
-        search_response = client.get('/tracks', q=query, ids=ids.join(','), limit=15)
 
         videos = []
         for video in search_response:

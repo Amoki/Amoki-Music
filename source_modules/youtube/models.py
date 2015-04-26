@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import string
+import re
 
 from apiclient.discovery import build as youtube_api
 
@@ -8,6 +9,8 @@ from amoki_music.settings.common import YOUTUBE_KEY
 
 from music.models import TemporaryMusic, Source
 from utils.time import get_time_in_seconds
+
+URL_REGEX = "(?:v=|youtu\.be\/)([^&?]+)"
 
 youtube = youtube_api(
     "youtube",
@@ -43,14 +46,12 @@ def get_info(ids):
 
 class Youtube(Source):
     @staticmethod
-    def search(query=None, ids=None):
-        # see https://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument
-        if not ids:
-            ids = []
+    def search(query):
+        ids = []
 
-        requestId = ''.join(random.choice(string.lowercase) for i in range(64))
-
-        if query:
+        regexVideoId = re.compile(URL_REGEX, re.IGNORECASE | re.MULTILINE)
+        if regexVideoId.search(query) is None:
+            # The query is not an url
             search_response = youtube.search().list(
                 q=query,
                 part="id",
@@ -62,6 +63,11 @@ class Youtube(Source):
             ).execute()
             for video in search_response.get("items", []):
                 ids.append(video["id"]["videoId"])
+        else:
+            # Get the id from url
+            ids.append(regexVideoId.search(query).group(1))
+
+        requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
         videos = []
         for video in get_info(ids):

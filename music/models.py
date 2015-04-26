@@ -3,19 +3,18 @@ from datetime import datetime, timedelta
 
 
 class Source(models.Model):
-    name = models.CharField(max_length=255)
-    regex = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, editable=False)
 
     def __unicode__(self):
         return self.name
 
-    def search(self, query=None, ids=None):
+    def search(self, query):
         Provider = None
         for cls in Source.__subclasses__():
             if cls.__name__ == self.name:
                 Provider = cls
 
-        return Provider.search(query=query, ids=ids)
+        return Provider.search(query)
 
 
 class Music(models.Model):
@@ -34,7 +33,7 @@ class Music(models.Model):
     dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
     timer_end = models.PositiveIntegerField(null=True)
-    source = models.ForeignKey(Source)
+    source = models.ForeignKey(Source, editable=False)
 
     @classmethod
     def add(cls, **kwargs):

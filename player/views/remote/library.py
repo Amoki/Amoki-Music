@@ -8,7 +8,6 @@ from player.models import Room
 from player.views.remote.remote import render_remote
 from music.models import Music, Source
 import simplejson as json
-import re
 
 
 def search_music(request):
@@ -17,11 +16,8 @@ def search_music(request):
         # provider = Source.objects.get(name=request.POST.get('provider'))
         provider = Source.objects.get(name="Youtube")
 
-        regexVideoId = re.compile(provider.regex, re.IGNORECASE | re.MULTILINE)
-        if regexVideoId.search(request.POST.get('query')) is None:
-            musics_searched = provider.search(query=request.POST.get('query'))
-        else:
-            musics_searched = provider.search(ids=[regexVideoId.search(request.POST.get('query')).group(1), ])
+        musics_searched = provider.search(query=request.POST.get('query'))
+
         template_library = render_to_string("include/remote/library.html", {"musics": musics_searched, "tab": "youtube-list-music"})
         json_data = json.dumps({'template_library': template_library})
         return HttpResponse(json_data, content_type='application/json')

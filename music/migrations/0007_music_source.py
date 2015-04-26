@@ -8,7 +8,8 @@ def populate_db(apps, schema_editor):
     # We can't import the Person model directly as it may be a newer
     # version than this migration expects. We use the historical version.
     Source = apps.get_model("music", "Source")
-    Source(name="Youtube", regex="(?:v=|youtu\.be\/)([^&?]+)").save()
+    Source(name="Youtube").save()
+    Source(name="Soundcloud").save()
 
 
 def set_sources_as_youtube(apps, schema_editor):

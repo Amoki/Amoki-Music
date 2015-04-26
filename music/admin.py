@@ -18,6 +18,6 @@ admin.site.register(Music, MusicAdmin)
 
 
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'regex')
+    list_display = ('name',)
 
 admin.site.register(Source, SourceAdmin)
