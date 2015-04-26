@@ -49,9 +49,18 @@ var playerControl = {
   }
 };
 
-socket.on('message', function(message) {
-  if(initialized) {
-    if(message.action){
+jQuery(document).ready(function($) {
+  var ws4redis = WS4Redis({
+      uri: webSocketUri + token + '?subscribe-broadcast',
+      receive_message: receiveMessage,
+      heartbeat_msg: ws4redisHeartbeat
+  });
+
+  // receive a message though the websocket from the server
+  function receiveMessage(message) {
+    console.log('MESSAGE', message);
+    message = JSON.parse(message);
+    if(initialized && message.action) {
       playerControl[message.action](message.options);
     }
   }

@@ -140,17 +140,20 @@ WEBSOCKET_URL = '/ws/'
 WS4REDIS_CONNECTION = {
     'host': 'localhost',
     'port': 6379,
-    'db': 16,
-    'password': 'verysecret',
+    'db': 0,
+    'password': None,
 }
 
-WS4REDIS_EXPIRE = 7200
+WS4REDIS_EXPIRE = 1
 
 WS4REDIS_PREFIX = 'ws'
+
+WS4REDIS_HEARTBEAT = '--heartbeat--'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.static',
+    'django.core.context_processors.request',
     'ws4redis.context_processors.default',
 )
 
