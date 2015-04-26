@@ -186,7 +186,6 @@ jQuery(document).ready(function($) {
 
   // receive a message though the websocket from the server
   function receiveMessage(message) {
-    console.log('MESSAGE', message);
     message = JSON.parse(message);
     if(message.update === true){
       update_remote();
