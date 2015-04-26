@@ -54,11 +54,11 @@ class Room(models.Model):
             message = {
                 'action': 'play',
                 'update': True,
+                'source': music.source.name,
                 'options': {
                     'name': music.name,
                     'musicId': music.music_id,
                     'timer_start': music.timer_start,
-                    'source': music.source.name
                 }
             }
             if music.timer_end:

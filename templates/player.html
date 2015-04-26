@@ -13,15 +13,22 @@
 		var current_music = '{{music_id}}';
 		</script>
 	{% endif %}
-	<script type="text/javascript" src="{% static 'js/player/player.js' %}"></script>
 {% endblock pre_end_head %}
 {% block navbar %}
 	{% include "generic-part/navbar.html" with parent="player" %}
 {% endblock navbar %}
 {% block first_Col %}
 	<div class="col-xs-12">
-		<div id="embed"></div>
+		<div id="youtubePlayer"></div>
 	</div>
+	<div class="col-xs-12">
+		<iframe id="soundcloudPlayer" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/users/1539950/favorites" scrolling="no" frameborder="no"></iframe>
+	</div>
+	<script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
+	<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
+	<script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/player/youtube.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/player/player.js' %}"></script>
 {% endblock first_Col %}
 {% block footer %}
 	{% include "generic-part/footer.html" %}
