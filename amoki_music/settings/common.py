@@ -144,7 +144,7 @@ WS4REDIS_CONNECTION = {
     'password': None,
 }
 
-WS4REDIS_EXPIRE = 1
+WS4REDIS_EXPIRE = 0
 
 WS4REDIS_PREFIX = 'ws'
 
