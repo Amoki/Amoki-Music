@@ -64,10 +64,10 @@ $(document).on('submit', '.ajax-search', function(e) {
       modal_confirm($('#modal-add-music'));
     }
     else {
+      $(".list-lib .nav-tabs").find("li").removeClass("active");
+      $(".tab-content").find(".tab-pane").removeClass("active");
       $("#tab_btn_" + source).addClass("active");
       $("#" + source).addClass("active");
-      $("#tab_btn_library").removeClass("active");
-      $("#library").removeClass("active");
       $("#list-" + source).slideUp();
       $("#list-" + source).promise().done(function() {
         $("." + source + "-list-music").remove();

@@ -28,15 +28,7 @@ $(document).ready(function() {
   });
 
   $('body').popover({
-    container: '#list-youtube',
-    selector: '[data-toggle="popover"]',
-    trigger: 'focus',
-    html: true,
-    placement: 'left',
-  });
-
-  $('body').popover({
-    container: '#list-soundcloud',
+    container: '#popover-container-custom',
     selector: '[data-toggle="popover"]',
     trigger: 'focus',
     html: true,

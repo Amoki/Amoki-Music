@@ -92,13 +92,13 @@
 	<!-- LIBRARY  -->
 	<div class="col-md-4 LIB">
 		<div class="row input-lib">
-			<div class="col-md-offset-0 col-md-12">
+			<div class="col-md-12">
 				<form action="/search-music/" method="post" class="input-group form-inline ajax-search">
 					{% csrf_token %}
-					<div class="form-group col-sm-11 query">
+					<div class="form-group col-sm-8 query">
 						<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
 					</div>
-					<div class="form-group col-sm-1 source">
+					<div class="form-group col-sm-4 source">
 						<select id="btn-search"  class="btn btn-default source" name='source' title="Rechercher une musique" alt="Rechercher une musique">
 						{% for source in sources %}
 							<span class="input-group-btn">
@@ -118,7 +118,7 @@
 					{% endfor %}
 					<li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
 				</ul>
-				<div class="tab-content">
+				<div id="popover-container-custom" class="tab-content">
 					{% for source in sources %}
 					<div class="tab-pane" id="{{ source.name|lower }}">
 						<ul id="list-{{ source.name|lower }}" class="list-group">
