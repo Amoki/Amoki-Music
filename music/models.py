@@ -67,6 +67,7 @@ class TemporaryMusic(models.Model):
     description = models.TextField()
     url = models.CharField(max_length=512)
     requestId = models.CharField(max_length=64)
+    source = models.ForeignKey(Source, editable=False)
 
     @classmethod
     def clean(self):

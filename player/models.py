@@ -124,7 +124,7 @@ class Room(models.Model):
                 url=temporaryMusic.url,
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
-                source=kwargs['source']
+                source=temporaryMusic.source
             )
             TemporaryMusic.clean()
         else:

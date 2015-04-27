@@ -68,6 +68,7 @@ class Youtube(Source):
             ids.append(regexVideoId.search(query).group(1))
 
         requestId = ''.join(random.choice(string.lowercase) for i in range(64))
+        youtube_source = Source.objects.get(name="Youtube")
 
         videos = []
         for video in get_info(ids):
@@ -81,6 +82,7 @@ class Youtube(Source):
                 duration=video['duration'],
                 url="https://www.youtube.com/watch?v=" + video['music_id'],
                 requestId=requestId,
+                source=youtube_source
             )
             videos.append(music)
 

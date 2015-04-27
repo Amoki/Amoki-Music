@@ -28,6 +28,7 @@ class Soundcloud(Source):
 
         requestId = ''.join(random.choice(string.lowercase) for i in range(64))
 
+        soundcloud = Source.objects.get(name="Soundcloud")
         videos = []
         for video in search_response:
             music = TemporaryMusic(
@@ -37,9 +38,10 @@ class Soundcloud(Source):
                 description=unicode(video.description)[:200] + "...",
                 thumbnail=video.artwork_url if video.artwork_url else "http://" + settings.SITE_URL + "/static/img/soundcloud-100x100.jpg",
                 views=video.playback_count,
-                duration=video.duration / 1000,
+                duration=int(video.duration / 1000),
                 url=video.permalink_url,
                 requestId=requestId,
+                source=soundcloud
             )
             videos.append(music)
 
