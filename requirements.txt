@@ -4,4 +4,4 @@ isodate==0.5.0
 simplejson==3.6.4
 gevent==0.13.8
 django-socketio==0.3.9
-soundcloud==0.4.1
+git+https://github.com/soundcloud/soundcloud-python.git
