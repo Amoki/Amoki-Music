@@ -62,7 +62,7 @@ def music_inifite_scroll(request):
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
-            page = int(request.POST.get('page'))
+            page = int(request.POST.get('page')) + 1
 
             musics = paginator.page(page)
             if(paginator.page(page).has_next()):

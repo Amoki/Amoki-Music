@@ -64,7 +64,7 @@
 	{% endif %}
 </li>
 {% endfor %}
-{% if more_music != None %}
+{% if more_musics|yesno:"yeah,no" == "no" %}
 <li class="list-group-item item-lib {{tab}} row row-list-item">
 	<div><p>No more musics</p></div>
 </li>
