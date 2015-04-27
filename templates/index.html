@@ -98,11 +98,11 @@
 					<div class="form-group col-sm-11 query">
 						<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
 					</div>
-					<div class="form-group col-sm-1 provider">
-						<select id="btn-search"  class="btn btn-default provider" name='provider' title="Rechercher une musique" alt="Rechercher une musique">
-						{% for provider in providers %}
+					<div class="form-group col-sm-1 source">
+						<select id="btn-search"  class="btn btn-default source" name='source' title="Rechercher une musique" alt="Rechercher une musique">
+						{% for source in sources %}
 							<span class="input-group-btn">
-								<option {% if provider.name == "Youtube" %}selected{% endif %} value="{{ provider.name }}">{{ provider.name }}</option>
+								<option {% if source.name == "Youtube" %}selected{% endif %} value="{{ source.name }}">{{ source.name }}</option>
 							</span>
 						{% endfor %}
 						</select>
@@ -113,16 +113,16 @@
 		<div class="row list-lib">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs nav-justified">
-					{% for provider in providers %}
-					<li id="tab_btn_{{ provider.name|lower }}"><a data-toggle="tab" href="#{{ provider.name|lower }}">{{ provider.name }}</a></li>
+					{% for source in sources %}
+					<li id="tab_btn_{{ source.name|lower }}"><a data-toggle="tab" href="#{{ source.name|lower }}">{{ source.name }}</a></li>
 					{% endfor %}
 					<li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
 				</ul>
 				<div class="tab-content">
-					{% for provider in providers %}
-					<div class="tab-pane" id="{{ provider.name|lower }}">
-						<ul id="list-{{ provider.name|lower }}" class="list-group">
-							<li class="list-group-item item-lib {{ provider.name|lower }}-list-music">
+					{% for source in sources %}
+					<div class="tab-pane" id="{{ source.name|lower }}">
+						<ul id="list-{{ source.name|lower }}" class="list-group">
+							<li class="list-group-item item-lib {{ source.name|lower }}-list-music">
 								<div class="row row-list-item">
 									<p class="col-xs-10">Enter your search in the field above</p>
 									<i class="fa fa-level-up fa-2x col-xs-2"></i>

@@ -79,6 +79,7 @@ class Youtube(Source):
                 thumbnail=video['thumbnail'],
                 views=video['views'],
                 duration=video['duration'],
+                url="https://www.youtube.com/watch?v=" + video['music_id'],
                 requestId=requestId,
             )
             videos.append(music)

@@ -29,7 +29,7 @@ def home(request):
     # The current state of the shuffle. Can be True ou False
     shuffle = room.shuffle
 
-    providers = Source.objects.all()
+    sources = Source.objects.all()
 
     # Percent of current music time past
     if current_music:

@@ -38,6 +38,7 @@ class Soundcloud(Source):
                 thumbnail=video.artwork_url if video.artwork_url else "http://" + settings.SITE_URL + "/static/img/soundcloud-100x100.jpg",
                 views=video.playback_count,
                 duration=video.duration / 1000,
+                url=video.permalink_url,
                 requestId=requestId,
             )
             videos.append(music)

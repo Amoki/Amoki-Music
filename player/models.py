@@ -121,6 +121,7 @@ class Room(models.Model):
                 name=temporaryMusic.name,
                 duration=temporaryMusic.duration,
                 thumbnail=temporaryMusic.thumbnail,
+                url=temporaryMusic.url,
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
                 source=kwargs['source']
@@ -133,6 +134,7 @@ class Room(models.Model):
                 name=kwargs['name'],
                 duration=kwargs['duration'],
                 thumbnail=kwargs['thumbnail'],
+                url=temporaryMusic['url'],
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
                 source=kwargs['source']

@@ -20,6 +20,7 @@ class Source(models.Model):
 class Music(models.Model):
     music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255, editable=False)
+    url = models.CharField(max_length=512, editable=False)
     room = models.ForeignKey('player.Room')
     # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
@@ -64,6 +65,7 @@ class TemporaryMusic(models.Model):
     thumbnail = models.CharField(max_length=255)
     views = models.PositiveIntegerField()
     description = models.TextField()
+    url = models.CharField(max_length=512)
     requestId = models.CharField(max_length=64)
 
     @classmethod

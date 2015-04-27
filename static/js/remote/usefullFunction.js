@@ -35,6 +35,14 @@ $(document).ready(function() {
     placement: 'left',
   });
 
+  $('body').popover({
+    container: '#list-soundcloud',
+    selector: '[data-toggle="popover"]',
+    trigger: 'focus',
+    html: true,
+    placement: 'left',
+  });
+
   $('.ajax_music_inifite_scroll').submit();
 
   $("#query").autocomplete({
