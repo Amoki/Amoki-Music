@@ -40,42 +40,40 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   .fail(log_errors);
 });
 
+$(document).on('change', '.source', function(){
+  $('.ajax-search').submit();
+});
+
 $(document).on('submit', '.ajax-search', function(e) {
   e.preventDefault();
   var $this = $(this);
-
-  if($this.children('.query').val().trim() === '' || $this.children('.query').val().trim() === null) {
-    $("#list-youtube").slideUp();
-    $("#list-youtube").promise().done(function() {
-      $("#list-youtube").children().remove();
-      $("#list-youtube").append('<li class="list-group-item item-lib youtube-list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
-      $("#list-youtube").slideDown();
+  var source = $this.children('.source').children('.source').val().toLowerCase();
+  if($this.children('.query').children('.query').val().trim() === '' || $this.children('.query').children('.query').val().trim() === null) {
+    $("#list-" + source).slideUp();
+    $("#list-" + source).promise().done(function() {
+      $("#list-" + source).children().remove();
+      $("#list-" + source).append('<li class="list-group-item item-lib ' + source + '-list-music"><div class="row"><p class="col-xs-10">Enter your search in the field above</p><i class="fa fa-level-up fa-2x col-xs-2"></i></div></li>');
+      $("#list-" + source).slideDown();
     });
     return;
   }
-  $this.children("span").children("button").children("i").attr("class", "fa fa-refresh fa-spin");
-  $this.children("span").children("button").attr('disabled', 'disabled');
 
   ajax($this).done(function(data) {
     if(data.current_music) {
-      $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
       $("#btn-search").removeAttr('disabled');
       modal_confirm($('#modal-add-music'));
     }
     else {
-      $("#tab_btn_youtube").addClass("active");
-      $("#youtube").addClass("active");
+      $("#tab_btn_" + source).addClass("active");
+      $("#" + source).addClass("active");
       $("#tab_btn_library").removeClass("active");
       $("#library").removeClass("active");
-      $("#list-youtube").slideUp();
-      $("#list-youtube").promise().done(function() {
-        $(".youtube-list-music").remove();
-        $("#list-youtube").html(data.template_library);
-        $("#list-youtube").slideDown();
-        $("#list-youtube").promise().done(function() {
-          $("#btn-search").children("i").attr("class", "fa fa-youtube-play");
-          $("#btn-search").removeAttr('disabled');
-        });
+      $("#list-" + source).slideUp();
+      $("#list-" + source).promise().done(function() {
+        $("." + source + "-list-music").remove();
+        $("#list-" + source).html(data.template_library);
+        $("#list-" + source).slideDown();
+        $("#list-" + source).promise().done(function() {});
       });
     }
   })
