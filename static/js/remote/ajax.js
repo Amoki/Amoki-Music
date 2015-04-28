@@ -40,15 +40,15 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   .fail(log_errors);
 });
 
-$(document).on('change', '.source', function(){
+$(document).on('change', 'select#source', function(){
   $('.ajax-search').submit();
 });
 
 $(document).on('submit', '.ajax-search', function(e) {
   e.preventDefault();
   var $this = $(this);
-  var source = $this.children('.source').children('.source').val().toLowerCase();
-  if($this.children('.query').children('.query').val().trim() === '' || $this.children('.query').children('.query').val().trim() === null) {
+  var source = $this.find('select#source').val().toLowerCase();
+  if($this.find('input#query').val().trim() === '' || $this.find('input#query').val().trim() === null) {
     $("#list-" + source).slideUp();
     $("#list-" + source).promise().done(function() {
       $("#list-" + source).children().remove();
@@ -60,7 +60,7 @@ $(document).on('submit', '.ajax-search', function(e) {
 
   ajax($this).done(function(data) {
     if(data.current_music) {
-      $("#btn-search").removeAttr('disabled');
+      $("input#query").removeAttr('disabled');
       modal_confirm($('#modal-add-music'));
     }
     else {

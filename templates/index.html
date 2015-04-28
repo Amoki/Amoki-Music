@@ -92,23 +92,25 @@
 	<!-- LIBRARY  -->
 	<div class="col-md-4 LIB">
 		<div class="row input-lib">
-			<div class="col-md-12">
-				<form action="/search-music/" method="post" class="input-group form-inline ajax-search">
+			<div class="col-lg-12">
+				<form action="/search-music/" method="post" class="form-inline ajax-search">
 					{% csrf_token %}
-					<div class="form-group col-sm-8 query">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+						</span>
 						<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
-					</div>
-					<div class="form-group col-sm-4 source">
-						<select id="btn-search"  class="btn btn-default source" name='source' title="Rechercher une musique" alt="Rechercher une musique">
-						{% for source in sources %}
-							<span class="input-group-btn">
+						<span class="input-group-btn">
+							<select id="source" class="form-control" name="source">
+							{% for source in sources %}
 								<option {% if source.name == "Youtube" %}selected{% endif %} value="{{ source.name }}">{{ source.name }}</option>
-							</span>
-						{% endfor %}
-						</select>
-					</div>
+							{% endfor %}
+							</select>
+						</span>
+					</div><!-- /input-group -->
 				</form>
 			</div>
+
 		</div>
 		<div class="row list-lib">
 			<div class="col-md-12">
