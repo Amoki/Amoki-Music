@@ -176,8 +176,19 @@ function ajax(source){
   });
 }
 
-socket.on('message', function(message) {
-  if(message.update === true){
-    update_remote();
+
+jQuery(document).ready(function($) {
+  var ws4redis = WS4Redis({
+      uri: webSocketUri + token + '?subscribe-broadcast',
+      receive_message: receiveMessage,
+      heartbeat_msg: ws4redisHeartbeat
+  });
+
+  // receive a message though the websocket from the server
+  function receiveMessage(message) {
+    message = JSON.parse(message);
+    if(message.update === true){
+      update_remote();
+    }
   }
 });
