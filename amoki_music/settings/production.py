@@ -7,6 +7,4 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-SITE_URL = 'music.amoki.fr'
-
 PYTHON_ENV = "production"
