@@ -4,9 +4,12 @@ Amoki-Music
 External Requirements
 ---------------------
 * libevent
-On ubuntu: `apt-get install libevent-dev`
-On ubuntu: `apt-get install redis-server`
-On ubuntu: `sudo apt-get install libpcre3 libpcre3-dev`
+	* On ubuntu :
+	```
+	apt-get install libevent-dev
+	apt-get install redis-server
+	sudo apt-get install libpcre3 libpcre3-dev
+	```
 
 
 Install
@@ -36,7 +39,7 @@ SET YOUTUBE_KEY="your youtube API key"
 How to use
 ----------
 ## In development
-#### Start the server 
+#### Start the server
 ```bash
 pyhton manage.py runserver <ip:port>
 ```
