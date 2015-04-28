@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
-{% load socketio_tags %}
 {% block pre_end_head %}
-	{% socketio %}
-	<script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
-	<script type="text/javascript" src="{% static 'js/lib/socketIO.js' %}"></script>
 	<script type ="text/javascript">
-		var token = "{{ request.session.token }}";
+		var token = '{{ request.session.token }}';
+		var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
+		var webSocketUri = '{{ WEBSOCKET_URI }}';
 	</script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
 	{% if current_music %}
 	<script type="text/javascript">
 		var current_time_past = {{current_time_past}};

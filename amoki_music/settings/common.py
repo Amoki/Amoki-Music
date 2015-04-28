@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../..")
 
 ADMINS = (
@@ -49,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Pip lib
-    'django_socketio',
+    'ws4redis',
 
     # Our apps
     'player',
@@ -68,8 +67,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'amoki_music.urls'
-
-WSGI_APPLICATION = 'amoki_music.wsgi.application'
 
 
 # Database
@@ -140,3 +137,30 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
     # 'django.template.loaders.eggs.Loader',
 )
+
+
+# Websockets
+WEBSOCKET_URL = '/ws/'
+
+WS4REDIS_CONNECTION = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 0,
+    'password': None,
+}
+
+WS4REDIS_EXPIRE = 0
+
+WS4REDIS_PREFIX = 'ws'
+
+WS4REDIS_HEARTBEAT = '--heartbeat--'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'ws4redis.context_processors.default',
+)
+
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_PREFIX = 'session'

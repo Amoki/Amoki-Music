@@ -143,12 +143,11 @@ button > .glyphicon, a > .glyphicon {
 /********************** REMOTE STUFF ***********/
 .player {
 	border-radius: 50px;
-	margin-bottom: 20px;
 	.shadow;
 	//background: rgba(34,34,34,0.7);
 	background: url('../img/cover-center.png') no-repeat;
 	background-size: cover;
-	height: 650px;
+	min-height: 650px;
 }
 
 .header-player img {
@@ -204,7 +203,7 @@ button > .glyphicon, a > .glyphicon {
 .panel-playlist {
 	overflow-y : auto;
 	background-color: rgba(255,255,255,0.5) !important;
-	height: 390px;
+	min-height: 390px;
 }
 
 .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
@@ -257,8 +256,8 @@ button > .glyphicon, a > .glyphicon {
 /********************** LIBRARY STUFF ***********/
 
 .LIB {
-	height: 550px;
-	margin-bottom: 10px;
+	min-height: 550px;
+	//margin-bottom: 10px;
 	background: rgba(34,34,34,0.7);
 	.shadow;
 }
@@ -390,11 +389,12 @@ select#source {
 	width: 100%;
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 0px 0px 12px 2px #000;
-}
-.foot .btn {
-	margin-right: 15px;
-	margin-left: 15px;
-	top:5px;
-	position: relative;
-	.beauti-btn;
+	margin-top: 10px;
+	.btn {
+		margin-right: 15px;
+		margin-left: 15px;
+		top:5px;
+		position: relative;
+		.beauti-btn;
+	}
 }

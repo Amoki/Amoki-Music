@@ -2,13 +2,15 @@
 
 from django.db import models
 
-import django_socketio
 import random
 import math
 import os
 import binascii
+import json
 from datetime import datetime
 from threading import Timer
+from ws4redis.publisher import RedisPublisher
+from ws4redis.redis_store import RedisMessage
 
 from music.models import Music, TemporaryMusic
 
@@ -33,11 +35,9 @@ class Room(models.Model):
         self.save()
 
     def send_message(self, message):
-        try:
-            django_socketio.broadcast_channel(message, self.token)
-            return True
-        except:
-            return False
+        redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
+        message = RedisMessage(json.dumps(message))
+        redis_publisher.publish_message(message)
 
     def play(self, music=None):
         # clear the queue
@@ -64,13 +64,9 @@ class Room(models.Model):
             if music.timer_end:
                 message['options']['timer_end'] = music.timer_end
 
-            if self.send_message(message):
-                events[self.name] = Timer(music.duration, self.play_next, ())
-                events[self.name].start()
-            else:
-                self.shuffle = False
-                self.current_music = None
-                self.save()
+            self.send_message(message)
+            events[self.name] = Timer(music.duration, self.play_next, ())
+            events[self.name].start()
 
         else:
             message = {
