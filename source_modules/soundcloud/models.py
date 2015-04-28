@@ -8,7 +8,6 @@ import json
 
 from django.conf import settings
 
-
 from music.models import TemporaryMusic, Source
 
 client = soundcloud.Client(client_id=settings.SOUNDCLOUD_KEY)

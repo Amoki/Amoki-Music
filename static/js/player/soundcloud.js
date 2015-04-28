@@ -30,8 +30,6 @@ var soundcloudPlayerControl = {
             soundcloud.pause();
           }
         });
-
-        soundcloudPlayer.play();
       });
     }
   },

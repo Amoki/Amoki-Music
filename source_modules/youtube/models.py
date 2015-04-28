@@ -5,7 +5,7 @@ import re
 
 from apiclient.discovery import build as youtube_api
 
-from amoki_music.settings.common import YOUTUBE_KEY
+from django.conf import settings
 
 from music.models import TemporaryMusic, Source
 from utils.time import get_time_in_seconds
@@ -15,7 +15,7 @@ URL_REGEX = "(?:v=|youtu\.be\/)([^&?]+)"
 youtube = youtube_api(
     "youtube",
     "v3",
-    developerKey=YOUTUBE_KEY
+    developerKey=settings.YOUTUBE_KEY
 )
 
 
