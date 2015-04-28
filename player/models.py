@@ -74,21 +74,22 @@ class Room(models.Model):
 
         else:
             message = {
-                'action': 'stop',
+                'stop': True,
                 'update': True,
             }
             self.send_message(message)
 
     def play_next(self, forced=False):
-        music = None
-        if self.current_music:
+        next_music = None
+        previous_music = self.current_music
+        if previous_music:
             if forced:
-                music = self.current_music
+                next_music = previous_music
             else:
-                music = self.music_set.filter(date__gt=self.current_music.date).order_by('date').first()
+                next_music = self.music_set.filter(date__gt=previous_music.date).order_by('date').first()
 
-        if music:
-            self.play(music)
+        if next_music:
+            self.play(music=next_music)
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
             musics = self.music_set.exclude(dead_link=True).order_by('-date')
@@ -106,11 +107,11 @@ class Room(models.Model):
             shuffled.date = datetime.now()
             shuffled.save()
 
-            self.play(shuffled)
+            self.play(music=shuffled)
         else:
             self.current_music = None
             self.save()
-            self.play(None)
+            self.play(music=None)
 
     def push(self, music_id, requestId=None, **kwargs):
         if requestId:
@@ -134,7 +135,7 @@ class Room(models.Model):
                 name=kwargs['name'],
                 duration=kwargs['duration'],
                 thumbnail=kwargs['thumbnail'],
-                url=temporaryMusic['url'],
+                url=kwargs['url'],
                 timer_start=kwargs['timer_start'],
                 timer_end=kwargs['timer_end'],
                 source=kwargs['source']

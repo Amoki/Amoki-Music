@@ -14,7 +14,7 @@ function onYouTubeIframeAPIReady() {
     playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',},
     events: {
       onReady : function(){
-        if(typeof current_music !== "undefined"){
+        if(typeof current_music !== "undefined" && current_music_source === "Youtube"){
           youtubePlayer.loadVideoById(current_music, current_time_past, 'default');
         }
         youtubePlayer.initialized = true;

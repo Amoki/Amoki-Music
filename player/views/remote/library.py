@@ -37,6 +37,7 @@ def add_music(request):
                 thumbnail=music_to_add.thumbnail,
                 timer_start=music_to_add.timer_start,
                 timer_end=music_to_add.timer_end,
+                url=music_to_add.url,
                 source=Source.objects.get(name=request.POST.get('source'))
             )
         else:

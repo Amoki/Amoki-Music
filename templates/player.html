@@ -9,10 +9,11 @@
 		var token = "{{ request.session.token }}";
 	</script>
 	{% if current_music %}
-		<script type="text/javascript">
+	<script type="text/javascript">
 		var current_time_past = {{current_time_past}};
 		var current_music = '{{music_id}}';
-		</script>
+		var current_music_source = '{{source}}';
+	</script>
 	{% endif %}
 {% endblock pre_end_head %}
 {% block navbar %}
@@ -23,7 +24,7 @@
 		<div id="youtubePlayer"></div>
 	</div>
 	<div class="col-xs-12">
-		<iframe id="soundcloudPlayer" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/users/1539950/favorites" scrolling="no" frameborder="no"></iframe>
+		<iframe id="soundcloudPlayer" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/users/1539950/favorites" scrolling="no" frameborder="no"></iframe>
 	</div>
 	<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
 	<script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>

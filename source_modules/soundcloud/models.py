@@ -44,7 +44,7 @@ class Soundcloud(Source):
                 music_id=video['id'],
                 name=video['title'],
                 channel_name=video['user']['username'],
-                description=video['description'][:200] + "...",
+                description=video['description'][:200] + "..." if video['description'] else '',
                 thumbnail=video['artwork_url'] if video['artwork_url'] else "http://" + settings.SITE_URL + "/static/img/soundcloud-100x100.jpg",
                 views=video['playback_count'],
                 duration=int(video['duration'] / 1000),
