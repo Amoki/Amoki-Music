@@ -2,9 +2,25 @@ from django.db import models
 from datetime import datetime, timedelta
 
 
+class Source(models.Model):
+    name = models.CharField(max_length=255, editable=False)
+
+    def __unicode__(self):
+        return self.name
+
+    def search(self, query):
+        Provider = None
+        for cls in Source.__subclasses__():
+            if cls.__name__ == self.name:
+                Provider = cls
+
+        return Provider.search(query)
+
+
 class Music(models.Model):
     music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255, editable=False)
+    url = models.CharField(max_length=512, editable=False)
     room = models.ForeignKey('player.Room')
     # Date is used for ordering musics
     date = models.DateTimeField(auto_now_add=True)
@@ -18,10 +34,11 @@ class Music(models.Model):
     dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
     timer_end = models.PositiveIntegerField(null=True)
+    source = models.ForeignKey(Source, editable=False)
 
     @classmethod
     def add(cls, **kwargs):
-        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room']).first()
+        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room'], source=kwargs['source']).first()
         if existing_music:
             if kwargs['timer_start']:
                 existing_music.timer_start = kwargs['timer_start']
@@ -48,7 +65,9 @@ class TemporaryMusic(models.Model):
     thumbnail = models.CharField(max_length=255)
     views = models.PositiveIntegerField()
     description = models.TextField()
+    url = models.CharField(max_length=512)
     requestId = models.CharField(max_length=64)
+    source = models.ForeignKey(Source, editable=False)
 
     @classmethod
     def clean(self):

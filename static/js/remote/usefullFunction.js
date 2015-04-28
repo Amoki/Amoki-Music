@@ -36,7 +36,7 @@ $(document).ready(function() {
   });
 
   $('body').popover({
-    container: '#list-youtube',
+    container: '#popover-container-custom',
     selector: '[data-toggle="popover"]',
     trigger: 'focus',
     html: true,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from player.models import Room
+from music.models import Source
 
 
 def home(request):
@@ -27,6 +28,8 @@ def home(request):
     current_time_left = room.get_current_remaining_time()
     # The current state of the shuffle. Can be True ou False
     shuffle = room.shuffle
+
+    sources = Source.objects.all()
 
     # Percent of current music time past
     if current_music:

@@ -92,26 +92,39 @@
 	<!-- LIBRARY  -->
 	<div class="col-md-4 LIB">
 		<div class="row input-lib">
-			<div class="col-md-offset-0 col-md-12">
-				<form action="/search-music/" method="post" class="input-group ajax-search">
+			<div class="col-lg-12">
+				<form action="/search-music/" method="post" class="form-inline ajax-search">
 					{% csrf_token %}
-					<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
-					<span class="input-group-btn">
-						<button id="btn-search" class="btn btn-default" type="submit" title="Chercher sur Youtube" alt="Chercher sur Youtube"><i class="fa fa-youtube-play"></i></span> Youtube</button>
-					</span>
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+						</span>
+						<input type="text" name="query" class="form-control query" id="query" placeholder="Titre">
+						<span class="input-group-btn">
+							<select id="source" class="form-control" name="source">
+							{% for source in sources %}
+								<option {% if source.name == "Youtube" %}selected{% endif %} value="{{ source.name }}">{{ source.name }}</option>
+							{% endfor %}
+							</select>
+						</span>
+					</div><!-- /input-group -->
 				</form>
 			</div>
+
 		</div>
 		<div class="row list-lib">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs nav-justified">
-					<li id="tab_btn_youtube"><a data-toggle="tab" href="#youtube">Youtube</a></li>
+					{% for source in sources %}
+					<li id="tab_btn_{{ source.name|lower }}"><a data-toggle="tab" href="#{{ source.name|lower }}">{{ source.name }}</a></li>
+					{% endfor %}
 					<li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
 				</ul>
-				<div class="tab-content">
-					<div class="tab-pane" id="youtube">
-						<ul id="list-youtube" class="list-group">
-							<li class="list-group-item item-lib youtube-list-music">
+				<div id="popover-container-custom" class="tab-content">
+					{% for source in sources %}
+					<div class="tab-pane" id="{{ source.name|lower }}">
+						<ul id="list-{{ source.name|lower }}" class="list-group">
+							<li class="list-group-item item-lib {{ source.name|lower }}-list-music">
 								<div class="row row-list-item">
 									<p class="col-xs-10">Enter your search in the field above</p>
 									<i class="fa fa-level-up fa-2x col-xs-2"></i>
@@ -119,6 +132,7 @@
 							</li>
 						</ul>
 					</div>
+					{% endfor %}
 					<div class="tab-pane active" id="library">
 						<ul id="list-library" class="list-group">
 							<li class="list-group-item item-lib row row-list-item">

@@ -7,5 +7,4 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-
 PYTHON_ENV = "production"

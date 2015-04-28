@@ -24,6 +24,9 @@ MANAGERS = ADMINS
 YOUTUBE_KEY = None
 if 'YOUTUBE_KEY' in os.environ:
     YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
+SOUNDCLOUD_KEY = None
+if 'SOUNDCLOUD_KEY' in os.environ:
+    SOUNDCLOUD_KEY = os.environ['SOUNDCLOUD_KEY']
 
 
 # Quick-start development settings - unsuitable for production
@@ -50,6 +53,8 @@ INSTALLED_APPS = (
     # Our apps
     'player',
     'music',
+    'source_modules.soundcloud',
+    'source_modules.youtube',
 )
 
 MIDDLEWARE_CLASSES = (

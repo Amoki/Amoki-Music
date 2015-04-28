@@ -9,7 +9,7 @@
 			</div>
 			<div class="row">
 				<div class="col-xs-8" style="color:black;font-weight:normal;">
-					{% if tab == "youtube-list-music" %}<b>{{music.views}}</b> views{% else %}Played <b>{{music.count}}</b> times{% endif %}
+					{% if tab == music.source.name|lower|add:"-list-music" %}<b>{{music.views}}</b> views{% else %}Played <b>{{music.count}}</b> times{% endif %}
 				</div>
 				<div class="col-xs-4">
 					<span class="badge">{{music.duration|secToDuration}}</span>
@@ -20,6 +20,7 @@
 			<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
 			<input type="hidden" class="input-reset" id="timer-start-{{music.music_id}}" name="timer-start">
 			<input type="hidden" class="input-reset" id="timer-end-{{music.music_id}}" name="timer-end">
+			<input type="hidden" value="{{music.source.name}}" name="source">
 			{% if music.requestId %}
 			<input type="hidden" value="{{music.requestId}}" name="requestId">
 			<a tabindex="0" class="btn btn-default btn-lg" role="button" data-toggle="popover" alt="Options" title="Options" data-content="

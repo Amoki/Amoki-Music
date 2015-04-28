@@ -70,7 +70,11 @@ def update_remote(request):
             return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
         player_updated = json.loads(render_remote(room))
-        player_updated['template_library'] = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
+        player_updated['template_library'] = render_to_string("include/remote/library.html", {
+            "musics": musics,
+            "tab": "library-list-music",
+            "more_musics": more_musics
+        })
         player_updated['more_musics'] = more_musics
 
         return HttpResponse(json.dumps(player_updated), content_type='application/json')
