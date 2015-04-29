@@ -35,7 +35,7 @@ if 'SOUNDCLOUD_KEY' in os.environ:
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '5h9@)57rjgoe3m_sb12kcp-ku7w!#x86a_k5_59t#g=!e$nhha'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
