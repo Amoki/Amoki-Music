@@ -31,17 +31,19 @@
 							<span class='glyphicon glyphicon-headphones'></span> Play music
 						</button>
 					</div>
-					<div>
-						<button href='#music_preview' class='btn btn-default btn-lg' type='button' alt='More info' title='More info'
-						data-toggle='modal'
-						data-backdrop='static'
-						data-duration='{{music.duration}}'
-						data-musicid='{{music.music_id}}'
-						data-channelname='{{music.channel_name}}'
-						data-description='{{music.description}}'>
-							<span class='glyphicon glyphicon-time'></span> Edit duration
-						</button>
-					</div>
+					{% if tab == 'youtube-list-music' %}
+						<div>
+							<button href='#music_preview' class='btn btn-default btn-lg' type='button' alt='More info' title='More info'
+							data-toggle='modal'
+							data-backdrop='static'
+							data-duration='{{music.duration}}'
+							data-musicid='{{music.music_id}}'
+							data-channelname='{{music.channel_name}}'
+							data-description='{{music.description}}'>
+								<span class='glyphicon glyphicon-time'></span> Edit duration
+							</button>
+						</div>
+					{% endif %}
 				</div>"
 			data-template="
 			<div class='popover' role='tooltip'>

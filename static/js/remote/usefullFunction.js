@@ -199,6 +199,7 @@ $(document).ready(function() {
     source_selected = $(this).val();
     $('.source-selected').html(source_selected);
     $('#input-source-selected').val(source_selected);
+    $('.ajax-search').submit();
   });
 
 });
