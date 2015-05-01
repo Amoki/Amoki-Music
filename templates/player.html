@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block pre_end_head %}
+	<script type="text/javascript" src="{% static 'js/player/ajax.js' %}"></script>
 	<script type ="text/javascript">
 		var token = '{{ request.session.token }}';
 		var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
