@@ -47,7 +47,7 @@ $(document).on('change', 'select#source', function(){
 $(document).on('submit', '.ajax-search', function(e) {
   e.preventDefault();
   var $this = $(this);
-  var source = $this.find('select#source').val().toLowerCase();
+  var source = $this.find('#input-source-selected').val().toLowerCase();
   if($this.find('input#query').val().trim() === '' || $this.find('input#query').val().trim() === null) {
     $("#list-" + source).slideUp();
     $("#list-" + source).promise().done(function() {

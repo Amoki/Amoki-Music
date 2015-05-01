@@ -194,6 +194,14 @@ $(document).ready(function() {
       }
     },
   };
+
+  $('.btn-change-source').on('click', function () {
+    source_selected = $(this).val();
+    $('.source-selected').html(source_selected);
+    $('#input-source-selected').val(source_selected);
+    $('.ajax-search').submit();
+  });
+
 });
 
 function maj_header_remote(data) {
