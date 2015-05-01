@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from player.models import Room, events, generate_token
+from player.models import Room, generate_token
 from music.models import Music
-
-
-@receiver(pre_save, sender=Room)
-def add_event(sender, instance, **kwargs):
-    events[instance.name] = None
 
 
 @receiver(pre_save, sender=Room)
