@@ -226,23 +226,23 @@ function disabled_btn() {
   $(".progress-bar").stop();
   $(".progress-bar").css('width', '0%');
   $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('display-none');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
 }
 
 function maj_playlist_current(data) {
   $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('display-none');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
-    $('#time-left-progress-bar-wrapper').removeClass('display-none');
+    $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
     $('#time-left-progress-bar').countdown({
       since: -data.time_past,
       onTick: function(periods){
-        if ((data.current_music[0].fields.duration) === (periods[0] + periods[1] + periods[2] + periods[3] + periods[4] + periods[5] + periods[6])) {
-          $('#time-left-progress-bar').countdown('pause');
+        if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+          $('#time-left-progress-bar').countdown('destroy');
         };
       },
     });

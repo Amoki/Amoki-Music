@@ -18,13 +18,13 @@
     {% if current_music %}
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('#time-left-progress-bar-wrapper').removeClass('display-none');
+            $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
             timeline({{current_time_left}}, {{current_time_past_percent}});
             $('#time-left-progress-bar').countdown({
               since: -{{ current_time_past }},
               onTick: function(periods){
-                if (({{ current_music.duration }}) === (periods[0] + periods[1] + periods[2] + periods[3] + periods[4] + periods[5] + periods[6])) {
-                  $('#time-left-progress-bar').countdown('pause');
+                if (({{ current_music.duration }}) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+                  $('#time-left-progress-bar').countdown('destroy');
                 };
               },
             });
@@ -68,7 +68,7 @@
                         <div class="progress-bar"></div>
 
                     </div>
-                    <div id="time-left-progress-bar-wrapper" class="display-none">
+                    <div id="time-left-progress-bar-wrapper" class="visibility-hidden">
                         <span id="time-left-progress-bar"></span>
                         <span>/</span>
                         <span id="time-left-progress-bar-duration"></span>
