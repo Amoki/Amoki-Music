@@ -33,7 +33,8 @@ def home(request):
 
     # Percent of current music time past
     if current_music:
-        current_time_past_percent = room.get_current_time_past_percent
+        current_time_past = room.get_current_time_past()
+        current_time_past_percent = room.get_current_time_past_percent()
 
     # TODO Do not return locals
     return render(request, 'index.html', locals())

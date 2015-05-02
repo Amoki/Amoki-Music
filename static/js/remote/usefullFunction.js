@@ -44,7 +44,7 @@ $(document).ready(function() {
   });
 
   $("#page").val(current_page);
-  $('.ajax_music_inifite_scroll').submit();
+  $('.ajax_music_infinite_scroll').submit();
 
   $("#query").autocomplete({
     minLength: 2,
@@ -229,12 +229,22 @@ function disabled_btn() {
 
 function maj_playlist_current(data) {
   $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('display-none');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
-    $('#time-left-progress-bar').countdown({until: data.time_left});
+    $('#time-left-progress-bar-wrapper').removeClass('display-none');
+    $('#time-left-progress-bar').countdown({
+      since: -data.time_past,
+      onTick: function(periods){
+        if ((data.current_music[0].fields.duration) === (periods[0] + periods[1] + periods[2] + periods[3] + periods[4] + periods[5] + periods[6])) {
+          $('#time-left-progress-bar').countdown('pause');
+        };
+      },
+    });
+    $('#time-left-progress-bar-duration').html(humanize_seconds(data.current_music[0].fields.duration))
   }
 }
 
@@ -261,10 +271,6 @@ function timeline(current_time_left, current_time_past_percent){
 }
 
 function humanize_seconds(s) {
-  var fm = [
-    Math.floor(s / 60) % 60,
-    s % 60
-  ];
-  if(Math.floor(s / 60 / 60) % 24 > 0){fm.unshift(Math.floor(s / 60 / 60) % 24);}
+  var fm = [Math.floor((s / 60 / 60) % 24),Math.floor(s / 60) % 60,s % 60];
   return $.map(fm, function(v, i) { return ((v < 10) ? '0' : '') + v; }).join(':');
 }
