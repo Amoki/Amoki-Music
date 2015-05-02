@@ -85,6 +85,7 @@ $(document).ready(function() {
   $('#time-left-progress-bar').countdown('destroy');
   $.countdown.setDefaults({
     compact: true,
+    format: 'hMS',
   });
 
   $('#music_preview').on('show.bs.modal', function (event) {
@@ -272,6 +273,10 @@ function timeline(current_time_left, current_time_past_percent){
 }
 
 function humanize_seconds(s) {
-  var fm = [Math.floor((s / 60 / 60) % 24),Math.floor(s / 60) % 60,s % 60];
+  var fm = [
+    Math.floor(s / 60) % 60,
+    s % 60
+  ];
+  if(Math.floor(s / 60 / 60) % 24 > 0){fm.unshift(Math.floor(s / 60 / 60) % 24);}
   return $.map(fm, function(v, i) { return ((v < 10) ? '0' : '') + v; }).join(':');
 }
