@@ -225,6 +225,7 @@ function disabled_btn() {
   $(".progress-bar").stop();
   $(".progress-bar").css('width', '0%');
   $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('display-none');
 }
 
 function maj_playlist_current(data) {
