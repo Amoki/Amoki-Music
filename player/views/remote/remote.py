@@ -51,7 +51,7 @@ def update_remote(request):
     if request.is_ajax and request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
 
-        musics = room.music_set.filter(dead_link=False).order_by('-date')
+        musics = room.music_set.filter(dead_link=False).order_by('-last_play')
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
