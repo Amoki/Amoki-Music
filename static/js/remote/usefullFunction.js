@@ -7,7 +7,7 @@ $(document).ready(function() {
     hauteur = 650;
   }
   // resize of the remote
-  $(".player").height(hauteur);
+  $(".remote").height(hauteur);
   $(".panel-playlist").height(hauteur - 258);
   // resize of the library
   $(".LIB").height(hauteur);
@@ -22,7 +22,7 @@ $(document).ready(function() {
         hauteur = 650;
       }
       // resize of the remote
-      $(".player").height(hauteur);
+      $(".remote").height(hauteur);
       $(".panel-playlist").height(hauteur - 258);
       // resize of the library
       $(".LIB").height(hauteur);
@@ -213,13 +213,13 @@ function maj_header_remote(data) {
   else {
     disabled_btn();
   }
-  $(".player").children('.header-player').html(data.template_header_remote);
+  $(".remote").children('.header-remote').html(data.template_header_remote);
 }
 
 function disabled_btn() {
   $(document).attr('title', 'Amoki\'s musics');
-  $(".header-player").children().remove();
-  $('.header-player').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
+  $(".header-remote").children().remove();
+  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
   $("#btn-next").attr('disabled', 'disabled');
   $("#dead-link").attr('disabled', 'disabled');
   $(".progress-bar").stop();

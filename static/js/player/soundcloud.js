@@ -1,4 +1,4 @@
-var iframeElement = document.getElementById('soundcloudPlayer');
+var iframeElement = document.querySelector('iframe#soundcloudPlayer');
 var soundcloudPlayer = SC.Widget(iframeElement);
 soundcloudPlayer.initialized = false;
 
@@ -20,17 +20,27 @@ var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized ) {
       $(document).attr('title', options.name);
-      soundcloudPlayer.load('https://api.soundcloud.com/tracks/' + options.musicId, {auto_play: true},  function() {
-        // Start time
-        soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
-        // End time
-        soundcloudPlayer.unbind(SC.Widget.Events.PLAY_PROGRESS);
-        soundcloudPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function(stats) {
-          if(options.timer_end && stats.currentPosition >= options.timer_end * 1000) {
-            soundcloud.pause();
-          }
-        });
-      });
+      $('iframe#soundcloudPlayer').css("opacity", 1);
+      console.log(options.timer_start);
+      soundcloudPlayer.load(
+        'https://api.soundcloud.com/tracks/' + options.musicId,
+        {
+          auto_play: true,
+          buying: false,
+        },
+        function() {
+          // Start time
+          console.log(options.timer_start);
+          soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+          // End time
+          soundcloudPlayer.unbind(SC.Widget.Events.PLAY_PROGRESS);
+          soundcloudPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function(stats) {
+            if(options.timer_end && stats.currentPosition >= options.timer_end * 1000) {
+              soundcloud.pause();
+            }
+          });
+        }
+      );
     }
   },
   stop: function() {

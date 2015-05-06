@@ -30,14 +30,14 @@
     {% include "generic-part/navbar.html" with parent="remote" %}
 {% endblock navbar %}
 {% block first_Col %}
-    <!-- PLAYER ZONE -->
+    <!-- REMOTE ZONE -->
     <div class="col-md-8">
-        <div class="col-md-offset-1 col-md-10 player">
-            <!-- HEADER PLAYER -->
-            <div class="row header-player">
+        <div class="col-md-offset-1 col-md-10 remote">
+            <!-- HEADER REMOTE -->
+            <div class="row header-remote">
                 {% include "include/remote/header_remote.html" %}
             </div>
-            <!-- END HEADER PLAYER -->
+            <!-- END HEADER REMOTE -->
             <!-- PLAYLIST -->
             <div class="row playlist">
                 <div class="col-md-offset-1 col-md-10">
@@ -86,7 +86,7 @@
             <!-- END CONTROL BUTTONS -->
         </div>
     </div>
-    <!-- END PLAYER ZONE -->
+    <!-- END REMOTE ZONE -->
 {% endblock first_Col %}
 {% block second_Col %}
     <!-- LIBRARY  -->
