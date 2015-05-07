@@ -161,8 +161,8 @@ $(document).ready(function() {
         slide: function( event, ui ) {
           var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
           var offset2 = $(this).children( '.ui-slider-handle' ).last().offset();
-          $( ".tooltip1" ).css('top',offset1.top+30).css('left',offset1.left-5).text(humanize_seconds(ui.values[ 0 ]));
-          $( ".tooltip2" ).css('top',offset2.top+30).css('left',offset2.left-5).text(humanize_seconds(ui.values[ 1 ]));
+          $( ".tooltip1" ).css('top',offset1.top+30).css('left',offset1.left-15).text(humanize_seconds(ui.values[ 0 ]));
+          $( ".tooltip2" ).css('top',offset2.top+30).css('left',offset2.left-15).text(humanize_seconds(ui.values[ 1 ]));
 
           $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
           $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );

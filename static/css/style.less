@@ -384,6 +384,7 @@ button > .glyphicon, a > .glyphicon {
 	line-height: 1.7;
 	padding: 0px 5px 0px 5px;
 	font-size: 14px;
+	z-index: 10000;
 }
 
 #music_preview {
@@ -395,6 +396,10 @@ button > .glyphicon, a > .glyphicon {
 #music_preview.modal.fade.in {
 	visibility: visible;
 	z-index: 9999;
+}
+
+#music_preview #slider {
+	margin-bottom: 15px;
 }
 
 /********************** LIBRARY STUFF ***********/
@@ -443,8 +448,13 @@ button > .glyphicon, a > .glyphicon {
 }
 
 div#slider-vertical {
+	display: none;
 	height: 390px;
 	position: absolute;
 	top: 0;
 	right: 0;
+}
+
+#tooltip_volume_slider {
+	display: none;
 }

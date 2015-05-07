@@ -18,6 +18,7 @@ jQuery(document).ready(function($) {
       Object.keys(playerControlWrapper).forEach(function(player) {
         playerControlWrapper[player].stop();
         $(document).attr('title', "Amoki's player");
+        $( "#slider-vertical" ).fadeOut(250);
         $('.player-child').not('.player-child-no-music').fadeOut(250);
       });
     }
@@ -38,16 +39,21 @@ jQuery(document).ready(function($) {
       range: "min",
       min: 0,
       max: 100,
-      value: 60,
       slide: function( event, ui ) {
         update_volume( ui.value );
-        var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
-        $( ".tooltip1" ).css('top',offset1.top-60).css('left',offset1.left-200).text(ui.value);
-
-        $( "#amount" ).val( ui.value );
-      }
+        var offset1 = $(this).children( '.ui-slider-handle' ).offset();
+        $( ".tooltip1" ).css('top',offset1.top).css('left', offset1.left+25).text(ui.value);
+      },
+      change: function( event, ui ) {
+        update_volume( ui.value );
+      },
+      start: function( event, ui ) {
+        $( ".tooltip1" ).fadeIn(250);
+      },
+      stop: function( event, ui ) {
+        $( ".tooltip1" ).fadeOut(250);
+      },
   });
-  $( "#amount" ).val( $( "#slider-vertical" ).slider( "value" ) );
 
   function update_volume(volume) {
     Object.keys(playerControlWrapper).forEach(function(player) {
