@@ -18,6 +18,19 @@ $(document).on('submit', '.ajax-dead-link', function(e) {
   ajax($this).fail(log_errors);
 });
 
+function update_player() {
+  $.ajax({
+    type: "POST",
+    url: "/update-player/",
+    data: {},
+    dataType: "json",
+    success: function(data) {
+      $('.playlist-ajax').html(data);
+    },
+    error: log_errors
+  });
+}
+
 function ajax(source){
   return $.ajax({
     url: source.attr('action'),

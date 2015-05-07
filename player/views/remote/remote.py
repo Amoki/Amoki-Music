@@ -79,6 +79,7 @@ def update_remote(request):
         remote_updated['more_musics'] = more_musics
 
         return HttpResponse(json.dumps(remote_updated), content_type='application/json')
+    return redirect('/')
 
 
 def render_remote(room):

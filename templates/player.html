@@ -27,7 +27,7 @@
 	{% include "generic-part/navbar.html" with parent="player" %}
 {% endblock navbar %}
 {% block first_Col %}
-	<div class="col-xs-6 col-xs-offset-3 player">
+	<div class="col-xs-6 player">
 		<div id="youtubePlayer" class="player-child col-xs-12"></div>
 
 		<iframe id="soundcloudPlayer" class="player-child col-xs-12" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/{% if current_music and source.name == 'Soundcloud' %}{{music_id}}{% else %}33427584{% endif %}&buying=false&visual=true&hide_related=true&enable_api=true" scrolling="no" frameborder="no"></iframe>
@@ -37,6 +37,20 @@
 			NO MUSIC!</p>
 		</div>
 		<div id="slider-vertical"></div>
+	</div>
+	<div class="col-xs-5 col-xs-offset-1 player">
+		<div class="playlist">
+            <div class="panel panel-default panel-playlist">
+                <table class="table table-striped table-condensed header-fixed">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Playlist</h3>
+                    </div>
+                    <tbody class="playlist-ajax">
+                        {% include "include/remote/playlist.html" %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 	</div>
 	<div id="tooltip_volume_slider" class="tooltip tooltip1"></div>
 	<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>

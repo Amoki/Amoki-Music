@@ -31,6 +31,9 @@ jQuery(document).ready(function($) {
       });
       playerControlWrapper[message.source][message.action](message.options);
     }
+    if(message.update === true){
+      update_player();
+    }
   }
 
 
