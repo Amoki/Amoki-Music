@@ -1,5 +1,6 @@
 var iframeElement = document.querySelector('iframe#soundcloudPlayer');
 var soundcloudPlayer = SC.Widget(iframeElement);
+soundcloudPlayer.current_volume;
 soundcloudPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
@@ -54,12 +55,21 @@ var soundcloudPlayerControl = {
   },
   volume_up: function() {
     if(soundcloudPlayer.initialized ) {
-      soundcloudPlayer.setVolume(Math.min(soundcloudPlayer.getVolume() + 10, 100));
+      soundcloudPlayer.getVolume(function(volume){
+        soundcloudPlayer.setVolume(Math.min(volume + 0.1, 1));
+      });
     }
   },
   volume_down: function() {
     if(soundcloudPlayer.initialized ) {
-      soundcloudPlayer.setVolume(Math.max(soundcloudPlayer.getVolume() - 10, 0));
+      soundcloudPlayer.getVolume(function(volume){
+        soundcloudPlayer.setVolume(Math.max(volume - 0.1, 0));
+      });
     }
-  }
+  },
+  set_volume: function(volume) {
+    if (soundcloudPlayer.initialized ) {
+      soundcloudPlayer.setVolume(volume/100);
+    }
+  },
 };

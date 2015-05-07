@@ -13,10 +13,11 @@ import simplejson as json
 def volume_change(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        if request.POST.get('volume_change') == 'up':
-            room.increase_volume()
-        else:
-            room.decrease_volume()
+        if room.current_music:
+            if request.POST.get('volume_change') == 'up':
+                room.increase_volume()
+            else:
+                room.decrease_volume()
         return HttpResponse('{}', content_type='application/json')
     return redirect('/')
 

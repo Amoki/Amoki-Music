@@ -14,7 +14,8 @@
 {% if room.can_adjust_volume %}
 <form action="/volume/" method="post" class="navbar-form navbar-right ajax-volume">
 	{% csrf_token %}
-	<button type="submit" class="btn btn-default btn-vol" name="volume" value="down" title="volume_down" alt="volume_down" onclick="$(this).addClass('volume_clicked')"><i class="fa fa-volume-down fa-2x"></i></span></button>
-	<button type="submit" class="btn btn-default btn-vol" name="volume" value="up" title="volume_up" alt="volume_up" onclick="$(this).addClass('volume_clicked')"><i class="fa fa-volume-up fa-2x"></i></span></button>
+	<input id="volume_change" type="hidden" name="volume_change" value="">
+	<button id="btn_volume_down" type="submit" class="btn btn-default btn-vol" data-value="down" title="volume_down" alt="volume_down" onclick="$('#volume_change').val($('#btn_volume_down').data('value'))"><i class="fa fa-volume-down fa-2x"></i></span></button>
+	<button id="btn_volume_up" type="submit" class="btn btn-default btn-vol" data-value="up" title="volume_up" alt="volume_up" onclick="$('#volume_change').val($('#btn_volume_up').data('value'))"><i class="fa fa-volume-up fa-2x"></i></span></button>
 </form>
 {% endif %}

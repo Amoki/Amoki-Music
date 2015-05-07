@@ -56,5 +56,10 @@ var youtubePlayerControl = {
     if(youtubePlayer.initialized) {
       youtubePlayer.setVolume(Math.max(youtubePlayer.getVolume() - 10, 0));
     }
-  }
+  },
+  set_volume: function(volume) {
+    if (youtubePlayer.initialized ) {
+      youtubePlayer.setVolume(volume);
+    }
+  },
 };

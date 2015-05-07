@@ -31,4 +31,25 @@ jQuery(document).ready(function($) {
       playerControlWrapper[message.source][message.action](message.options);
     }
   }
+
+
+  $( "#slider-vertical" ).slider({
+      orientation: "vertical",
+      range: "min",
+      min: 0,
+      max: 100,
+      value: 60,
+      slide: function( event, ui ) {
+        update_volume( ui.value );
+        $( "#amount" ).val( ui.value );
+      }
+  });
+  $( "#amount" ).val( $( "#slider-vertical" ).slider( "value" ) );
+
+  function update_volume(volume) {
+    Object.keys(playerControlWrapper).forEach(function(player) {
+      playerControlWrapper[player].set_volume(volume);
+    });
+  };
+
 });

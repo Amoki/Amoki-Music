@@ -4,6 +4,9 @@
 	{% if current_music %}{{current_music}}{% else %}Amoki's player{% endif %}
 {% endblock title %}
 {% block pre_end_head %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/player/ajax.js' %}"></script>
 	<script type ="text/javascript">
 		var token = '{{ request.session.token }}';
@@ -16,7 +19,7 @@
 		var current_time_past = {{current_time_past}};
 		var current_music = '{{music_id}}';
 		var current_music_source = '{{source}}';
-		var current_music_timer_end = {{current_music_timer_end}};
+		var current_music_timer_end = {{current_music_timer_end|default:"false"}};
 	</script>
 	{% endif %}
 {% endblock pre_end_head %}
@@ -33,7 +36,13 @@
 			<p>PLACEHOLDER FOR<br />
 			NO MUSIC!</p>
 		</div>
+		<div id="slider-vertical"></div>
 	</div>
+	<p>
+		<label for="amount">Volume:</label>
+		<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+	</p>
+
 	<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
 	<script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/player/youtube.js' %}"></script>
