@@ -4,12 +4,12 @@ soundcloudPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
-  if(typeof current_music !== "undefined" && current_music_source === "Soundcloud"){
-    soundcloudPlayerControl.play({
-      musicId: current_music,
-      timer_start: current_time_past
-    });
-  }
+  soundcloudPlayer.play();
+  // Start time
+  soundcloudPlayer.bind (SC.Widget.Events.PLAY,function(){
+    soundcloudPlayer.seekTo(current_time_past * 1000 || 0);
+    soundcloudPlayer.unbind(SC.Widget.Events.PLAY);
+  });
 });
 
 soundcloudPlayer.bind(SC.Widget.Events.ERROR, function(err) {
@@ -21,7 +21,6 @@ var soundcloudPlayerControl = {
     if(soundcloudPlayer.initialized ) {
       $(document).attr('title', options.name);
       $('iframe#soundcloudPlayer').css("opacity", 1);
-      console.log(options.timer_start);
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.musicId,
         {
@@ -31,7 +30,6 @@ var soundcloudPlayerControl = {
           callback: function() {
             soundcloudPlayer.play();
             // Start time
-            console.log(options.timer_start);
             soundcloudPlayer.bind (SC.Widget.Events.PLAY,function(){
               soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
               soundcloudPlayer.unbind(SC.Widget.Events.PLAY);

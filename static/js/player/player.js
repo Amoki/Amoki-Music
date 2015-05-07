@@ -22,7 +22,6 @@ jQuery(document).ready(function($) {
     if(message.action){
       // stop all others players
       Object.keys(playerControlWrapper).forEach(function(player) {
-        console.log(player);
         if(player !== message.source) {
          playerControlWrapper[player].stop();
         }
