@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}
+	{% if current_music %}{{current_music}}{% else %}Amoki's player{% endif %}
+{% endblock title %}
 {% block pre_end_head %}
 	<script type="text/javascript" src="{% static 'js/player/ajax.js' %}"></script>
 	<script type ="text/javascript">
@@ -22,14 +25,13 @@
 {% block first_Col %}
 	<div class="col-xs-6 col-xs-offset-3 player">
 		<div id="youtubePlayer" class="player-child col-xs-12"></div>
-		{% if current_music and source.name == "Soundcloud" %}
-			<iframe id="soundcloudPlayer" class="player-child col-xs-12" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/{{music_id}}&buying=false&visual=true&hide_related=true&enable_api=true" scrolling="no" frameborder="no"></iframe>
-		{% else %}
-			<iframe id="soundcloudPlayer" class="player-child col-xs-12" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/33427584" scrolling="no" frameborder="no"></iframe>
-		{% endif %}
-		<!-- <div class="player-child player-child-no-music col-xs-12">
-			NO MUSIC!
-		</div> -->
+
+		<iframe id="soundcloudPlayer" class="player-child col-xs-12" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/{% if current_music and source.name == 'Soundcloud' %}{{music_id}}{% else %}33427584{% endif %}&buying=false&visual=true&hide_related=true&enable_api=true" scrolling="no" frameborder="no"></iframe>
+
+		<div class="player-child player-child-no-music col-xs-12">
+			<p>PLACEHOLDER FOR<br />
+			NO MUSIC!</p>
+		</div>
 	</div>
 	<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
 	<script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>

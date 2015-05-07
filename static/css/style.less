@@ -429,10 +429,14 @@ button > .glyphicon, a > .glyphicon {
 	margin-bottom: 20px;
 }
 
-.player-child{
+.player-child {
 	transition: all 500ms linear;
 	position: absolute;
 	left: 0;
 	top: 0;
 	height: 390px;
+	opacity: 0;
+	&.player-child-no-music {
+		opacity: 1;
+	}
 }

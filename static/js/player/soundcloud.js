@@ -4,12 +4,12 @@ soundcloudPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
-  soundcloudPlayer.play();
-  // Start time
-  soundcloudPlayer.bind (SC.Widget.Events.PLAY,function(){
-    soundcloudPlayer.seekTo(current_time_past * 1000 || 0);
-    soundcloudPlayer.unbind(SC.Widget.Events.PLAY);
-  });
+  if(typeof current_music !== "undefined" && current_music_source === "Soundcloud"){
+    soundcloudPlayerControl.play({
+      musicId: current_music,
+      timer_start: current_time_past
+    });
+  }
 });
 
 soundcloudPlayer.bind(SC.Widget.Events.ERROR, function(err) {
@@ -49,6 +49,7 @@ var soundcloudPlayerControl = {
   stop: function() {
     if(soundcloudPlayer.initialized ) {
       soundcloudPlayer.pause();
+      $('#soundcloudPlayer').css('opacity', 0);
     }
   },
   volume_up: function() {
