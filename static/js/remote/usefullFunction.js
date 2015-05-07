@@ -89,7 +89,7 @@ $(document).ready(function() {
 
   $('#music_preview').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
-    var duration = button.data("duration");
+    var duration = parseFloat(button.data("duration"));
     var musicId = button.data("musicid");
     var channel_name = button.data("channelname");
     var description = button.data("description");
