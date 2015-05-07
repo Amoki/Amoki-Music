@@ -69,6 +69,8 @@ class Room(models.Model):
             events[self.name].start()
 
         else:
+            self.current_music = None
+            self.save()
             message = {
                 'stop': True,
                 'update': True,
@@ -105,8 +107,6 @@ class Room(models.Model):
 
             self.play(music=shuffled)
         else:
-            self.current_music = None
-            self.save()
             self.play(music=None)
 
     def push(self, music_id, requestId=None, **kwargs):
