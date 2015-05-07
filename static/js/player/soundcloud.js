@@ -25,20 +25,25 @@ var soundcloudPlayerControl = {
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.musicId,
         {
-          auto_play: true,
           buying: false,
-        },
-        function() {
-          // Start time
-          console.log(options.timer_start);
-          soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
-          // End time
-          soundcloudPlayer.unbind(SC.Widget.Events.PLAY_PROGRESS);
-          soundcloudPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function(stats) {
-            if(options.timer_end && stats.currentPosition >= options.timer_end * 1000) {
-              soundcloud.pause();
-            }
-          });
+          visual: true,
+          hide_related: true,
+          callback: function() {
+            soundcloudPlayer.play();
+            // Start time
+            console.log(options.timer_start);
+            soundcloudPlayer.bind (SC.Widget.Events.PLAY,function(){
+              soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+              soundcloudPlayer.unbind(SC.Widget.Events.PLAY);
+            });
+            // End time
+            soundcloudPlayer.unbind(SC.Widget.Events.PLAY_PROGRESS);
+            soundcloudPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function(stats) {
+              if(options.timer_end && stats.currentPosition >= options.timer_end * 1000) {
+                soundcloud.pause();
+              }
+            });
+          },
         }
       );
     }
