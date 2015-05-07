@@ -11,7 +11,7 @@ urlpatterns = patterns('player.views',
     # AJAX urls
     url(r'^search-music/$', 'remote.library.search_music'),
     url(r'^add-music/$', 'remote.library.add_music'),
-    url(r'^music_inifite_scroll/$', 'remote.library.music_inifite_scroll'),
+    url(r'^music_infinite_scroll/$', 'remote.library.music_infinite_scroll'),
 
     url(r'^shuffle/$', 'remote.remote.trigger_shuffle'),
     url(r'^next-music/$', 'remote.remote.next_music'),

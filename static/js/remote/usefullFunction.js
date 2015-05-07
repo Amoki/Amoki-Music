@@ -44,7 +44,7 @@ $(document).ready(function() {
   });
 
   $("#page").val(current_page);
-  $('.ajax_music_inifite_scroll').submit();
+  $('.ajax_music_infinite_scroll').submit();
 
   $("#query").autocomplete({
     minLength: 2,
@@ -85,6 +85,7 @@ $(document).ready(function() {
   $('#time-left-progress-bar').countdown('destroy');
   $.countdown.setDefaults({
     compact: true,
+    format: 'hMS',
   });
 
   $('#music_preview').on('show.bs.modal', function (event) {
@@ -225,16 +226,28 @@ function disabled_btn() {
   $(".progress-bar").stop();
   $(".progress-bar").css('width', '0%');
   $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
 }
 
 function maj_playlist_current(data) {
   $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
-    $('#time-left-progress-bar').countdown({until: data.time_left});
+    $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
+    $('#time-left-progress-bar').countdown({
+      since: -data.time_past,
+      onTick: function(periods){
+        if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+          $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+          $('#time-left-progress-bar').countdown('destroy');
+        };
+      },
+    });
+    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
   }
 }
 

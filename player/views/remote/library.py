@@ -55,7 +55,7 @@ def add_music(request):
     return redirect('/')
 
 
-def music_inifite_scroll(request):
+def music_infinite_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
         musics = room.music_set.filter(dead_link=False).exclude(last_play__isnull=True).order_by('-last_play')
