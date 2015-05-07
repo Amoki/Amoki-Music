@@ -18,12 +18,10 @@ jQuery(document).ready(function($) {
       Object.keys(playerControlWrapper).forEach(function(player) {
         playerControlWrapper[player].stop();
         $(document).attr('title', "Amoki's player");
-        $('.player-child').css("opacity", 0);
-        $('.player-child-no-music').css("opacity", 1);
+        $('.player-child').not('.player-child-no-music').fadeOut(250);
       });
     }
     if(message.action){
-      $('.player-child-no-music').css("opacity", 0);
       // stop all others players
       Object.keys(playerControlWrapper).forEach(function(player) {
         if(player !== message.source) {

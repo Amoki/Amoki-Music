@@ -20,7 +20,7 @@ var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized ) {
       $(document).attr('title', options.name);
-      $('iframe#soundcloudPlayer').css("opacity", 1);
+      $('iframe#soundcloudPlayer').fadeIn(250);
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.musicId,
         {
@@ -49,7 +49,7 @@ var soundcloudPlayerControl = {
   stop: function() {
     if(soundcloudPlayer.initialized ) {
       soundcloudPlayer.pause();
-      $('#soundcloudPlayer').css('opacity', 0);
+      $('#soundcloudPlayer').fadeOut(250);
     }
   },
   volume_up: function() {

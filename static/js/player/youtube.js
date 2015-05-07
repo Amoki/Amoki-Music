@@ -34,13 +34,13 @@ var youtubePlayerControl = {
       if(options.timer_end){music_options.endSeconds = options.timer_end;}
       youtubePlayer.loadVideoById(music_options);
       $(document).attr('title', options.name);
-      $('#youtubePlayer').css("opacity", 1);
+      $('#youtubePlayer').fadeIn(250);
     }
   },
   stop: function() {
     if(youtubePlayer.initialized) {
       youtubePlayer.stopVideo();
-      $('#youtubePlayer').css("opacity", 0);
+      $('#youtubePlayer').fadeOut(250);
     }
   },
   volume_up: function() {
