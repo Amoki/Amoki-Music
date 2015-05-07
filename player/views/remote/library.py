@@ -58,7 +58,7 @@ def add_music(request):
 def music_infinite_scroll(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        musics = room.music_set.filter(dead_link=False).order_by('-date')
+        musics = room.music_set.filter(dead_link=False).exclude(last_play__isnull=True).order_by('-last_play')
         # Get the paginator
         paginator = Paginator(musics, 16)
         more_musics = False
