@@ -41,6 +41,9 @@ jQuery(document).ready(function($) {
       value: 60,
       slide: function( event, ui ) {
         update_volume( ui.value );
+        var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
+        $( ".tooltip1" ).css('top',offset1.top-60).css('left',offset1.left-200).text(ui.value);
+
         $( "#amount" ).val( ui.value );
       }
   });
