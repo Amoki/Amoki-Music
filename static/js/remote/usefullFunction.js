@@ -242,11 +242,12 @@ function maj_playlist_current(data) {
       since: -data.time_past,
       onTick: function(periods){
         if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+          $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
           $('#time-left-progress-bar').countdown('destroy');
         };
       },
     });
-    $('#time-left-progress-bar-duration').html(humanize_seconds(data.current_music[0].fields.duration))
+    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
   }
 }
 
