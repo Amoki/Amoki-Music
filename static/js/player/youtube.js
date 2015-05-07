@@ -14,10 +14,14 @@ function onYouTubeIframeAPIReady() {
     playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',},
     events: {
       onReady : function(){
-        if(typeof current_music !== "undefined" && current_music_source === "Youtube"){
-          youtubePlayer.loadVideoById(current_music, current_time_past, 'default');
-        }
         youtubePlayer.initialized = true;
+        if(typeof current_music !== "undefined" && current_music_source === "Youtube"){
+          youtubePlayerControl.play({
+            musicId: current_music,
+            timer_start: current_time_past,
+            timer_end: current_music_timer_end,
+          });
+        }
       }
     }
   });

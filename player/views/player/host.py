@@ -13,5 +13,7 @@ def host(request):
             current_time_past = room.get_current_time_past()
             music_id = current_music.music_id
             source = current_music.source
+            if current_music.timer_end:
+                current_music_timer_end = current_music.timer_end
 
     return render(request, 'player.html', locals())
