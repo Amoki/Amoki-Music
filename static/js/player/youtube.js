@@ -11,7 +11,7 @@ function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player('youtubePlayer', {
     height: '390',
     width: '640',
-    playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',},
+    playerVars: {iv_load_policy: '3',modestbranding:'1',rel:'0',controls:'0',},
     events: {
       onReady : function(){
         youtubePlayer.initialized = true;
