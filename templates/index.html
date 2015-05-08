@@ -18,10 +18,17 @@
     {% if current_music %}
     <script type="text/javascript">
         $( document ).ready(function() {
+            $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
             timeline({{current_time_left}}, {{current_time_past_percent}});
             $('#time-left-progress-bar').countdown({
-                until: {{current_time_left}}
+              since: -{{ current_time_past }},
+              onTick: function(periods){
+                if (({{ current_music.duration }}) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+                  $('#time-left-progress-bar').countdown('destroy');
+                };
+              },
             });
+            $('#time-left-progress-bar-duration').html(humanize_seconds({{ current_music.duration }}))
         });
     </script>
     {% endif %}
@@ -59,7 +66,11 @@
                 <div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
                     <div class="progress progress-striped active">
                         <div class="progress-bar"></div>
+
+                    </div>
+                    <div id="time-left-progress-bar-wrapper" class="visibility-hidden">
                         <span id="time-left-progress-bar"></span>
+                        <span id="time-left-progress-bar-duration"></span>
                     </div>
                 </div>
             </div>
@@ -145,7 +156,7 @@
                     <div class="tab-pane active" id="library">
                         <ul id="list-library" class="list-group">
                             <li class="list-group-item item-lib row row-list-item">
-                                <form id="form_infini_scroll" action="/music_inifite_scroll/" method="post" class="ajax_music_inifite_scroll">
+                                <form id="form_infini_scroll" action="/music_infinite_scroll/" method="post" class="ajax_music_infinite_scroll">
                                     {% csrf_token %}
                                     <input type="hidden" id="page" name="page" value="">
                                     <button id="load-more-musics" title="Load more" class="btn btn-default" type="submit">Next musics</button>

@@ -101,6 +101,8 @@ def render_remote(room):
     })
     current_time_left = room.get_current_remaining_time()
 
+    current_time_past = room.get_current_time_past()
+
     current_time_past_percent = room.get_current_time_past_percent()
 
     json_data = json.dumps({
@@ -109,6 +111,7 @@ def render_remote(room):
         'template_playlist': template_playlist,
         'template_header_remote': template_header_remote,
         'time_left': current_time_left,
+        'time_past': current_time_past,
         'time_past_percent': current_time_past_percent,
     })
 

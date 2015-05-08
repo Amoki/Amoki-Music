@@ -104,7 +104,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
   .fail(log_errors);
 });
 
-$(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
+$(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
   e.preventDefault();
   var $this = $(this);
   $("<li id='spinner_library' class='list-group-item item-lib row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore($this.closest('li'));
@@ -123,7 +123,7 @@ $(document).on('submit', '.ajax_music_inifite_scroll', function(e) {
 
 function update_remote() {
   var dataSend = {
-      'page': encodeURIComponent($('.ajax_music_inifite_scroll').children("#page").val()),
+      'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
     };
   $.ajax({
     type: "POST",

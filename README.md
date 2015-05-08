@@ -6,7 +6,6 @@ External Requirements
 * libevent
 	* On ubuntu :
 	```
-	apt-get install libevent-dev
 	apt-get install redis-server
 	sudo apt-get install libpcre3 libpcre3-dev
 	```
@@ -19,9 +18,8 @@ Install
 * `virtualenv --no-site-packages .v_env` : create a virtual-env for python code
 * `source .v_env/bin/activate` : activate the v_env
 * `pip install -r requirements.txt` : install all requirements
-* `./manage.py syncdb` : create DB
 * `./manage.py migrate` : migrate DB
-
+* `./manage.py createsuperuser` : add your own admin.
 
 
 Configure
@@ -29,11 +27,13 @@ Configure
 
 #### env:
 ```bash
-export YOUTUBE_KEY="your youtube API key"
+export YOUTUBE_KEY="your Youtube API key"
+export SOUNDCLOUD_KEY="your Soundcloud API key"
 ```
 or
 ```bash
 SET YOUTUBE_KEY="your youtube API key"
+SET SOUNDCLOUD_KEY="your Soundcloud API key"
 ```
 
 How to use
