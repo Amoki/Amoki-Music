@@ -36,13 +36,6 @@ jQuery(document).ready(function($) {
     }
   }
 
-  $( "#slider-vertical" ).on( "slidecreate", function( event, ui ) {
-    if(typeof cookie_volume !== "undefined") {
-      $( "#slider-vertical" ).slider("option", "value", cookie_volume);
-    } else {
-      $( "#slider-vertical" ).slider("option", "value", 10);
-    }
-  });
   $( "#slider-vertical" ).slider({
       orientation: "vertical",
       range: "min",
