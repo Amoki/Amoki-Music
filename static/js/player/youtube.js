@@ -15,7 +15,7 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady : function(){
         youtubePlayer.initialized = true;
-        $( "#slider-vertical" ).slider("value", youtubePlayerControl.get_volume());
+        youtubePlayerControl.set_volume(cookie_volume);
         if(typeof current_music !== "undefined" && current_music_source === "Youtube"){
           youtubePlayerControl.play({
             musicId: current_music,
@@ -65,10 +65,4 @@ var youtubePlayerControl = {
       youtubePlayer.setVolume(volume);
     }
   },
-  get_volume: function() {
-    if (youtubePlayer.initialized ) {
-      return youtubePlayer.getVolume();
-    }
-    return 10
-  }
 };

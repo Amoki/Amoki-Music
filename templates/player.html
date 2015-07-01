@@ -12,6 +12,7 @@
 		var token = '{{ request.session.token }}';
 		var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
 		var webSocketUri = '{{ WEBSOCKET_URI }}';
+		var cookie_volume = $.cookie('player_volume');
 	</script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
 	{% if current_music %}

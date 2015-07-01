@@ -30,7 +30,7 @@ var soundcloudPlayerControl = {
           visual: true,
           hide_related: true,
           callback: function() {
-            soundcloudPlayerControl.set_volume(youtubePlayerControl.get_volume());
+            soundcloudPlayer.setVolume(cookie_volume/100);
             soundcloudPlayer.play();
             // Start time
             soundcloudPlayer.bind (SC.Widget.Events.PLAY,function(){

@@ -36,12 +36,26 @@ jQuery(document).ready(function($) {
     }
   }
 
-
+  $( "#slider-vertical" ).on( "slidecreate", function( event, ui ) {
+    if(typeof cookie_volume !== "undefined") {
+      $( "#slider-vertical" ).slider("option", "value", cookie_volume);
+    } else {
+      $( "#slider-vertical" ).slider("option", "value", 10);
+    }
+  });
   $( "#slider-vertical" ).slider({
       orientation: "vertical",
       range: "min",
       min: 0,
       max: 100,
+      create: function( event, ui ) {
+        if(typeof cookie_volume !== "undefined") {
+          $( "#slider-vertical" ).slider("option", "value", cookie_volume);
+        } else {
+          cookie_volume = 10;
+          $( "#slider-vertical" ).slider("option", "value", 10);
+        }
+      },
       slide: function( event, ui ) {
         update_volume( ui.value );
         var offset1 = $(this).children( '.ui-slider-handle' ).offset();
@@ -49,6 +63,7 @@ jQuery(document).ready(function($) {
       },
       change: function( event, ui ) {
         update_volume( ui.value );
+        $.cookie('player_volume', ui.value);
       },
       start: function( event, ui ) {
         $( ".tooltip1" ).fadeIn(250);
@@ -57,6 +72,7 @@ jQuery(document).ready(function($) {
         $( ".tooltip1" ).fadeOut(250);
       },
   });
+
 
   function update_volume(volume) {
     Object.keys(playerControlWrapper).forEach(function(player) {
