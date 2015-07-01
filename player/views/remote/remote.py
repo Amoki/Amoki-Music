@@ -110,9 +110,9 @@ def render_remote(room):
         'shuffle': shuffle_state,
         'template_playlist': template_playlist,
         'template_header_remote': template_header_remote,
-        'time_left': current_time_left,
-        'time_past': current_time_past,
-        'time_past_percent': current_time_past_percent,
+        'current_time_left': current_time_left,
+        'current_time_past': current_time_past,
+        'current_time_past_percent': current_time_past_percent,
     })
 
     return json_data

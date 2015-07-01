@@ -237,18 +237,22 @@ function maj_playlist_current(data) {
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
-    $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-    $('#time-left-progress-bar').countdown({
-      since: -data.time_past,
-      onTick: function(periods){
-        if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
-          $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-          $('#time-left-progress-bar').countdown('destroy');
-        };
-      },
-    });
-    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
+    maj_progress_bar(data);
   }
+}
+
+function maj_progress_bar(data) {
+  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
+  $('#time-left-progress-bar').countdown({
+    since: -data.current_time_past,
+    onTick: function(periods){
+      if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+        $('#time-left-progress-bar').countdown('destroy');
+      };
+    },
+  });
+  $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
 }
 
 function modal_confirm(target) {

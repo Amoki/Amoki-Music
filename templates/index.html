@@ -5,6 +5,7 @@
         var token = "{{ request.session.token }}";
         var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
         var webSocketUri = '{{ WEBSOCKET_URI }}';
+        var data = {{json_data|safe}}
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
@@ -18,17 +19,8 @@
     {% if current_music %}
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-            timeline({{current_time_left}}, {{current_time_past_percent}});
-            $('#time-left-progress-bar').countdown({
-              since: -{{ current_time_past }},
-              onTick: function(periods){
-                if (({{ current_music.duration }}) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
-                  $('#time-left-progress-bar').countdown('destroy');
-                };
-              },
-            });
-            $('#time-left-progress-bar-duration').html(humanize_seconds({{ current_music.duration }}))
+            timeline(data.current_time_left, data.current_time_past_percent);
+            maj_progress_bar(data);
         });
     </script>
     {% endif %}

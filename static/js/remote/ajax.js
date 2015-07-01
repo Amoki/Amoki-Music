@@ -148,7 +148,7 @@ function update_remote() {
       $('#list-library').prepend(data.template_library);
 
       if(data.current_music) {
-        timeline(data.time_left, data.time_past_percent);
+        timeline(data.current_time_left, data.current_time_past_percent);
         maj_playlist_current(data);
       }
       else {
