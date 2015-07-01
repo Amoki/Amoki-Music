@@ -16,9 +16,16 @@
 
 body, html {
 	margin: 0;
+	padding: 0;
+	height: 100%;
 	color: #fff;
 	text-align: center;
 	background-image: url(../img/background-2.png);
+}
+
+#wrapper {
+	min-height:100%;
+	position:relative;
 }
 
 select {
@@ -118,7 +125,7 @@ button > .glyphicon, a > .glyphicon {
 
 .navbar {
 	height: 50px;
-	margin-bottom: 10px !important;
+	margin-bottom: 0px !important;
 	box-shadow: 0px 0px 12px 2px #000;
 	border-radius: 0px;
 }
@@ -142,14 +149,15 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .ligne {
-	padding-bottom: 40px;
+	padding-top: 15px;
+	padding-bottom: 55px;
 }
 
 /********************** REMOTE STUFF ***********/
 .remote {
 	border-radius: 50px;
 	.shadow;
-	//background: rgba(34,34,34,0.7);
+	background: rgba(34,34,34,0.7);
 	background: url('../img/cover_center_large.jpg') no-repeat;
 	background-size: cover;
 	background-position: 50%;
@@ -415,13 +423,13 @@ button > .glyphicon, a > .glyphicon {
 /********************** FOOTER STUFF ***********/
 
 .foot {
-	height: 45px;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+	width:100%;
+	height:45px;
+	position:absolute;
+	bottom:0;
+	left:0;
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 0px 0px 12px 2px #000;
-	margin-top: 10px;
 	.btn {
 		margin-right: 15px;
 		margin-left: 15px;

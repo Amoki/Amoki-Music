@@ -1,33 +1,25 @@
 $(document).ready(function() {
-  var hauteur = $(window).height() - 115;
-  if($(window).height() > 765) {
-    hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true));
+  resize();
+
+  function resize(){
+    if($(window).height() > 765) {
+    hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true) + 25);
+    }
+    else {
+      hauteur = 650;
+    }
+    // resize of the remote
+    $(".remote").height(hauteur);
+    $(".panel-playlist").height(hauteur - 258);
+    // resize of the library
+    $(".LIB").height(hauteur);
+    $(".list-lib").height(hauteur - 90);
+    $(".tab-content").height(hauteur - 130);
   }
-  else {
-    hauteur = 650;
-  }
-  // resize of the remote
-  $(".remote").height(hauteur);
-  $(".panel-playlist").height(hauteur - 258);
-  // resize of the library
-  $(".LIB").height(hauteur);
-  $(".list-lib").height(hauteur - 90);
-  $(".tab-content").height(hauteur - 130);
+
   $(window).resize(function() {
     if($(window).width() > 992) {
-      if($(window).height() > 765) {
-        hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true));
-      }
-      else {
-        hauteur = 650;
-      }
-      // resize of the remote
-      $(".remote").height(hauteur);
-      $(".panel-playlist").height(hauteur - 258);
-      // resize of the library
-      $(".LIB").height(hauteur);
-      $(".list-lib").height(hauteur - 90);
-      $(".tab-content").height(hauteur - 130);
+      resize();
     }
   });
 
