@@ -1,5 +1,4 @@
 $(document).ready(function() {
-  resize();
 
   function resize(){
     if($(window).height() > 765) {
@@ -22,6 +21,8 @@ $(document).ready(function() {
       resize();
     }
   });
+
+  resize();
 
   $(".btn").click(function() {
     $(this).blur();
