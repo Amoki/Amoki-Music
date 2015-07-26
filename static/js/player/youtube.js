@@ -70,6 +70,6 @@ var youtubePlayerControl = {
 
 function onPlayerError(event){
   if ([2, 100, 101, 150].indexOf(event.data) >= 0) {
-    $('.ajax-dead-link').submit();
+  //  $('.ajax-dead-link').submit();
   }
 }
