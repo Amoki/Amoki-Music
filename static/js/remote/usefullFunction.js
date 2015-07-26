@@ -248,17 +248,6 @@ function maj_progress_bar(data) {
   $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
 }
 
-function modal_confirm(target) {
-  target.modal({
-      'show': true,
-      'backdrop': false
-  }).on('shown.bs.modal', function() {
-    setTimeout(function() {
-      target.modal('hide');
-    }, 1000);
-  });
-}
-
 function timeline(current_time_left, current_time_past_percent){
   $(".progress-bar").finish();
   var actual_time = current_time_left;

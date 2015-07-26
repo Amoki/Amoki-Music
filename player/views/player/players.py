@@ -2,6 +2,7 @@
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.core import serializers
 
 from player.models import Room
 
@@ -16,5 +17,18 @@ def update_player(request):
             "shuffle": room.shuffle
         })
 
-        return HttpResponse(json.dumps(template_playlist), content_type='application/json')
+        if room.current_music:
+            data = room.music_set.filter(music_id=room.current_music.music_id)
+            model_json = serializers.serialize('json', data, fields=('music_id', 'duration'))
+            current_music_json = json.loads(model_json)
+        else:
+            current_music_json = None
+
+
+        json_data = json.dumps({
+            'current_music': current_music_json,
+            'template_playlist': template_playlist,
+        })
+
+        return HttpResponse(json_data, content_type='application/json')
     return redirect('/')
