@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.core import serializers
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
+
+from player.views.json_renderer import JSONResponse
+from rest_framework.parsers import JSONParser
+from music.models import Music
+from music.serializers import MusicSerializer
 
 from player.models import Room
 
@@ -17,7 +21,7 @@ def volume_change(request):
             room.increase_volume()
         else:
             room.decrease_volume()
-        return HttpResponse('{}', content_type='application/json')
+        return JSONResponse()
     return redirect('/')
 
 
@@ -30,7 +34,7 @@ def trigger_shuffle(request):
 
         player_template_rendered = render_remote(room=room)
 
-        return HttpResponse(player_template_rendered, content_type='application/json')
+        return JSONResponse(player_template_rendered)
     return redirect('/')
 
 
@@ -43,7 +47,7 @@ def next_music(request):
                 room.signal_dead_link()
             room.play_next()
         player_template_rendered = render_remote(room=room)
-        return HttpResponse(player_template_rendered, content_type='application/json')
+        return JSONResponse(player_template_rendered)
     return redirect('/')
 
 
@@ -69,7 +73,7 @@ def update_remote(request):
         except (InvalidPage, EmptyPage):
             return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
-        player_updated = json.loads(render_remote(room))
+        player_updated = render_remote(room)
         player_updated['template_library'] = render_to_string("include/remote/library.html", {
             "musics": musics,
             "tab": "library-list-music",
@@ -77,14 +81,14 @@ def update_remote(request):
         })
         player_updated['more_musics'] = more_musics
 
-        return HttpResponse(json.dumps(player_updated), content_type='application/json')
+        return JSONResponse(player_updated)
 
 
 def render_remote(room):
     if room.current_music:
-        data = room.music_set.filter(music_id=room.current_music.music_id)
-        model_json = serializers.serialize('json', data, fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))
-        current_music = json.loads(model_json)
+        music = room.music_set.get(music_id=room.current_music.music_id)
+        model_json = MusicSerializer(music)
+        current_music = model_json.data
     else:
         current_music = None
 
@@ -103,7 +107,7 @@ def render_remote(room):
 
     current_time_past_percent = room.get_current_time_past_percent()
 
-    json_data = json.dumps({
+    return {
         'current_music': current_music,
         'shuffle': shuffle_state,
         'template_playlist': template_playlist,
@@ -111,6 +115,4 @@ def render_remote(room):
         'time_left': current_time_left,
         'time_past': current_time_past,
         'time_past_percent': current_time_past_percent,
-    })
-
-    return json_data
+    }

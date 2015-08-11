@@ -6,6 +6,8 @@ from django.template.loader import render_to_string
 
 from player.models import Room
 from player.views.remote.remote import render_remote
+from player.views.json_renderer import JSONResponse
+
 from music.models import Music, Source
 import simplejson as json
 
@@ -51,7 +53,7 @@ def add_music(request):
                 timer_start=int(request.POST.get('timer-start', 0)),
                 timer_end=timer_end,
             )
-        return HttpResponse(render_remote(room), content_type='application/json')
+        return JSONResponse(render_remote(room))
     return redirect('/')
 
 
@@ -74,9 +76,9 @@ def music_infinite_scroll(request):
             return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
         template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
-        json_data = json.dumps({
+        data = {
             'template': template,
             'more_musics': more_musics
-        })
-        return HttpResponse(json_data, content_type="application/json")
+        }
+        return JSONResponse(data)
     return redirect('/')

@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Pip lib
     'ws4redis',
+    'rest_framework',
 
     # Our apps
     'player',

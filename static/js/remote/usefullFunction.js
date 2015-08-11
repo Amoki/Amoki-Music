@@ -207,9 +207,9 @@ $(document).ready(function() {
 
 function maj_header_remote(data) {
   if(data.current_music) {
-    $(document).attr('title', data.current_music[0].fields.name);
-    $('#music_id-next').val(data.current_music[0].fields.music_id);
-    $('#music_id-dead-link').val(data.current_music[0].fields.music_id);
+    $(document).attr('title', data.current_music.name);
+    $('#music_id-next').val(data.current_music.music_id);
+    $('#music_id-dead-link').val(data.current_music.music_id);
   }
   else {
     disabled_btn();
@@ -241,13 +241,13 @@ function maj_playlist_current(data) {
     $('#time-left-progress-bar').countdown({
       since: -data.time_past,
       onTick: function(periods){
-        if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+        if ((data.current_music.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
           $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
           $('#time-left-progress-bar').countdown('destroy');
         };
       },
     });
-    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
+    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music.duration))
   }
 }
 

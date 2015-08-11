@@ -5,3 +5,5 @@ simplejson==3.6.4
 git+https://github.com/soundcloud/soundcloud-python.git
 django-websocket-redis==0.4.3
 django-redis-sessions==0.4.0
+djangorestframework==3.2.1
+markdown==2.6.2
