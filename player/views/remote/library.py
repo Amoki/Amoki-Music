@@ -11,7 +11,7 @@ from player.views.json_renderer import JSONResponse
 from music.models import Music, Source
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def search_music(request):
     if request.session.get('room', False) and request.data.get('source'):
         source = Source.objects.get(name=request.data.get('source'))

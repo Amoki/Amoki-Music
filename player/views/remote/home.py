@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+
+from player.views.json_renderer import JSONResponse
 from player.models import Room
+from player.serializers import RoomSerializer
 from music.models import Source
 
 
@@ -38,3 +42,11 @@ def home(request):
 
     # TODO Do not return locals
     return render(request, 'index.html', locals())
+
+
+def room(request):
+    if request.session.get('room', False):
+        room = Room.objects.get(name=request.session.get('room'))
+        model_json = RoomSerializer(room)
+        return JSONResponse(model_json.data)
+    return HttpResponse(401)

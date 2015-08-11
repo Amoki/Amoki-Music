@@ -7,6 +7,7 @@ urlpatterns = patterns('player.views',
 
     url(r'^player/$', 'player.host.host', name='player'),
     url(r'^remote/$', 'remote.home.home', name='remote'),
+    url(r'^room/$', 'remote.home.room', name='room'),
 
     # AJAX urls
     url(r'^search-music/$', 'remote.library.search_music'),

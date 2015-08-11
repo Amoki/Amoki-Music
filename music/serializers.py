@@ -2,12 +2,12 @@
 
 from rest_framework import serializers
 
-from music.models import Music, TemporaryMusic
+from music.models import Music
 
 
 class MusicSerializer(serializers.ModelSerializer):
     """
-    Serializing all the Authors
+    Serializing all the Music
     """
     class Meta:
         model = Music

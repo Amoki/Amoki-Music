@@ -9,12 +9,10 @@ from music.serializers import MusicSerializer
 
 from player.models import Room
 
-import simplejson as json
-
 
 @api_view(['POST'])
 def volume_change(request):
-    if(request.session.get('room', False)):
+    if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
         if request.data.get('volume_change') == 'up':
             room.increase_volume()
@@ -29,7 +27,7 @@ def trigger_shuffle(request):
     if request.session.get('room', False) and request.data.get('shuffle'):
         room = Room.objects.get(name=request.session.get('room'))
         if room.music_set.count() == 0:
-            return HttpResponse(json.dumps({"error": True}), content_type='application/json')
+            return JSONResponse({"error": True})
         room.toggle_shuffle((request.data.get('shuffle') == 'true'))
 
         player_template_rendered = render_remote(room=room)
