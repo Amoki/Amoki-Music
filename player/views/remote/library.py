@@ -13,7 +13,7 @@ import simplejson as json
 
 
 def search_music(request):
-    if request.is_ajax() and request.session.get('room', False) and request.POST.get('source'):
+    if request.session.get('room', False) and request.POST.get('source'):
         source = Source.objects.get(name=request.POST.get('source'))
 
         musics_searched = source.search(query=request.POST.get('query'))
@@ -24,11 +24,11 @@ def search_music(request):
         })
         json_data = json.dumps({'template_library': template_library})
         return HttpResponse(json_data, content_type='application/json')
-    return redirect('/')
+    return HttpResponse(401)
 
 
 def add_music(request):
-    if request.is_ajax() and request.session.get('room', False) and request.POST.get('music_id'):
+    if request.session.get('room', False) and request.POST.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
         if not request.POST.get('requestId') and request.POST.get('source'):
             music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room, source__name=request.POST.get('source'))
@@ -54,11 +54,11 @@ def add_music(request):
                 timer_end=timer_end,
             )
         return JSONResponse(render_remote(room))
-    return redirect('/')
+    return HttpResponse(401)
 
 
 def music_infinite_scroll(request):
-    if request.is_ajax():
+    if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
         musics = room.music_set.filter(dead_link=False).exclude(last_play__isnull=True).order_by('-last_play')
         # Get the paginator
@@ -81,4 +81,4 @@ def music_infinite_scroll(request):
             'more_musics': more_musics
         }
         return JSONResponse(data)
-    return redirect('/')
+    return HttpResponse(401)

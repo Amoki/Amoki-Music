@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 
 from player.views.json_renderer import JSONResponse
-from rest_framework.parsers import JSONParser
-from music.models import Music
 from music.serializers import MusicSerializer
 
 from player.models import Room
@@ -15,18 +12,18 @@ import simplejson as json
 
 
 def volume_change(request):
-    if request.is_ajax():
+    if(request.session.get('room', False)):
         room = Room.objects.get(name=request.session.get('room'))
         if request.POST.get('volume_change') == 'up':
             room.increase_volume()
         else:
             room.decrease_volume()
         return JSONResponse()
-    return redirect('/')
+    return HttpResponse(401)
 
 
 def trigger_shuffle(request):
-    if request.is_ajax and request.session.get('room', False) and request.POST.get('shuffle'):
+    if request.session.get('room', False) and request.POST.get('shuffle'):
         room = Room.objects.get(name=request.session.get('room'))
         if room.music_set.count() == 0:
             return HttpResponse(json.dumps({"error": True}), content_type='application/json')
@@ -35,12 +32,12 @@ def trigger_shuffle(request):
         player_template_rendered = render_remote(room=room)
 
         return JSONResponse(player_template_rendered)
-    return redirect('/')
+    return HttpResponse(401)
 
 
 # Catch /next-music/ AND /dead-link/ ids
 def next_music(request):
-    if request.is_ajax and request.session.get('room', False):
+    if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
         if request.POST.get('music_id') == room.current_music.music_id:
             if request.path == "/dead-link/":
@@ -48,11 +45,11 @@ def next_music(request):
             room.play_next()
         player_template_rendered = render_remote(room=room)
         return JSONResponse(player_template_rendered)
-    return redirect('/')
+    return HttpResponse(401)
 
 
 def update_remote(request):
-    if request.is_ajax and request.session.get('room', False):
+    if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
 
         musics = room.music_set.filter(dead_link=False).exclude(last_play__isnull=True).order_by('-last_play')
@@ -82,6 +79,7 @@ def update_remote(request):
         player_updated['more_musics'] = more_musics
 
         return JSONResponse(player_updated)
+    return HttpResponse(401)
 
 
 def render_remote(room):
