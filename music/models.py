@@ -33,7 +33,7 @@ class Music(models.Model):
     # signalement de lien mort
     dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
-    timer_end = models.PositiveIntegerField(null=True)
+    timer_end = models.PositiveIntegerField(null=True, blank=True)
     source = models.ForeignKey(Source, editable=False)
 
     @classmethod

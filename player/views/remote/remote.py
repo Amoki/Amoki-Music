@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
+from rest_framework.decorators import api_view
 
 from player.views.json_renderer import JSONResponse
 from music.serializers import MusicSerializer
@@ -11,10 +12,11 @@ from player.models import Room
 import simplejson as json
 
 
+@api_view(['POST'])
 def volume_change(request):
     if(request.session.get('room', False)):
         room = Room.objects.get(name=request.session.get('room'))
-        if request.POST.get('volume_change') == 'up':
+        if request.data.get('volume_change') == 'up':
             room.increase_volume()
         else:
             room.decrease_volume()
@@ -22,12 +24,13 @@ def volume_change(request):
     return HttpResponse(401)
 
 
+@api_view(['POST'])
 def trigger_shuffle(request):
-    if request.session.get('room', False) and request.POST.get('shuffle'):
+    if request.session.get('room', False) and request.data.get('shuffle'):
         room = Room.objects.get(name=request.session.get('room'))
         if room.music_set.count() == 0:
             return HttpResponse(json.dumps({"error": True}), content_type='application/json')
-        room.toggle_shuffle((request.POST.get('shuffle') == 'true'))
+        room.toggle_shuffle((request.data.get('shuffle') == 'true'))
 
         player_template_rendered = render_remote(room=room)
 
@@ -35,19 +38,30 @@ def trigger_shuffle(request):
     return HttpResponse(401)
 
 
-# Catch /next-music/ AND /dead-link/ ids
+@api_view(['POST'])
 def next_music(request):
     if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
-        if request.POST.get('music_id') == room.current_music.music_id:
-            if request.path == "/dead-link/":
-                room.signal_dead_link()
+        if request.data.get('music_id') == room.current_music.music_id:
             room.play_next()
         player_template_rendered = render_remote(room=room)
         return JSONResponse(player_template_rendered)
     return HttpResponse(401)
 
 
+@api_view(['DELETE'])
+def remove_music(request):
+    if request.session.get('room', False):
+        room = Room.objects.get(name=request.session.get('room'))
+        if request.data.get('music_id') == room.current_music.music_id:
+            room.signal_dead_link()
+            room.play_next()
+        player_template_rendered = render_remote(room=room)
+        return JSONResponse(player_template_rendered)
+    return HttpResponse(401)
+
+
+@api_view(['POST'])
 def update_remote(request):
     if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
@@ -56,7 +70,7 @@ def update_remote(request):
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
-            page = int(request.POST.get('page'))
+            page = int(request.data.get('page'))
         except ValueError:
             page = 1
         try:

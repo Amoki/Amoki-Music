@@ -1,37 +1,38 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
+from rest_framework.decorators import api_view
 
 from player.models import Room
 from player.views.remote.remote import render_remote
 from player.views.json_renderer import JSONResponse
 
 from music.models import Music, Source
-import simplejson as json
 
 
+@api_view(['GET'])
 def search_music(request):
-    if request.session.get('room', False) and request.POST.get('source'):
-        source = Source.objects.get(name=request.POST.get('source'))
+    if request.session.get('room', False) and request.data.get('source'):
+        source = Source.objects.get(name=request.data.get('source'))
 
-        musics_searched = source.search(query=request.POST.get('query'))
+        musics_searched = source.search(query=request.data.get('query'))
 
         template_library = render_to_string("include/remote/library.html", {
             "musics": musics_searched,
             "tab": source.name.lower() + "-list-music",
         })
-        json_data = json.dumps({'template_library': template_library})
-        return HttpResponse(json_data, content_type='application/json')
+        data = {'template_library': template_library}
+        return JSONResponse(data)
     return HttpResponse(401)
 
 
+@api_view(['POST'])
 def add_music(request):
-    if request.session.get('room', False) and request.POST.get('music_id'):
+    if request.session.get('room', False) and request.data.get('music_id'):
         room = Room.objects.get(name=request.session.get('room'))
-        if not request.POST.get('requestId') and request.POST.get('source'):
-            music_to_add = Music.objects.get(music_id=request.POST.get('music_id'), room=room, source__name=request.POST.get('source'))
+        if not request.data.get('requestId') and request.data.get('source'):
+            music_to_add = Music.objects.get(music_id=request.data.get('music_id'), room=room, source__name=request.data.get('source'))
             room.push(
                 music_id=music_to_add.music_id,
                 name=music_to_add.name,
@@ -40,23 +41,24 @@ def add_music(request):
                 timer_start=music_to_add.timer_start,
                 timer_end=music_to_add.timer_end,
                 url=music_to_add.url,
-                source=Source.objects.get(name=request.POST.get('source'))
+                source=Source.objects.get(name=request.data.get('source'))
             )
         else:
             try:
-                timer_end = int(request.POST.get('timer-end'))
+                timer_end = int(request.data.get('timer-end'))
             except Exception:
                 timer_end = None
             room.push(
-                music_id=request.POST.get('music_id'),
-                requestId=request.POST.get('requestId'),
-                timer_start=int(request.POST.get('timer-start', 0)),
+                music_id=request.data.get('music_id'),
+                requestId=request.data.get('requestId'),
+                timer_start=int(request.data.get('timer-start', 0)),
                 timer_end=timer_end,
             )
         return JSONResponse(render_remote(room))
     return HttpResponse(401)
 
 
+@api_view(['POST'])
 def music_infinite_scroll(request):
     if request.session.get('room', False):
         room = Room.objects.get(name=request.session.get('room'))
@@ -65,7 +67,7 @@ def music_infinite_scroll(request):
         paginator = Paginator(musics, 16)
         more_musics = False
         try:
-            page = int(request.POST.get('page')) + 1
+            page = int(request.data.get('page')) + 1
 
             musics = paginator.page(page)
             if(paginator.page(page).has_next()):
