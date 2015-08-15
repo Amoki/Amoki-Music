@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from player.views.json_renderer import JSONResponse
+from website.json_renderer import JSONResponse
 from player.models import Room
 from player.serializers import RoomSerializer
 from music.models import Source

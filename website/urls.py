@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('player.views',
+urlpatterns = patterns('website.views',
     url(r'^$', 'login.login.login', name='login'),
     url(r'^log-out/$', 'login.login.logout', name='logout'),
 
