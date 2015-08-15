@@ -41,14 +41,12 @@ var youtubePlayerControl = {
       youtubePlayer.loadVideoById(music_options);
       $(document).attr('title', options.name);
       $('#youtubePlayer').fadeIn(250);
-      $( "#slider-vertical" ).fadeIn(250);
     }
   },
   stop: function() {
     if(youtubePlayer.initialized) {
       youtubePlayer.stopVideo();
       $('#youtubePlayer').fadeOut(250);
-      $( "#slider-vertical" ).fadeOut(250);
     }
   },
   volume_up: function() {

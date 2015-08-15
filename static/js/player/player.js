@@ -11,7 +11,6 @@ function receiveMessage(message) {
     Object.keys(playerControlWrapper).forEach(function(player) {
       playerControlWrapper[player].stop();
       $(document).attr('title', "Amoki's player");
-      $( "#slider-vertical" ).fadeOut(250);
       $('.player-child').not('.player-child-no-music').fadeOut(250);
     });
   }
@@ -29,26 +28,43 @@ function receiveMessage(message) {
   }
 }
 
-$( "#slider-vertical" ).slider({
-    orientation: "vertical",
+function display_slider(value){
+  var offset1 = $( "#slider-volume" ).children( '.ui-slider-handle' ).offset();
+  $( ".tooltip1" ).css('top',offset1.top-120).css('left', offset1.left-20).text(value);
+
+  volume = $('#icon-volume');
+  if (value === 0) {
+    volume.css('background-position', '0 -102px');
+  } else if(value <= 10) {
+    volume.css('background-position', '0 -77px');
+  } else if (value <= 40) {
+    volume.css('background-position', '0 -51px');
+  } else if (value <= 75) {
+    volume.css('background-position', '0 -26px');
+  } else {
+    volume.css('background-position', '0 0');
+  };
+}
+
+$( "#slider-volume" ).slider({
     range: "min",
     min: 0,
     max: 100,
     create: function( event, ui ) {
       if(typeof cookie_volume !== "undefined") {
-        $( "#slider-vertical" ).slider("option", "value", cookie_volume);
+        $( "#slider-volume" ).slider("option", "value", cookie_volume);
       } else {
         cookie_volume = 10;
-        $( "#slider-vertical" ).slider("option", "value", 10);
+        $( "#slider-volume" ).slider("option", "value", 10);
       }
     },
     slide: function( event, ui ) {
       update_volume( ui.value );
-      var offset1 = $(this).children( '.ui-slider-handle' ).offset();
-      $( ".tooltip1" ).css('top',offset1.top).css('left', offset1.left+25).text(ui.value);
+      display_slider(ui.value);
     },
     change: function( event, ui ) {
       update_volume( ui.value );
+      display_slider(ui.value);
       $.cookie('player_volume', ui.value);
     },
     start: function( event, ui ) {
@@ -59,6 +75,20 @@ $( "#slider-vertical" ).slider({
     },
 });
 
+$( "#player-wrapper" ).hover(
+    function() {
+      if($('.player-child').not('.player-child-no-music').filter(":visible").length > 0) {
+        $("#wrapper-slider-volume").fadeIn(300);
+      };
+    },
+    function() {
+      $("#wrapper-slider-volume").fadeOut(300);
+    }
+  );
+
+$('#icon-volume').click(function() {
+    $( "#slider-volume" ).slider( "option", "value", 0 );
+  });
 
 function update_volume(volume) {
   Object.keys(playerControlWrapper).forEach(function(player) {

@@ -28,7 +28,7 @@
     {% include "generic-part/navbar.html" with parent="player" %}
 {% endblock navbar %}
 {% block first_Col %}
-    <div class="col-xs-6 player">
+    <div id="player-wrapper" class="col-xs-6 player">
         <div id="youtubePlayer" class="player-child col-xs-12"></div>
 
         <iframe id="soundcloudPlayer" class="player-child col-xs-12" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/{% if current_music and source.name == 'Soundcloud' %}{{music_id}}{% else %}33427584{% endif %}&buying=false&visual=true&hide_related=true&enable_api=true" scrolling="no" frameborder="no"></iframe>
@@ -36,7 +36,12 @@
         <div class="player-child player-child-no-music col-xs-12">
             <a href="/remote" target="_blank" id="btn-link-remote"><img src="{% static 'img/btn-play-large.png' %}"></a>
         </div>
-        <div id="slider-vertical"></div>
+        <div id="wrapper-slider-volume">
+            <span id="icon-volume" class="col-xs-1"></span>
+            <div id="slider-volume" class="col-xs-offset-1 col-xs-10"></div>
+        </div>
+        <div id="tooltip_volume_slider" class="tooltip tooltip1"></div>
+
     </div>
     <div class="col-xs-5 col-xs-offset-1 player">
         <div class="playlist">
@@ -52,7 +57,6 @@
             </div>
         </div>
     </div>
-    <div id="tooltip_volume_slider" class="tooltip tooltip1"></div>
     <script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
     <script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/player/youtube.js' %}"></script>

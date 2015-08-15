@@ -19,10 +19,9 @@ soundcloudPlayer.bind(SC.Widget.Events.ERROR, function(err) {
 
 var soundcloudPlayerControl = {
   play: function(options) {
-    if(soundcloudPlayer.initialized ) {
+    if(soundcloudPlayer.initialized) {
       $(document).attr('title', options.name);
       $('iframe#soundcloudPlayer').fadeIn(250);
-      $( "#slider-vertical" ).fadeIn(250);
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.musicId,
         {
@@ -53,7 +52,6 @@ var soundcloudPlayerControl = {
     if(soundcloudPlayer.initialized ) {
       soundcloudPlayer.pause();
       $('#soundcloudPlayer').fadeOut(250);
-      $( "#slider-vertical" ).fadeOut(250);
     }
   },
   volume_up: function() {
