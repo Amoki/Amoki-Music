@@ -18,9 +18,9 @@
     {% if current_music %}
     <script type="text/javascript">
         var current_time_past = {{current_time_past}};
-        var current_music = '{{music_id}}';
-        var current_music_source = '{{source}}';
-        var current_music_timer_end = {{current_music_timer_end|default:"false"}};
+        var current_music = '{{current_music.music_id}}';
+        var current_music_source = '{{current_music.source}}';
+        var current_music_timer_end = {{current_music.timer_end|default:"false"}};
     </script>
     {% endif %}
 {% endblock pre_end_head %}

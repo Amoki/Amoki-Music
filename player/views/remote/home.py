@@ -35,8 +35,7 @@ def home(request):
     sources = Source.objects.all()
 
     if current_music:
-        data = room.music_set.filter(music_id=current_music.music_id)
-        model_json = serializers.serialize('json', data, fields=('music_id', 'duration'))
+        model_json = serializers.serialize('json', [current_music], fields=('music_id', 'duration'))
         current_music_json = json.loads(model_json)
 
         # Total time of current music in hh:mm:ss

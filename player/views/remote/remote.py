@@ -84,8 +84,7 @@ def update_remote(request):
 
 def render_remote(room):
     if room.current_music:
-        data = room.music_set.filter(music_id=room.current_music.music_id)
-        model_json = serializers.serialize('json', data, fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))
+        model_json = serializers.serialize('json', [room.current_music], fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))
         current_music = json.loads(model_json)
     else:
         current_music = None

@@ -18,8 +18,7 @@ def update_player(request):
         })
 
         if room.current_music:
-            data = room.music_set.filter(music_id=room.current_music.music_id)
-            model_json = serializers.serialize('json', data, fields=('music_id', 'duration'))
+            model_json = serializers.serialize('json', [room.current_music], fields=('music_id', 'duration'))
             current_music_json = json.loads(model_json)
         else:
             current_music_json = None
