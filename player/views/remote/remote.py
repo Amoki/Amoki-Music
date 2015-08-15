@@ -29,9 +29,9 @@ def trigger_shuffle(request):
     if request.session.get('room', False) and request.data.get('shuffle'):
         room = Room.objects.get(name=request.session.get('room'))
         if room.music_set.count() == 0:
-            return JSONResponse({"error": True})
-        room.toggle_shuffle((request.data.get('shuffle') == 'true'))
+            return HttpResponse(409)
 
+        room.toggle_shuffle((request.data.get('shuffle') == 'true'))
         remote_template_rendered = render_remote(room=room)
         return JSONResponse(remote_template_rendered)
     return HttpResponse(401)
