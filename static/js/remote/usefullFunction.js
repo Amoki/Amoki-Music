@@ -1,35 +1,28 @@
 $(document).ready(function() {
-  var hauteur = $(window).height() - 115;
-  if($(window).height() > 765) {
-    hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true));
+
+  function resize(){
+    if($(window).height() > 765) {
+    hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true) + 25);
+    }
+    else {
+      hauteur = 650;
+    }
+    // resize of the remote
+    $(".remote").height(hauteur);
+    $(".panel-playlist").height(hauteur - 258);
+    // resize of the library
+    $(".LIB").height(hauteur);
+    $(".list-lib").height(hauteur - 90);
+    $(".tab-content").height(hauteur - 130);
   }
-  else {
-    hauteur = 650;
-  }
-  // resize of the remote
-  $(".player").height(hauteur);
-  $(".panel-playlist").height(hauteur - 258);
-  // resize of the library
-  $(".LIB").height(hauteur);
-  $(".list-lib").height(hauteur - 90);
-  $(".tab-content").height(hauteur - 130);
+
   $(window).resize(function() {
     if($(window).width() > 992) {
-      if($(window).height() > 765) {
-        hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true));
-      }
-      else {
-        hauteur = 650;
-      }
-      // resize of the remote
-      $(".player").height(hauteur);
-      $(".panel-playlist").height(hauteur - 258);
-      // resize of the library
-      $(".LIB").height(hauteur);
-      $(".list-lib").height(hauteur - 90);
-      $(".tab-content").height(hauteur - 130);
+      resize();
     }
   });
+
+  resize();
 
   $(".btn").click(function() {
     $(this).blur();
@@ -90,7 +83,7 @@ $(document).ready(function() {
 
   $('#music_preview').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
-    var duration = button.data("duration");
+    var duration = parseFloat(button.data("duration"));
     var musicId = button.data("musicid");
     var channel_name = button.data("channelname");
     var description = button.data("description");
@@ -162,8 +155,8 @@ $(document).ready(function() {
         slide: function( event, ui ) {
           var offset1 = $(this).children( '.ui-slider-handle' ).first().offset();
           var offset2 = $(this).children( '.ui-slider-handle' ).last().offset();
-          $( ".tooltip1" ).css('top',offset1.top+30).css('left',offset1.left-5).text(humanize_seconds(ui.values[ 0 ]));
-          $( ".tooltip2" ).css('top',offset2.top+30).css('left',offset2.left-5).text(humanize_seconds(ui.values[ 1 ]));
+          $( ".tooltip1" ).css('top',offset1.top+30).css('left',offset1.left-15).text(humanize_seconds(ui.values[ 0 ]));
+          $( ".tooltip2" ).css('top',offset2.top+30).css('left',offset2.left-15).text(humanize_seconds(ui.values[ 1 ]));
 
           $( "#time_start" ).html( humanize_seconds(ui.values[ 0 ]) );
           $( "#time_end" ).html( humanize_seconds(ui.values[ 1 ]) );
@@ -214,13 +207,13 @@ function maj_header_remote(data) {
   else {
     disabled_btn();
   }
-  $(".player").children('.header-player').html(data.template_header_remote);
+  $(".remote").children('.header-remote').html(data.template_header_remote);
 }
 
 function disabled_btn() {
   $(document).attr('title', 'Amoki\'s musics');
-  $(".header-player").children().remove();
-  $('.header-player').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
+  $(".header-remote").children().remove();
+  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
   $("#btn-next").attr('disabled', 'disabled');
   $("#dead-link").attr('disabled', 'disabled');
   $(".progress-bar").stop();
@@ -237,29 +230,22 @@ function maj_playlist_current(data) {
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
-    $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-    $('#time-left-progress-bar').countdown({
-      since: -data.time_past,
-      onTick: function(periods){
-        if ((data.current_music.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
-          $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-          $('#time-left-progress-bar').countdown('destroy');
-        };
-      },
-    });
-    $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music.duration))
+    maj_progress_bar(data);
   }
 }
 
-function modal_confirm(target) {
-  target.modal({
-      'show': true,
-      'backdrop': false
-  }).on('shown.bs.modal', function() {
-    setTimeout(function() {
-      target.modal('hide');
-    }, 1000);
+function maj_progress_bar(data) {
+  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
+  $('#time-left-progress-bar').countdown({
+    since: -data.current_time_past,
+    onTick: function(periods){
+      if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+        $('#time-left-progress-bar').countdown('destroy');
+      };
+    },
   });
+  $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
 }
 
 function timeline(current_time_left, current_time_past_percent){

@@ -1,17 +1,4 @@
-var csrftoken = $.cookie('csrftoken');
 var current_page = 0;
-
-function csrfSafeMethod(method) {
-  // these HTTP methods do not require CSRF protection
-  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-$.ajaxSetup({
-beforeSend: function(xhr, settings) {
-  if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
-    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-  }
-}
-});
 
 $(document).on('submit', '.ajax-shuffle', function(e) {
   e.preventDefault();
@@ -26,16 +13,6 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
     else {
       modal_confirm($('#modal-shuffle-off'));
     }
-  })
-  .fail(log_errors);
-});
-
-
-$(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
-  e.preventDefault();
-  var $this = $(this);
-  ajax($this).done(function(data) {
-    modal_confirm($('#modal-next-music'));
   })
   .fail(log_errors);
 });
@@ -148,7 +125,7 @@ function update_remote() {
       $('#list-library').prepend(data.template_library);
 
       if(data.current_music) {
-        timeline(data.time_left, data.time_past_percent);
+        timeline(data.current_time_left, data.current_time_past_percent);
         maj_playlist_current(data);
       }
       else {
@@ -159,34 +136,10 @@ function update_remote() {
   });
 }
 
-function log_errors(resultat, statut, erreur){
-  console.error(resultat.responseText);
-  console.error("Statut : " + statut);
-  console.error("Error: " + erreur.stack);
-}
-
-function ajax(source){
-  return $.ajax({
-    url: source.attr('action'),
-    type: source.attr('method'),
-    data: source.serialize().replace(/[^&]+=(?:&|$)/gm, ''),
-    dataType: "json",
-  });
-}
-
-
-jQuery(document).ready(function($) {
-  var ws4redis = WS4Redis({
-      uri: webSocketUri + token + '?subscribe-broadcast',
-      receive_message: receiveMessage,
-      heartbeat_msg: ws4redisHeartbeat
-  });
-
-  // receive a message though the websocket from the server
-  function receiveMessage(message) {
-    message = JSON.parse(message);
-    if(message.update === true){
-      update_remote();
-    }
+// receive a message though the websocket from the server
+function receiveMessage(message) {
+  message = JSON.parse(message);
+  if(message.update === true){
+    update_remote();
   }
-});
+}
