@@ -19,18 +19,21 @@
 		{% endblock pre_end_head %}
 	</head>
 	<body>
-		{% block navbar %}
-		{% endblock navbar %}
-		<div class="container-fluid ligne">
-			{% block first_Col %}
-			{% endblock first_Col %}
-			{% block second_Col %}
-			{% endblock second_Col %}
+		<div id="wrapper">
+			{% block navbar %}
+			{% endblock navbar %}
+			<div class="container-fluid ligne">
+				{% block first_Col %}
+				{% endblock first_Col %}
+				{% block second_Col %}
+				{% endblock second_Col %}
+			</div>
+			{% block footer %}
+			{% endblock footer %}
+			<!-- END PAGE -->
+			{% include "include/common/common_modals.html" %}
+			{% block pre_end_body %}
+			{% endblock pre_end_body %}
 		</div>
-		{% block footer %}
-		{% endblock footer %}
-		<!-- END PAGE -->
-		{% block pre_end_body %}
-		{% endblock pre_end_body %}
 	</body>
 </html>

@@ -194,6 +194,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_up',
+                'source': self.current_music.source.name,
             }
             self.send_message(message)
 
@@ -201,6 +202,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_down',
+                'source': self.current_music.source.name,
             }
             self.send_message(message)
 

@@ -58,6 +58,7 @@ class Youtube(Source):
                 type="video",
                 maxResults=15,
                 videoSyndicated="true",
+                videoEmbeddable="true",
                 regionCode="FR",
                 relevanceLanguage="fr"
             ).execute()

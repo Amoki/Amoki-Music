@@ -5,11 +5,13 @@
         var token = "{{ request.session.token }}";
         var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
         var webSocketUri = '{{ WEBSOCKET_URI }}';
+        var data = {{json_data|safe}}
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/common_functions.js' %}"></script>
     <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/jquery-ui.structure.min.css' %}" rel="stylesheet">
 
@@ -18,17 +20,8 @@
     {% if current_music %}
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-            timeline({{current_time_left}}, {{current_time_past_percent}});
-            $('#time-left-progress-bar').countdown({
-              since: -{{ current_time_past }},
-              onTick: function(periods){
-                if (({{ current_music.duration }}) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
-                  $('#time-left-progress-bar').countdown('destroy');
-                };
-              },
-            });
-            $('#time-left-progress-bar-duration').html(humanize_seconds({{ current_music.duration }}))
+            timeline(data.current_time_left, data.current_time_past_percent);
+            maj_progress_bar(data);
         });
     </script>
     {% endif %}
@@ -37,14 +30,14 @@
     {% include "generic-part/navbar.html" with parent="remote" %}
 {% endblock navbar %}
 {% block first_Col %}
-    <!-- PLAYER ZONE -->
+    <!-- REMOTE ZONE -->
     <div class="col-md-8">
-        <div class="col-md-offset-1 col-md-10 player">
-            <!-- HEADER PLAYER -->
-            <div class="row header-player">
+        <div class="col-md-offset-1 col-md-10 remote">
+            <!-- HEADER REMOTE -->
+            <div class="row header-remote">
                 {% include "include/remote/header_remote.html" %}
             </div>
-            <!-- END HEADER PLAYER -->
+            <!-- END HEADER REMOTE -->
             <!-- PLAYLIST -->
             <div class="row playlist">
                 <div class="col-md-offset-1 col-md-10">
@@ -97,7 +90,7 @@
             <!-- END CONTROL BUTTONS -->
         </div>
     </div>
-    <!-- END PLAYER ZONE -->
+    <!-- END REMOTE ZONE -->
 {% endblock first_Col %}
 {% block second_Col %}
     <!-- LIBRARY  -->

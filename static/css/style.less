@@ -16,9 +16,16 @@
 
 body, html {
 	margin: 0;
+	padding: 0;
+	height: 100%;
 	color: #fff;
 	text-align: center;
 	background-image: url(../img/background-2.png);
+}
+
+#wrapper {
+	min-height:100%;
+	position:relative;
 }
 
 select {
@@ -118,7 +125,7 @@ button > .glyphicon, a > .glyphicon {
 
 .navbar {
 	height: 50px;
-	margin-bottom: 10px !important;
+	margin-bottom: 0px !important;
 	box-shadow: 0px 0px 12px 2px #000;
 	border-radius: 0px;
 }
@@ -142,21 +149,22 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .ligne {
-	padding-bottom: 40px;
+	padding-top: 15px;
+	padding-bottom: 55px;
 }
 
 /********************** REMOTE STUFF ***********/
-.player {
+.remote {
 	border-radius: 50px;
 	.shadow;
-	//background: rgba(34,34,34,0.7);
+	background: rgba(34,34,34,0.7);
 	background: url('../img/cover_center_large.jpg') no-repeat;
 	background-size: cover;
 	background-position: 50%;
 	min-height: 650px;
 }
 
-.header-player img {
+.header-remote img {
 	height: 90px;
 }
 
@@ -217,6 +225,7 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .wrapper-progress-bar{
+	height: 20px;
 	margin-bottom: 20px;
 }
 
@@ -390,6 +399,7 @@ button > .glyphicon, a > .glyphicon {
 	line-height: 1.7;
 	padding: 0px 5px 0px 5px;
 	font-size: 14px;
+	z-index: 10000;
 }
 
 #music_preview {
@@ -403,16 +413,23 @@ button > .glyphicon, a > .glyphicon {
 	z-index: 9999;
 }
 
+#music_preview #slider {
+	margin-bottom: 15px;
+}
+
 /********************** LIBRARY STUFF ***********/
 
+
+/********************** FOOTER STUFF ***********/
+
 .foot {
-	height: 45px;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+	width:100%;
+	height:45px;
+	position:absolute;
+	bottom:0;
+	left:0;
 	background: rgba(34, 34, 34, 0.7);
 	box-shadow: 0px 0px 12px 2px #000;
-	margin-top: 10px;
 	.btn {
 		margin-right: 15px;
 		margin-left: 15px;
@@ -421,3 +438,113 @@ button > .glyphicon, a > .glyphicon {
 		.beauti-btn;
 	}
 }
+
+/********************** FOOTER STUFF ***********/
+
+
+/********************** PLAYER STUFF ***********/
+
+.player {
+	height: 390px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	.panel-playlist {
+		height: 390px;
+	}
+}
+
+.player-child {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 390px;
+	display: none;
+	z-index: 1;
+	&.player-child-no-music {
+		display: block;
+		z-index: 0;
+		background: url('../img/cover_center_small.jpg') no-repeat;
+		background-position: 50%;
+	}
+}
+
+#wrapper-slider-volume {
+	padding-left: 10%;
+	padding-right: 10%;
+	height: 20%;
+	line-height:20%;
+	margin-left: -15px;
+	display: none;
+	position: absolute;
+	width: 100%;
+	bottom: 0%;
+	z-index: 99;
+	background: linear-gradient(to bottom,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.5) 20%,
+		rgba(0, 0, 0, 0.8) 45%,
+		rgba(0, 0, 0, 1) 100%);
+}
+
+#slider-volume {
+	position: absolute;
+    width: 70%;
+	border-width: 1px;
+    border-style: solid;
+    border-color: #333 #333 #777 #333;
+    border-radius: 25px;
+	background-color: #8e8d8d;
+    background: url('../img/bg-slider.png') repeat top left;
+  	box-shadow: inset 0 1px 5px 0px rgba(0, 0, 0, .5),
+                 0 1px 0 0px rgba(250, 250, 250, .5);
+    height: 13px;
+	top: 44%;
+}
+.ui-slider-range {
+    background: linear-gradient(to top, #ffffff 0%,#bbbbbb 100%) !important;
+    border-radius: 25px;
+}
+.ui-slider-handle {
+	outline: none !important;
+	border: none !important;
+    width: 25px !important;
+    height: 25px !important;
+    background: url('../img/handler-slider.png') no-repeat 50% 50% !important;
+    top: -7px !important;
+    margin-left: -12px !important;
+    &:focus {border : none !important;
+    		outline: none !important;}
+    &:active {border: none !important;
+    		outline: none !important;}
+}
+
+#icon-volume {
+    width: 30px;
+    height: 26px;
+    background: url('../img/volume-icon-sprite.png') no-repeat 0 -50px;
+    border-radius: 0px;
+	top:35%;
+}
+
+#tooltip_volume_slider {
+	display: none;
+    width: 35px;
+    height: 25px;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid #333;
+  	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, .3);
+    box-sizing: border-box;
+    background: linear-gradient(to top, rgba(69,72,77,0.5) 0%,rgba(0,0,0,0.5) 100%);
+}
+
+a#btn-link-remote{
+	position: relative;
+	top: 100px;
+	display: inline-block;
+	box-shadow: 0px 25px 40px 0px #000000;
+	border-radius: 100px;
+}
+
+/********************** FOOTER STUFF ***********/

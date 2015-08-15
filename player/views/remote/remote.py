@@ -13,10 +13,11 @@ import simplejson as json
 def volume_change(request):
     if request.is_ajax():
         room = Room.objects.get(name=request.session.get('room'))
-        if request.POST.get('volume_change') == 'up':
-            room.increase_volume()
-        else:
-            room.decrease_volume()
+        if room.current_music:
+            if request.POST.get('volume_change') == 'up':
+                room.increase_volume()
+            else:
+                room.decrease_volume()
         return HttpResponse('{}', content_type='application/json')
     return redirect('/')
 
@@ -28,9 +29,9 @@ def trigger_shuffle(request):
             return HttpResponse(json.dumps({"error": True}), content_type='application/json')
         room.toggle_shuffle((request.POST.get('shuffle') == 'true'))
 
-        player_template_rendered = render_remote(room=room)
+        remote_template_rendered = render_remote(room=room)
 
-        return HttpResponse(player_template_rendered, content_type='application/json')
+        return HttpResponse(remote_template_rendered, content_type='application/json')
     return redirect('/')
 
 
@@ -42,8 +43,8 @@ def next_music(request):
             if request.path == "/dead-link/":
                 room.signal_dead_link()
             room.play_next()
-        player_template_rendered = render_remote(room=room)
-        return HttpResponse(player_template_rendered, content_type='application/json')
+        remote_template_rendered = render_remote(room=room)
+        return HttpResponse(remote_template_rendered, content_type='application/json')
     return redirect('/')
 
 
@@ -69,21 +70,21 @@ def update_remote(request):
         except (InvalidPage, EmptyPage):
             return HttpResponse("Error while refreshing the library, please reload the page", status=409)
 
-        player_updated = json.loads(render_remote(room))
-        player_updated['template_library'] = render_to_string("include/remote/library.html", {
+        remote_updated = json.loads(render_remote(room))
+        remote_updated['template_library'] = render_to_string("include/remote/library.html", {
             "musics": musics,
             "tab": "library-list-music",
             "more_musics": more_musics
         })
-        player_updated['more_musics'] = more_musics
+        remote_updated['more_musics'] = more_musics
 
-        return HttpResponse(json.dumps(player_updated), content_type='application/json')
+        return HttpResponse(json.dumps(remote_updated), content_type='application/json')
+    return redirect('/')
 
 
 def render_remote(room):
     if room.current_music:
-        data = room.music_set.filter(music_id=room.current_music.music_id)
-        model_json = serializers.serialize('json', data, fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))
+        model_json = serializers.serialize('json', [room.current_music], fields=('music_id', 'name', 'thumbnail', 'count', 'duration'))
         current_music = json.loads(model_json)
     else:
         current_music = None
@@ -108,9 +109,9 @@ def render_remote(room):
         'shuffle': shuffle_state,
         'template_playlist': template_playlist,
         'template_header_remote': template_header_remote,
-        'time_left': current_time_left,
-        'time_past': current_time_past,
-        'time_past_percent': current_time_past_percent,
+        'current_time_left': current_time_left,
+        'current_time_past': current_time_past,
+        'current_time_past_percent': current_time_past_percent,
     })
 
     return json_data
