@@ -239,13 +239,13 @@ function maj_progress_bar(data) {
   $('#time-left-progress-bar').countdown({
     since: -data.current_time_past,
     onTick: function(periods){
-      if ((data.current_music[0].fields.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
+      if ((data.current_music.duration) === (periods[4]*3600 + periods[5]*60 + periods[6])) {
         $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
         $('#time-left-progress-bar').countdown('destroy');
       };
     },
   });
-  $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music[0].fields.duration))
+  $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music.duration))
 }
 
 function timeline(current_time_left, current_time_past_percent){
