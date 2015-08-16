@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
+from rest_framework.decorators import api_view
 
 from website.json_renderer import JSONResponse
 from player.models import Room
 from player.serializers import RoomSerializer
 from music.serializers import MusicSerializer
+from website.decorators import room_required
+
 
 from music.models import Source
 
@@ -59,9 +61,8 @@ def home(request):
     return render(request, 'index.html', locals())
 
 
-def room(request):
-    if request.session.get('room', False):
-        room = Room.objects.get(name=request.session.get('room'))
-        model_json = RoomSerializer(room)
-        return JSONResponse(model_json.data)
-    return HttpResponse(401)
+@api_view(['GET'])
+@room_required
+def room(request, room):
+    model_json = RoomSerializer(room)
+    return JSONResponse(model_json.data)
