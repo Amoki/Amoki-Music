@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
-from player.models import Room
-from music.models import Source
-from django.core import serializers
+from rest_framework.renderers import JSONRenderer
+from rest_framework.decorators import api_view
 
-import simplejson as json
+from website.json_renderer import JSONResponse
+from player.models import Room
+from player.serializers import RoomSerializer
+from music.serializers import MusicSerializer
+from website.decorators import room_required
+
+
+from music.models import Source
 
 
 def home(request):
-    if not request.session.get('room', False) or not Room.objects.filter(name=request.session.get('room')).exists():
+    if not request.session.get('token', False) or not Room.objects.filter(token=request.session.get('token')).exists():
         return redirect('logout', permanent=True)
 
-    room = Room.objects.get(name=request.session.get('room'))
+    room = Room.objects.get(token=request.session.get('token'))
 
     # The object Music playing
     current_music = room.current_music
@@ -35,8 +41,7 @@ def home(request):
     sources = Source.objects.all()
 
     if current_music:
-        model_json = serializers.serialize('json', [current_music], fields=('music_id', 'duration'))
-        current_music_json = json.loads(model_json)
+        current_music_json = MusicSerializer(current_music).data
 
         # Total time of current music in hh:mm:ss
         current_total_time = current_music.duration
@@ -44,7 +49,7 @@ def home(request):
     else:
         current_music_json = None
 
-    json_data = json.dumps({
+    json_data = JSONRenderer().render({
         'current_music': current_music_json,
         'time_left': time_left,
         'current_time_left': current_time_left,
@@ -54,3 +59,9 @@ def home(request):
 
     # TODO Do not return locals
     return render(request, 'index.html', locals())
+
+
+@api_view(['GET'])
+@room_required
+def room(request, room):
+    return JSONResponse(RoomSerializer(room).data)

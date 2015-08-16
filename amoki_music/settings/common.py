@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../..")
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
     ('Amoki', 'hugo.duroux@gmail.com'),
@@ -49,10 +49,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Pip lib
     'ws4redis',
+    'rest_framework',
 
     # Our apps
     'player',
     'music',
+    'website',
     'source_modules.soundcloud',
     'source_modules.youtube',
 )
@@ -75,7 +77,7 @@ ROOT_URLCONF = 'amoki_music.urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
     }
 }
 
@@ -125,10 +127,7 @@ STATICFILES_FINDERS = (
 
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    BASE_DIR + '/templates',
+    os.path.join(BASE_DIR, 'templates/'),
 )
 
 # List of callables that know how to import templates from various sources.
