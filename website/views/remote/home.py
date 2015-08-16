@@ -64,5 +64,4 @@ def home(request):
 @api_view(['GET'])
 @room_required
 def room(request, room):
-    model_json = RoomSerializer(room)
-    return JSONResponse(model_json.data)
+    return JSONResponse(RoomSerializer(room).data)
