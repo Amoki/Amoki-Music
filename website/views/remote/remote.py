@@ -31,7 +31,7 @@ def trigger_shuffle(request, room):
         return Response("Shuffle is not allowed or no available music in this room", status=status.HTTP_400_BAD_REQUEST)
 
     room.toggle_shuffle((request.data.get('shuffle') == 'true'))
-    remote_template_rendered = render_remote(room=room)
+    remote_template_rendered = render_remote(room)
     return JSONResponse(remote_template_rendered)
 
 
@@ -101,7 +101,7 @@ def render_remote(room):
         "shuffle": shuffle_state
     })
     template_header_remote = render_to_string("include/remote/header_remote.html", {
-        "current_music": room.current_music
+        "currentMusic": room.current_music
     })
     current_time_left = room.get_current_remaining_time()
 
