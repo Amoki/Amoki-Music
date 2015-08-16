@@ -8,7 +8,7 @@ def room_required(func):
     @wraps(func)
     def wrap(request, **kwargs):
         try:
-            room = Room.objects.get(name=request.session.get('room'))
+            room = Room.objects.get(token=request.session.get('token'))
         except:
             raise AuthenticationFailed()
 
