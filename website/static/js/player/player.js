@@ -30,7 +30,7 @@ function receiveMessage(message) {
 
 function updateVolume(volume) {
   Object.keys(playerControlWrapper).forEach(function(player) {
-    playerControlWrapper[player].set_volume(volume);
+    playerControlWrapper[player].setVolume(volume);
   });
 }
 
@@ -76,7 +76,7 @@ $("#slider-volume").slider({
     change: function(event, ui) {
       updateVolume(ui.value);
       displaySlider(ui.value);
-      $.cookie('player_volume', ui.value);
+      $.cookie('playerVolume', ui.value);
     },
     start: function() {
       $(".tooltip1").fadeIn(250);

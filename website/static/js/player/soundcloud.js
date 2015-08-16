@@ -1,6 +1,6 @@
 var iframeElement = document.querySelector('iframe#soundcloudPlayer');
 var soundcloudPlayer = SC.Widget(iframeElement);
-soundcloudPlayer.current_volume;
+soundcloudPlayer.currentVolume;
 soundcloudPlayer.initialized = false;
 
 
@@ -20,13 +20,13 @@ var soundcloudPlayerControl = {
             soundcloudPlayer.play();
             // Start time
             soundcloudPlayer.bind(SC.Widget.Events.PLAY, function() {
-              soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+              soundcloudPlayer.seekTo(options.timerStart * 1000 || 0);
               soundcloudPlayer.unbind(SC.Widget.Events.PLAY);
             });
             // End time
             soundcloudPlayer.unbind(SC.Widget.Events.PLAY_PROGRESS);
             soundcloudPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function(stats) {
-              if(options.timer_end && stats.currentPosition >= options.timer_end * 1000) {
+              if(options.timerEnd && stats.currentPosition >= options.timerEnd * 1000) {
                 soundcloudPlayer.pause();
               }
             });
@@ -41,21 +41,21 @@ var soundcloudPlayerControl = {
       $('#soundcloudPlayer').fadeOut(250);
     }
   },
-  volume_up: function() {
+  volumeUp: function() {
     if(soundcloudPlayer.initialized) {
       soundcloudPlayer.getVolume(function(volume) {
         soundcloudPlayer.setVolume(Math.min(volume + 0.1, 1));
       });
     }
   },
-  volume_down: function() {
+  volumeDown: function() {
     if(soundcloudPlayer.initialized) {
       soundcloudPlayer.getVolume(function(volume) {
         soundcloudPlayer.setVolume(Math.max(volume - 0.1, 0));
       });
     }
   },
-  set_volume: function(volume) {
+  setVolume: function(volume) {
     if(soundcloudPlayer.initialized) {
       soundcloudPlayer.setVolume(volume / 100);
     }
@@ -65,10 +65,10 @@ var soundcloudPlayerControl = {
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
-  if(typeof current_music !== "undefined" && current_music_source === "Soundcloud") {
+  if(typeof currentMsic !== "undefined" && currentMusicSource === "Soundcloud") {
     soundcloudPlayerControl.play({
-      musicId: current_music,
-      timer_start: current_time_past
+      musicId: currentMusic,
+      timerStart: currentTimePast
     });
   }
 });

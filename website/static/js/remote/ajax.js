@@ -36,7 +36,7 @@ $(document).on('submit', '.ajax-search', function(e) {
   }
 
   ajax($this).done(function(data) {
-    if(data.current_music) {
+    if(data.currentMusic) {
       $("input#query").removeAttr('disabled');
       modalConfirm($('#modal-add-music'));
     }
@@ -48,7 +48,7 @@ $(document).on('submit', '.ajax-search', function(e) {
       $("#list-" + source).slideUp();
       $("#list-" + source).promise().done(function() {
         $("." + source + "-list-music").remove();
-        $("#list-" + source).html(data.template_library);
+        $("#list-" + source).html(data.templateLibrary);
         $("#list-" + source).slideDown();
         $("#list-" + source).promise().done(function() {});
       });
@@ -88,7 +88,7 @@ $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
 
   ajax($this).done(function(data) {
     $(data.template).insertBefore($this.closest('li'));
-    if(data.more_musics === false) {
+    if(data.moreMusics === false) {
       $this.children("#load-more-musics").addClass('disabled');
     }
     currentPage += 1;
@@ -117,15 +117,15 @@ function updateRemote() {
         $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
       }
 
-      if(data.more_musics === true && $("#load-more-musics").hasClass('disabled')) {
+      if(data.moreMusics === true && $("#load-more-musics").hasClass('disabled')) {
         $("#load-more-musics").removeClass('disabled');
       }
 
       $('.library-list-music').remove();
-      $('#list-library').prepend(data.template_library);
+      $('#list-library').prepend(data.templateLibrary);
 
-      if(data.current_music) {
-        timeline(data.current_time_left, data.current_time_past_percent);
+      if(data.currentMusic) {
+        timeline(data.currentTimeLeft, data.currentTimePastPercent);
         updatePlaylistCurrent(data);
       }
       else {

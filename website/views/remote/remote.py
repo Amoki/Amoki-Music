@@ -81,9 +81,9 @@ def update_remote(request, room):
     remote_updated['template_library'] = render_to_string("include/remote/library.html", {
         "musics": musics,
         "tab": "library-list-music",
-        "more_musics": more_musics
+        "moreMusics": more_musics
     })
-    remote_updated['more_musics'] = more_musics
+    remote_updated['moreMusics'] = more_musics
 
     return JSONResponse(remote_updated)
 
@@ -110,11 +110,11 @@ def render_remote(room):
     current_time_past_percent = room.get_current_time_past_percent()
 
     return {
-        'current_music': current_music,
+        'currentMusic': current_music,
         'shuffle': shuffle_state,
-        'template_playlist': template_playlist,
-        'template_header_remote': template_header_remote,
-        'current_time_left': current_time_left,
-        'current_time_past': current_time_past,
-        'current_time_past_percent': current_time_past_percent,
+        'templatePlaylist': template_playlist,
+        'templateHeaderRemote': template_header_remote,
+        'currentTimeLeft': current_time_left,
+        'currentTimePast': current_time_past,
+        'currentTimePastPercent': current_time_past_percent,
     }

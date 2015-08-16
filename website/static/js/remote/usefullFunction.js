@@ -24,29 +24,29 @@ function disabledBtn() {
 }
 
 function updateHeaderRemote(data) {
-  if(data.current_music) {
-    $(document).attr('title', data.current_music.name);
-    $('#music_id-next').val(data.current_music.music_id);
-    $('#music_id-dead-link').val(data.current_music.music_id);
+  if(data.currentMusic) {
+    $(document).attr('title', data.currentMusic.name);
+    $('#music_id-next').val(data.currentMusic.music_id);
+    $('#music_id-dead-link').val(data.currentMusic.music_id);
   }
   else {
     disabledBtn();
   }
-  $(".remote").children('.header-remote').html(data.template_header_remote);
+  $(".remote").children('.header-remote').html(data.templateHeaderRemote);
 }
 
 function updateProgressBar(data) {
   $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
   $('#time-left-progress-bar').countdown({
-    since: -data.current_time_past,
+    since: -data.currentTimePast,
     onTick: function(periods) {
-      if((data.current_music.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
+      if((data.currentMusic.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
         $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
         $('#time-left-progress-bar').countdown('destroy');
       }
     },
   });
-  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.current_music.duration));
+  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.currentMusic.duration));
 }
 
 function updatePlaylistCurrent(data) {
@@ -54,9 +54,9 @@ function updatePlaylistCurrent(data) {
   $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
-  $('.playlist-ajax').html(data.template_playlist);
+  $('.playlist-ajax').html(data.templatePlaylist);
   updateHeaderRemote(data);
-  if(data.current_music) {
+  if(data.currentMusic) {
     updateProgressBar(data);
   }
 }
@@ -173,9 +173,9 @@ $(document).ready(function() {
       values: [0, duration],
       musicId: musicId,
     });
-    customSlider.update_options({
+    customSlider.updateOptions({
       element: $("#slider"),
-      option_with_value: {values: [0, duration]},
+      optionWithValue: {values: [0, duration]},
     });
     playerControl.play({musicId: musicId});
   });
@@ -195,11 +195,11 @@ $(document).ready(function() {
         videoId: options.musicId,
         suggestedQuality: 'default',
       };
-      if(options.timer_start) {
-        musicOptions.startSeconds = options.timer_start;
+      if(options.timerStart) {
+        musicOptions.startSeconds = options.timerStart;
       }
-      if(options.timer_end) {
-        musicOptions.endSeconds = options.timer_end;
+      if(options.timerEnd) {
+        musicOptions.endSeconds = options.timerEnd;
       }
       player.cueVideoById(musicOptions);
     },
@@ -209,13 +209,13 @@ $(document).ready(function() {
     seekTo: function(options) {
       player.seekTo(options.secondes, options.seekAhead);
     },
-    volume_up: function() {
+    volumeUp: function() {
       player.setVolume(Math.min(player.getVolume() + 10, 100));
     },
-    volume_down: function() {
+    volumeDown: function() {
       player.setVolume(Math.max(player.getVolume() - 10, 0));
     },
-    get_state: function() {
+    getState: function() {
       if([-1, 0, 5].indexOf(player.getPlayerState()) > -1) {
         return 0;
       }
@@ -242,7 +242,7 @@ $(document).ready(function() {
 
           $("#time_start").html(humanizeSeconds(ui.values[0]));
           $("#time_end").html(humanizeSeconds(ui.values[1]));
-          if(playerControl.get_state() !== 0) {
+          if(playerControl.getState() !== 0) {
             playerControl.seekTo({secondes: ui.value, seekAhead: false});
           }
         },
@@ -257,14 +257,14 @@ $(document).ready(function() {
         },
         stop: function(event, ui) {
           tooltip.fadeOut('fast');
-          if(playerControl.get_state() !== 0) {
+          if(playerControl.getState() !== 0) {
             playerControl.seekTo({secondes: ui.value, seekAhead: true});
           }
         },
       });
     },
-    update_options: function(options) {
-      var optionToUpdate = options.option_with_value;
+    updateOptions: function(options) {
+      var optionToUpdate = options.optionWithValue;
       for(var optionValue in optionToUpdate) {
         options.element.slider("option", optionValue, optionToUpdate[optionValue]);
       }

@@ -14,11 +14,11 @@ var youtubePlayerControl = {
         videoId: options.musicId,
         suggestedQuality: 'default',
       };
-      if(options.timer_start) {
-        musicOptions.startSeconds = options.timer_start;
+      if(options.timerStart) {
+        musicOptions.startSeconds = options.timerStart;
       }
-      if(options.timer_end) {
-        musicOptions.endSeconds = options.timer_end;
+      if(options.timerEnd) {
+        musicOptions.endSeconds = options.timerEnd;
       }
       youtubePlayer.loadVideoById(musicOptions);
       $(document).attr('title', options.name);
@@ -31,17 +31,17 @@ var youtubePlayerControl = {
       $('#youtubePlayer').fadeOut(250);
     }
   },
-  volume_up: function() {
+  volumeUp: function() {
     if(youtubePlayer.initialized) {
       youtubePlayer.setVolume(Math.min(youtubePlayer.getVolume() + 10, 100));
     }
   },
-  volume_down: function() {
+  volumeDown: function() {
     if(youtubePlayer.initialized) {
       youtubePlayer.setVolume(Math.max(youtubePlayer.getVolume() - 10, 0));
     }
   },
-  set_volume: function(volume) {
+  setVolume: function(volume) {
     if(youtubePlayer.initialized) {
       youtubePlayer.setVolume(volume);
     }
@@ -63,12 +63,12 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function() {
         youtubePlayer.initialized = true;
-        youtubePlayerControl.set_volume(cookieVolume);
-        if(typeof current_music !== "undefined" && current_music_source === "Youtube") {
+        youtubePlayerControl.setVolume(cookieVolume);
+        if(typeof currentMusic !== "undefined" && currentMusicSource === "Youtube") {
           youtubePlayerControl.play({
-            musicId: current_music,
-            timer_start: current_time_past,
-            timer_end: current_music_timer_end,
+            musicId: currentMusic,
+            timerStart: currentTimePast,
+            timerEnd: currentMusicTimerEnd,
           });
         }
       },

@@ -21,8 +21,8 @@ def update_player(request, room):
         current_music = None
 
     json = {
-        'current_music': current_music,
-        'template_playlist': template_playlist,
+        'currentMusic': current_music,
+        'templatePlaylist': template_playlist,
     }
 
     return JSONResponse(json)

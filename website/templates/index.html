@@ -19,9 +19,9 @@
     <script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
     {% if current_music %}
     <script type="text/javascript">
-        $( document ).ready(function() {
-            timeline(data.current_time_left, data.current_time_past_percent);
-            maj_progress_bar(data);
+        $(document).ready(function() {
+          timeline(data.current_time_left, data.current_time_past_percent);
+          updateProgressBar(data);
         });
     </script>
     {% endif %}
