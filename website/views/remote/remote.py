@@ -81,7 +81,7 @@ def update_remote(request, room):
     remote_updated['templateLibrary'] = render_to_string("include/remote/library.html", {
         "musics": musics,
         "tab": "library-list-music",
-        "moreMusics": more_musics
+        "more_musics": more_musics
     })
     remote_updated['moreMusics'] = more_musics
 
@@ -101,7 +101,7 @@ def render_remote(room):
         "shuffle": shuffle_state
     })
     template_header_remote = render_to_string("include/remote/header_remote.html", {
-        "currentMusic": room.current_music
+        "current_music": room.current_music
     })
     current_time_left = room.get_current_remaining_time()
 

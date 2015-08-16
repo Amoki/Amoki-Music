@@ -76,7 +76,7 @@ def music_infinite_scroll(request, room):
     except (InvalidPage, EmptyPage, ValueError):
         return Response("Error while refreshing the library, please reload the page", status=status.HTTP_409_CONFLICT)
 
-    template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "moreMusics": more_musics})
+    template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
     data = {
         'template': template,
         'moreMusics': more_musics
