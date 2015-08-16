@@ -1,23 +1,23 @@
-var current_page = 0;
+var currentPage = 0;
 
 $(document).on('submit', '.ajax-shuffle', function(e) {
   e.preventDefault();
   var $this = $(this);
   ajax($this).done(function(data) {
     if(data.error) {
-      modal_confirm($('#modal-shuffle-error'));
+      modalConfirm($('#modal-shuffle-error'));
     }
     else if(data.shuffle === true) {
-      modal_confirm($('#modal-shuffle-on'));
+      modalConfirm($('#modal-shuffle-on'));
     }
     else {
-      modal_confirm($('#modal-shuffle-off'));
+      modalConfirm($('#modal-shuffle-off'));
     }
   })
-  .fail(log_errors);
+  .fail(logErrors);
 });
 
-$(document).on('change', 'select#source', function(){
+$(document).on('change', 'select#source', function() {
   $('.ajax-search').submit();
 });
 
@@ -38,7 +38,7 @@ $(document).on('submit', '.ajax-search', function(e) {
   ajax($this).done(function(data) {
     if(data.current_music) {
       $("input#query").removeAttr('disabled');
-      modal_confirm($('#modal-add-music'));
+      modalConfirm($('#modal-add-music'));
     }
     else {
       $(".list-lib .nav-tabs").find("li").removeClass("active");
@@ -54,7 +54,7 @@ $(document).on('submit', '.ajax-search', function(e) {
       });
     }
   })
-  .fail(log_errors);
+  .fail(logErrors);
 });
 
 $(document).on('submit', '.ajax-add-music', function(e) {
@@ -66,9 +66,9 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   ajax($this).done(function(data) {
     $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
     $this.children("button").removeAttr('disabled');
-    modal_confirm($('#modal-add-music'));
+    modalConfirm($('#modal-add-music'));
   })
-  .fail(log_errors);
+  .fail(logErrors);
 });
 
 $(document).on('submit', '.ajax-volume', function(e) {
@@ -78,7 +78,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
   ajax($this).done(function(data) {
     $this.children(".volume_clicked").removeClass("volume_clicked");
   })
-  .fail(log_errors);
+  .fail(logErrors);
 });
 
 $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
@@ -91,14 +91,14 @@ $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
     if(data.more_musics === false) {
       $this.children("#load-more-musics").addClass('disabled');
     }
-    current_page ++;
-    $("#page").val(current_page);
+    currentPage += 1;
+    $("#page").val(currentPage);
     $("#spinner_library").remove();
   })
-  .fail(log_errors);
+  .fail(logErrors);
 });
 
-function update_remote() {
+function updateRemote() {
   var dataSend = {
       'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
     };
@@ -132,14 +132,14 @@ function update_remote() {
         disabled_btn();
       }
     },
-    error: log_errors
+    error: logErrors
   });
 }
 
 // receive a message though the websocket from the server
 function receiveMessage(message) {
   message = JSON.parse(message);
-  if(message.update === true){
-    update_remote();
+  if(message.update === true) {
+    updateRemote();
   }
 }

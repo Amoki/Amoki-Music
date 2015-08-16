@@ -1,4 +1,4 @@
-function update_player() {
+function updatePlayer() {
   $.ajax({
     type: "POST",
     url: "/update-player/",
@@ -9,10 +9,11 @@ function update_player() {
       if(data.current_music) {
         $("#dead-link").removeAttr('disabled');
         $('#music_id-dead-link').val(data.current_music[0].fields.music_id);
-      } else {
+      }
+      else {
         $("#dead-link").attr('disabled', 'disabled');
       }
     },
-    error: log_errors
+    error: logErrors
   });
 }
