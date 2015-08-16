@@ -17,7 +17,7 @@ def home(request):
     if not request.session.get('token', False) or not Room.objects.filter(token=request.session.get('token')).exists():
         return redirect('logout', permanent=True)
 
-    room = Room.objects.get(name=request.session.get('token'))
+    room = Room.objects.get(token=request.session.get('token'))
 
     # The object Music playing
     current_music = room.current_music
