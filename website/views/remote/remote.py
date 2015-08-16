@@ -36,7 +36,9 @@ def trigger_shuffle(request, room):
 @api_view(['POST'])
 @room_required
 def next_music(request, room):
-    if not room.current_music or request.data.get('music_id') == room.current_music.music_id:
+    if not room.current_music:
+        return HttpResponse("Can't skip music: there is no current music", status=409)
+    if request.data.get('music_id') == room.current_music.music_id:
         room.play_next()
     remote_template_rendered = render_remote(room=room)
     return JSONResponse(remote_template_rendered)
