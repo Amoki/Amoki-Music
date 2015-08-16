@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from website.json_renderer import JSONResponse
 from player.models import Room
 from player.serializers import RoomSerializer
+from music.serializers import MusicSerializer
+
 from music.models import Source
 from django.core import serializers
 
