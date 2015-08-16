@@ -23,6 +23,6 @@ def update_duration(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Room)
-def create_invited_debil(sender, instance, created, **kwargs):
+def create_room(sender, instance, created, **kwargs):
     if created:
         events[instance.name] = None
