@@ -231,7 +231,7 @@ function disabled_btn() {
 }
 
 function maj_playlist_current(data) {
-  $('#time-left-progress-bar').countdown('destroy');[
+  $('#time-left-progress-bar').countdown('destroy');
   $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
   $("#btn-next").removeAttr('disabled');
   $("#dead-link").removeAttr('disabled');
