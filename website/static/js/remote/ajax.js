@@ -63,7 +63,7 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   $this.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
   $this.children("button").attr('disabled', 'disabled');
 
-  ajax($this).done(function(data) {
+  ajax($this).done(function() {
     $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
     $this.children("button").removeAttr('disabled');
     modalConfirm($('#modal-add-music'));
@@ -75,7 +75,7 @@ $(document).on('submit', '.ajax-volume', function(e) {
   e.preventDefault();
   var $this = $(this);
 
-  ajax($this).done(function(data) {
+  ajax($this).done(function() {
     $this.children(".volume_clicked").removeClass("volume_clicked");
   })
   .fail(logErrors);
@@ -126,10 +126,10 @@ function updateRemote() {
 
       if(data.current_music) {
         timeline(data.current_time_left, data.current_time_past_percent);
-        maj_playlist_current(data);
+        updatePlaylistCurrent(data);
       }
       else {
-        disabled_btn();
+        disabledBtn();
       }
     },
     error: logErrors

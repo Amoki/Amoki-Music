@@ -1,5 +1,80 @@
-$(document).ready(function() {
+function humanizeSeconds(s) {
+  var fm = [
+    Math.floor(s / 60) % 60,
+    s % 60
+  ];
+  if(Math.floor(s / 60 / 60) % 24 > 0) {
+    fm.unshift(Math.floor(s / 60 / 60) % 24);
+  }
+  return $.map(fm, function(v) {
+    return ((v < 10) ? '0' : '') + v;
+  }).join(':');
+}
 
+function disabledBtn() {
+  $(document).attr('title', 'Amoki\'s musics');
+  $(".header-remote").children().remove();
+  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
+  $("#btn-next").attr('disabled', 'disabled');
+  $("#dead-link").attr('disabled', 'disabled');
+  $(".progress-bar").stop();
+  $(".progress-bar").css('width', '0%');
+  $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+}
+
+function updateHeaderRemote(data) {
+  if(data.current_music) {
+    $(document).attr('title', data.current_music.name);
+    $('#music_id-next').val(data.current_music.music_id);
+    $('#music_id-dead-link').val(data.current_music.music_id);
+  }
+  else {
+    disabledBtn();
+  }
+  $(".remote").children('.header-remote').html(data.template_header_remote);
+}
+
+function updateProgressBar(data) {
+  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
+  $('#time-left-progress-bar').countdown({
+    since: -data.current_time_past,
+    onTick: function(periods) {
+      if((data.current_music.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
+        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+        $('#time-left-progress-bar').countdown('destroy');
+      }
+    },
+  });
+  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.current_music.duration));
+}
+
+function updatePlaylistCurrent(data) {
+  $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+  $("#btn-next").removeAttr('disabled');
+  $("#dead-link").removeAttr('disabled');
+  $('.playlist-ajax').html(data.template_playlist);
+  updateHeaderRemote(data);
+  if(data.current_music) {
+    updateProgressBar(data);
+  }
+}
+
+
+function timeline(currentTimeLeft, currentTimePastPercent) {
+  $(".progress-bar").finish();
+  var actualTime = currentTimeLeft;
+  actualTime *= 1000;
+  $(".progress-bar").width(currentTimePastPercent + '%');
+  $(".progress-bar").animate({'width': '100%'} , {
+      duration: actualTime,
+      easing: 'linear',
+  });
+}
+
+
+$(document).ready(function() {
   function resize() {
     var hauteur;
     if($(window).height() > 765) {
@@ -204,77 +279,3 @@ $(document).ready(function() {
   });
 
 });
-
-function updateHeaderRemote(data) {
-  if(data.current_music) {
-    $(document).attr('title', data.current_music.name);
-    $('#music_id-next').val(data.current_music.music_id);
-    $('#music_id-dead-link').val(data.current_music.music_id);
-  }
-  else {
-    disabledBtn();
-  }
-  $(".remote").children('.header-remote').html(data.template_header_remote);
-}
-
-function disabledBtn() {
-  $(document).attr('title', 'Amoki\'s musics');
-  $(".header-remote").children().remove();
-  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
-  $("#btn-next").attr('disabled', 'disabled');
-  $("#dead-link").attr('disabled', 'disabled');
-  $(".progress-bar").stop();
-  $(".progress-bar").css('width', '0%');
-  $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-}
-
-function updatePlaylistCurrent(data) {
-  $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-  $("#btn-next").removeAttr('disabled');
-  $("#dead-link").removeAttr('disabled');
-  $('.playlist-ajax').html(data.template_playlist);
-  updateHeaderRemote(data);
-  if(data.current_music) {
-    updateProgressBar(data);
-  }
-}
-
-function updateProgressBar(data) {
-  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-  $('#time-left-progress-bar').countdown({
-    since: -data.current_time_past,
-    onTick: function(periods) {
-      if ((data.current_music.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
-        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-        $('#time-left-progress-bar').countdown('destroy');
-      }
-    },
-  });
-  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.current_music.duration));
-}
-
-function timeline(current_time_left, current_time_past_percent) {
-  $(".progress-bar").finish();
-  var actualTime = current_time_left;
-  actualTime *= 1000;
-  $(".progress-bar").width(current_time_past_percent + '%');
-  $(".progress-bar").animate({'width': '100%'} , {
-      duration: actualTime,
-      easing: 'linear',
-  });
-}
-
-function humanizeSeconds(s) {
-  var fm = [
-    Math.floor(s / 60) % 60,
-    s % 60
-  ];
-  if(Math.floor(s / 60 / 60) % 24 > 0) {
-    fm.unshift(Math.floor(s / 60 / 60) % 24);
-  }
-  return $.map(fm, function(v) {
-    return ((v < 10) ? '0' : '') + v;
-  }).join(':');
-}

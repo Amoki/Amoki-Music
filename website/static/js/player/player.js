@@ -28,6 +28,12 @@ function receiveMessage(message) {
   }
 }
 
+function updateVolume(volume) {
+  Object.keys(playerControlWrapper).forEach(function(player) {
+    playerControlWrapper[player].set_volume(volume);
+  });
+}
+
 function displaySlider(value) {
   var offset1 = $("#slider-volume").children('.ui-slider-handle').offset();
   $(".tooltip1").css('top', offset1.top - 120).css('left', offset1.left - 20).text(value);
@@ -94,10 +100,3 @@ $("#player-wrapper").hover(
 $('#icon-volume').click(function() {
     $("#slider-volume").slider("option", "value", 0);
   });
-
-function updateVolume(volume) {
-  Object.keys(playerControlWrapper).forEach(function(player) {
-    playerControlWrapper[player].set_volume(volume);
-  });
-}
-

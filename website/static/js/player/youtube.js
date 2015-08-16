@@ -7,34 +7,6 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var youtubePlayer = {initialized: false};
 
-// This function creates an <iframe> (and YouTube player)
-// after the API code downloads.
-function onYouTubeIframeAPIReady() {
-  youtubePlayer = new YT.Player('youtubePlayer', {
-    height: '390',
-    width: '640',
-    playerVars: {
-      iv_load_policy: '3',
-      modestbranding: '1',
-      rel: '0',
-      controls: '0',
-    },
-    events: {
-      onReady: function() {
-        youtubePlayer.initialized = true;
-        youtubePlayerControl.set_volume(cookieVolume);
-        if(typeof current_music !== "undefined" && current_music_source === "Youtube") {
-          youtubePlayerControl.play({
-            musicId: current_music,
-            timer_start: current_time_past,
-            timer_end: current_music_timer_end,
-          });
-        }
-      },
-    }
-  });
-}
-
 var youtubePlayerControl = {
   play: function(options) {
     if(youtubePlayer.initialized) {
@@ -75,3 +47,31 @@ var youtubePlayerControl = {
     }
   },
 };
+
+// This function creates an <iframe> (and YouTube player)
+// after the API code downloads.
+function onYouTubeIframeAPIReady() {
+  youtubePlayer = new YT.Player('youtubePlayer', {
+    height: '390',
+    width: '640',
+    playerVars: {
+      iv_load_policy: '3',
+      modestbranding: '1',
+      rel: '0',
+      controls: '0',
+    },
+    events: {
+      onReady: function() {
+        youtubePlayer.initialized = true;
+        youtubePlayerControl.set_volume(cookieVolume);
+        if(typeof current_music !== "undefined" && current_music_source === "Youtube") {
+          youtubePlayerControl.play({
+            musicId: current_music,
+            timer_start: current_time_past,
+            timer_end: current_music_timer_end,
+          });
+        }
+      },
+    }
+  });
+}

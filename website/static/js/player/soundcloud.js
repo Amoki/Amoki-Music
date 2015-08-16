@@ -3,19 +3,6 @@ var soundcloudPlayer = SC.Widget(iframeElement);
 soundcloudPlayer.current_volume;
 soundcloudPlayer.initialized = false;
 
-soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
-  soundcloudPlayer.initialized = true;
-  if(typeof current_music !== "undefined" && current_music_source === "Soundcloud") {
-    soundcloudPlayerControl.play({
-      musicId: current_music,
-      timer_start: current_time_past
-    });
-  }
-});
-
-soundcloudPlayer.bind(SC.Widget.Events.ERROR, function() {
-  console.error("Soundcloud error occured");
-});
 
 var soundcloudPlayerControl = {
   play: function(options) {
@@ -74,3 +61,18 @@ var soundcloudPlayerControl = {
     }
   },
 };
+
+
+soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
+  soundcloudPlayer.initialized = true;
+  if(typeof current_music !== "undefined" && current_music_source === "Soundcloud") {
+    soundcloudPlayerControl.play({
+      musicId: current_music,
+      timer_start: current_time_past
+    });
+  }
+});
+
+soundcloudPlayer.bind(SC.Widget.Events.ERROR, function() {
+  console.error("Soundcloud error occured");
+});
