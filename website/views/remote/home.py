@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from rest_framework.renderers import JSONRenderer
 
 from website.json_renderer import JSONResponse
 from player.models import Room
@@ -8,9 +9,6 @@ from player.serializers import RoomSerializer
 from music.serializers import MusicSerializer
 
 from music.models import Source
-from django.core import serializers
-
-import simplejson as json
 
 
 def home(request):
@@ -41,8 +39,7 @@ def home(request):
     sources = Source.objects.all()
 
     if current_music:
-        model_json = serializers.serialize('json', [current_music], fields=('music_id', 'duration'))
-        current_music_json = json.loads(model_json)
+        current_music_json = MusicSerializer(current_music).data
 
         # Total time of current music in hh:mm:ss
         current_total_time = current_music.duration
@@ -50,7 +47,7 @@ def home(request):
     else:
         current_music_json = None
 
-    json_data = json.dumps({
+    json_data = JSONRenderer().render({
         'current_music': current_music_json,
         'time_left': time_left,
         'current_time_left': current_time_left,
