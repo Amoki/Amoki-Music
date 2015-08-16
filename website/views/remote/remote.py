@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
+
+from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from website.decorators import room_required
 from website.json_renderer import JSONResponse
@@ -18,15 +20,15 @@ def volume_change(request, room):
             room.increase_volume()
         else:
             room.decrease_volume()
-        return HttpResponse(204)
-    return HttpResponse(404)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response("No current music", status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
 @room_required
 def trigger_shuffle(request, room):
     if not request.data.get('shuffle') or room.music_set.count() == 0:
-        return HttpResponse(409)
+        return Response("Shuffle is not allowed or no available music in this room", status=status.HTTP_400_BAD_REQUEST)
 
     room.toggle_shuffle((request.data.get('shuffle') == 'true'))
     remote_template_rendered = render_remote(room=room)
@@ -37,10 +39,10 @@ def trigger_shuffle(request, room):
 @room_required
 def next_music(request, room):
     if not room.current_music:
-        return HttpResponse("Can't skip music: there is no current music", status=409)
+        return Response("Can't skip music: there is no current music", status=status.HTTP_409_CONFLICT)
     if request.data.get('music_id') == room.current_music.music_id:
         room.play_next()
-    remote_template_rendered = render_remote(room=room)
+    remote_template_rendered = render_remote(room)
     return JSONResponse(remote_template_rendered)
 
 
@@ -50,7 +52,7 @@ def remove_music(request, room):
     if request.data.get('music_id') == room.current_music.music_id:
         room.signal_dead_link()
         room.play_next()
-    player_template_rendered = render_remote(room=room)
+    player_template_rendered = render_remote(room)
     return JSONResponse(player_template_rendered)
 
 
@@ -73,7 +75,7 @@ def update_remote(request, room):
         else:
             more_musics = False
     except (InvalidPage, EmptyPage):
-        return HttpResponse("Error while refreshing the library, please reload the page", status=409)
+        return Response("Error while refreshing the library, please reload the page", status=status.HTTP_409_CONFLICT)
 
     remote_updated = render_remote(room)
     remote_updated['template_library'] = render_to_string("include/remote/library.html", {

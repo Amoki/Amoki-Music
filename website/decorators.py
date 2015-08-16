@@ -1,5 +1,5 @@
 from functools import wraps
-from django.core.exceptions import PermissionDenied
+from website.exceptions import AuthenticationFailed
 
 from player.models import Room
 
@@ -10,7 +10,7 @@ def room_required(func):
         try:
             room = Room.objects.get(name=request.session.get('room'))
         except:
-            raise PermissionDenied("Invalid room.")
+            raise AuthenticationFailed()
 
         return func(request, room=room, **kwargs)
     return wrap
