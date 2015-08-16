@@ -78,7 +78,7 @@ def update_remote(request, room):
         return Response("Error while refreshing the library, please reload the page", status=status.HTTP_409_CONFLICT)
 
     remote_updated = render_remote(room)
-    remote_updated['template_library'] = render_to_string("include/remote/library.html", {
+    remote_updated['templateLibrary'] = render_to_string("include/remote/library.html", {
         "musics": musics,
         "tab": "library-list-music",
         "moreMusics": more_musics
