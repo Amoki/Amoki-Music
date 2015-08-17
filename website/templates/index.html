@@ -19,10 +19,10 @@
     <script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
     {% if current_music %}
     <script type="text/javascript">
-        $(document).ready(function() {
-          timeline(data.current_time_left, data.current_time_past_percent);
-          updateProgressBar(data);
-        });
+      $(document).ready(function() {
+        timeline(data.currentTimeLeft, data.currentTimePastPercent);
+        updateProgressBar(data);
+      });
     </script>
     {% endif %}
 {% endblock pre_end_head %}
