@@ -47,7 +47,10 @@ class Room(models.Model):
         if music:
             self.current_music = music
             self.save()
-            if music.source.check_validity(music.music_id):
+            if not music.source.check_validity(music.music_id):
+                self.signal_dead_link()
+                self.play_next()
+            else:
                 music.count += 1
                 music.last_play = datetime.now()
                 music.save()
@@ -68,9 +71,6 @@ class Room(models.Model):
                 self.send_message(message)
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
-            else:
-                self.signal_dead_link()
-                self.play_next()
         else:
             self.current_music = None
             self.save()
