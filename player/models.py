@@ -47,7 +47,7 @@ class Room(models.Model):
         if music:
             self.current_music = music
             self.save()
-            if not music.source.check_validity(music.music_id):
+            if not music.is_valid():
                 self.signal_dead_link()
                 self.play_next()
             else:

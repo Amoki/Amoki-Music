@@ -63,6 +63,9 @@ class Music(models.Model):
     def __unicode__(self):
         return self.name
 
+    def is_valid(self):
+        return self.check_validity(self.music_id)
+
 
 class TemporaryMusic(models.Model):
     music_id = models.CharField(max_length=16)
