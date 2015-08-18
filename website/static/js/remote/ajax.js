@@ -98,7 +98,7 @@ $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
   .fail(log_errors);
 });
 
-function update_remote() {
+function update_remote(action) {
   var dataSend = {
       'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
     };
@@ -125,6 +125,14 @@ function update_remote() {
       $('#list-library').prepend(data.template_library);
 
       if(data.current_music) {
+        if(typeof(action) !== 'undefined' && action === "play") {
+          if(!$("#btn-next, #dead-link").prop('disabled')) {
+            freezeButtons();
+          }
+          else {
+            $("#btn-next, #dead-link").prop('disabled', false);
+          }
+        }
         timeline(data.current_time_left, data.current_time_past_percent);
         maj_playlist_current(data);
       }
@@ -139,7 +147,13 @@ function update_remote() {
 // receive a message though the websocket from the server
 function receiveMessage(message) {
   message = JSON.parse(message);
-  if(message.update === true){
-    update_remote();
+  if(message.update === true) {
+    console.log(message);
+    if(typeof(message.action) !== "undefined" && message.action === "play") {
+      update_remote(message.action);
+    }
+    else {
+      update_remote();
+    }
   }
 }

@@ -204,6 +204,18 @@ $(document).ready(function() {
 
 });
 
+function freezeButtons() {
+  $("#btn-next, #dead-link").prop('disabled', function(index, value) {
+    console.log("index : " + index + " ... value : " + value);
+    return !value;
+  });
+  setTimeout(function() {
+    $("#btn-next, #dead-link").prop('disabled', function(index, value) {
+      return !value;
+    });
+  }, 2000);
+}
+
 function maj_header_remote(data) {
   if(data.current_music) {
     $(document).attr('title', data.current_music.name);
@@ -220,8 +232,7 @@ function disabled_btn() {
   $(document).attr('title', 'Amoki\'s musics');
   $(".header-remote").children().remove();
   $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
-  $("#btn-next").attr('disabled', 'disabled');
-  $("#dead-link").attr('disabled', 'disabled');
+  $("#btn-next, #dead-link").prop('disabled', true);
   $(".progress-bar").stop();
   $(".progress-bar").css('width', '0%');
   $('#time-left-progress-bar').countdown('destroy');
@@ -231,8 +242,7 @@ function disabled_btn() {
 function maj_playlist_current(data) {
   $('#time-left-progress-bar').countdown('destroy');
   $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-  $("#btn-next").removeAttr('disabled');
-  $("#dead-link").removeAttr('disabled');
+  //$("#btn-next, #dead-link").prop('disabled', false);
   $('.playlist-ajax').html(data.template_playlist);
   maj_header_remote(data);
   if(data.current_music) {
