@@ -28,18 +28,30 @@ def get_info(ids):
     ).execute()
 
     videos = []
-
     for detail in details.get("items", []):
-        detailedVideo = {
-            'music_id': detail["id"],
-            'name': detail["snippet"]["title"],
-            'channel_name': detail["snippet"]["channelTitle"],
-            'description': detail["snippet"]["description"][:200] + "...",
-            'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
-            'views': detail["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
-        }
-        videos.append(detailedVideo)
+        added = True
+        if "regionRestriction" not in detail["contentDetails"]:
+            if "blocked" in detail["contentDetails"]["regionRestriction"]:
+                if settings.YOUTUBE_LANGUAGE in detail["contentDetails"]["regionRestriction"]["blocked"]:
+                    added = False
+            if "allowed" in detail["contentDetails"]["regionRestriction"]:
+                if len(detail["contentDetails"]["regionRestriction"]["allowed"]) == 0:
+                    added = False
+                else:
+                    if settings.YOUTUBE_LANGUAGE not in detail["contentDetails"]["regionRestriction"]["allowed"]:
+                        added = False
+
+        if added:
+            detailedVideo = {
+                'music_id': detail["id"],
+                'name': detail["snippet"]["title"],
+                'channel_name': detail["snippet"]["channelTitle"],
+                'description': detail["snippet"]["description"][:200] + "...",
+                'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
+                'views': detail["statistics"]["viewCount"],
+                'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
+            }
+            videos.append(detailedVideo)
 
     return videos
 
@@ -90,3 +102,40 @@ class Youtube(Source):
         TemporaryMusic.objects.bulk_create(videos)
 
         return videos
+
+    @staticmethod
+    def check_validity(id):
+        detail = youtube.videos().list(
+            id=id,
+            part='contentDetails,status'
+        ).execute()
+
+        # General validity
+        validity = True
+
+        # Check if the video exist
+        if detail["pageInfo"]["totalResults"] > 0:
+            # Check if the music have a Country restriction
+            country_validity = True
+            if "regionRestriction" in detail["items"][0]["contentDetails"]:
+                if "blocked" in detail["items"][0]["contentDetails"]["regionRestriction"]:
+                    if settings.YOUTUBE_LANGUAGE in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
+                        country_validity = False
+                if "allowed" in detail["items"][0]["contentDetails"]["regionRestriction"]:
+                    if len(detail["items"][0]["contentDetails"]["regionRestriction"]["allowed"]) == 0:
+                        country_validity = False
+                    else:
+                        if settings.YOUTUBE_LANGUAGE not in detail["contentDetails"]["regionRestriction"]["allowed"]:
+                            country_validity = False
+
+            # Check if the music have an embeddable restriction
+            embeddable_validity = True
+            if not detail["items"][0]["status"]["embeddable"]:
+                embeddable_validity = False
+
+            if not country_validity or not embeddable_validity:
+                validity = False
+        else:
+            validity = False
+
+        return validity

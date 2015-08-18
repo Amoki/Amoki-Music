@@ -47,27 +47,30 @@ class Room(models.Model):
         if music:
             self.current_music = music
             self.save()
-            music.count += 1
-            music.last_play = datetime.now()
-            music.save()
+            if not music.is_valid():
+                self.signal_dead_link()
+                self.play_next()
+            else:
+                music.count += 1
+                music.last_play = datetime.now()
+                music.save()
 
-            message = {
-                'action': 'play',
-                'update': True,
-                'source': music.source.name,
-                'options': {
-                    'name': music.name,
-                    'musicId': music.music_id,
-                    'timer_start': music.timer_start,
+                message = {
+                    'action': 'play',
+                    'update': True,
+                    'source': music.source.name,
+                    'options': {
+                        'name': music.name,
+                        'musicId': music.music_id,
+                        'timer_start': music.timer_start,
+                    }
                 }
-            }
-            if music.timer_end:
-                message['options']['timer_end'] = music.timer_end
+                if music.timer_end:
+                    message['options']['timer_end'] = music.timer_end
 
-            self.send_message(message)
-            events[self.name] = Timer(music.duration, self.play_next, ())
-            events[self.name].start()
-
+                self.send_message(message)
+                events[self.name] = Timer(music.duration, self.play_next, ())
+                events[self.name].start()
         else:
             self.current_music = None
             self.save()

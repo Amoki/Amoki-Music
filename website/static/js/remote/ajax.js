@@ -98,7 +98,7 @@ $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
   .fail(logErrors);
 });
 
-function updateRemote() {
+function updateRemote(action) {
   var dataSend = {
       'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
     };
@@ -125,6 +125,14 @@ function updateRemote() {
       $('#list-library').prepend(data.templateLibrary);
 
       if(data.currentMusic) {
+        if(typeof(action) !== 'undefined' && action === "play") {
+          if(!$("#btn-next, #dead-link").prop('disabled')) {
+            freezeButtons();
+          }
+          else {
+            $("#btn-next, #dead-link").prop('disabled', false);
+          }
+        }
         timeline(data.currentTimeLeft, data.currentTimePastPercent);
         updatePlaylistCurrent(data);
       }
@@ -140,6 +148,11 @@ function updateRemote() {
 function receiveMessage(message) {
   message = JSON.parse(message);
   if(message.update === true) {
-    updateRemote();
+    if(typeof(message.action) !== "undefined" && message.action === "play") {
+      updateRemote(message.action);
+    }
+    else {
+      updateRemote();
+    }
   }
 }

@@ -28,6 +28,8 @@ SOUNDCLOUD_KEY = None
 if 'SOUNDCLOUD_KEY' in os.environ:
     SOUNDCLOUD_KEY = os.environ['SOUNDCLOUD_KEY']
 
+YOUTUBE_LANGUAGE = 'FR'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -103,7 +105,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = BASE_DIR + '/collected-static'
+STATIC_ROOT = BASE_DIR + '/../collected-static'
 
 # URL prefix for static files.
 # Example: "http://media.l
@@ -114,7 +116,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'static',
+    'website/static',
 )
 
 # List of finder classes that know how to find static files in
