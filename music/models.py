@@ -17,12 +17,12 @@ class Source(models.Model):
         return Provider.search(query)
 
     def check_validity(self, id):
-        if self.name == "Youtube":
-            for cls in Source.__subclasses__():
-                if cls.__name__ == self.name:
-                    return cls.check_validity(id)
+        Provider = None
+        for cls in Source.__subclasses__():
+            if cls.__name__ == self.name:
+                Provider = cls
 
-        return True
+        return Provider.check_validity(id)
 
 
 class Music(models.Model):

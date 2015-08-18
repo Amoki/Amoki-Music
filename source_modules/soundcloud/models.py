@@ -56,3 +56,7 @@ class Soundcloud(Source):
         TemporaryMusic.objects.bulk_create(videos)
 
         return videos
+
+    @staticmethod
+    def check_validity(id):
+        return True
