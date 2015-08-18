@@ -50,24 +50,6 @@ def get_info(ids):
     return videos
 
 
-def get_validity(id):
-    detail = youtube.videos().list(
-        id=id,
-        part='contentDetails'
-    ).execute()
-
-    validity = False
-    if "regionRestriction" in detail["items"][0]["contentDetails"]:
-        if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
-            validity = False
-        else:
-            validity = True
-    else:
-        validity = True
-
-    return validity
-
-
 class Youtube(Source):
     @staticmethod
     def search(query):
@@ -117,7 +99,26 @@ class Youtube(Source):
 
     @staticmethod
     def check_validity(id):
-        if not get_validity(id):
-            return False
-        else:
-            return True
+        detail = youtube.videos().list(
+            id=id,
+            part='contentDetails,status'
+        ).execute()
+
+        # General validity
+        validity = True
+
+        # Check if the music have a Country restriction
+        country_validity = True
+        if "regionRestriction" in detail["items"][0]["contentDetails"]:
+            if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
+                country_validity = False
+
+        # Check if the music have an embeddable restriction
+        embeddable_validity = True
+        if not detail["items"][0]["status"]["embeddable"]:
+            embeddable_validity = False
+
+        if not country_validity or not embeddable_validity:
+            validity = False
+
+        return validity
