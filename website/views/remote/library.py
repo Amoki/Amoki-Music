@@ -25,7 +25,7 @@ def search_music(request, room):
         "musics": musics_searched,
         "tab": source.name.lower() + "-list-music",
     })
-    data = {'template_library': template_library}
+    data = {'templateLibrary': template_library}
     return JSONResponse(data)
 
 
@@ -79,6 +79,6 @@ def music_infinite_scroll(request, room):
     template = render_to_string("include/remote/library.html", {"musics": musics, "tab": "library-list-music", "more_musics": more_musics})
     data = {
         'template': template,
-        'more_musics': more_musics
+        'moreMusics': more_musics
     }
     return JSONResponse(data)

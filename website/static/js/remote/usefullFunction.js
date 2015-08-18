@@ -1,6 +1,92 @@
-$(document).ready(function() {
+function humanizeSeconds(s) {
+  var fm = [
+    Math.floor(s / 60) % 60,
+    s % 60
+  ];
+  if(Math.floor(s / 60 / 60) % 24 > 0) {
+    fm.unshift(Math.floor(s / 60 / 60) % 24);
+  }
+  return $.map(fm, function(v) {
+    return ((v < 10) ? '0' : '') + v;
+  }).join(':');
+}
 
-  function resize(){
+function disabledBtn() {
+  $(document).attr('title', 'Amoki\'s musics');
+  $(".header-remote").children().remove();
+  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
+  $("#btn-next").attr('disabled', 'disabled');
+  $("#dead-link").attr('disabled', 'disabled');
+  $(".progress-bar").stop();
+  $(".progress-bar").css('width', '0%');
+  $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+}
+
+function updateHeaderRemote(data) {
+  if(data.currentMusic) {
+    $(document).attr('title', data.currentMusic.name);
+    $('#music_id-next').val(data.currentMusic.music_id);
+    $('#music_id-dead-link').val(data.currentMusic.music_id);
+  }
+  else {
+    disabledBtn();
+  }
+  $(".remote").children('.header-remote').html(data.templateHeaderRemote);
+}
+
+function updateProgressBar(data) {
+  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
+  $('#time-left-progress-bar').countdown({
+    since: -data.currentTimePast,
+    onTick: function(periods) {
+      if((data.currentMusic.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
+        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+        $('#time-left-progress-bar').countdown('destroy');
+      }
+    },
+  });
+  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.currentMusic.duration));
+}
+
+function updatePlaylistCurrent(data) {
+  $('#time-left-progress-bar').countdown('destroy');
+  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
+  $("#btn-next").removeAttr('disabled');
+  $("#dead-link").removeAttr('disabled');
+  $('.playlist-ajax').html(data.templatePlaylist);
+  updateHeaderRemote(data);
+  if(data.currentMusic) {
+    updateProgressBar(data);
+  }
+}
+
+
+function timeline(currentTimeLeft, currentTimePastPercent) {
+  $(".progress-bar").finish();
+  var actualTime = currentTimeLeft;
+  actualTime *= 1000;
+  $(".progress-bar").width(currentTimePastPercent + '%');
+  $(".progress-bar").animate({'width': '100%'} , {
+      duration: actualTime,
+      easing: 'linear',
+  });
+}
+
+function freezeButtons() {
+  $("#btn-next, #dead-link").prop('disabled', function(index, value) {
+    return !value;
+  });
+  setTimeout(function() {
+    $("#btn-next, #dead-link").prop('disabled', function(index, value) {
+      return !value;
+    });
+  }, 2000);
+}
+
+$(document).ready(function() {
+  function resize() {
+    var hauteur;
     if($(window).height() > 765) {
       hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true) + 25);
     }
@@ -36,7 +122,7 @@ $(document).ready(function() {
     placement: 'left',
   });
 
-  $("#page").val(current_page);
+  $("#page").val(currentPage);
   $('.ajax_music_infinite_scroll').submit();
 
   $("#query").autocomplete({
@@ -51,7 +137,7 @@ $(document).ready(function() {
         "client": "youtube" // force youtube style response, i.e. jsonp
         }
       );
-      suggestCallBack = function (data) {
+      suggestCallBack = function(data) {
         var suggestions = [];
         if(data[1].length > 0) {
           $.each(data[1], function(key, val) {
@@ -86,46 +172,46 @@ $(document).ready(function() {
     var button = $(event.relatedTarget);
     var duration = parseFloat(button.data("duration"));
     var musicId = button.data("musicid");
-    var channel_name = button.data("channelname");
+    var channelName = button.data("channelname");
     var description = button.data("description");
     $("#btn-modal-preview-valid").data("musicId", musicId);
-    $("#music_preview #music-channel").html("<p>Posted by : " + channel_name + "</p>");
+    $("#music_preview #music-channel").html("<p>Posted by : " + channelName + "</p>");
     $("#music_preview #music-description").html("<p>" + description + "</p>");
-    custom_slider.slide({
+    customSlider.slide({
       element: $("#slider"),
       max: duration,
       values: [0, duration],
       musicId: musicId,
     });
-    custom_slider.update_options({
-      element:$("#slider"),
-      option_with_value: {values: [0, duration]},
+    customSlider.updateOptions({
+      element: $("#slider"),
+      optionWithValue: {values: [0, duration]},
     });
     playerControl.play({musicId: musicId});
   });
-  $('#music_preview').on('hide.bs.modal', function(e) {
+  $('#music_preview').on('hide.bs.modal', function() {
     playerControl.stop();
   });
-  $(document).on("click", "#btn-modal-preview-cancel", function(e) {
+  $(document).on("click", "#btn-modal-preview-cancel", function() {
     $(".input-reset").val("");
   });
-  $(document).on('click', '#btn-modal-preview-valid', function(e) {
+  $(document).on('click', '#btn-modal-preview-valid', function() {
     $("#form-add-" + $(this).data("musicId")).submit();
   });
 
   var playerControl = {
     play: function(options) {
-      var music_options = {
+      var musicOptions = {
         videoId: options.musicId,
         suggestedQuality: 'default',
       };
-      if(options.timer_start) {
-        music_options.startSeconds = options.timer_start;
+      if(options.timerStart) {
+        musicOptions.startSeconds = options.timerStart;
       }
-      if(options.timer_end) {
-        music_options.endSeconds = options.timer_end;
+      if(options.timerEnd) {
+        musicOptions.endSeconds = options.timerEnd;
       }
-      player.cueVideoById(music_options);
+      player.cueVideoById(musicOptions);
     },
     stop: function() {
       player.stopVideo();
@@ -133,13 +219,13 @@ $(document).ready(function() {
     seekTo: function(options) {
       player.seekTo(options.secondes, options.seekAhead);
     },
-    volume_up: function() {
+    volumeUp: function() {
       player.setVolume(Math.min(player.getVolume() + 10, 100));
     },
-    volume_down: function() {
+    volumeDown: function() {
       player.setVolume(Math.max(player.getVolume() - 10, 0));
     },
-    get_state: function() {
+    getState: function() {
       if([-1, 0, 5].indexOf(player.getPlayerState()) > -1) {
         return 0;
       }
@@ -151,7 +237,7 @@ $(document).ready(function() {
 
   var tooltip = $('.tooltip');
   tooltip.hide();
-  var custom_slider = {
+  var customSlider = {
     slide: function(options) {
       var musicId = options.musicId;
       options.element.slider({
@@ -161,129 +247,45 @@ $(document).ready(function() {
         slide: function(event, ui) {
           var offset1 = $(this).children('.ui-slider-handle').first().offset();
           var offset2 = $(this).children('.ui-slider-handle').last().offset();
-          $(".tooltip1").css('top', offset1.top + 30).css('left', offset1.left - 15).text(humanize_seconds(ui.values[0]));
-          $(".tooltip2").css('top', offset2.top + 30).css('left', offset2.left - 15).text(humanize_seconds(ui.values[1]));
+          $(".tooltip1").css('top', offset1.top + 30).css('left', offset1.left - 15).text(humanizeSeconds(ui.values[0]));
+          $(".tooltip2").css('top', offset2.top + 30).css('left', offset2.left - 15).text(humanizeSeconds(ui.values[1]));
 
-          $("#time_start").html(humanize_seconds(ui.values[0]));
-          $("#time_end").html(humanize_seconds(ui.values[1]));
-          if(playerControl.get_state() !== 0) {
+          $("#time_start").html(humanizeSeconds(ui.values[0]));
+          $("#time_end").html(humanizeSeconds(ui.values[1]));
+          if(playerControl.getState() !== 0) {
             playerControl.seekTo({secondes: ui.value, seekAhead: false});
           }
         },
         change: function(event, ui) {
-          $("#time_start").html(humanize_seconds(ui.values[0]));
-          $("#time_end").html(humanize_seconds(ui.values[1]));
+          $("#time_start").html(humanizeSeconds(ui.values[0]));
+          $("#time_end").html(humanizeSeconds(ui.values[1]));
           $("#timer-start-" + musicId).val(ui.values[0]);
           $("#timer-end-" + musicId).val(ui.values[1]);
         },
-        start: function(event, ui) {
+        start: function() {
           tooltip.fadeIn('fast');
         },
         stop: function(event, ui) {
           tooltip.fadeOut('fast');
-          if(playerControl.get_state() !== 0) {
+          if(playerControl.getState() !== 0) {
             playerControl.seekTo({secondes: ui.value, seekAhead: true});
           }
         },
       });
     },
-    update_options: function(options) {
-      var option_to_update = options.option_with_value;
-      for(var option_value in option_to_update) {
-        options.element.slider("option", option_value, option_to_update[option_value]);
+    updateOptions: function(options) {
+      var optionToUpdate = options.optionWithValue;
+      for(var optionValue in optionToUpdate) {
+        options.element.slider("option", optionValue, optionToUpdate[optionValue]);
       }
     },
   };
 
-  $('.btn-change-source').on('click', function () {
-    source_selected = $(this).val();
-    $('.source-selected').html(source_selected);
-    $('#input-source-selected').val(source_selected);
+  $('.btn-change-source').on('click', function() {
+    sourceSelected = $(this).val();
+    $('.source-selected').html(sourceSelected);
+    $('#input-source-selected').val(sourceSelected);
     $('.ajax-search').submit();
   });
 
 });
-
-function freezeButtons() {
-  $("#btn-next, #dead-link").prop('disabled', function(index, value) {
-    console.log("index : " + index + " ... value : " + value);
-    return !value;
-  });
-  setTimeout(function() {
-    $("#btn-next, #dead-link").prop('disabled', function(index, value) {
-      return !value;
-    });
-  }, 2000);
-}
-
-function maj_header_remote(data) {
-  if(data.current_music) {
-    $(document).attr('title', data.current_music.name);
-    $('#music_id-next').val(data.current_music.music_id);
-    $('#music_id-dead-link').val(data.current_music.music_id);
-  }
-  else {
-    disabled_btn();
-  }
-  $(".remote").children('.header-remote').html(data.template_header_remote);
-}
-
-function disabled_btn() {
-  $(document).attr('title', 'Amoki\'s musics');
-  $(".header-remote").children().remove();
-  $('.header-remote').append('<div class="col-md-12 title"><div class="marquee"><span class="now-playing">No music :\'( Add yours now !</span></div></div>');
-  $("#btn-next, #dead-link").prop('disabled', true);
-  $(".progress-bar").stop();
-  $(".progress-bar").css('width', '0%');
-  $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-}
-
-function maj_playlist_current(data) {
-  $('#time-left-progress-bar').countdown('destroy');
-  $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-  //$("#btn-next, #dead-link").prop('disabled', false);
-  $('.playlist-ajax').html(data.template_playlist);
-  maj_header_remote(data);
-  if(data.current_music) {
-    maj_progress_bar(data);
-  }
-}
-
-function maj_progress_bar(data) {
-  $('#time-left-progress-bar-wrapper').removeClass('visibility-hidden');
-  $('#time-left-progress-bar').countdown({
-    since: -data.current_time_past,
-    onTick: function(periods) {
-      if ((data.current_music.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
-        $('#time-left-progress-bar-wrapper').addClass('visibility-hidden');
-        $('#time-left-progress-bar').countdown('destroy');
-      }
-    },
-  });
-  $('#time-left-progress-bar-duration').html("/ " + humanize_seconds(data.current_music.duration))
-}
-
-function timeline(current_time_left, current_time_past_percent) {
-  $(".progress-bar").finish();
-  var actual_time = current_time_left;
-  actual_time *= 1000;
-  $(".progress-bar").width(current_time_past_percent + '%');
-  $(".progress-bar").animate({'width': '100%'} , {
-      duration: actual_time,
-      easing: 'linear',
-  });
-}
-
-function humanize_seconds(s) {
-  var fm = [
-    Math.floor(s / 60) % 60,
-    s % 60
-  ];
-  if(Math.floor(s / 60 / 60) % 24 > 0) {
-    fm.unshift(Math.floor(s / 60 / 60) % 24);
-  }
-  return $.map(fm, function(v, i) {
-    return ((v < 10) ? '0' : '') + v;
-  }).join(':');
-}

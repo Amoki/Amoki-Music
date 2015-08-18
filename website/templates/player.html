@@ -12,15 +12,15 @@
         var token = '{{ request.session.token }}';
         var ws4redisHeartbeat = {{ WS4REDIS_HEARTBEAT }};
         var webSocketUri = '{{ WEBSOCKET_URI }}';
-        var cookie_volume = $.cookie('player_volume');
+        var cookieVolume = $.cookie('playerVolume');
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
     {% if current_music %}
     <script type="text/javascript">
-        var current_time_past = {{current_time_past}};
-        var current_music = '{{current_music.music_id}}';
-        var current_music_source = '{{current_music.source}}';
-        var current_music_timer_end = {{current_music.timer_end|default:"false"}};
+        var currentTimePast = {{current_time_past}};
+        var currentMusic = '{{current_music.music_id}}';
+        var currentMusicSource = '{{current_music.source}}';
+        var currentMusicTimerEnd = {{current_music.timer_end|default:"false"}};
     </script>
     {% endif %}
 {% endblock pre_end_head %}

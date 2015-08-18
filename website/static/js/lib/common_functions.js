@@ -18,7 +18,7 @@ $.ajaxSetup({
 /********************
   AJAX SKELETON DECLARATION
 ********************/
-function ajax(source){
+function ajax(source) {
   return $.ajax({
     url: source.attr('action'),
     type: source.attr('method'),
@@ -27,28 +27,16 @@ function ajax(source){
   });
 }
 
-function log_errors(resultat, statut, erreur){
+function logErrors(resultat, statut, erreur) {
   console.error(resultat.responseText);
   console.error("Statut : " + statut);
   console.error("Error: " + erreur.stack);
 }
 
 /********************
-  AJAX CALLS
-********************/
-$(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
-  e.preventDefault();
-  var $this = $(this);
-  ajax($this).done(function(data) {
-    modal_confirm($('#modal-next-music'));
-  })
-  .fail(log_errors);
-});
-
-/********************
   MODAL WINDOWS
 ********************/
-function modal_confirm(target) {
+function modalConfirm(target) {
   target.modal({
       'show': true,
       'backdrop': false
@@ -60,9 +48,21 @@ function modal_confirm(target) {
 }
 
 /********************
+  AJAX CALLS
+********************/
+$(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
+  e.preventDefault();
+  var $this = $(this);
+  ajax($this).done(function() {
+    modalConfirm($('#modal-next-music'));
+  })
+  .fail(logErrors);
+});
+
+/********************
   WEB SOCKET OBJECT DECLARATION
 ********************/
-jQuery(document).ready(function($) {
+jQuery(document).ready(function() {
   var ws4redis = WS4Redis({
       uri: webSocketUri + token + '?subscribe-broadcast',
       receive_message: receiveMessage,

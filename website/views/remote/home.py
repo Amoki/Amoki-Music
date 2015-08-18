@@ -50,11 +50,11 @@ def home(request):
         current_music_json = None
 
     json_data = JSONRenderer().render({
-        'current_music': current_music_json,
-        'time_left': time_left,
-        'current_time_left': current_time_left,
-        'current_time_past': current_time_past,
-        'current_time_past_percent': current_time_past_percent,
+        'currentMusic': current_music_json,
+        'timeLeft': time_left,
+        'currentTimeLeft': current_time_left,
+        'currentTimePast': current_time_past,
+        'currentTimePastPercent': current_time_past_percent,
     })
 
     # TODO Do not return locals
