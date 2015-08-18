@@ -107,18 +107,22 @@ class Youtube(Source):
         # General validity
         validity = True
 
-        # Check if the music have a Country restriction
-        country_validity = True
-        if "regionRestriction" in detail["items"][0]["contentDetails"]:
-            if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
-                country_validity = False
+        # Check if the video exist
+        if detail["pageInfo"]["totalResults"] > 0:
+            # Check if the music have a Country restriction
+            country_validity = True
+            if "regionRestriction" in detail["items"][0]["contentDetails"]:
+                if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
+                    country_validity = False
 
-        # Check if the music have an embeddable restriction
-        embeddable_validity = True
-        if not detail["items"][0]["status"]["embeddable"]:
-            embeddable_validity = False
+            # Check if the music have an embeddable restriction
+            embeddable_validity = True
+            if not detail["items"][0]["status"]["embeddable"]:
+                embeddable_validity = False
 
-        if not country_validity or not embeddable_validity:
+            if not country_validity or not embeddable_validity:
+                validity = False
+        else:
             validity = False
 
         return validity
