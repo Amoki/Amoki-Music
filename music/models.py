@@ -64,7 +64,7 @@ class Music(models.Model):
         return self.name
 
     def is_valid(self):
-        return self.check_validity(self.music_id)
+        return self.source.check_validity(self.music_id)
 
 
 class TemporaryMusic(models.Model):

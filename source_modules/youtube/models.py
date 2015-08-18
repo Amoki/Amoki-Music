@@ -30,7 +30,7 @@ def get_info(ids):
     videos = []
     for detail in details.get("items", []):
         added = True
-        if "regionRestriction" not in detail["contentDetails"]:
+        if "regionRestriction" in detail["contentDetails"]:
             if "blocked" in detail["contentDetails"]["regionRestriction"]:
                 if settings.YOUTUBE_LANGUAGE in detail["contentDetails"]["regionRestriction"]["blocked"]:
                     added = False
