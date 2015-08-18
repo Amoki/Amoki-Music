@@ -16,6 +16,14 @@ class Source(models.Model):
 
         return Provider.search(query)
 
+    def check_validity(self, id):
+        Provider = None
+        for cls in Source.__subclasses__():
+            if cls.__name__ == self.name:
+                Provider = cls
+
+        return Provider.check_validity(id)
+
 
 class Music(models.Model):
     music_id = models.CharField(max_length=16)
@@ -54,6 +62,9 @@ class Music(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def is_valid(self):
+        return self.check_validity(self.music_id)
 
 
 class TemporaryMusic(models.Model):

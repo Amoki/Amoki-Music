@@ -28,6 +28,8 @@ SOUNDCLOUD_KEY = None
 if 'SOUNDCLOUD_KEY' in os.environ:
     SOUNDCLOUD_KEY = os.environ['SOUNDCLOUD_KEY']
 
+YOUTUBE_LANGUAGE = 'FR'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
