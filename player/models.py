@@ -12,7 +12,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic, Source
+from music.models import Music, TemporaryMusic
 
 
 def generate_token():
@@ -45,10 +45,9 @@ class Room(models.Model):
             events[self.name].cancel()
 
         if music:
-            musicSource = Source.objects.get(name=music.source)
             self.current_music = music
             self.save()
-            if musicSource.check_validity(music.music_id):
+            if music.source.check_validity(music.music_id):
                 music.count += 1
                 music.last_play = datetime.now()
                 music.save()
@@ -70,7 +69,6 @@ class Room(models.Model):
                 events[self.name] = Timer(music.duration, self.play_next, ())
                 events[self.name].start()
             else:
-                print("no valid")
                 self.signal_dead_link()
                 self.play_next()
         else:
