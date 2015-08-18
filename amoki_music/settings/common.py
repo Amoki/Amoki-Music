@@ -21,16 +21,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-YOUTUBE_KEY = None
-if 'YOUTUBE_KEY' in os.environ:
-    YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
-SOUNDCLOUD_KEY = None
-if 'SOUNDCLOUD_KEY' in os.environ:
-    SOUNDCLOUD_KEY = os.environ['SOUNDCLOUD_KEY']
-
-YOUTUBE_LANGUAGE = 'FR'
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -165,3 +155,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_PREFIX = 'session'
+
+#
+# Modules
+#
+
+# Youtube
+YOUTUBE_KEY = os.environ.get('YOUTUBE_KEY', None)
+YOUTUBE_LANGUAGE = os.environ.get('YOUTUBE_LANGUAGE', 'FR')
+
+# Soundcloud
+SOUNDCLOUD_KEY = os.environ.get('SOUNDCLOUD_KEY', None)
