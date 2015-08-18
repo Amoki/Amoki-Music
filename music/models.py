@@ -16,6 +16,14 @@ class Source(models.Model):
 
         return Provider.search(query)
 
+    def check_validity(self, id):
+        if self.name == "Youtube":
+            for cls in Source.__subclasses__():
+                if cls.__name__ == self.name:
+                    return cls.check_validity(id)
+
+        return True
+
 
 class Music(models.Model):
     music_id = models.CharField(max_length=16)

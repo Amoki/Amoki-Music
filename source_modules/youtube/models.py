@@ -28,20 +28,44 @@ def get_info(ids):
     ).execute()
 
     videos = []
-
     for detail in details.get("items", []):
-        detailedVideo = {
-            'music_id': detail["id"],
-            'name': detail["snippet"]["title"],
-            'channel_name': detail["snippet"]["channelTitle"],
-            'description': detail["snippet"]["description"][:200] + "...",
-            'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
-            'views': detail["statistics"]["viewCount"],
-            'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
-        }
-        videos.append(detailedVideo)
+        added = False
+        if "regionRestriction" in detail["contentDetails"]:
+            if 'FR' not in detail["contentDetails"]["regionRestriction"]["blocked"]:
+                added = True
+        else:
+            added = True
+        if added:
+            detailedVideo = {
+                'music_id': detail["id"],
+                'name': detail["snippet"]["title"],
+                'channel_name': detail["snippet"]["channelTitle"],
+                'description': detail["snippet"]["description"][:200] + "...",
+                'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
+                'views': detail["statistics"]["viewCount"],
+                'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
+            }
+            videos.append(detailedVideo)
 
     return videos
+
+
+def get_validity(id):
+    detail = youtube.videos().list(
+        id=id,
+        part='contentDetails'
+    ).execute()
+
+    validity = False
+    if "regionRestriction" in detail["items"][0]["contentDetails"]:
+        if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
+            validity = False
+        else:
+            validity = True
+    else:
+        validity = True
+
+    return validity
 
 
 class Youtube(Source):
@@ -90,3 +114,10 @@ class Youtube(Source):
         TemporaryMusic.objects.bulk_create(videos)
 
         return videos
+
+    @staticmethod
+    def check_validity(id):
+        if not get_validity(id):
+            return False
+        else:
+            return True
