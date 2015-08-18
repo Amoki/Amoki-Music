@@ -29,12 +29,18 @@ def get_info(ids):
 
     videos = []
     for detail in details.get("items", []):
-        added = False
-        if "regionRestriction" in detail["contentDetails"]:
-            if 'FR' not in detail["contentDetails"]["regionRestriction"]["blocked"]:
-                added = True
-        else:
-            added = True
+        added = True
+        if "regionRestriction" not in detail["contentDetails"]:
+            if "blocked" in detail["contentDetails"]["regionRestriction"]:
+                if 'FR' in detail["contentDetails"]["regionRestriction"]["blocked"]:
+                    added = False
+            if "allowed" in detail["contentDetails"]["regionRestriction"]:
+                if len(detail["contentDetails"]["regionRestriction"]["allowed"]) == 0:
+                    added = False
+                else:
+                    if 'FR' not in detail["contentDetails"]["regionRestriction"]["allowed"]:
+                        added = False
+
         if added:
             detailedVideo = {
                 'music_id': detail["id"],
@@ -112,8 +118,15 @@ class Youtube(Source):
             # Check if the music have a Country restriction
             country_validity = True
             if "regionRestriction" in detail["items"][0]["contentDetails"]:
-                if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
-                    country_validity = False
+                if "blocked" in detail["items"][0]["contentDetails"]["regionRestriction"]:
+                    if 'FR' in detail["items"][0]["contentDetails"]["regionRestriction"]["blocked"]:
+                        country_validity = False
+                if "allowed" in detail["items"][0]["contentDetails"]["regionRestriction"]:
+                    if len(detail["items"][0]["contentDetails"]["regionRestriction"]["allowed"]) == 0:
+                        country_validity = False
+                    else:
+                        if 'FR' not in detail["contentDetails"]["regionRestriction"]["allowed"]:
+                            country_validity = False
 
             # Check if the music have an embeddable restriction
             embeddable_validity = True
