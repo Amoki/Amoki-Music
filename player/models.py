@@ -12,7 +12,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic
+from music.models import Music, TemporaryMusic, PlaylistTrack
 
 
 def generate_token():
@@ -26,6 +26,7 @@ class Room(models.Model):
     shuffle = models.BooleanField(default=False)
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
+    tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
 
     def __unicode__(self):
         return self.name
@@ -87,10 +88,12 @@ class Room(models.Model):
             if forced:
                 next_music = previous_music
             else:
-                next_music = self.music_set.filter(date__gt=previous_music.date).order_by('date').first()
+                next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
+            PlaylistTrack.objects.filter(room=self, track=next_music).delete()
             self.play(music=next_music)
+            
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
             musics = self.music_set.exclude(dead_link=True).order_by('-date')
@@ -156,6 +159,7 @@ class Room(models.Model):
 
     def get_remaining_time(self):
         if self.current_music:
+            # TODO USE MUSICS IN PlaylistTracks
             nexts = self.music_set.filter(date__gt=self.current_music.date)
             time_left = 0
             for music in nexts:
@@ -180,11 +184,13 @@ class Room(models.Model):
 
     def get_musics_remaining(self):
         if self.current_music:
-            return self.music_set.filter(date__gt=self.current_music.date).order_by('date')
+            return self.tracks.all().order_by('playlisttrack__order')
+            # return Music.objects.filter(playlisttrack__track__room=self).order_by('playlisttrack__order')
         return []
 
     def get_count_remaining(self):
         if self.current_music:
+            # TODO COUNT PlaylistTracks
             return self.music_set.filter(date__gte=self.current_music.date).count()
         return 0
 
@@ -221,6 +227,20 @@ class Room(models.Model):
             self.shuffle = False
             self.save()
             self.send_update_message()
+
+    def order_playlist(self, id, action):
+        print("action : " + action + " on : " + id)
+        if action == "top":
+            PlaylistTrack.objects.get(room=self, track__music_id=id).top()
+        elif action == "up":
+            PlaylistTrack.objects.get(room=self, track__music_id=id).up()
+        elif action == "down":
+            PlaylistTrack.objects.get(room=self, track__music_id=id).down()
+        elif action == "bot":
+            PlaylistTrack.objects.get(room=self, track__music_id=id).bottom()
+        else:
+            return
+        self.send_update_message()
 
     def send_update_message(self):
         message = {

@@ -134,11 +134,11 @@ function updateRemote(action) {
           }
         }
         timeline(data.currentTimeLeft, data.currentTimePastPercent);
-        updatePlaylistCurrent(data);
       }
       else {
         disabledBtn();
       }
+      updatePlaylistCurrent(data);
     },
     error: logErrors
   });
@@ -156,3 +156,21 @@ function receiveMessage(message) {
     }
   }
 }
+
+
+$(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
+  var dataSend = {
+    'music_id': $(this).closest("tr").attr("id"),
+    'action': $(this).data("action"),
+  };
+  $.ajax({
+    type: "POST",
+    url: "/change-ordering/",
+    data: dataSend,
+    dataType: "json",
+    success: function(data) {
+      console.log("ok! " + data);
+    },
+    error: logErrors
+  });
+});

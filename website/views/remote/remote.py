@@ -46,6 +46,13 @@ def next_music(request, room):
     return JSONResponse(remote_template_rendered)
 
 
+@api_view(['POST'])
+@room_required
+def change_ordering(request, room):
+    room.order_playlist(id=request.data.get('music_id'), action=request.data.get('action'))
+    return JSONResponse("ok!")
+
+
 @api_view(['DELETE'])
 @room_required
 def remove_music(request, room):

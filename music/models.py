@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime, timedelta
 
+from ordered_model.models import OrderedModel
+
 
 class Source(models.Model):
     name = models.CharField(max_length=255, editable=False)
@@ -54,10 +56,17 @@ class Music(models.Model):
                 existing_music.timer_end = kwargs['timer_end']
             existing_music.date = datetime.now()
             existing_music.save()
+            if not existing_music.room.current_music == existing_music:
+                if PlaylistTrack.objects.filter(track__pk=existing_music.pk):
+                    PlaylistTrack.objects.get(track__pk=existing_music.pk).top()
+                else:
+                    PlaylistTrack.objects.create(room=existing_music.room, track=existing_music)
+
             return existing_music
         else:
             music = cls(**kwargs)
             music.save()
+            PlaylistTrack.objects.create(room=music.room, track=music)
             return music
 
     def __unicode__(self):
@@ -83,3 +92,12 @@ class TemporaryMusic(models.Model):
     @classmethod
     def clean(self):
         TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(hours=1)).delete()
+
+
+class PlaylistTrack(OrderedModel):
+    room = models.ForeignKey('player.Room')
+    track = models.ForeignKey('music.Music')
+    order_with_respect_to = 'room'
+
+    class Meta(OrderedModel.Meta):
+        pass
