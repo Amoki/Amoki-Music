@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 
 from ordered_model.models import OrderedModel
@@ -57,11 +58,10 @@ class Music(models.Model):
             existing_music.date = datetime.now()
             existing_music.save()
             if existing_music.room.current_music != existing_music:
-                if PlaylistTrack.objects.filter(track=existing_music):
+                try:
                     PlaylistTrack.objects.get(track=existing_music).top()
-                else:
+                except ObjectDoesNotExist:
                     PlaylistTrack.objects.create(room=existing_music.room, track=existing_music)
-
             return existing_music
         else:
             music = cls(**kwargs)
