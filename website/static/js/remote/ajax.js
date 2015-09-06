@@ -61,11 +61,10 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   e.preventDefault();
   var $this =  $(this);
   $this.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
-  $this.children("button").attr('disabled', 'disabled');
-
+  $('.btn-add-music').attr('disabled', 'disabled');
   ajax($this).done(function() {
     $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
-    $this.children("button").removeAttr('disabled');
+    $('.btn-add-music').removeAttr('disabled');
     modalConfirm($('#modal-add-music'));
   })
   .fail(logErrors);
