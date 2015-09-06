@@ -77,11 +77,6 @@ function freezeButtons() {
   $("#btn-next, #dead-link").prop('disabled', function(index, value) {
     return !value;
   });
-  setTimeout(function() {
-    $("#btn-next, #dead-link").prop('disabled', function(index, value) {
-      return !value;
-    });
-  }, 2000);
 }
 
 $(document).ready(function() {

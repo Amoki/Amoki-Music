@@ -51,6 +51,7 @@ function modalConfirm(target) {
   AJAX CALLS
 ********************/
 $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
+  freezeButtons();
   e.preventDefault();
   var $this = $(this);
   ajax($this).done(function() {
