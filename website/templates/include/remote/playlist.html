@@ -6,10 +6,17 @@
 			<td><span class="badge">{{music.duration|secToDuration}}</span></td>
 			{% if playlist|length > 1 %}
 			<td>
-				<i class="fa fa-1-5 fa-angle-double-up ordering-to-top" data-action="top"></i>
-				<i class="fa fa-1-5 fa-angle-up ordering-move-up" data-action="up"></i>
-				<i class="fa fa-1-5 fa-angle-down ordering-move-down" data-action="down"></i>
-				<i class="fa fa-1-5 fa-angle-double-down ordering-to-bot" data-action="bot"></i>
+				{% if not forloop.first %}
+					<i class="fa fa-1-5 fa-angle-double-up ordering-to-top" data-action="top"></i>
+					<i class="fa fa-1-5 fa-angle-up ordering-move-up" data-action="up"></i>
+				{% else %}
+					
+				{% endif %}
+				{% if not forloop.last %}
+					<i class="fa fa-1-5 fa-angle-down ordering-move-down" data-action="down"></i>
+					<i class="fa fa-1-5 fa-angle-double-down ordering-to-bot" data-action="bottom"></i>
+				{% endif %}
+				<span class="pull-right">| <i class="fa fa-arrows"></i></span>
 			</td>
 			{% endif %}
 		</tr>

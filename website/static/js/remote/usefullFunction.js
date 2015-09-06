@@ -288,4 +288,10 @@ $(document).ready(function() {
     $('.ajax-search').submit();
   });
 
+
+  $( "#sortable" ).sortable({
+    placeholder: "ui-state-highlight",
+  });
+  $( "#sortable" ).disableSelection();
+
 });

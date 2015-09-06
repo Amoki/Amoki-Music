@@ -223,12 +223,15 @@ class Room(models.Model):
             self.save()
             self.send_update_message()
 
-    def order_playlist(self, id, action):
-        if action not in ['top', 'up', 'down', 'bot']:
+    def order_playlist(self, id, action, target=None):
+        if action not in ['top', 'up', 'down', 'bottom', 'to']:
             return
         playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
-        getattr(playlist, action)()
-        self.send_update_message()
+        if target or target == 0:
+            getattr(playlist, action)(target)
+        else:
+            getattr(playlist, action)()
+        send_update_message()
 
     def send_update_message(self):
         message = {

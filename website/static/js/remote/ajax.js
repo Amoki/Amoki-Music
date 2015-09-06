@@ -157,20 +157,32 @@ function receiveMessage(message) {
   }
 }
 
+function change_ordering_ajax(dataSend){
+   $.ajax({
+    type: "POST",
+    url: "/change-ordering/",
+    data: dataSend,
+    dataType: "json",
+    success: function() {
+      // TODO : overlay on playlist + loader
+    },
+    error: logErrors
+  });
+}
 
 $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
   var dataSend = {
     'music_id': $(this).closest("tr").attr("id"),
     'action': $(this).data("action"),
   };
-  $.ajax({
-    type: "POST",
-    url: "/change-ordering/",
-    data: dataSend,
-    dataType: "json",
-    success: function(data) {
-      console.log("ok! " + data);
-    },
-    error: logErrors
-  });
+  change_ordering_ajax(dataSend);
+});
+
+$(document).on( "sortupdate", function( event, ui ) {
+  var dataSend = {
+    'music_id': ui.item[0].id,
+    'action': "to",
+    'target': ui.item.index(),
+  };
+  change_ordering_ajax(dataSend);
 });

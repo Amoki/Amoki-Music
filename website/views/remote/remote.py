@@ -50,8 +50,12 @@ def next_music(request, room):
 @room_required
 def change_ordering(request, room):
     if request.data.get('music_id') and request.data.get('action'):
-        room.order_playlist(id=request.data.get('music_id'), action=request.data.get('action'))
-    return JSONResponse(status=status.HTTP_204_NO_CONTENT)
+        try:
+            target = int(request.data.get('target'))
+        except (ValueError, TypeError):
+            target = None
+        room.order_playlist(id=request.data.get('music_id'), action=request.data.get('action'), target=target)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['DELETE'])
@@ -104,13 +108,12 @@ def render_remote(room):
 
     shuffle_state = room.shuffle
 
-    template_playlist = render_to_string("include/remote/playlist.html", {
-        "playlist": room.get_musics_remaining(),
-        "shuffle": shuffle_state
-    })
-    template_header_remote = render_to_string("include/remote/header_remote.html", {
-        "current_music": room.current_music
-    })
+    playlist_rendered = render_playlist(room)
+
+    template_playlist = playlist_rendered['templatePlaylist']
+
+    template_header_remote = playlist_rendered['templateHeaderRemote']
+
     current_time_left = room.get_current_remaining_time()
 
     current_time_past = room.get_current_time_past()
@@ -125,4 +128,19 @@ def render_remote(room):
         'currentTimeLeft': current_time_left,
         'currentTimePast': current_time_past,
         'currentTimePastPercent': current_time_past_percent,
+    }
+
+
+def render_playlist(room):
+    template_header_remote = render_to_string("include/remote/header_remote.html", {
+        "current_music": room.current_music
+    })
+    template_playlist = render_to_string("include/remote/playlist.html", {
+        "playlist": room.get_musics_remaining(),
+        "shuffle": room.shuffle
+    })
+
+    return {
+        'templateHeaderRemote': template_header_remote,
+        'templatePlaylist': template_playlist,
     }
