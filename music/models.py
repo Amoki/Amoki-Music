@@ -56,9 +56,9 @@ class Music(models.Model):
                 existing_music.timer_end = kwargs['timer_end']
             existing_music.date = datetime.now()
             existing_music.save()
-            if not existing_music.room.current_music == existing_music:
-                if PlaylistTrack.objects.filter(track__pk=existing_music.pk):
-                    PlaylistTrack.objects.get(track__pk=existing_music.pk).top()
+            if existing_music.room.current_music != existing_music:
+                if PlaylistTrack.objects.filter(track=existing_music):
+                    PlaylistTrack.objects.get(track=existing_music).top()
                 else:
                     PlaylistTrack.objects.create(room=existing_music.room, track=existing_music)
 

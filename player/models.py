@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Sum
 
 import random
 import math
@@ -159,11 +160,7 @@ class Room(models.Model):
 
     def get_remaining_time(self):
         if self.current_music:
-            # TODO USE MUSICS IN PlaylistTracks
-            nexts = self.music_set.filter(date__gt=self.current_music.date)
-            time_left = 0
-            for music in nexts:
-                time_left += music.duration
+            time_left = (self.tracks.all().aggregate(Sum('duration')).values()[0] or 0)
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
@@ -185,13 +182,11 @@ class Room(models.Model):
     def get_musics_remaining(self):
         if self.current_music:
             return self.tracks.all().order_by('playlisttrack__order')
-            # return Music.objects.filter(playlisttrack__track__room=self).order_by('playlisttrack__order')
         return []
 
     def get_count_remaining(self):
         if self.current_music:
-            # TODO COUNT PlaylistTracks
-            return self.music_set.filter(date__gte=self.current_music.date).count()
+            return self.tracks.all().count()
         return 0
 
     def signal_dead_link(self):
@@ -229,17 +224,10 @@ class Room(models.Model):
             self.send_update_message()
 
     def order_playlist(self, id, action):
-        print("action : " + action + " on : " + id)
-        if action == "top":
-            PlaylistTrack.objects.get(room=self, track__music_id=id).top()
-        elif action == "up":
-            PlaylistTrack.objects.get(room=self, track__music_id=id).up()
-        elif action == "down":
-            PlaylistTrack.objects.get(room=self, track__music_id=id).down()
-        elif action == "bot":
-            PlaylistTrack.objects.get(room=self, track__music_id=id).bottom()
-        else:
+        if action not in ['top', 'up', 'down', 'bot']:
             return
+        playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
+        getattr(playlist, action)()
         self.send_update_message()
 
     def send_update_message(self):

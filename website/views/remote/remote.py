@@ -49,8 +49,9 @@ def next_music(request, room):
 @api_view(['POST'])
 @room_required
 def change_ordering(request, room):
-    room.order_playlist(id=request.data.get('music_id'), action=request.data.get('action'))
-    return JSONResponse("ok!")
+    if request.data.get('music_id') and request.data.get('action'):
+        room.order_playlist(id=request.data.get('music_id'), action=request.data.get('action'))
+    return JSONResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['DELETE'])
