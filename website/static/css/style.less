@@ -219,10 +219,24 @@ button > .glyphicon, a > .glyphicon {
 	overflow-y : auto;
 	background-color: rgba(255,255,255,0.5) !important;
 	min-height: 390px;
+	position: relative;
 }
 
 .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
 	background: rgba(255,255,255,0.5) !important;
+}
+
+#overlay-playlist {
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(160,160,160,0.8);
+    display: table;
+    overflow: hidden;
+}
+.loader{
+    display: table-cell !important;
+    vertical-align: middle;
 }
 
 .ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot {

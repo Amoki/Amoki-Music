@@ -139,6 +139,7 @@ function updateRemote(action) {
         disabledBtn();
       }
       updatePlaylistCurrent(data);
+      $('#overlay-playlist').hide();
     },
     error: logErrors
   });
@@ -158,14 +159,12 @@ function receiveMessage(message) {
 }
 
 function change_ordering_ajax(dataSend){
-   $.ajax({
+  $('#overlay-playlist').show();
+  $.ajax({
     type: "POST",
     url: "/change-ordering/",
     data: dataSend,
     dataType: "json",
-    success: function() {
-      // TODO : overlay on playlist + loader
-    },
     error: logErrors
   });
 }

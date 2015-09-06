@@ -231,7 +231,7 @@ class Room(models.Model):
             getattr(playlist, action)(target)
         else:
             getattr(playlist, action)()
-        send_update_message()
+        self.send_update_message()
 
     def send_update_message(self):
         message = {

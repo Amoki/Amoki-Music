@@ -110,6 +110,8 @@ $(document).ready(function() {
 
   resize();
 
+  $("#overlay-playlist").hide();
+
   $(".btn").click(function() {
     $(this).blur();
   });
