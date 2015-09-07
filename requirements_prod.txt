@@ -6,4 +6,5 @@ django-websocket-redis==0.4.3
 django-redis-sessions==0.4.0
 djangorestframework==3.2.1
 markdown==2.6.2
+django-ordered-model==0.4.2
 uwsgi==2.0.10
