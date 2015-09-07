@@ -77,11 +77,6 @@ function freezeButtons() {
   $("#btn-next, #dead-link").prop('disabled', function(index, value) {
     return !value;
   });
-  setTimeout(function() {
-    $("#btn-next, #dead-link").prop('disabled', function(index, value) {
-      return !value;
-    });
-  }, 2000);
 }
 
 $(document).ready(function() {
@@ -109,6 +104,8 @@ $(document).ready(function() {
   });
 
   resize();
+
+  $("#overlay-playlist").hide();
 
   $(".btn").click(function() {
     $(this).blur();
@@ -287,5 +284,11 @@ $(document).ready(function() {
     $('#input-source-selected').val(sourceSelected);
     $('.ajax-search').submit();
   });
+
+
+  $( "#sortable" ).sortable({
+    placeholder: "ui-state-highlight",
+  });
+  $( "#sortable" ).disableSelection();
 
 });

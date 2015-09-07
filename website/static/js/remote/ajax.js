@@ -61,11 +61,10 @@ $(document).on('submit', '.ajax-add-music', function(e) {
   e.preventDefault();
   var $this =  $(this);
   $this.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
-  $this.children("button").attr('disabled', 'disabled');
-
+  $('.btn-add-music').attr('disabled', 'disabled');
   ajax($this).done(function() {
     $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
-    $this.children("button").removeAttr('disabled');
+    $('.btn-add-music').removeAttr('disabled');
     modalConfirm($('#modal-add-music'));
   })
   .fail(logErrors);
@@ -134,11 +133,12 @@ function updateRemote(action) {
           }
         }
         timeline(data.currentTimeLeft, data.currentTimePastPercent);
-        updatePlaylistCurrent(data);
       }
       else {
         disabledBtn();
       }
+      updatePlaylistCurrent(data);
+      $('#overlay-playlist').hide();
     },
     error: logErrors
   });
@@ -156,3 +156,31 @@ function receiveMessage(message) {
     }
   }
 }
+
+function change_ordering_ajax(dataSend){
+  $('#overlay-playlist').show();
+  $.ajax({
+    type: "POST",
+    url: "/change-ordering/",
+    data: dataSend,
+    dataType: "json",
+    error: logErrors
+  });
+}
+
+$(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
+  var dataSend = {
+    'music_id': $(this).closest("tr").attr("id"),
+    'action': $(this).data("action"),
+  };
+  change_ordering_ajax(dataSend);
+});
+
+$(document).on( "sortupdate", function( event, ui ) {
+  var dataSend = {
+    'music_id': ui.item[0].id,
+    'action': "to",
+    'target': ui.item.index(),
+  };
+  change_ordering_ajax(dataSend);
+});

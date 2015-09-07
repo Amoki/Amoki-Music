@@ -19,6 +19,7 @@ urlpatterns = patterns('website.views',
     url(r'^dead-link/$', 'remote.remote.remove_music'),
     url(r'^volume/$', 'remote.remote.volume_change'),
     url(r'^update-remote/$', 'remote.remote.update_remote'),
+    url(r'^change-ordering/$', 'remote.remote.change_ordering'),
 
     url(r'^update-player/$', 'player.players.update_player'),
 )

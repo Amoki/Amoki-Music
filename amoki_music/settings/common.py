@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     # Pip lib
     'ws4redis',
     'rest_framework',
+    'ordered_model',
 
     # Our apps
     'player',
