@@ -137,7 +137,8 @@ function updateRemote(action) {
       else {
         disabledBtn();
       }
-      updatePlaylistCurrent(data);
+      // updatePlaylistCurrent(data);
+      musicsPlaylistVM.getPlaylist();
       $('#overlay-playlist').hide();
     },
     error: logErrors

@@ -288,6 +288,8 @@ $(document).ready(function() {
 
   $("#sortable").sortable({
     placeholder: "ui-state-highlight",
+    containment: ".panel-playlist",
+    scroll: false,
   });
   $("#sortable").disableSelection();
 
