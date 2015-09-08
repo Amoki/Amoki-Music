@@ -286,9 +286,9 @@ $(document).ready(function() {
   });
 
 
-  $( "#sortable" ).sortable({
+  $("#sortable").sortable({
     placeholder: "ui-state-highlight",
   });
-  $( "#sortable" ).disableSelection();
+  $("#sortable").disableSelection();
 
 });

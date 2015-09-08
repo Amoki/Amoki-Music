@@ -144,3 +144,14 @@ def render_playlist(room):
         'templateHeaderRemote': template_header_remote,
         'templatePlaylist': template_playlist,
     }
+
+
+@api_view(['GET'])
+@room_required
+def getPlaylist(request, room):
+    playlist = room.get_musics_remaining()
+    jsonResponse = []
+    for music in playlist:
+        musicT = MusicSerializer(music).data
+        jsonResponse.append(musicT)
+    return JSONResponse(jsonResponse)

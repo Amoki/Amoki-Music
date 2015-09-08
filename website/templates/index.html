@@ -7,6 +7,7 @@
         var webSocketUri = '{{ WEBSOCKET_URI }}';
         var data = {{json_data|safe}}
     </script>
+    <script type="text/javascript" src="{% static 'js/remote/knockout.remote.js' %}"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/ws4redis.js"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
@@ -49,8 +50,26 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Playlist</h3>
                             </div>
-                            <tbody id="sortable" class="playlist-ajax">
-                                {% include "include/remote/playlist.html" %}
+                            <!-- ko if: musics().length -->
+                            <tbody id="sortable" class="playlist-ajax" data-bind="foreach: musics">
+                                <tr class="playlist-item" id="">
+                                    <td data-bind="text: name"></td>
+                                    <td><span class="badge" data-bind="text: humanizeSeconds(duration())"></span></td>
+                                    <td>
+                                        <i class="fa fa-1-5 fa-angle-double-up ordering-to-top" data-action="top" data-bind="visible : $index()!=0" ></i>
+                                        <i class="fa fa-1-5 fa-angle-up ordering-move-up" data-action="up" data-bind="visible : $index()!=0" ></i>
+                                        <i class="fa fa-1-5 fa-angle-down ordering-move-down" data-action="down" data-bind="visible: $index() < $parent.musics().length - 1"></i>
+                                        <i class="fa fa-1-5 fa-angle-double-down ordering-to-bot" data-action="bottom" data-bind="visible: $index() < $parent.musics().length - 1"></i>
+
+                                        <span class="pull-right">| <i class="fa fa-arrows"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <!-- /ko -->
+                             <tbody data-bind="if: musics().length === 0">
+                                <tr class="empty">
+                                    <td>No more musics in the playlist !</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -38,8 +38,8 @@ function logErrors(resultat, statut, erreur) {
 ********************/
 function modalConfirm(target) {
   target.modal({
-      'show': true,
-      'backdrop': false
+    'show': true,
+    'backdrop': false
   }).on('shown.bs.modal', function() {
     setTimeout(function() {
       target.modal('hide');
@@ -64,9 +64,9 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   WEB SOCKET OBJECT DECLARATION
 ********************/
 jQuery(document).ready(function() {
-  var ws4redis = WS4Redis({
-      uri: webSocketUri + token + '?subscribe-broadcast',
-      receive_message: receiveMessage,
-      heartbeat_msg: ws4redisHeartbeat
+  var ws4redis = new WS4Redis({
+    uri: webSocketUri + token + '?subscribe-broadcast',
+    receive_message: receiveMessage,
+    heartbeat_msg: ws4redisHeartbeat
   });
 });

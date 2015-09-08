@@ -1,9 +1,12 @@
 {% load filters %}
+<!-- TODO FOREACH KNOCKOUT -->
 {% for music in musics %}
 <li class="list-group-item item-lib {{tab}}">
-	<div class="row row-list-item">
-		<img class="col-xs-3 col-lg-3" src="{{music.thumbnail}}" style="padding:0px">
-		<div class="col-xs-7 col-lg-7" style="padding-right:0px">
+	<div class="row-list-item">
+		<div class="library-img-music">
+			<img src="{{music.thumbnail}}">
+		</div>
+		<div class="library-music-info">
 			<div class="row">
 				<div class="col-xs-12" style="min-height:45px">{{music.name}}</div>
 			</div>
@@ -16,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		<form id="form-add-{{music.music_id}}" class="ajax-add-music col-xs-2 col-lg-2" action="/add-music/" method="post">
+		<form id="form-add-{{music.music_id}}" class="ajax-add-music" action="/add-music/" method="post">
 			<input class="music_id" type="hidden" value="{{music.music_id}}" name="music_id">
 			<input type="hidden" class="input-reset" id="timer-start-{{music.music_id}}" name="timer-start">
 			<input type="hidden" class="input-reset" id="timer-end-{{music.music_id}}" name="timer-end">
