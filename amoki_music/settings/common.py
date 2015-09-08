@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     # Our apps
     'player',
     'music',
-    'website',
+    'endpoints',
     'source_modules.soundcloud',
     'source_modules.youtube',
 )
