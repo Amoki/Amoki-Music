@@ -9,13 +9,24 @@ from player.serializers import RoomSerializer
 
 class RoomView(APIView):
     """
-    Get room info or create a new room.
+    Room resource.
     """
+
     @room_required
     def get(self, request, room, format=None):
+        """
+        Get current room info
+        ---
+        serializer: RoomSerializer
+        """
         return JSONResponse(RoomSerializer(room).data)
 
     def post(self, request, format=None):
+        """
+        Post new room
+        ---
+        serializer: RoomSerializer
+        """
         serializer = RoomSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -24,6 +35,11 @@ class RoomView(APIView):
 
     @room_required
     def patch(self, request, room, format=None):
+        """
+        Update current room
+        ---
+        serializer: RoomSerializer
+        """
         serializer = RoomSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -32,5 +48,10 @@ class RoomView(APIView):
 
     @room_required
     def delete(self, request, room, format=None):
+        """
+        Delete current room
+        ---
+        serializer: RoomSerializer
+        """
         room.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

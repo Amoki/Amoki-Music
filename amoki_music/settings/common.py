@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'ws4redis',
     'rest_framework',
     'ordered_model',
+    'rest_framework_swagger',
 
     # Our apps
     'player',
@@ -167,3 +168,22 @@ YOUTUBE_LANGUAGE = os.environ.get('YOUTUBE_LANGUAGE', 'FR')
 
 # Soundcloud
 SOUNDCLOUD_KEY = os.environ.get('SOUNDCLOUD_KEY', None)
+
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    'api_path': '/',
+    'enabled_methods': [
+        'get',
+        'post',
+        'patch',
+        'delete'
+    ],
+    'info': {
+        'contact': 'hugo.duroux@gmail.com',
+        'title': 'Amoki Music',
+    },
+    'doc_expansion': 'none',
+    'token_type': 'Bearer'
+}
