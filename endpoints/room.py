@@ -40,7 +40,7 @@ class RoomView(APIView):
         ---
         serializer: RoomSerializer
         """
-        serializer = RoomSerializer(data=request.data, partial=True)
+        serializer = RoomSerializer(room, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
