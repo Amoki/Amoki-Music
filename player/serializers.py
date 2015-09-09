@@ -17,11 +17,11 @@ class RoomSerializer(serializers.ModelSerializer):
     playlist = serializers.ListField(source='get_musics_remaining', child=MusicSerializer(), read_only=True)
 
     # Validators for post method
+    password = serializers.CharField(max_length=128, write_only=True)
     name = serializers.CharField(max_length=64)
-    password = serializers.CharField(max_length=128)
     can_adjust_volume = serializers.BooleanField()
     shuffle = serializers.BooleanField()
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'token')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'token', 'password')

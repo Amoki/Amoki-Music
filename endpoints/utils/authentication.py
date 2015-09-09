@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
-from players.models import Room
+from player.models import Room
 
 
 def get_authorization_header(request):
@@ -34,8 +34,9 @@ def authenticate_credentials(token):
 def authenticate(request):
     auth = get_authorization_header(request).split()
 
-    if not auth or auth[0].lower() != b'token':
-        return None
+    if not auth or auth[0].lower() != b'bearer':
+        msg = _('Invalid token header. No credentials provided.')
+        raise exceptions.AuthenticationFailed(msg)
 
     if len(auth) == 1:
         msg = _('Invalid token header. No credentials provided.')
