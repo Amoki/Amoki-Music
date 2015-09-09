@@ -8,7 +8,7 @@ from music.serializers import MusicSerializer
 
 class RoomsSerializer(serializers.ModelSerializer):
     """
-    Serializing all the Room
+    Serializing all the Rooms
     """
     # Get more info about room
     count_left = serializers.IntegerField(source='get_count_remaining', read_only=True)
@@ -23,7 +23,7 @@ class RoomsSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     """
-    Serializing all the Room
+    Serializing one Room
     """
     # Get more info about room
     count_left = serializers.IntegerField(source='get_count_remaining', read_only=True)
@@ -31,6 +31,7 @@ class RoomSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=64, read_only=True)
     current_time_left = serializers.IntegerField(source='get_current_remaining_time', read_only=True)
     playlist = serializers.ListField(source='get_musics_remaining', child=MusicSerializer(), read_only=True)
+    current_music = MusicSerializer(read_only=True)
 
     # Validators for post method
     password = serializers.CharField(max_length=128, write_only=True, required=True)

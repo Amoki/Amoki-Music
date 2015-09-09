@@ -55,3 +55,17 @@ class RoomView(APIView):
         """
         room.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RoomNextView(APIView):
+    """
+    Room resource.
+    """
+
+    @room_required
+    def post(self, request, room, format=None):
+        """
+        Skip music and play next one
+        """
+        room.play_next()
+        return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
