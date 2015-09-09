@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from endpoints.utils.json_renderer import JSONResponse
 from endpoints.utils.decorators import room_required
 from player.serializers import RoomSerializer
 
@@ -19,7 +18,7 @@ class RoomView(APIView):
         ---
         serializer: RoomSerializer
         """
-        return JSONResponse(RoomSerializer(room).data)
+        return Response(RoomSerializer(room).data)
 
     def post(self, request, format=None):
         """
