@@ -26,7 +26,12 @@ function LibraryViewModel() {
   var self = this;
   self.musicsLibrary = ko.observableArray([]);
   self.musicSearch = ko.observableArray([]);
-  self.sources = ko.observableArray([]);
+
+  // TEST ONLY
+  self.sources = ko.observableArray([
+      new Source({name: "test"}),
+      new Source({name: "test2"}),
+    ]);
 
   self.addMusic = function(Music) {
     endpointAddMusic(Music);
@@ -83,7 +88,7 @@ function PlaylistViewModel() {
 
   // Load Playlist from server, convert it to Music instances, then populate self.musics
   self.getPlaylist = function() {
-    $.getJSON("/playlist", function(allData) {
+    $.getJSON("/playlist/", function(allData) {
       var mappedMusics = $.map(allData, function(item) {
         return new Music(item);
       });
@@ -94,14 +99,17 @@ function PlaylistViewModel() {
   };
 }
 
+
 $(function() {
   musicsPlaylistVM = new PlaylistViewModel();
   musicsLibraryVM = new LibraryViewModel();
   // Local Binding to avoid multi binding by musicsPlaylistVM and musicsLibraryVM
-  $('.playlist-ko').each(function(index) {
-    ko.applyBindings(musicsPlaylistVM, $('.playlist-ko')[index]);
+  $('.ko-playlist').each(function(index) {
+    ko.applyBindings(musicsPlaylistVM, $('.ko-playlist')[index]);
   });
-  // ko.applyBindings(musicsLibraryVM);
+  $('.ko-library').each(function(index) {
+    ko.applyBindings(musicsLibraryVM, $('.ko-library')[index]);
+  });
 
   // TODO Transfer to Redis onSubscribe
   musicsPlaylistVM.getPlaylist();

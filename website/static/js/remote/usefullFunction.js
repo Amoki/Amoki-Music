@@ -68,8 +68,8 @@ function timeline(currentTimeLeft, currentTimePastPercent) {
   actualTime *= 1000;
   $(".progress-bar").width(currentTimePastPercent + '%');
   $(".progress-bar").animate({'width': '100%'} , {
-      duration: actualTime,
-      easing: 'linear',
+    duration: actualTime,
+    easing: 'linear',
   });
 }
 
@@ -120,18 +120,18 @@ $(document).ready(function() {
   });
 
   $("#page").val(currentPage);
-  $('.ajax_music_infinite_scroll').submit();
+  // $('.ajax_music_infinite_scroll').submit();
 
   $("#query").autocomplete({
     minLength: 2,
     source: function(request, response) {
       $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
         {
-        "hl": "fr", // Language
-        "ds": "yt", // Restrict lookup to youtube
-        "jsonp": "suggestCallBack", // jsonp callback function name
-        "q": request.term, // query term
-        "client": "youtube" // force youtube style response, i.e. jsonp
+          "hl": "fr", // Language
+          "ds": "yt", // Restrict lookup to youtube
+          "jsonp": "suggestCallBack", // jsonp callback function name
+          "q": request.term, // query term
+          "client": "youtube" // force youtube style response, i.e. jsonp
         }
       );
       suggestCallBack = function(data) {
