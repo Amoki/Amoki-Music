@@ -125,7 +125,7 @@ class Youtube(Source):
                     if len(detail["items"][0]["contentDetails"]["regionRestriction"]["allowed"]) == 0:
                         country_validity = False
                     else:
-                        if settings.YOUTUBE_LANGUAGE not in detail["contentDetails"]["regionRestriction"]["allowed"]:
+                        if settings.YOUTUBE_LANGUAGE not in detail["items"][0]["contentDetails"]["regionRestriction"]["allowed"]:
                             country_validity = False
 
             # Check if the music have an embeddable restriction
