@@ -1,6 +1,6 @@
 function endpointAddMusic(newMusic) {
   // Return a json serialized Music object
-  $.ajax("/music", {
+  $.ajax("/music/", {
     data: ko.toJSON({music: newMusic}),
     type: "post",
     contentType: "application/json",

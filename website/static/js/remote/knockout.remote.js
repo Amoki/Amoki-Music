@@ -24,7 +24,13 @@ function Source(data) {
 // Library view model
 function LibraryViewModel() {
   var self = this;
+  // library part
   self.musicsLibrary = ko.observableArray([]);
+  self.hasPrevious = ko.observable();
+  self.hasNext = ko.observable();
+  self.currentPage = ko.observable();
+
+  // search part
   self.musicSearch = ko.observableArray([]);
 
   // TEST ONLY
@@ -33,8 +39,9 @@ function LibraryViewModel() {
       new Source({name: "test2"}),
     ]);
 
-  self.addMusic = function(Music) {
-    endpointAddMusic(Music);
+  self.addMusic = function() {
+    // endpointAddMusic(Music);
+    console.log(ko.toJSON(this));
   };
 
   self.searchMusic = function(query) {
@@ -50,8 +57,8 @@ function LibraryViewModel() {
   };
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
-  self.getLibrary = function(page) {
-    $.getJSON("/musics?page=" + page, function(allData) {
+  self.getLibrary = function() {
+    $.getJSON("/musics/", function(allData) {
       var mappedMusics = $.map(allData, function(item) {
         return new Music(item);
       });
@@ -113,5 +120,5 @@ $(function() {
 
   // TODO Transfer to Redis onSubscribe
   musicsPlaylistVM.getPlaylist();
-  // musicsLibraryVM.getLibrary(1);
+  musicsLibraryVM.getLibrary();
 });

@@ -10,6 +10,7 @@ from website.decorators import room_required
 from website.json_renderer import JSONResponse
 
 from music.serializers import MusicSerializer
+from music.models import Music
 
 
 @api_view(['POST'])
@@ -152,6 +153,17 @@ def getPlaylist(request, room):
     playlist = room.get_musics_remaining()
     jsonResponse = []
     for music in playlist:
+        musicT = MusicSerializer(music).data
+        jsonResponse.append(musicT)
+    return JSONResponse(jsonResponse)
+
+
+@api_view(['GET'])
+@room_required
+def getAllMusics(request, room):
+    musics = Music.objects.filter(room=room)[:20]
+    jsonResponse = []
+    for music in musics:
         musicT = MusicSerializer(music).data
         jsonResponse.append(musicT)
     return JSONResponse(jsonResponse)

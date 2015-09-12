@@ -23,6 +23,8 @@ urlpatterns = patterns('website.views',
 
     url(r'^update-player/$', 'player.players.update_player'),
 
-    # Endpoint API
+    # Endpoint API TEST
     url(r'^playlist/$', 'remote.remote.getPlaylist'),
+    url(r'^musics/$', 'remote.remote.getAllMusics'),
+
 )
