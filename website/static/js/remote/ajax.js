@@ -17,6 +17,7 @@ $(document).on('submit', '.ajax-shuffle', function(e) {
   .fail(logErrors);
 });
 
+/*
 $(document).on('change', 'select#source', function() {
   $('.ajax-search').submit();
 });
@@ -55,7 +56,7 @@ $(document).on('submit', '.ajax-search', function(e) {
     }
   })
   .fail(logErrors);
-});
+});*/
 
 $(document).on('submit', '.ajax-add-music', function(e) {
   e.preventDefault();

@@ -17,6 +17,15 @@
 	&:active {outline: none !important;}
 };
 
+.input-group-btn select {
+	border-color: #ccc;
+	margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+
 body, html {
 	margin: 0;
 	padding: 0;
@@ -86,6 +95,18 @@ button > .glyphicon, a > .glyphicon {
 .list-group-item:first-child {
 	border-top-right-radius: 0px;
 	border-top-left-radius: 0px;
+}
+.list-group-item:last-child {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+.LIB.ko-library .list-group {
+	margin-bottom: 0px;
+}
+#form_infini_scroll {
+	border-bottom-right-radius: 4px !important;
+	border-bottom-left-radius: 4px !important;
+	padding: 20px 10px;
 }
 
 [class*="col-"], header {
@@ -304,29 +325,14 @@ button > .glyphicon, a > .glyphicon {
 	.shadow;
 }
 
-.selected {
-	width: 111px;
-}
-
-.selected:hover > .menu-source {
-	display: block;
-	height: 100px;
-}
-
-.menu-source {
-	transition: all .20s linear;
-	position: absolute;
-	top: 34px;
-	left: 0;
-	height: 0px;
-	overflow: hidden;
-	z-index: 100;
-	width: 111px;
-}
-
-.menu-source > ul > li > .btn{
-	width: 100%;
-	line-height: 2;
+.search-form {
+	button {
+		height: 34px;
+	}
+	.dropdown-toggle {
+		border-bottom-left-radius: 4px !important;
+    	border-top-left-radius: 4px !important;
+	}
 }
 
 .input-lib {
@@ -360,7 +366,7 @@ button > .glyphicon, a > .glyphicon {
 .row-list-item {
 	margin-right: 0px !important;
 	margin-left: 0px !important;
-	padding: 10px 10px;
+	padding: 10px 5px;
 }
 
 .add-music-form{
