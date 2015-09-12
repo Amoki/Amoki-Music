@@ -1,4 +1,5 @@
-
+// MODEL DEFINITION
+// Music model
 function Music(data) {
   this.musicId = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
@@ -14,26 +15,70 @@ function Music(data) {
   timerEnd = ko.observable(data.timer_end);
   source = ko.observable(data.source);
 }
+// Source model
+function Source(data) {
+  this.name = ko.observable(data.name);
+}
 
-function MusicsPlaylist() {
+// VIEW MODEL DEFINITION
+// Library view model
+function LibraryViewModel() {
+  var self = this;
+  self.musicsLibrary = ko.observableArray([]);
+  self.musicSearch = ko.observableArray([]);
+  self.sources = ko.observableArray([]);
+
+  self.addMusic = function(Music) {
+    endpointAddMusic(Music);
+  };
+
+  self.searchMusic = function(query) {
+    // Return a json serialized Music object
+    $.getJSON("/search?q=" + query, function(allData) {
+      var mappedMusics = $.map(allData, function(item) {
+        return new Music(item);
+      });
+      self.musicSearch(mappedMusics);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+
+  // Load Library page from server, convert it to Music instances, then populate self.musics
+  self.getLibrary = function(page) {
+    $.getJSON("/musics?page=" + page, function(allData) {
+      var mappedMusics = $.map(allData, function(item) {
+        return new Music(item);
+      });
+      self.musicsLibrary(mappedMusics);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+
+  // Load Sources from server, convert it to Source instances, then populate self.sources
+  self.getSources = function() {
+    $.getJSON("/sources", function(allData) {
+      var mappedSources = $.map(allData, function(item) {
+        return new Source(item);
+      });
+      self.sources(mappedSources);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+}
+
+// Playist view model
+function PlaylistViewModel() {
   var self = this;
   self.musics = ko.observableArray([]);
 
-  this.print = function() {
-    alert(ko.toJSON(self.musics));
-  };
-
-  // addMusic (to playlist)
   self.addMusic = function(Music) {
-    self.musics.push(Music);
-    // TODO call endpoint POST /music
-    $.ajax("/music", {
-      data: ko.toJSON({musics: self.musics}),
-      type: "post", contentType: "application/json",
-      success: function(result) {
-        alert(result);
-      }
-    });
+    endpointAddMusic(Music);
+  };
+  self.removeMusic = function(Music) {
+    self.musics.remove(Music);
   };
 
   // Load Playlist from server, convert it to Music instances, then populate self.musics
@@ -49,43 +94,9 @@ function MusicsPlaylist() {
   };
 }
 
-function MusicsLibrary() {
-  var self = this;
-  self.musics = ko.observableArray([]);
-
-  self.addMusic = function(Music) {
-    self.musics.push(Music);
-    // TODO call endpoint POST /music
-    $.ajax("/music", {
-      data: ko.toJSON({musics: self.musics}),
-      type: "post", contentType: "application/json",
-      success: function(result) {
-        alert(result);
-      }
-    });
-  };
-  self.removeMusic = function(Music) {
-    self.musics.destroy(Music);
-    // TODO call endopoint  DELETE /music
-  };
-
-  // Load Library from server, convert it to Music instances, then populate self.musics
-  self.getLibrary = function(page) {
-    $.getJSON("/musics?page=" + page, function(allData) {
-      var mappedMusics = $.map(allData, function(item) {
-        return new Music(item);
-      });
-      self.musics(mappedMusics);
-    }).fail(function(jqxhr) {
-      console.error(jqxhr.responseText);
-    });
-  };
-
-}
-
 $(function() {
-  musicsPlaylistVM = new MusicsPlaylist();
-  musicsLibraryVM = new MusicsLibrary();
+  musicsPlaylistVM = new PlaylistViewModel();
+  musicsLibraryVM = new LibraryViewModel();
   // Local Binding to avoid multi binding by musicsPlaylistVM and musicsLibraryVM
   $('.playlist-ko').each(function(index) {
     ko.applyBindings(musicsPlaylistVM, $('.playlist-ko')[index]);
