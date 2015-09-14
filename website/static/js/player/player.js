@@ -57,43 +57,43 @@ function displaySlider(value) {
 }
 
 $("#slider-volume").slider({
-    range: "min",
-    min: 0,
-    max: 100,
-    create: function() {
-      if(typeof cookieVolume !== "undefined") {
-        $("#slider-volume").slider("option", "value", cookieVolume);
-      }
-      else {
-        cookieVolume = 10;
-        $("#slider-volume").slider("option", "value", 10);
-      }
-    },
-    slide: function(event, ui) {
-      updateVolume(ui.value);
-      displaySlider(ui.value);
-    },
-    change: function(event, ui) {
-      updateVolume(ui.value);
-      displaySlider(ui.value);
-      $.cookie('playerVolume', ui.value);
-    },
-    start: function() {
-      $(".tooltip1").fadeIn(250);
-    },
-    stop: function() {
-      $(".tooltip1").fadeOut(250);
-    },
+  range: "min",
+  min: 0,
+  max: 100,
+  create: function() {
+    if(typeof cookieVolume !== "undefined") {
+      $("#slider-volume").slider("option", "value", cookieVolume);
+    }
+    else {
+      cookieVolume = 10;
+      $("#slider-volume").slider("option", "value", 10);
+    }
+  },
+  slide: function(event, ui) {
+    updateVolume(ui.value);
+    displaySlider(ui.value);
+  },
+  change: function(event, ui) {
+    updateVolume(ui.value);
+    displaySlider(ui.value);
+    $.cookie('playerVolume', ui.value);
+  },
+  start: function() {
+    $(".tooltip1").fadeIn(250);
+  },
+  stop: function() {
+    $(".tooltip1").fadeOut(250);
+  },
 });
 
 $("#player-wrapper").hover(
     function() {
       if($('.player-child').not('.player-child-no-music').filter(":visible").length > 0) {
-        $("#wrapper-slider-volume").fadeIn(300);
+        $("#wrapper-slider-volume").stop().fadeIn(300);
       }
     },
     function() {
-      $("#wrapper-slider-volume").fadeOut(300);
+      $("#wrapper-slider-volume").stop().fadeOut(300);
     }
  );
 
