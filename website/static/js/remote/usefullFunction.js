@@ -273,7 +273,10 @@ $(document).ready(function() {
   $("#sortable").sortable({
     axis: "y",
     containment: ".panel-playlist",
-    scroll: false,
+    scroll: true,
+    revert: true,
+    cursor: "move",
+    scrollSpeed: 5,
     over: function() {
       $(this).find('.ui-sortable-helper').appendTo(this);
     }
