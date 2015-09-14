@@ -3,17 +3,35 @@
 function Music(data) {
   this.musicId = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
-  url = ko.observable(data.url);
-  room = ko.observable(data.room);
-  date = ko.observable(data.date);
+  this.url = ko.observable(data.url);
+  this.room = ko.observable(data.room);
+  this.date = ko.observable(data.date);
   this.duration = ko.observable(data.duration);
   this.thumbnail = ko.observable(data.thumbnail);
   this.count = ko.observable(data.count);
-  lastPlay = ko.observable(data.last_play);
-  deadLink = ko.observable(data.dead_link);
-  timerStart = ko.observable(data.timer_start);
-  timerEnd = ko.observable(data.timer_end);
-  source = ko.observable(data.source);
+  this.lastPlay = ko.observable(data.last_play);
+  this.deadLink = ko.observable(data.dead_link);
+  this.timerStart = ko.observable(data.timer_start);
+  this.timerEnd = ko.observable(data.timer_end);
+  this.source = ko.observable(data.source);
+}
+// Room model
+function Room(data) {
+  this.name = ko.observable(data.name);
+  this.timeLeft = ko.observable(data.time_left);
+  this.currentTimeLeft = ko.observable(data.current_time_left);
+  this.canAdjustVolume = ko.observable(data.can_adjust_volume);
+  this.shuffle = ko.observable(data.shuffle);
+
+  // ??
+  this.currentMusic = ko.observableArray(new Music(data.current_music));
+  // ??
+
+  playlist = ko.observableArray([]);
+  var mappedMusics = $.map(data.playlist, function(item) {
+    return new Music(item);
+  });
+  this.playlist(mappedMusics);
 }
 // Source model
 function Source(data) {
@@ -25,9 +43,6 @@ function Source(data) {
 function LibraryViewModel() {
   var self = this;
 
-  self.sourceSearch = ko.observable();
-  self.querySearch = ko.observable();
-
   // library part
   self.musicsLibrary = ko.observableArray([]);
   self.hasPrevious = ko.observable();
@@ -36,6 +51,8 @@ function LibraryViewModel() {
 
   // search part
   self.musicSearch = ko.observableArray([]);
+  self.sourceSearch = ko.observable();
+  self.querySearch = ko.observable();
 
   // TEST ONLY
   self.sources = ko.observableArray([
@@ -45,11 +62,15 @@ function LibraryViewModel() {
 
   self.addMusic = function() {
     // endpointAddMusic(Music);
-    console.log(ko.toJSON(this));
+    console.log(ko.toJSON(this.musicId));
   };
 
   self.searchMusic = function() {
     // Return a json serialized Music object
+    if($.type(ko.toJS(self.querySearch)) === "undefined" || !ko.toJS(self.querySearch).trim()) {
+      // TODO Display empty field warning
+      return false;
+    }
     $.getJSON("/search",
       {
         "source": ko.toJSON(self.sourceSearch),
@@ -90,25 +111,37 @@ function LibraryViewModel() {
   };
 }
 
-// Playist view model
-function PlaylistViewModel() {
+// Room view model
+function RoomViewModel() {
   var self = this;
-  self.musics = ko.observableArray([]);
+
+  self.room = ko.observableArray([]);
+  self.musicsPlaylist = ko.observableArray([]);
 
   self.addMusic = function(music) {
     endpointAddMusic(music);
   };
   self.removeMusic = function(music) {
-    self.musics.remove(music);
+    self.musicsPlaylist.remove(music);
   };
 
-  // Load Playlist from server, convert it to Music instances, then populate self.musics
+  // Load Playlist from server, convert it to Music instances, then populate self.musicsPlaylist
+  // TEMP FUNCTION UNTIL ENDPOINTS ARE USABLE
   self.getPlaylist = function() {
     $.getJSON("/playlist/", function(allData) {
       var mappedMusics = $.map(allData, function(item) {
         return new Music(item);
       });
-      self.musics(mappedMusics);
+      self.musicsPlaylist(mappedMusics);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+
+  self.getRoom = function() {
+    $.getJSON("/room/", function(allData) {
+      var room = new Room(allData);
+      self.room(room);
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
@@ -117,18 +150,18 @@ function PlaylistViewModel() {
 
 
 $(function() {
-  musicsPlaylistVM = new PlaylistViewModel();
+  roomVM = new RoomViewModel();
   musicsLibraryVM = new LibraryViewModel();
-  // Local Binding to avoid multi binding by musicsPlaylistVM and musicsLibraryVM
-  $('.ko-playlist').each(function(index) {
-    ko.applyBindings(musicsPlaylistVM, $('.ko-playlist')[index]);
+  // Local Binding to avoid multi binding by roomVM and musicsLibraryVM
+  $('.ko-room').each(function(index) {
+    ko.applyBindings(roomVM, $('.ko-room')[index]);
   });
   $('.ko-library').each(function(index) {
     ko.applyBindings(musicsLibraryVM, $('.ko-library')[index]);
   });
 
   // TODO Transfer to Redis onSubscribe
-  musicsPlaylistVM.getPlaylist();
+  roomVM.getPlaylist();
   musicsLibraryVM.getLibrary();
 });
 
@@ -167,10 +200,7 @@ ko.bindingHandlers.selectPicker = {
     if($(element).is('select')) {
       var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
       if(typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
-        var options = selectPickerOptions.optionsArray,
-        optionsText = selectPickerOptions.optionsText,
-        optionsValue = selectPickerOptions.optionsValue,
-        optionsCaption = selectPickerOptions.optionsCaption,
+        var options = selectPickerOptions.optionsArray;
         isDisabled = selectPickerOptions.disabledCondition || false,
         resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
         if(ko.utils.unwrapObservable(options).length > 0) {
