@@ -78,7 +78,7 @@ $(document).ready(function() {
     }
     // resize of the remote
     $(".remote").height(hauteur);
-    $(".panel-playlist").height(hauteur - 258);
+    $(".wrappeur").height(hauteur - 258);
     // resize of the library
     $(".LIB").height(hauteur);
     $(".list-lib").height(hauteur - 90);
@@ -271,9 +271,12 @@ $(document).ready(function() {
 
 
   $("#sortable").sortable({
-    placeholder: "ui-state-highlight",
+    axis: "y",
     containment: ".panel-playlist",
     scroll: false,
+    over: function() {
+      $(this).find('.ui-sortable-helper').appendTo(this);
+    }
   });
   $("#sortable").disableSelection();
 

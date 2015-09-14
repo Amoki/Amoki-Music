@@ -128,7 +128,7 @@ function RoomViewModel() {
   // Load Playlist from server, convert it to Music instances, then populate self.musicsPlaylist
   // TEMP FUNCTION UNTIL ENDPOINTS ARE USABLE
   self.getPlaylist = function() {
-    $.getJSON("/playlist/", function(allData) {
+    $.getJSON("/musics/", function(allData) {
       var mappedMusics = $.map(allData, function(item) {
         return new Music(item);
       });
