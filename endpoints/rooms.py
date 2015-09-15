@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from endpoints.utils.json_renderer import JSONResponse
+from rest_framework.response import Response
 
 from player.serializers import RoomsSerializer
 from player.models import Room
@@ -17,4 +17,4 @@ class RoomsView(APIView):
         serializer: RoomsSerializer
         """
         rooms = Room.objects.all()
-        return JSONResponse(RoomsSerializer(rooms, many=True).data)
+        return Response(RoomsSerializer(rooms, many=True).data)
