@@ -146,6 +146,30 @@ function RoomViewModel() {
       console.error(jqxhr.responseText);
     });
   };
+
+  self.patchShuffle = function() {
+    self.room.shuffle = !self.room.shuffle;
+    $.ajax({
+      url: '/room/',
+      data: ko.toJSON({shuffle: self.room.shuffle}),
+      type: 'patch',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function() {},
+      error: logErrors,
+    });
+  };
+
+  self.postNext = function() {
+    $.ajax("/room/next/", {
+      data: ko.toJSON({tasks: self.tasks}),
+      type: "post",
+      contentType: "application/json",
+      dataType: 'json',
+      success: function() {},
+      error: logErrors,
+    });
+  };
 }
 
 
@@ -211,5 +235,11 @@ ko.bindingHandlers.selectPicker = {
 
       $(element).selectpicker('refresh');
     }
+  }
+};
+
+ko.bindingHandlers.stopBinding = {
+  init: function() {
+    return {controlsDescendantBindings: true};
   }
 };
