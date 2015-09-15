@@ -9,4 +9,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^', include('endpoints.routes')),
+
+
+    url(r'^$', 'website.views.login.login', name='login'),
+    url(r'^remote/$', 'website.views.home.home', name='remote'),
+
 )

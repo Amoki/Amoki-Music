@@ -22,12 +22,13 @@ function Room(data) {
   this.currentTimeLeft = ko.observable(data.current_time_left);
   this.canAdjustVolume = ko.observable(data.can_adjust_volume);
   this.shuffle = ko.observable(data.shuffle);
+  this.countLeft = ko.observable(data.count_left);
 
   // ??
   this.currentMusic = ko.observableArray(new Music(data.current_music));
   // ??
 
-  playlist = ko.observableArray([]);
+  this.playlist = ko.observableArray([]);
   var mappedMusics = $.map(data.playlist, function(item) {
     return new Music(item);
   });
@@ -61,15 +62,27 @@ function LibraryViewModel() {
     ]);
 
   self.addMusic = function() {
-    // endpointAddMusic(Music);
-    console.log(ko.toJSON(this.musicId));
+    // Return a json serialized Music object
+    // $.ajax("/music/", {
+    //   data: ko.toJSON({music: this}),
+    //   type: "post",
+    //   contentType: "application/json",
+    //   dataType: "json",
+    //   success: function(result) {
+    //     newMusic = new Music(result);
+    //     roomVM.musics.push(newMusic);
+    //     musicsLibraryVM.musicsLibrary.push(newMusic);
+    //   }
+    // });
+    console.log(self.musicsLibrary.indexOf(this));
+    console.log(ko.toJSON(this));
   };
 
   self.searchMusic = function() {
     // Return a json serialized Music object
     if($.type(ko.toJS(self.querySearch)) === "undefined" || !ko.toJS(self.querySearch).trim()) {
       // TODO Display empty field warning
-      return false;
+      return;
     }
     $.getJSON("/search",
       {
@@ -117,13 +130,6 @@ function RoomViewModel() {
 
   self.room = ko.observableArray([]);
   self.musicsPlaylist = ko.observableArray([]);
-
-  self.addMusic = function(music) {
-    endpointAddMusic(music);
-  };
-  self.removeMusic = function(music) {
-    self.musicsPlaylist.remove(music);
-  };
 
   // Load Playlist from server, convert it to Music instances, then populate self.musicsPlaylist
   // TEMP FUNCTION UNTIL ENDPOINTS ARE USABLE

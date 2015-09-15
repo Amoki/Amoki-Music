@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'endpoints',
     'source_modules.soundcloud',
     'source_modules.youtube',
+    'website',
 )
 
 MIDDLEWARE_CLASSES = (
