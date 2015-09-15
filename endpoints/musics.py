@@ -1,22 +1,29 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from endpoints.utils.decorators import room_required
 
 from music.serializers import MusicSerializer
 from music.models import Music
 
 
-class MusicsView(APIView):
+class MusicsView(ListAPIView):
     """
     Musics resource.
+    ---
+    parameters:
+        - name: page
+            type: int
+            paramType: query
     """
+    serializer_class = MusicSerializer
+    paginate_by = 40
+    paginate_by_param = 'page_size'
+    max_paginate_by = 200
 
     @room_required
-    def get(self, request, room, format=None):
+    def get_queryset(self, request, room):
         """
         Get musics of the current room
         ---
         serializer: MusicSerializer
         """
-        musics = Music.objects.filter(room=room)
-        return Response(MusicSerializer(musics, many=True).data)
+        return Music.objects.filter(room=room)
