@@ -94,7 +94,7 @@ class Room(models.Model):
         if next_music:
             PlaylistTrack.objects.filter(room=self, track=next_music).delete()
             self.play(music=next_music)
-            
+
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
             musics = self.music_set.exclude(dead_link=True).order_by('-date')

@@ -11,7 +11,7 @@ class MusicAdmin(admin.ModelAdmin):
 
     def add_music(self, request, queryset):
         for music in queryset:
-            music.room.push(music.music_id)
+            music.room.play(music)
         return
 
 admin.site.register(Music, MusicAdmin)
