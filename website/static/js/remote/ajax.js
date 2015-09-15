@@ -1,5 +1,3 @@
-var currentPage = 0;
-
 $(document).on('submit', '.ajax-shuffle', function(e) {
   e.preventDefault();
   var $this = $(this);
@@ -58,18 +56,18 @@ $(document).on('submit', '.ajax-search', function(e) {
   .fail(logErrors);
 });*/
 
-$(document).on('submit', '.ajax-add-music', function(e) {
-  e.preventDefault();
-  var $this =  $(this);
-  $this.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
-  $('.btn-add-music').attr('disabled', 'disabled');
-  ajax($this).done(function() {
-    $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
-    $('.btn-add-music').removeAttr('disabled');
-    modalConfirm($('#modal-add-music'));
-  })
-  .fail(logErrors);
-});
+// $(document).on('submit', '.ajax-add-music', function(e) {
+//   e.preventDefault();
+//   var $this =  $(this);
+//   $this.children("button").children("span").attr("class", "fa fa-refresh fa-spin");
+//   $('.btn-add-music').attr('disabled', 'disabled');
+//   ajax($this).done(function() {
+//     $this.children("button").children("span").attr('class', 'glyphicon glyphicon-headphones');
+//     $('.btn-add-music').removeAttr('disabled');
+//     modalConfirm($('#modal-add-music'));
+//   })
+//   .fail(logErrors);
+// });
 
 $(document).on('submit', '.ajax-volume', function(e) {
   e.preventDefault();
@@ -81,70 +79,70 @@ $(document).on('submit', '.ajax-volume', function(e) {
   .fail(logErrors);
 });
 
-$(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
-  e.preventDefault();
-  var $this = $(this);
-  $("<li id='spinner_library' class='list-group-item item-lib row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore($this.closest('li'));
+// $(document).on('submit', '.ajax_music_infinite_scroll', function(e) {
+//   e.preventDefault();
+//   var $this = $(this);
+//   $("<li id='spinner_library' class='list-group-item item-lib row row-list-item' style='color:black'><i class='fa fa-spinner fa-4x fa-spin'></i></li>").insertBefore($this.closest('li'));
 
-  ajax($this).done(function(data) {
-    $(data.template).insertBefore($this.closest('li'));
-    if(data.moreMusics === false) {
-      $this.children("#load-more-musics").addClass('disabled');
-    }
-    currentPage += 1;
-    $("#page").val(currentPage);
-    $("#spinner_library").remove();
-  })
-  .fail(logErrors);
-});
+//   ajax($this).done(function(data) {
+//     $(data.template).insertBefore($this.closest('li'));
+//     if(data.moreMusics === false) {
+//       $this.children("#load-more-musics").addClass('disabled');
+//     }
+//     currentPage += 1;
+//     $("#page").val(currentPage);
+//     $("#spinner_library").remove();
+//   })
+//   .fail(logErrors);
+// });
 
-function updateRemote(action) {
-  var dataSend = {
-      'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
-    };
-  $.ajax({
-    type: "POST",
-    url: "/update-remote/",
-    data: dataSend,
-    dataType: "json",
-    success: function(data) {
-      if(data.shuffle === true) {
-        $("#btn-shuffle").attr("value", "false");
-        $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-true");
-      }
-      else {
-        $("#btn-shuffle").attr("value", "true");
-        $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
-      }
+// function updateRemote(action) {
+//   var dataSend = {
+//       'page': encodeURIComponent($('.ajax_music_infinite_scroll').children("#page").val()),
+//     };
+//   $.ajax({
+//     type: "POST",
+//     url: "/update-remote/",
+//     data: dataSend,
+//     dataType: "json",
+//     success: function(data) {
+//       if(data.shuffle === true) {
+//         $("#btn-shuffle").attr("value", "false");
+//         $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-true");
+//       }
+//       else {
+//         $("#btn-shuffle").attr("value", "true");
+//         $("#submit-shuffle").attr("class", "btn btn-default btn-control btn-shuffle-false");
+//       }
 
-      if(data.moreMusics === true && $("#load-more-musics").hasClass('disabled')) {
-        $("#load-more-musics").removeClass('disabled');
-      }
+//       if(data.moreMusics === true && $("#load-more-musics").hasClass('disabled')) {
+//         $("#load-more-musics").removeClass('disabled');
+//       }
 
-      $('.library-list-music').remove();
-      $('#list-library').prepend(data.templateLibrary);
+//       $('.library-list-music').remove();
+//       $('#list-library').prepend(data.templateLibrary);
 
-      if(data.currentMusic) {
-        if(typeof(action) !== 'undefined' && action === "play") {
-          if(!$("#btn-next, #dead-link").prop('disabled')) {
-            freezeButtons();
-          }
-          else {
-            $("#btn-next, #dead-link").prop('disabled', false);
-          }
-        }
-        timeline(data.currentTimeLeft, data.currentTimePastPercent);
-      }
-      else {
-        disabledBtn();
-      }
-      // updatePlaylistCurrent(data);
-      musicsPlaylistVM.getPlaylist();
-      $('#overlay-playlist').hide();
-    },
-    error: logErrors
-  });
-}
+//       if(data.currentMusic) {
+//         if(typeof(action) !== 'undefined' && action === "play") {
+//           if(!$("#btn-next, #dead-link").prop('disabled')) {
+//             freezeButtons();
+//           }
+//           else {
+//             $("#btn-next, #dead-link").prop('disabled', false);
+//           }
+//         }
+//         timeline(data.currentTimeLeft, data.currentTimePastPercent);
+//       }
+//       else {
+//         disabledBtn();
+//       }
+//       // updatePlaylistCurrent(data);
+//       musicsPlaylistVM.getPlaylist();
+//       $('#overlay-playlist').hide();
+//     },
+//     error: logErrors
+//   });
+// }
 
 // receive a message though the websocket from the server
 function receiveMessage(message) {
