@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from music.models import Music
+from music.models import Music, Source
 
 
 class MusicSerializer(serializers.ModelSerializer):
@@ -20,3 +20,13 @@ class MusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = ('music_id', 'name', 'thumbnail', 'count', 'duration', 'timer_start', 'timer_end', 'url', 'room_id', 'source_id')
+
+
+class SourceSerializer(serializers.ModelSerializer):
+    """
+    Serializing all the Source
+    """
+
+    class Meta:
+        model = Source
+        fields = ('pk', 'name')
