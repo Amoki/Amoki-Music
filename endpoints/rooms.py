@@ -1,20 +1,20 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 
 from player.serializers import RoomsSerializer
 from player.models import Room
 
 
-class RoomsView(APIView):
+class RoomsView(ListAPIView):
     """
     Rooms resource.
+    ---
+    parameters:
+        - name: page
+            type: int
+            paramType: query
     """
-
-    def get(self, request, format=None):
-        """
-        Get rooms
-        ---
-        serializer: RoomsSerializer
-        """
-        rooms = Room.objects.all()
-        return Response(RoomsSerializer(rooms, many=True).data)
+    queryset = Room.objects.all()
+    serializer_class = RoomsSerializer
+    paginate_by = 40
+    paginate_by_param = 'page_size'
+    max_paginate_by = 200
