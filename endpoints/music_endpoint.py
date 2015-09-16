@@ -18,7 +18,7 @@ class Music_endpointView(APIView):
         ---
         serializer: MusicSerializer
         """
-        request.data['room'] = room.pk
+        request.data.update({'room_id': room.id})
         serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
