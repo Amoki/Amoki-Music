@@ -29,7 +29,7 @@ class Room(models.Model):
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def reset_token(self):
@@ -94,7 +94,7 @@ class Room(models.Model):
         if next_music:
             PlaylistTrack.objects.filter(room=self, track=next_music).delete()
             self.play(music=next_music)
-            
+
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
             musics = self.music_set.exclude(dead_link=True).order_by('-date')
