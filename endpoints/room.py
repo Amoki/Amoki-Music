@@ -65,6 +65,13 @@ class RoomNextView(APIView):
     def post(self, request, room, format=None):
         """
         Skip music and play next one
+        ---
+        parameters:
+            - name: music
+              required: true
+              type: integer
+              paramType: body
         """
-        room.play_next()
+        if request.data['music'] == room.current_music.pk:
+            room.play_next()
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)

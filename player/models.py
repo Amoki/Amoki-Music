@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from django.db.models import Sum
 
@@ -29,7 +27,7 @@ class Room(models.Model):
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def reset_token(self):

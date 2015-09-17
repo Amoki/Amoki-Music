@@ -13,10 +13,13 @@ def login(request):
     """
     Get token
     """
+    if not all(k in request.query_params for k in ("name", "password")):
+        return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)
     try:
         room = Room.objects.get(name=request.query_params['name'], password=request.query_params['password'])
     except Room.DoesNotExist:
         raise exceptions.AuthenticationFailed('Invalid credentials.')
     except MultiValueDictKeyError:
         return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)
+
     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)

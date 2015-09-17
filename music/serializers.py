@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from rest_framework import serializers
 
 from music.models import Music, Source
@@ -19,7 +17,7 @@ class MusicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Music
-        fields = ('music_id', 'name', 'thumbnail', 'count', 'duration', 'timer_start', 'timer_end', 'url', 'room_id', 'source_id')
+        fields = ('pk', 'music_id', 'name', 'thumbnail', 'count', 'duration', 'timer_start', 'timer_end', 'url', 'room_id', 'source_id')
 
 
 class SourceSerializer(serializers.ModelSerializer):
