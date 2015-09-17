@@ -8,11 +8,6 @@ from music.models import Music
 class MusicsView(ListAPIView):
     """
     Musics resource.
-    ---
-    parameters:
-        - name: page
-            type: int
-            paramType: query
     """
     serializer_class = MusicSerializer
     paginate_by = 40
@@ -25,5 +20,9 @@ class MusicsView(ListAPIView):
         Get musics of the current room
         ---
         serializer: MusicSerializer
+        parameters:
+        - name: page
+            type: int
+            paramType: query
         """
         return Music.objects.filter(room=room)

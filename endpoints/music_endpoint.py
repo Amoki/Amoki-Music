@@ -18,7 +18,7 @@ class Music_endpointView(APIView):
         ---
         serializer: MusicSerializer
         """
-        request.data['room'] = room.pk
+        request.data.update({'room_id': room.id})
         serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -32,7 +32,10 @@ class Music_endpointView(APIView):
         ---
         serializer: MusicSerializer
         """
-        music = Music.object.get(pk=pk)
+        try:
+            music = Music.objects.get(pk=pk)
+        except Music.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = MusicSerializer(music, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -46,5 +49,8 @@ class Music_endpointView(APIView):
         ---
         serializer: MusicSerializer
         """
-        Music.object.get(pk=pk).delete()
+        try:
+            Music.objects.get(pk=pk).delete()
+        except Music.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_204_NO_CONTENT)
