@@ -34,7 +34,7 @@ class Soundcloud(Source):
             raw_response = client.get('/resolve.json', url=query)
             response = json.loads(raw_response.raw_data)
 
-        requestId = ''.join(random.choice(string.lowercase) for i in range(64))
+        requestId = ''.join(random.choice(string.ascii_letters) for i in range(64))
 
         soundcloud = Source.objects.get(name="Soundcloud")
         videos = []

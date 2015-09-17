@@ -20,7 +20,7 @@ youtube = youtube_api(
 
 
 def get_info(ids):
-    if type(ids) is not unicode:
+    if not isinstance(ids, str):
         ids = ','.join(ids)
     details = youtube.videos().list(
         id=ids,
@@ -80,7 +80,7 @@ class Youtube(Source):
             # Get the id from url
             ids.append(regexVideoId.search(query).group(1))
 
-        requestId = ''.join(random.choice(string.lowercase) for i in range(64))
+        requestId = ''.join(random.choice(string.ascii_letters) for i in range(64))
         youtube_source = Source.objects.get(name="Youtube")
 
         videos = []
