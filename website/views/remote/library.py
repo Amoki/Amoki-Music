@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.loader import render_to_string
 

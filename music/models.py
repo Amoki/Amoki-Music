@@ -8,7 +8,7 @@ from ordered_model.models import OrderedModel
 class Source(models.Model):
     name = models.CharField(max_length=255, editable=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def search(self, query):
@@ -69,7 +69,7 @@ class Music(models.Model):
             PlaylistTrack.objects.create(room=music.room, track=music)
             return music
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def is_valid(self):

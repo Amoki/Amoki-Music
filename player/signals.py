@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from player.models import Room, generate_token, events
