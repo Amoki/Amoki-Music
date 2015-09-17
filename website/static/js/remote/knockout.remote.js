@@ -24,9 +24,13 @@ function Room(data) {
   this.shuffle = ko.observable(data.shuffle);
   this.countLeft = ko.observable(data.count_left);
 
-  // ??
-  this.currentMusic = ko.observableArray(new Music(data.current_music));
-  // ??
+  this.currentMusic = ko.observableArray([]);
+  if(data.current_music) {
+    this.currentMusic = new Music(data.current_music);
+  }
+  else {
+    this.currentMusic = null;
+  }
 
   this.playlist = ko.observableArray([]);
   var mappedMusics = $.map(data.playlist, function(item) {
@@ -131,19 +135,6 @@ function RoomViewModel() {
   self.room = ko.observableArray([]);
   self.musicsPlaylist = ko.observableArray([]);
 
-  // Load Playlist from server, convert it to Music instances, then populate self.musicsPlaylist
-  // TEMP FUNCTION UNTIL ENDPOINTS ARE USABLE
-  self.getPlaylist = function() {
-    $.getJSON("/musics/", function(allData) {
-      var mappedMusics = $.map(allData, function(item) {
-        return new Music(item);
-      });
-      self.musicsPlaylist(mappedMusics);
-    }).fail(function(jqxhr) {
-      console.error(jqxhr.responseText);
-    });
-  };
-
   self.getRoom = function() {
     $.getJSON("/room/", function(allData) {
       var room = new Room(allData);
@@ -168,7 +159,7 @@ function RoomViewModel() {
 
   self.postNext = function() {
     $.ajax("/room/next/", {
-      data: ko.toJSON({tasks: self.tasks}),
+      data: ko.toJSON({pk: self.room.pk}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
@@ -178,8 +169,50 @@ function RoomViewModel() {
   };
 }
 
+// Login viewModel
+function LoginViewModel() {
+  var self = this;
+
+  self.rooms = ko.observableArray([]);
+
+  self.password = ko.observable();
+  self.selectedRoom = ko.observable();
+
+  self.getRooms = function() {
+    $.getJSON("/rooms", function(allData) {
+      console.log(allData.results);
+      var mappedRooms = $.map(allData.results, function(item) {
+        return new Room(item);
+      });
+      self.rooms(mappedRooms);
+      console.log(ko.toJSON(self.rooms));
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+
+  self.getLogin = function() {
+    if(!$('#password').val().trim()) {
+      $.getJSON("/login",
+        {
+          "name": ko.toJSON(self.sourceSearch),
+          "password": ko.toJSON(self.querySearch)
+        },
+        function(allData) {
+          console.log(allData);
+        }).fail(function(jqxhr) {
+          console.error(jqxhr.responseText);
+        }
+      );
+    }
+    else {
+      return;
+    }
+  };
+}
 
 $(function() {
+  loginVM = new LoginViewModel();
   roomVM = new RoomViewModel();
   musicsLibraryVM = new LibraryViewModel();
   // Local Binding to avoid multi binding by roomVM and musicsLibraryVM
@@ -191,8 +224,9 @@ $(function() {
   });
 
   // TODO Transfer to Redis onSubscribe
-  roomVM.getPlaylist();
-  musicsLibraryVM.getLibrary();
+  loginVM.getRooms();
+  // roomVM.getPlaylist();
+  // musicsLibraryVM.getLibrary();
 });
 
 ko.bindingHandlers.selectPicker = {
