@@ -15,7 +15,7 @@ Install
 ---------
 * `git clone git@github.com:Amoki/Amoki-Music.git` : retrieve the repo
 * `cd Amoki-Music`
-* `virtualenv --no-site-packages .v_env` : create a virtual-env for python code
+* `virtualenv -p python3 --no-site-packages .v_env` : create a virtual-env for python code
 * `source .v_env/bin/activate` : activate the v_env
 * `pip install -r requirements.txt` : install all requirements
 * `./manage.py migrate` : migrate DB

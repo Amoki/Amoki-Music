@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import api_view
