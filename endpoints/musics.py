@@ -16,13 +16,34 @@ class MusicsView(ListAPIView):
 
     @room_required
     def get_queryset(self, request, room):
+
+        return Music.objects.filter(room=room)
+
+    def get(self, request, *args, **kwargs):
         """
         Get musics of the current room
         ---
-        serializer: MusicSerializer
         parameters:
-        - name: page
-            type: int
+          - name: page
+            type: integer
             paramType: query
+          - name: page_size
+            type: integer
+            paramType: query
+
+        type:
+          count:
+            required: true
+            type: integer
+          next:
+            required: true
+            type: url
+          previous:
+            required: true
+            type: url
+          results:
+            required: true
+            description: Music objects
+            type: items
         """
-        return Music.objects.filter(room=room)
+        return super(MusicsView, self).get(request, *args, **kwargs)
