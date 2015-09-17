@@ -11,7 +11,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic, PlaylistTrack
+from music.models import Music, PlaylistTrack
 
 
 def generate_token():
@@ -115,32 +115,17 @@ class Room(models.Model):
             self.play(music=None)
 
     def push(self, music_id, requestId=None, **kwargs):
-        if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(music_id=music_id, requestId=requestId)
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=temporaryMusic.name,
-                duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail,
-                url=temporaryMusic.url,
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=temporaryMusic.source
-            )
-            TemporaryMusic.clean()
-        else:
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=kwargs['name'],
-                duration=kwargs['duration'],
-                thumbnail=kwargs['thumbnail'],
-                url=kwargs['url'],
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=kwargs['source']
-            )
+        music = Music.add(
+            room=self,
+            music_id=music_id,
+            name=kwargs['name'],
+            duration=kwargs['duration'],
+            thumbnail=kwargs['thumbnail'],
+            url=kwargs['url'],
+            timer_start=kwargs['timer_start'],
+            timer_end=kwargs['timer_end'],
+            source=kwargs['source']
+        )
 
         # Autoplay
         if not self.current_music:

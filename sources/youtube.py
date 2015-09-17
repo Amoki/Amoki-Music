@@ -1,12 +1,9 @@
-import random
-import string
 import re
 
 from apiclient.discovery import build as youtube_api
 
 from django.conf import settings
 
-from music.models import TemporaryMusic, Source
 from utils.time import get_time_in_seconds
 
 URL_REGEX = "(?:v=|youtu\.be\/)([^&?]+)"
@@ -55,7 +52,7 @@ def get_info(ids):
     return videos
 
 
-class Youtube(Source):
+class Youtube():
     @staticmethod
     def search(query):
         ids = []
@@ -79,26 +76,20 @@ class Youtube(Source):
             # Get the id from url
             ids.append(regexVideoId.search(query).group(1))
 
-        requestId = ''.join(random.choice(string.ascii_letters) for i in range(64))
-        youtube_source = Source.objects.get(name="Youtube")
-
         videos = []
         for video in get_info(ids):
-            music = TemporaryMusic(
-                music_id=video['music_id'],
-                name=video['name'],
-                channel_name=video['channel_name'],
-                description=video['description'],
-                thumbnail=video['thumbnail'],
-                views=video['views'],
-                duration=video['duration'],
-                url="https://www.youtube.com/watch?v=" + video['music_id'],
-                requestId=requestId,
-                source=youtube_source
-            )
+            music = {
+                "music_id": video['music_id'],
+                "name": video['name'],
+                "channel_name": video['channel_name'],
+                "description": video['description'],
+                "thumbnail": video['thumbnail'],
+                "views": video['views'],
+                "duration": video['duration'],
+                "url": "https://www.youtube.com/watch?v=" + video['music_id'],
+                "source": "youtube"
+            }
             videos.append(music)
-
-        TemporaryMusic.objects.bulk_create(videos)
 
         return videos
 

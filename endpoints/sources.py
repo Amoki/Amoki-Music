@@ -1,12 +1,14 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
-from music.serializers import SourceSerializer
-from music.models import Source
+from django.conf import settings
 
 
-class SourcesView(ListAPIView):
+@api_view(['GET'])
+def sources(request):
     """
-    Source resource.
+    Get sources list
+    ---
     """
-    queryset = Source.objects.all()
-    serializer_class = SourceSerializer
+    return Response(settings.SOURCES, status=status.HTTP_200_OK)
