@@ -7,8 +7,6 @@ from player.models import Room
 class RoomsView(ListAPIView):
     """
     Rooms resource.
-    ---
-
     """
     queryset = Room.objects.all()
     serializer_class = RoomsSerializer

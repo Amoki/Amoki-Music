@@ -10,6 +10,17 @@ from player.serializers import RoomSerializer
 def login(request):
     """
     Get token
+    ---
+    serializer: RoomSerializer
+    parameters:
+      - name: name
+        required: true
+        type: string
+        paramType: query
+      - name: password
+        required: true
+        type: string
+        paramType: query
     """
     if not all(k in request.query_params for k in ("name", "password")):
         return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)

@@ -49,8 +49,6 @@ class RoomView(APIView):
     def delete(self, request, room, format=None):
         """
         Delete current room
-        ---
-        serializer: RoomSerializer
         """
         room.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -58,7 +56,7 @@ class RoomView(APIView):
 
 class RoomNextView(APIView):
     """
-    Room resource.
+    Next music.
     """
 
     @room_required
@@ -67,11 +65,11 @@ class RoomNextView(APIView):
         Skip music and play next one
         ---
         parameters:
-            - name: music
-              required: true
-              type: integer
-              paramType: body
+          - name: music_pk
+            required: true
+            type: int
+            paramType: body
         """
-        if request.data['music'] == room.current_music.pk:
+        if request.data['music_pk'] == room.current_music.pk:
             room.play_next()
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
