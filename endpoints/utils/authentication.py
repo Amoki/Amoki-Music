@@ -1,8 +1,6 @@
 """
 Provides various authentication policies.
 """
-from __future__ import unicode_literals
-
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import HTTP_HEADER_ENCODING, exceptions

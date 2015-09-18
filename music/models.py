@@ -2,7 +2,7 @@ from django.db import models
 from datetime import datetime
 
 from ordered_model.models import OrderedModel
-from sources.interface import Source
+from sources import source
 
 
 class Music(models.Model):
@@ -50,7 +50,7 @@ class Music(models.Model):
         return self.name
 
     def is_valid(self):
-        return Source.check_validity(self.source, self.music_id)
+        return source.check_validity(self.source, self.music_id)
 
 
 class PlaylistTrack(OrderedModel):
