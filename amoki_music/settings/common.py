@@ -47,10 +47,10 @@ INSTALLED_APPS = (
     'player',
     'music',
     'endpoints',
-    'source_modules.soundcloud',
-    'source_modules.youtube',
-    'website',
+    'sources'
 )
+
+SOURCES = ["youtube", "soundcloud"]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

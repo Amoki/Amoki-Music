@@ -1,30 +1,8 @@
 from django.db import models
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from ordered_model.models import OrderedModel
-
-
-class Source(models.Model):
-    name = models.CharField(max_length=255, editable=False)
-
-    def __str__(self):
-        return self.name
-
-    def search(self, query):
-        Provider = None
-        for cls in Source.__subclasses__():
-            if cls.__name__ == self.name:
-                Provider = cls
-
-        return Provider.search(query)
-
-    def check_validity(self, id):
-        Provider = None
-        for cls in Source.__subclasses__():
-            if cls.__name__ == self.name:
-                Provider = cls
-
-        return Provider.check_validity(id)
+from sources import source
 
 
 class Music(models.Model):
@@ -44,7 +22,7 @@ class Music(models.Model):
     dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
     timer_end = models.PositiveIntegerField(null=True, blank=True)
-    source = models.ForeignKey(Source, editable=False)
+    source = models.CharField(max_length=255, editable=False)
 
     @classmethod
     def add(cls, **kwargs):
@@ -72,25 +50,7 @@ class Music(models.Model):
         return self.name
 
     def is_valid(self):
-        return self.source.check_validity(self.music_id)
-
-
-class TemporaryMusic(models.Model):
-    music_id = models.CharField(max_length=16)
-    name = models.CharField(max_length=255)
-    channel_name = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now_add=True)
-    duration = models.PositiveIntegerField()
-    thumbnail = models.CharField(max_length=255)
-    views = models.PositiveIntegerField()
-    description = models.TextField()
-    url = models.CharField(max_length=512)
-    requestId = models.CharField(max_length=64)
-    source = models.ForeignKey(Source, editable=False)
-
-    @classmethod
-    def clean(self):
-        TemporaryMusic.objects.filter(date__lte=datetime.now() - timedelta(hours=1)).delete()
+        return source.check_validity(self.source, self.music_id)
 
 
 class PlaylistTrack(OrderedModel):
