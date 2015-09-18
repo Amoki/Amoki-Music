@@ -4,54 +4,10 @@ from rest_framework.renderers import JSONRenderer
 from player.models import Room
 from music.serializers import MusicSerializer
 
-from music.models import Source
-
-
 def home(request):
     if not request.session.get('token', False) or not Room.objects.filter(token=request.session.get('token')).exists():
         return redirect('logout', permanent=True)
 
-    room = Room.objects.get(token=request.session.get('token'))
-
-    # The object Music playing
-    current_music = room.current_music
-
-    # Objects of musics in queue
-    playlist = room.get_musics_remaining()
-    # The number of music in queue
-    count_left = room.get_count_remaining()
-
-    # Remaining time of the queue in hh:mm:ss
-    time_left = room.get_remaining_time()
-    # Remaining time of the Music playing in hh:mm:ss
-    current_time_left = room.get_current_remaining_time()
-    # Value of current music time past
-    current_time_past = room.get_current_time_past()
-    # Percent of current music time past
-    current_time_past_percent = room.get_current_time_past_percent()
-    # The current state of the shuffle. Can be True ou False
-    shuffle = room.shuffle
-
-    sources = Source.objects.all()
-
-    if current_music:
-        current_music_json = MusicSerializer(current_music).data
-
-        # Total time of current music in hh:mm:ss
-        current_total_time = current_music.duration
-        music_id = current_music.music_id
-    else:
-        current_music_json = None
-
-    json_data = JSONRenderer().render({
-        'currentMusic': current_music_json,
-        'timeLeft': time_left,
-        'currentTimeLeft': current_time_left,
-        'currentTimePast': current_time_past,
-        'currentTimePastPercent': current_time_past_percent,
-    })
-
-    # TODO Do not return locals
     return render(request, 'index.html', locals())
 
 

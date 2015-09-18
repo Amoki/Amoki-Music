@@ -58,7 +58,7 @@ class Room(models.Model):
                 message = {
                     'action': 'play',
                     'update': True,
-                    'source': music.source.name,
+                    'source': music.source,
                     'options': {
                         'name': music.name,
                         'musicId': music.music_id,
@@ -143,7 +143,7 @@ class Room(models.Model):
 
     def get_remaining_time(self):
         if self.current_music:
-            time_left = self.tracks.all().aggregate(Sum('duration')).values()[0] or 0
+            time_left = self.tracks.all().aggregate(Sum('duration')).get('sum__duration') or 0
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
