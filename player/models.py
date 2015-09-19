@@ -58,7 +58,7 @@ class Room(models.Model):
                 message = {
                     'action': 'play',
                     'update': True,
-                    'source': music.source.name,
+                    'source': music.source,
                     'options': {
                         'name': music.name,
                         'musicId': music.music_id,
@@ -181,7 +181,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_up',
-                'source': self.current_music.source.name,
+                'source': self.current_music.source,
             }
             self.send_message(message)
 
@@ -189,7 +189,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_down',
-                'source': self.current_music.source.name,
+                'source': self.current_music.source,
             }
             self.send_message(message)
 
