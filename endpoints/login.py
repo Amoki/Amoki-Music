@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, exceptions
 
 from django.utils.datastructures import MultiValueDictKeyError
+from django.conf import settings
 
 from player.models import Room
 from player.serializers import RoomSerializer
@@ -33,4 +34,12 @@ def login(request):
     except MultiValueDictKeyError:
         return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+    protocol = request.is_secure() and 'wss://' or 'ws://'
+    WEBSOCKET_URI = protocol + request.get_host() + settings.WEBSOCKET_URL
+
+    response = {
+        'room': RoomSerializer(room).data,
+        'ws4redisHeartbeat': settings.WS4REDIS_HEARTBEAT,
+        'webSocketUri': WEBSOCKET_URI
+    }
+    return Response(response, status=status.HTTP_200_OK)

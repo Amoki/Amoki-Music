@@ -2,18 +2,31 @@
   INIT VARS
   INIT AJAX CSRF
 ********************/
-var csrftoken = $.cookie('csrftoken');
+var csrftoken = Cookies.get('csrftoken');
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-$.ajaxSetup({
-  beforeSend: function(xhr, settings) {
-    if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
-      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+function setRoomConnexion(token, heartbeat, wsUri) {
+  Cookies.set('room_token', token);
+  Cookies.set('room_heartbeat', heartbeat);
+  Cookies.set('room_wsUri', wsUri);
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+      xhr.setRequestHeader("Authorization", "Bearer " + token);
     }
-  }
-});
+  });
+  var ws4redis = new WS4Redis({
+    uri: wsUri + token + '?subscribe-broadcast',
+    receive_message: receiveMessage,
+    heartbeat_msg: heartbeat,
+    on_open: onWsOpen,
+  });
+}
 
 /********************
   AJAX SKELETON DECLARATION
@@ -58,15 +71,4 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
     modalConfirm($('#modal-next-music'));
   })
   .fail(logErrors);
-});
-
-/********************
-  WEB SOCKET OBJECT DECLARATION
-********************/
-jQuery(document).ready(function() {
-  var ws4redis = new WS4Redis({
-    uri: webSocketUri + token + '?subscribe-broadcast',
-    receive_message: receiveMessage,
-    heartbeat_msg: ws4redisHeartbeat
-  });
 });

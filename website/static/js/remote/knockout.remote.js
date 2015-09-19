@@ -1,6 +1,9 @@
+var pageSize = 40;
+
 // MODEL DEFINITION
 // Music model
 function Music(data) {
+  this.pk = ko.observable(data.pk);
   this.musicId = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
   this.url = ko.observable(data.url);
@@ -104,15 +107,22 @@ function LibraryViewModel() {
   };
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
-  self.getLibrary = function() {
-    $.getJSON("/musics/", function(allData) {
-      var mappedMusics = $.map(allData, function(item) {
-        return new Music(item);
+  self.getLibrary = function(target, event) {
+    if(event) {
+      console.log(event.target.value);
+    }
+    event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
+    $.getJSON(url,
+      function(allData) {
+        var mappedMusics = $.map(allData.results, function(item) {
+          return new Music(item);
+        });
+        self.musicsLibrary(mappedMusics);
+        self.hasPrevious(allData.previous);
+        self.hasNext(allData.next);
+      }).fail(function(jqxhr) {
+        console.error(jqxhr.responseText);
       });
-      self.musicsLibrary(mappedMusics);
-    }).fail(function(jqxhr) {
-      console.error(jqxhr.responseText);
-    });
   };
 
   // Load Sources from server, convert it to Source instances, then populate self.sources
@@ -136,7 +146,7 @@ function RoomViewModel() {
   self.musicsPlaylist = ko.observableArray([]);
 
   self.getRoom = function() {
-    $.getJSON("/room/", function(allData) {
+    $.getJSON("/room", function(allData) {
       var room = new Room(allData);
       self.room(room);
     }).fail(function(jqxhr) {
@@ -147,7 +157,7 @@ function RoomViewModel() {
   self.patchShuffle = function() {
     self.room.shuffle = !self.room.shuffle;
     $.ajax({
-      url: '/room/',
+      url: '/room',
       data: ko.toJSON({shuffle: self.room.shuffle}),
       type: 'patch',
       contentType: 'application/json',
@@ -158,7 +168,7 @@ function RoomViewModel() {
   };
 
   self.postNext = function() {
-    $.ajax("/room/next/", {
+    $.ajax("/room/next", {
       data: ko.toJSON({pk: self.room.pk}),
       type: "post",
       contentType: "application/json",
@@ -173,6 +183,9 @@ function RoomViewModel() {
 function LoginViewModel() {
   var self = this;
 
+  self.isConnected = ko.observable();
+  Cookies.get('room_token') ? self.isConnected(true) : self.isConnected(false);
+
   self.rooms = ko.observableArray([]);
 
   self.password = ko.observable();
@@ -180,26 +193,27 @@ function LoginViewModel() {
 
   self.getRooms = function() {
     $.getJSON("/rooms", function(allData) {
-      console.log(allData.results);
       var mappedRooms = $.map(allData.results, function(item) {
         return new Room(item);
       });
       self.rooms(mappedRooms);
-      console.log(ko.toJSON(self.rooms));
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
   };
 
   self.getLogin = function() {
-    if(!$('#password').val().trim()) {
+    if($('#password').val().trim()) {
       $.getJSON("/login",
         {
-          "name": ko.toJSON(self.sourceSearch),
-          "password": ko.toJSON(self.querySearch)
+          "name": ko.toJS(self.selectedRoom),
+          "password": ko.toJS(self.password)
         },
         function(allData) {
           console.log(allData);
+          roomVM.room(new Room(allData.room));
+          setRoomConnexion(allData.room.token, allData.ws4redisHeartbeat, allData.webSocketUri);
+          self.isConnected(true);
         }).fail(function(jqxhr) {
           console.error(jqxhr.responseText);
         }
@@ -222,12 +236,25 @@ $(function() {
   $('.ko-library').each(function(index) {
     ko.applyBindings(musicsLibraryVM, $('.ko-library')[index]);
   });
+  $('.ko-login').each(function(index) {
+    ko.applyBindings(loginVM, $('.ko-login')[index]);
+  });
+
 
   // TODO Transfer to Redis onSubscribe
-  loginVM.getRooms();
-  // roomVM.getPlaylist();
-  // musicsLibraryVM.getLibrary();
+  if(Cookies.get('room_token') && Cookies.get('room_heartbeat') && Cookies.get('room_wsUri')) {
+    setRoomConnexion(Cookies.get('room_token'), Cookies.get('room_heartbeat'), Cookies.get('room_wsUri'));
+  }
+  else {
+    loginVM.getRooms();
+  }
 });
+
+function onWsOpen() {
+  console.log("YOLO");
+  roomVM.getRoom();
+  musicsLibraryVM.getLibrary();
+}
 
 ko.bindingHandlers.selectPicker = {
   init: function(element, valueAccessor, allBindingsAccessor) {
