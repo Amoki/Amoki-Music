@@ -72,3 +72,7 @@ $(document).on('submit', '.ajax-next, .ajax-dead-link', function(e) {
   })
   .fail(logErrors);
 });
+
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};

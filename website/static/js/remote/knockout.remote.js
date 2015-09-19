@@ -43,7 +43,7 @@ function Room(data) {
 }
 // Source model
 function Source(data) {
-  this.name = ko.observable(data.name);
+  this.name = ko.observable(data.capitalize());
 }
 
 // VIEW MODEL DEFINITION
@@ -63,10 +63,7 @@ function LibraryViewModel() {
   self.querySearch = ko.observable();
 
   // TEST ONLY
-  self.sources = ko.observableArray([
-      new Source({name: "Soundcloud test"}),
-      new Source({name: "Youtube test"}),
-    ]);
+  self.sources = ko.observableArray([]);
 
   self.addMusic = function() {
     // Return a json serialized Music object
@@ -108,9 +105,6 @@ function LibraryViewModel() {
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
-    if(event) {
-      console.log(event.target.value);
-    }
     event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
     $.getJSON(url,
       function(allData) {
@@ -135,6 +129,11 @@ function LibraryViewModel() {
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
+  };
+
+  self.init = function() {
+    self.getLibrary();
+    self.getSources();
   };
 }
 
@@ -251,9 +250,8 @@ $(function() {
 });
 
 function onWsOpen() {
-  console.log("YOLO");
   roomVM.getRoom();
-  musicsLibraryVM.getLibrary();
+  musicsLibraryVM.init();
 }
 
 ko.bindingHandlers.selectPicker = {

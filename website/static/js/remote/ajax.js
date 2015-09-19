@@ -147,14 +147,6 @@ $(document).on('submit', '.ajax-volume', function(e) {
 // receive a message though the websocket from the server
 function receiveMessage(message) {
   message = JSON.parse(message);
-  if(message.update === true) {
-    if(typeof(message.action) !== "undefined" && message.action === "play") {
-      updateRemote(message.action);
-    }
-    else {
-      updateRemote();
-    }
-  }
 }
 
 function changeOrderingAjax(dataSend) {
