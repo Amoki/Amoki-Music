@@ -13,6 +13,7 @@ class RoomsSerializer(serializers.ModelSerializer):
     time_left = serializers.IntegerField(source='get_remaining_time', read_only=True)
     current_time_left = serializers.IntegerField(source='get_current_remaining_time', read_only=True)
     playlist = serializers.ListField(source='get_musics_remaining', child=MusicSerializer(), read_only=True)
+    current_music = MusicSerializer(read_only=True)
 
     class Meta:
         model = Room

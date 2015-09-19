@@ -143,7 +143,7 @@ class Room(models.Model):
 
     def get_remaining_time(self):
         if self.current_music:
-            time_left = self.tracks.all().aggregate(Sum('duration')).get('sum__duration') or 0
+            time_left = self.tracks.all().aggregate(Sum('duration')).get("sum__duration") or 0
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
@@ -181,7 +181,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_up',
-                'source': self.current_music.source.name,
+                'source': self.current_music.source,
             }
             self.send_message(message)
 
@@ -189,7 +189,7 @@ class Room(models.Model):
         if self.can_adjust_volume:
             message = {
                 'action': 'volume_down',
-                'source': self.current_music.source.name,
+                'source': self.current_music.source,
             }
             self.send_message(message)
 
