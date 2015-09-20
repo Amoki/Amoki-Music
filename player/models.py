@@ -206,10 +206,10 @@ class Room(models.Model):
             self.save()
             self.send_update_message()
 
-    def order_playlist(self, id, action, target=None):
+    def order_playlist(self, pk, action, target=None):
         if action not in ['top', 'up', 'down', 'bottom', 'to']:
             return
-        playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
+        playlist = PlaylistTrack.objects.get(room=self, track__pk=pk)
         if target or target == 0:
             getattr(playlist, action)(target)
         else:
