@@ -51,7 +51,7 @@ class SearchView(APIView):
             required: true
         """
         if not all(k in request.query_params for k in ("service", "query")):
-            return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Missing service or query parameter", status=status.HTTP_400_BAD_REQUEST)
 
         service = request.query_params['service']
         query = request.query_params['query']
