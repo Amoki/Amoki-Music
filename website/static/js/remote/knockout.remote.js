@@ -141,38 +141,42 @@ function LibraryViewModel() {
 function RoomViewModel() {
   var self = this;
 
-  self.room = ko.observableArray([]);
+  self.room = ko.observable();
   self.musicsPlaylist = ko.observableArray([]);
 
   self.getRoom = function() {
     $.getJSON("/room", function(allData) {
-      var room = new Room(allData);
-      self.room(room);
+      self.room(new Room(allData));
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
   };
 
   self.patchShuffle = function() {
-    self.room.shuffle = !self.room.shuffle;
+    self.room().shuffle = !self.room().shuffle();
     $.ajax({
       url: '/room',
-      data: ko.toJSON({shuffle: self.room.shuffle}),
+      data: ko.toJSON({shuffle: self.room().shuffle}),
       type: 'patch',
       contentType: 'application/json',
       dataType: 'json',
-      success: function() {},
+      success: function(allData) {
+        self.room(new Room(allData));
+      },
       error: logErrors,
     });
   };
 
   self.postNext = function() {
+    musicPk = ko.toJS(self.room).currentMusic.pk;
     $.ajax("/room/next", {
-      data: ko.toJSON({pk: self.room.pk}),
+      data: ko.toJSON({music_pk: musicPk}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
-      success: function() {},
+      success: function(allData) {
+        self.room(new Room(allData));
+      },
       error: logErrors,
     });
   };
@@ -209,9 +213,8 @@ function LoginViewModel() {
           "password": ko.toJS(self.password)
         },
         function(allData) {
-          console.log(allData);
           roomVM.room(new Room(allData.room));
-          setRoomConnexion(allData.room.token, allData.ws4redisHeartbeat, allData.webSocketUri);
+          setRoomConnexion(allData.room.token, allData.websocket.ws4redisHeartbeat, allData.websocket.webSocketUri);
           self.isConnected(true);
         }).fail(function(jqxhr) {
           console.error(jqxhr.responseText);
@@ -219,6 +222,7 @@ function LoginViewModel() {
       );
     }
     else {
+      // TODO Front bad password
       return;
     }
   };
@@ -239,8 +243,6 @@ $(function() {
     ko.applyBindings(loginVM, $('.ko-login')[index]);
   });
 
-
-  // TODO Transfer to Redis onSubscribe
   if(Cookies.get('room_token') && Cookies.get('room_heartbeat') && Cookies.get('room_wsUri')) {
     setRoomConnexion(Cookies.get('room_token'), Cookies.get('room_heartbeat'), Cookies.get('room_wsUri'));
   }

@@ -52,7 +52,7 @@
     <div class="col-md-8">
         <div class="col-md-offset-1 col-md-10 remote ko-room">
             <!-- HEADER REMOTE -->
-            <div class="row header-remote ko-room">
+            <div class="row header-remote">
                 {% include "include/remote/header_remote.html" %}
             </div>
             <!-- END HEADER REMOTE -->
@@ -114,19 +114,20 @@
             </div>
             <!-- END PROGRESS BAR -->
             <!-- CONTROL BUTTONS -->
-            <div class="row">
+            <div class="row" data-bind="with: room">
                 <div class="col-xs-offset-2 col-xs-2">
-                    <form data-bind="submit: patchShuffle">
+                    <form data-bind="submit: $parent.patchShuffle">
+                    <span data-bind="text: shuffle"></span>
                         <button type="submit" id="submit-shuffle" class="btn btn-default btn-control" title="Shuffle" alt="Shuffle" 
-                        data-bind="enable: room.shuffle">
+                        data-bind="css: {'btn-shuffle-false' : !shuffle()}">
                             <i class="fa fa-random fa-2x"></i>
                         </button>
                     </form>
                 </div>
                 <div class="col-xs-offset-3 col-xs-4">
-                    <form data-bind="submit: postNext">
+                    <form data-bind="submit: $parent.postNext">
                         <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control"
-                        data-bind="enable: room.currentMusic">
+                        data-bind="enable: currentMusic">
                             <i class="fa fa-fast-forward fa-2x"></i>
                         </button>
                     </form>

@@ -1,19 +1,19 @@
-$(document).on('submit', '.ajax-shuffle', function(e) {
-  e.preventDefault();
-  var $this = $(this);
-  ajax($this).done(function(data) {
-    if(data.error) {
-      modalConfirm($('#modal-shuffle-error'));
-    }
-    else if(data.shuffle === true) {
-      modalConfirm($('#modal-shuffle-on'));
-    }
-    else {
-      modalConfirm($('#modal-shuffle-off'));
-    }
-  })
-  .fail(logErrors);
-});
+// $(document).on('submit', '.ajax-shuffle', function(e) {
+//   e.preventDefault();
+//   var $this = $(this);
+//   ajax($this).done(function(data) {
+//     if(data.error) {
+//       modalConfirm($('#modal-shuffle-error'));
+//     }
+//     else if(data.shuffle === true) {
+//       modalConfirm($('#modal-shuffle-on'));
+//     }
+//     else {
+//       modalConfirm($('#modal-shuffle-off'));
+//     }
+//   })
+//   .fail(logErrors);
+// });
 
 /*
 $(document).on('change', 'select#source', function() {
@@ -147,6 +147,10 @@ $(document).on('submit', '.ajax-volume', function(e) {
 // receive a message though the websocket from the server
 function receiveMessage(message) {
   message = JSON.parse(message);
+  if(message.update === true) {
+    roomVM.getRoom();
+    musicsLibraryVM.getLibrary();
+  }
 }
 
 function changeOrderingAjax(dataSend) {
