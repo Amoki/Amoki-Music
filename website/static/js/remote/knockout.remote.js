@@ -11,7 +11,7 @@ function Music(data) {
   this.date = ko.observable(data.date);
   this.duration = ko.observable(data.duration);
   this.thumbnail = ko.observable(data.thumbnail);
-  this.count = ko.observable(data.count);
+  this.count = ko.observable(data.count || data.views);
   this.lastPlay = ko.observable(data.last_play);
   this.deadLink = ko.observable(data.dead_link);
   this.timerStart = ko.observable(data.timer_start);
@@ -84,23 +84,48 @@ function LibraryViewModel() {
 
   self.searchMusic = function() {
     // Return a json serialized Music object
+    console.log(self.querySearch());
     if($.type(ko.toJS(self.querySearch)) === "undefined" || !ko.toJS(self.querySearch).trim()) {
       // TODO Display empty field warning
+      console.log("empty");
       return;
     }
     $.getJSON("/search",
       {
-        "source": ko.toJSON(self.sourceSearch),
-        "q": ko.toJSON(self.querySearch)
+        "service": ko.toJS(self.sourceSearch).toLowerCase(),
+        "query": ko.toJS(self.querySearch)
       },
       function(allData) {
         var mappedMusics = $.map(allData, function(item) {
           return new Music(item);
         });
         self.musicSearch(mappedMusics);
+        $("#tab_btn_library, #library").removeClass('active');
+        $("#tab_btn_search, #search-tab").addClass('active');
       }).fail(function(jqxhr) {
         console.error(jqxhr.responseText);
       });
+  };
+
+  self.getOptions = function(request, response) {
+    $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
+      {
+        "hl": "fr", // Language
+        "ds": "yt", // Restrict lookup to youtube
+        "jsonp": "suggestCallBack", // jsonp callback function name
+        "q": request, // query term
+        "client": "youtube" // force youtube style response, i.e. jsonp
+      }
+    );
+    suggestCallBack = function(data) {
+      var suggestions = [];
+      $.each(data[1], function(key, val) {
+        val[0] = val[0].substr(0, 40);
+        suggestions.push({"value": val[0]});
+      });
+      suggestions.length = 8; // prune suggestions list to only 8 items
+      response(suggestions);
+    };
   };
 
   // Load Library page from server, convert it to Music instances, then populate self.musics

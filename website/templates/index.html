@@ -52,8 +52,22 @@
     <div class="col-md-8">
         <div class="col-md-offset-1 col-md-10 remote ko-room">
             <!-- HEADER REMOTE -->
-            <div class="row header-remote">
-                {% include "include/remote/header_remote.html" %}
+            <div class="row header-remote" data-bind="with: room">
+                <div data-bind="with: currentMusic">
+                    <img id="thumbnail" width="120px" height="90px" class="col-md-offset-1 col-md-3 img-responsive" data-bind="attr: {src: thumbnail}"></img>
+                    <div class="col-md-7 title_playing">
+                        <div class="marquee">
+                            <a class="now-playing" data-bind="attr: {href: url}, text: name"></a>
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="if: !currentMusic">
+                    <div class="col-md-12 title">
+                        <div class="marquee">
+                            <span class="now-playing">No music :'( Add yours now !</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- END HEADER REMOTE -->
             <!-- PLAYLIST -->
@@ -85,12 +99,9 @@
                                     </tbody>
                                 </div>
                                 <tbody data-bind="if: musicsPlaylist().length === 0">
-                                    <div data-bind="">
-
                                         <tr class="empty">
                                             <td>No more musics in the playlist !</td>
                                         </tr>
-
                                     </div>
                                 </tbody>
                             </table>
@@ -117,7 +128,6 @@
             <div class="row" data-bind="with: room">
                 <div class="col-xs-offset-2 col-xs-2">
                     <form data-bind="submit: $parent.patchShuffle">
-                    <span data-bind="text: shuffle"></span>
                         <button type="submit" id="submit-shuffle" class="btn btn-default btn-control" title="Shuffle" alt="Shuffle" 
                         data-bind="css: {'btn-shuffle-false' : !shuffle()}">
                             <i class="fa fa-random fa-2x"></i>
@@ -148,7 +158,7 @@
                         <span class="input-group-btn">
                             <select data-width="auto" data-bind="selectPicker: sourceSearch, optionsText: 'name', optionsValue : 'name', selectPickerOptions: { optionsArray: sources }"></select>
                         </span>
-                        <input type="text" name="query" class="form-control query" id="query" placeholder="Titre" data-bind="value: querySearch">
+                        <input type="text" name="query" class="form-control query" id="query" placeholder="Titre" data-bind="jqAuto: { value: querySearch, source: getOptions, valueProp: 'value'}" />
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
                         </span>
@@ -184,7 +194,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form class="add-music" data-bind="submit: $root.addMusic">
+                                    <form class="add-music-form" data-bind="submit: $root.addMusic">
                                         <button class="btn btn-default btn-lg btn-add-music" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
                                             <span class="glyphicon glyphicon-headphones"></span>
                                         </button>
