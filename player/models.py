@@ -26,6 +26,7 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
+    volume = models.PositiveIntegerField(default=10)
 
     def __str__(self):
         return self.name
@@ -95,7 +96,7 @@ class Room(models.Model):
 
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
-            musics = self.music_set.exclude(dead_link=True).order_by('-date')
+            musics = self.music_set.exclude(dead_link=True).order_by('-last_play')
             count = musics.count()
 
             to_remove = int(count / 10)
@@ -163,48 +164,10 @@ class Room(models.Model):
         return 0
 
     def get_musics_remaining(self):
-        if self.current_music:
             return self.tracks.all().order_by('playlisttrack__order')
-        return []
 
     def get_count_remaining(self):
-        if self.current_music:
-            return self.tracks.count()
-        return 0
-
-    def signal_dead_link(self):
-        if self.current_music:
-            self.current_music.dead_link = True
-            self.current_music.save()
-
-    def increase_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_up',
-                'source': self.current_music.source,
-            }
-            self.send_message(message)
-
-    def decrease_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_down',
-                'source': self.current_music.source,
-            }
-            self.send_message(message)
-
-    def toggle_shuffle(self, to_active):
-        if to_active:
-            self.shuffle = True
-            self.save()
-            if not self.current_music:
-                self.play_next()
-            else:
-                self.send_update_message()
-        else:
-            self.shuffle = False
-            self.save()
-            self.send_update_message()
+        return self.tracks.count()
 
     def order_playlist(self, pk, action, target=None):
         if action not in ['top', 'up', 'down', 'bottom', 'to']:
@@ -221,6 +184,37 @@ class Room(models.Model):
                 'update': True,
         }
         self.send_message(message)
+
+    def update_volume(self, volume):
+        message = {
+            'action': 'volume_change',
+            'volume': self.volume
+        }
+        self.send_message(message)
+
+    def update_shuffle(self, to_active):
+        if to_active:
+            self.shuffle = True
+            self.save()
+            if not self.current_music:
+                self.play_next()
+            else:
+                self.send_update_message()
+        else:
+            self.shuffle = False
+            self.save()
+            self.send_update_message()
+
+    def update(self, modifications):
+        for key, value in modifications.items():
+            self.binding[key](self, value)
+
+    # Bind values updates with function
+    binding = {
+        "shuffle": update_shuffle,
+        "volume": update_volume
+    }
+
 
 events = dict()
 

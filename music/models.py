@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 
 from ordered_model.models import OrderedModel
 from sources import source
@@ -10,8 +9,6 @@ class Music(models.Model):
     name = models.CharField(max_length=255, editable=False)
     url = models.CharField(max_length=512, editable=False)
     room = models.ForeignKey('player.Room')
-    # Date is used for ordering musics
-    date = models.DateTimeField(auto_now_add=True)
     # Duration in second
     duration = models.PositiveIntegerField(editable=False)
     # thumbnail in 190 * 120
@@ -32,7 +29,6 @@ class Music(models.Model):
                 existing_music.timer_start = kwargs['timer_start']
             if kwargs['timer_end']:
                 existing_music.timer_end = kwargs['timer_end']
-            existing_music.date = datetime.now()
             existing_music.save()
             if existing_music.room.current_music != existing_music:
                 try:
