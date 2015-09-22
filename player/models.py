@@ -116,7 +116,6 @@ class Room(models.Model):
             self.play(music=None)
 
     def add_music(self, **kwargs):
-        print(kwargs)
         existing_music = Music.objects.filter(
             music_id=kwargs['music_id'],
             source=kwargs['source'],
