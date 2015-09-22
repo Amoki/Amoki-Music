@@ -122,10 +122,8 @@ class Room(models.Model):
             room=self,
         ).first()
         if existing_music:
-            if existing_music != self.current_music:
-                track, created = PlaylistTrack.objects.get_or_create(room=self, track=existing_music)
-                track.top()
-                return existing_music
+            PlaylistTrack.objects.create(room=self, track=existing_music)
+            return existing_music
         else:
             music = Music(room=self, **kwargs)
             music.save()
