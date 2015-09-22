@@ -1,10 +1,7 @@
 <!-- FOOTER  -->
-<footer class="foot">
-	<form action="/dead-link/" method="post" class="pull-left ajax-dead-link">
-		{% csrf_token %}
-		<input id="music_id-dead-link" class="music_id" type="hidden" name="music_id" value="{{music_id}}">
-		<input type="hidden" name="_method" value="DELETE">
-		<button id="dead-link" class="btn btn-primary" type="submit" {% if not current_music %}disabled{%endif%}>Dead link ?</button>
+<footer class="foot ko-room" data-bind="with: room">
+	<form class="pull-left" data-bind="submit: $parent.deleteMusic">
+		<button id="dead-link" class="btn btn-primary" type="submit" data-bind="enable: currentMusic">Dead link ?</button>
 	</form>
 	<a class="btn btn-primary pull-right" href="">Company Terms</a>
 	<a data-toggle="modal" href="#extensions" class="btn btn-primary pull-right">Extensions</a>

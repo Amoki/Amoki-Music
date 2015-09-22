@@ -199,6 +199,19 @@ function RoomViewModel() {
       error: logErrors,
     });
   };
+
+  self.deleteMusic = function() {
+    $.ajax("/room/" + self.room().currentMusic.pk(), {
+      // data: ko.toJSON({music_pk: }),
+      type: "delete",
+      contentType: "application/json",
+      dataType: 'json',
+      success: function(allData) {
+        console.log(allData);
+      },
+      error: logErrors,
+    });
+  };
 }
 
 // Login viewModel
