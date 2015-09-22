@@ -158,7 +158,7 @@
                         <span class="input-group-btn">
                             <select data-width="auto" data-bind="selectPicker: sourceSearch, optionsText: 'name', optionsValue : 'name', selectPickerOptions: { optionsArray: sources }"></select>
                         </span>
-                        <input type="text" name="query" class="form-control query" id="query" placeholder="Titre" data-bind="jqAuto: { value: querySearch, source: getOptions, valueProp: 'value'}" />
+                        <input type="text" name="query" class="form-control query" id="querySearch" placeholder="Titre" data-bind="textInput: querySearch">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
                         </span>

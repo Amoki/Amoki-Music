@@ -4,7 +4,7 @@ var pageSize = 40;
 // Music model
 function Music(data) {
   this.pk = ko.observable(data.pk);
-  this.musicId = ko.observable(data.music_id);
+  this.music_id = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
   this.url = ko.observable(data.url);
   this.room = ko.observable(data.room);
@@ -12,10 +12,10 @@ function Music(data) {
   this.duration = ko.observable(data.duration);
   this.thumbnail = ko.observable(data.thumbnail);
   this.count = ko.observable(data.count || data.views);
-  this.lastPlay = ko.observable(data.last_play);
-  this.deadLink = ko.observable(data.dead_link);
-  this.timerStart = ko.observable(data.timer_start);
-  this.timerEnd = ko.observable(data.timer_end);
+  this.last_play = ko.observable(data.last_play);
+  this.dead_link = ko.observable(data.dead_link);
+  this.timer_start = ko.observable(data.timer_start);
+  this.timer_end = ko.observable(data.timer_end);
   this.source = ko.observable(data.source);
 }
 // Room model
@@ -60,31 +60,26 @@ function LibraryViewModel() {
   // search part
   self.musicSearch = ko.observableArray([]);
   self.sourceSearch = ko.observable();
-  self.querySearch = ko.observable();
+  self.querySearch = ko.observable().trimmed();
 
   // TEST ONLY
   self.sources = ko.observableArray([]);
 
   self.addMusic = function() {
     // Return a json serialized Music object
-    // $.ajax("/music/", {
-    //   data: ko.toJSON({music: this}),
-    //   type: "post",
-    //   contentType: "application/json",
-    //   dataType: "json",
-    //   success: function(result) {
-    //     newMusic = new Music(result);
-    //     roomVM.musics.push(newMusic);
-    //     musicsLibraryVM.musicsLibrary.push(newMusic);
-    //   }
-    // });
-    console.log(self.musicsLibrary.indexOf(this));
-    console.log(ko.toJSON(this));
+    $.ajax("/music", {
+      data: ko.toJSON(this),
+      type: "post",
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+        newMusic = new Music(result);
+      }
+    });
   };
 
   self.searchMusic = function() {
     // Return a json serialized Music object
-    console.log(self.querySearch());
     if($.type(ko.toJS(self.querySearch)) === "undefined" || !ko.toJS(self.querySearch).trim()) {
       // TODO Display empty field warning
       console.log("empty");
@@ -93,7 +88,7 @@ function LibraryViewModel() {
     $.getJSON("/search",
       {
         "service": ko.toJS(self.sourceSearch).toLowerCase(),
-        "query": ko.toJS(self.querySearch)
+        "query": self.querySearch()
       },
       function(allData) {
         var mappedMusics = $.map(allData, function(item) {
@@ -193,9 +188,8 @@ function RoomViewModel() {
   };
 
   self.postNext = function() {
-    musicPk = ko.toJS(self.room).currentMusic.pk;
     $.ajax("/room/next", {
-      data: ko.toJSON({music_pk: musicPk}),
+      data: ko.toJSON({music_pk: self.room().currentMusic.pk()}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
@@ -212,11 +206,10 @@ function LoginViewModel() {
   var self = this;
 
   self.isConnected = ko.observable();
-  Cookies.get('room_token') ? self.isConnected(true) : self.isConnected(false);
 
   self.rooms = ko.observableArray([]);
 
-  self.password = ko.observable();
+  self.password = ko.observable().trimmed();
   self.selectedRoom = ko.observable();
 
   self.getRooms = function() {
@@ -231,22 +224,22 @@ function LoginViewModel() {
   };
 
   self.getLogin = function() {
-    if($('#password').val().trim()) {
+    if(self.password() && self.selectedRoom()) {
       $.getJSON("/login",
         {
-          "name": ko.toJS(self.selectedRoom),
-          "password": ko.toJS(self.password)
+          "name": self.selectedRoom(),
+          "password": self.password()
         },
         function(allData) {
           roomVM.room(new Room(allData.room));
-          setRoomConnexion(allData.room.token, allData.websocket.ws4redisHeartbeat, allData.websocket.webSocketUri);
-          self.isConnected(true);
+          setRoomConnexion(allData.room.token, allData.websocket.heartbeat, allData.websocket.uri);
         }).fail(function(jqxhr) {
           console.error(jqxhr.responseText);
         }
       );
     }
     else {
+      console.log("no pass");
       // TODO Front bad password
       return;
     }
@@ -272,11 +265,13 @@ $(function() {
     setRoomConnexion(Cookies.get('room_token'), Cookies.get('room_heartbeat'), Cookies.get('room_wsUri'));
   }
   else {
+    loginVM.isConnected(false);
     loginVM.getRooms();
   }
 });
 
 function onWsOpen() {
+  loginVM.isConnected(true);
   roomVM.getRoom();
   musicsLibraryVM.init();
 }
@@ -334,4 +329,22 @@ ko.bindingHandlers.stopBinding = {
   init: function() {
     return {controlsDescendantBindings: true};
   }
+};
+
+ko.subscribable.fn.trimmed = function() {
+  return ko.computed({
+    read: function() {
+      if(this()) {
+        return this().trim();
+      }
+      else {
+        return this();
+      }
+    },
+    write: function(value) {
+      this(value.trim());
+      this.valueHasMutated();
+    },
+    owner: this
+  });
 };
