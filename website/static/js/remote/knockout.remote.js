@@ -3,6 +3,7 @@ var pageSize = 40;
 // MODEL DEFINITION
 // Music model
 function Music(data) {
+  this.playlist_pk = ko.observable(data.playlist_pk);
   this.pk = ko.observable(data.pk);
   this.music_id = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
@@ -200,7 +201,18 @@ function RoomViewModel() {
 
   self.deleteMusic = function() {
     $.ajax("/music/" + self.room().currentMusic.pk(), {
-      // data: ko.toJSON({music_pk: }),
+      type: "delete",
+      contentType: "application/json",
+      dataType: 'json',
+      success: function(allData) {
+        console.log(allData);
+      },
+      error: logErrors,
+    });
+  };
+
+  self.deletePlaylistTrack = function() {
+    $.ajax("/?/", {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
