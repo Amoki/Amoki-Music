@@ -162,7 +162,6 @@ function RoomViewModel() {
   var self = this;
 
   self.room = ko.observable();
-  self.musicsPlaylist = ko.observableArray([]);
 
   self.getRoom = function() {
     $.getJSON("/room", function(allData) {
@@ -201,7 +200,7 @@ function RoomViewModel() {
   };
 
   self.deleteMusic = function() {
-    $.ajax("/room/" + self.room().currentMusic.pk(), {
+    $.ajax("/music/" + self.room().currentMusic.pk(), {
       // data: ko.toJSON({music_pk: }),
       type: "delete",
       contentType: "application/json",
