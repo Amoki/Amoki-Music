@@ -47,10 +47,12 @@ class Music_endpointView(APIView):
         """
         Delete a music
         ---
-        serializer: MusicSerializer
         """
         try:
-            Music.objects.get(pk=pk).delete()
+            music_to_delete = Music.objects.get(pk=pk)
         except Music.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        if music_to_delete == room.current_music:
+            room.play_next()
+            music_to_delete.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
