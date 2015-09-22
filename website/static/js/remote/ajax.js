@@ -164,19 +164,20 @@ function changeOrderingAjax(dataSend) {
   });
 }
 
-$(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
-  var dataSend = {
-    'music_id': $(this).closest("tr").attr("id"),
-    'action': $(this).data("action"),
-  };
-  changeOrderingAjax(dataSend);
-});
+// $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
+//   var dataSend = {
+//     'music_id': $(this).closest("tr").attr("id"),
+//     'action': $(this).data("action"),
+//   };
+//   changeOrderingAjax(dataSend);
+// });
 
-$(document).on("sortupdate", function(event, ui) {
-  var dataSend = {
-    'music_id': ui.item[0].id,
-    'action': "to",
-    'target': ui.item.index(),
-  };
-  changeOrderingAjax(dataSend);
-});
+// $(document).on("sortupdate", function(event, ui) {
+//   var dataSend = {
+//     'music_id': ui.item[0].id,
+//     'action': "to",
+//     'target': ui.item.index(),
+//   };
+//   console.log(dataSend);
+//   changeOrderingAjax(dataSend);
+// });

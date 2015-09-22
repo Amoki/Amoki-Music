@@ -27,7 +27,7 @@ function Room(data) {
   this.shuffle = ko.observable(data.shuffle);
   this.countLeft = ko.observable(data.count_left);
 
-  this.currentMusic = ko.observableArray([]);
+  this.currentMusic = ko.observable();
   if(data.current_music) {
     this.currentMusic = new Music(data.current_music);
   }
@@ -35,11 +35,10 @@ function Room(data) {
     this.currentMusic = null;
   }
 
-  this.playlist = ko.observableArray([]);
   var mappedMusics = $.map(data.playlist, function(item) {
     return new Music(item);
   });
-  this.playlist(mappedMusics);
+  this.playlist = ko.observableArray(mappedMusics);
 }
 // Source model
 function Source(data) {
@@ -80,7 +79,7 @@ function LibraryViewModel() {
 
   self.searchMusic = function() {
     // Return a json serialized Music object
-    if($.type(ko.toJS(self.querySearch)) === "undefined" || !ko.toJS(self.querySearch).trim()) {
+    if($.type(ko.toJS(self.querySearch)) === "undefined" || !self.querySearch()) {
       // TODO Display empty field warning
       console.log("empty");
       return;
@@ -282,11 +281,27 @@ $(function() {
   }
 });
 
+var afterMoveSortable = function(obj) {
+  console.log(obj);
+};
+
+var sortableOptions = {
+  axis: "y",
+  containment: ".panel-playlist",
+  revert: true,
+  cursor: "move",
+  scrollSpeed: 5,
+  over: function() {
+    $(this).find('.ui-sortable-helper').appendTo(this);
+  },
+};
+
 function onWsOpen() {
   loginVM.isConnected(true);
   roomVM.getRoom();
   musicsLibraryVM.init();
 }
+
 
 ko.bindingHandlers.stopBinding = {
   init: function() {

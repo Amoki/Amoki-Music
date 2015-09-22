@@ -237,17 +237,17 @@ $(document).ready(function() {
   // };
 
 
-  $("#sortable").sortable({
-    axis: "y",
-    containment: ".panel-playlist",
-    scroll: true,
-    revert: true,
-    cursor: "move",
-    scrollSpeed: 5,
-    over: function() {
-      $(this).find('.ui-sortable-helper').appendTo(this);
-    }
-  });
-  $("#sortable").disableSelection();
+  // $("#sortable").sortable({
+  //   axis: "y",
+  //   containment: ".panel-playlist",
+  //   scroll: true,
+  //   revert: true,
+  //   cursor: "move",
+  //   scrollSpeed: 5,
+  //   over: function() {
+  //     $(this).find('.ui-sortable-helper').appendTo(this);
+  //   }
+  // });
+  // $("#sortable").disableSelection();
 
 });

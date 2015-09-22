@@ -7,6 +7,7 @@
     <script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/common_functions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/knockout-sortable.min.js' %}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
     <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/jquery-ui.structure.min.css' %}" rel="stylesheet">
@@ -74,17 +75,16 @@
             <div class="row playlist">
                 <div class="col-md-offset-1 col-md-10">
                     <div class="wrappeur">
-                        <!-- <div id="overlay-playlist">
-                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw loader"></i>
-                        </div> -->
                         <div class="panel panel-default panel-playlist">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Playlist</h3>
                             </div>
-
+                            <!-- <div id="overlay-playlist">
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw loader"></i>
+                            </div> -->
                             <table class="table table-striped table-condensed header-fixed">
                                 <!-- ko if: playlist().length  -->
-                                    <tbody id="sortable" class="playlist-ajax" data-bind="foreach: playlist">
+                                    <tbody id="sortable" class="playlist-ajax" data-bind="sortable: {data: playlist, options: sortableOptions, afterMove: afterMoveSortable}">
                                         <tr class="playlist-item">
                                             <td data-bind="text: name"></td>
                                             <td><span class="badge" data-bind="text: humanizeSeconds(duration())"></span></td>
