@@ -207,7 +207,8 @@ class Room(models.Model):
 
     def update(self, modifications):
         for key, value in modifications.items():
-            self.binding[key](self, value)
+            if key in binding:
+                self.binding[key](self, value)
 
     # Bind values updates with function
     binding = {
