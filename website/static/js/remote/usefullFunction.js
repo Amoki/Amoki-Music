@@ -61,7 +61,7 @@ function resize() {
   }
   // resize of the remote and the library
   $(".remote, .LIB").height(hauteur);
-  $(".wrappeur").height(hauteur - 258);
+  // $(".wrappeur").height(hauteur - 258);
   $(".list-lib").height(hauteur - 90);
   $(".tab-content").height(hauteur - 130);
 }
