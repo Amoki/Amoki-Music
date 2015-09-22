@@ -115,18 +115,23 @@ class Room(models.Model):
         else:
             self.play(music=None)
 
-    def push(self, music_id, requestId=None, **kwargs):
-        music = Music.add(
+    def add_music(self, **kwargs):
+        print(kwargs)
+        existing_music = Music.objects.filter(
+            music_id=kwargs['music_id'],
+            source=kwargs['source'],
             room=self,
-            music_id=music_id,
-            name=kwargs['name'],
-            duration=kwargs['duration'],
-            thumbnail=kwargs['thumbnail'],
-            url=kwargs['url'],
-            timer_start=kwargs['timer_start'],
-            timer_end=kwargs['timer_end'],
-            source=kwargs['source']
-        )
+        ).first()
+        if existing_music:
+            if existing_music != self.current_music:
+                track, created = PlaylistTrack.objects.get_or_create(room=self, track=existing_music)
+                track.top()
+                return existing_music
+        else:
+            music = Music(room=self, **kwargs)
+            music.save()
+            PlaylistTrack.objects.create(room=self, track=music)
+            return music
 
         # Autoplay
         if not self.current_music:
