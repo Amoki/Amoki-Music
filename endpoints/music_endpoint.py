@@ -16,13 +16,50 @@ class Music_endpointView(APIView):
         """
         Post new music
         ---
-        serializer: MusicSerializer
+        parameters:
+          - name: music_id
+            type: string
+            paramType: body
+            required: true
+
+          - name: url
+            type: string
+            paramType: body
+            required: true
+
+          - name: thumbnail
+            type: string
+            paramType: body
+            required: true
+
+          - name: duration
+            type: integer
+            paramType: body
+            required: true
+
+          - name: timer_end
+            type: integer
+            paramType: body
+
+          - name: timer_start
+            type: integer
+            paramType: body
+
+          - name: source
+            type: string
+            paramType: body
+            required: true
+
+          - name: name
+            type: string
+            paramType: body
+            required: true
         """
         request.data.update({'room_id': room.id})
         serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            music = room.add_music(**serializer.data)
+            return Response(MusicSerializer(music).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @room_required

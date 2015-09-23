@@ -21,26 +21,8 @@ class Music(models.Model):
     timer_end = models.PositiveIntegerField(null=True, blank=True)
     source = models.CharField(max_length=255, editable=False)
 
-    @classmethod
-    def add(cls, **kwargs):
-        existing_music = Music.objects.filter(music_id=kwargs['music_id'], room=kwargs['room'], source=kwargs['source']).first()
-        if existing_music:
-            if kwargs['timer_start']:
-                existing_music.timer_start = kwargs['timer_start']
-            if kwargs['timer_end']:
-                existing_music.timer_end = kwargs['timer_end']
-            existing_music.save()
-            if existing_music.room.current_music != existing_music:
-                try:
-                    PlaylistTrack.objects.get(track=existing_music).top()
-                except PlaylistTrack.DoesNotExist:
-                    PlaylistTrack.objects.create(room=existing_music.room, track=existing_music)
-            return existing_music
-        else:
-            music = cls(**kwargs)
-            music.save()
-            PlaylistTrack.objects.create(room=music.room, track=music)
-            return music
+    class Meta():
+        unique_together = ("music_id", "room")
 
     def __str__(self):
         return self.name
