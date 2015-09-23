@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from player.models import Room
-from music.serializers import MusicSerializer
+from music.serializers import MusicSerializer, PlaylistSerializer
 
 
 class RoomsSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class RoomSerializer(serializers.ModelSerializer):
     time_left = serializers.IntegerField(source='get_remaining_time', read_only=True)
     token = serializers.CharField(max_length=64, read_only=True)
     current_time_left = serializers.IntegerField(source='get_current_remaining_time', read_only=True)
-    playlist = serializers.ListField(source='get_musics_remaining', child=MusicSerializer(), read_only=True)
+    playlist = serializers.ListField(source='playlist.all', child=PlaylistSerializer(), read_only=True)
     current_music = MusicSerializer(read_only=True)
 
     # Validators for post method

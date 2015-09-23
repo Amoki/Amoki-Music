@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from music.models import Music
+from music.models import Music, PlaylistTrack
 
 
 class MusicSerializer(serializers.ModelSerializer):
@@ -18,3 +18,14 @@ class MusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = ('pk', 'music_id', 'name', 'thumbnail', 'count', 'duration', 'timer_start', 'timer_end', 'url', 'room_id', 'source')
+
+
+class PlaylistSerializer(serializers.ModelSerializer):
+    """
+    Serializing all the Playlist
+    """
+    music = MusicSerializer(source='track', read_only=True)
+
+    class Meta:
+        model = PlaylistTrack
+        fields = ('music', 'order')

@@ -32,7 +32,7 @@ class Music(models.Model):
 
 
 class PlaylistTrack(OrderedModel):
-    room = models.ForeignKey('player.Room')
+    room = models.ForeignKey('player.Room', related_name='playlist')
     track = models.ForeignKey('music.Music')
     order_with_respect_to = 'room'
 
