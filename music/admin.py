@@ -13,6 +13,7 @@ class MusicAdmin(admin.ModelAdmin):
 
     def add_music(self, request, queryset):
         for music in queryset:
+            # Hack to transform music into dict
             music.room.add_music(**MusicSerializer(music).data)
         return
 
