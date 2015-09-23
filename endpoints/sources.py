@@ -10,5 +10,9 @@ def sources(request):
     """
     Get sources list
     ---
+    results:
+      required: true
+      type: items
+      description: Array of sources' names (string)
     """
     return Response(settings.SOURCES, status=status.HTTP_200_OK)

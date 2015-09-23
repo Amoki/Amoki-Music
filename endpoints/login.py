@@ -30,17 +30,17 @@ def login(request):
         required: true
         description: The room, as /room return it
       websocket:
-          type: object
-          required: true
-          properties:
-            heartbeat:
-              type: string
-              required: true
-              description: the websocket heartbeat identifier
-            uri:
-              type: string
-              required: true
-              description: the websocket uri to connect
+        type: object
+        required: true
+        properties:
+          heartbeat:
+            type: string
+            required: true
+            description: the websocket heartbeat identifier
+          uri:
+            type: string
+            required: true
+            description: the websocket uri to connect
     """
     if not all(k in request.query_params for k in ("name", "password")):
         return Response("Missing name or password parameter", status=status.HTTP_400_BAD_REQUEST)

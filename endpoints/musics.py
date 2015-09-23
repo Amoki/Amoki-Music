@@ -16,7 +16,6 @@ class MusicsView(ListAPIView):
 
     @room_required
     def get_queryset(self, request, room):
-
         return Music.objects.filter(room=room).order_by('-last_play')
 
     def get(self, request, *args, **kwargs):
