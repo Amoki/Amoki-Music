@@ -10,6 +10,7 @@ for endpoint in ['music_endpoint', 'musics', 'room', 'rooms', 'search']:
 from endpoints.room import RoomNextView
 from endpoints.login import login
 from endpoints.sources import sources
+from endpoints import playlist
 
 urlpatterns = patterns('endpoints.routes',
     url(r'^search$', views['search']),
@@ -21,6 +22,9 @@ urlpatterns = patterns('endpoints.routes',
     url(r'^room/next$', RoomNextView.as_view()),
     url(r'^sources$', sources),
     url(r'^login$', login),
+    url(r'^playlist$', playlist.get),
+    url(r'^playlist/(?P<pk>[0-9]+)$', playlist.delete),
+    url(r'^playlist/(?P<pk>[0-9]+)/(?P<action>[a-z]+)/(?P<target>[0-9]+)?$', playlist.post),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
