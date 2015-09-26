@@ -171,19 +171,9 @@ class Room(models.Model):
     def get_count_remaining(self):
         return self.tracks.count()
 
-    def order_playlist(self, pk, action, target=None):
-        if action not in ['top', 'up', 'down', 'bottom', 'to']:
-            return
-        playlist = PlaylistTrack.objects.get(room=self, track__pk=pk)
-        if target or target == 0:
-            getattr(playlist, action)(target)
-        else:
-            getattr(playlist, action)()
-        self.send_update_message()
-
     def send_update_message(self):
         message = {
-                'update': True,
+            'update': True,
         }
         self.send_message(message)
 

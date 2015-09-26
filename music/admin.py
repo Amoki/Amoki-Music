@@ -1,6 +1,8 @@
 from django.contrib import admin
 from music.models import Music
 
+from music.serializers import MusicSerializer
+
 
 class MusicAdmin(admin.ModelAdmin):
     list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'dead_link', 'thumbnail', 'room', 'timer_start', 'timer_end')
@@ -11,7 +13,8 @@ class MusicAdmin(admin.ModelAdmin):
 
     def add_music(self, request, queryset):
         for music in queryset:
-            music.room.play(music)
+            # Hack to transform music into dict
+            music.room.add_music(**MusicSerializer(music).data)
         return
 
 admin.site.register(Music, MusicAdmin)
