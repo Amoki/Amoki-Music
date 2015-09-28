@@ -14,11 +14,11 @@ class MusicsView(ListAPIView):
     paginate_by_param = 'page_size'
     max_paginate_by = 200
 
-    @room_required
-    def get_queryset(self, request, room):
-        return Music.objects.filter(room=room).order_by('-last_play')
+    def get_queryset(self):
+        return Music.objects.filter(room=self.room).order_by('-last_play')
 
-    def get(self, request, *args, **kwargs):
+    @room_required
+    def get(self, request, room, *args, **kwargs):
         """
         Get musics of the current room
         ---
@@ -45,4 +45,5 @@ class MusicsView(ListAPIView):
             description: Music objects
             type: items
         """
+        self.room = room
         return super(MusicsView, self).get(request, *args, **kwargs)
