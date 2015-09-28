@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Django settings for amoki_music project.
 
@@ -39,18 +37,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.admindocs',
     # Pip lib
     'ws4redis',
     'rest_framework',
     'ordered_model',
+    'rest_framework_swagger',
 
     # Our apps
     'player',
     'music',
-    'website',
-    'source_modules.soundcloud',
-    'source_modules.youtube',
+    'endpoints',
+    'sources'
 )
+
+SOURCES = ["youtube", "soundcloud"]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -167,3 +168,22 @@ YOUTUBE_LANGUAGE = os.environ.get('YOUTUBE_LANGUAGE', 'FR')
 
 # Soundcloud
 SOUNDCLOUD_KEY = os.environ.get('SOUNDCLOUD_KEY', None)
+
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    'api_path': '/',
+    'enabled_methods': [
+        'get',
+        'post',
+        'patch',
+        'delete'
+    ],
+    'info': {
+        'contact': 'hugo.duroux@gmail.com',
+        'title': 'Amoki Music',
+    },
+    'doc_expansion': 'none',
+    'token_type': 'Bearer'
+}

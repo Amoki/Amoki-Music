@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from django.db.models import Sum
 
@@ -13,7 +11,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic, PlaylistTrack
+from music.models import Music, PlaylistTrack
 
 
 def generate_token():
@@ -28,8 +26,9 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
+    volume = models.PositiveIntegerField(default=10)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def reset_token(self):
@@ -60,7 +59,7 @@ class Room(models.Model):
                 message = {
                     'action': 'play',
                     'update': True,
-                    'source': music.source.name,
+                    'source': music.source,
                     'options': {
                         'name': music.name,
                         'musicId': music.music_id,
@@ -94,10 +93,10 @@ class Room(models.Model):
         if next_music:
             PlaylistTrack.objects.filter(room=self, track=next_music).delete()
             self.play(music=next_music)
-            
+
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
-            musics = self.music_set.exclude(dead_link=True).order_by('-date')
+            musics = self.music_set.exclude(dead_link=True, duration__gte=600).order_by('-last_play')
             count = musics.count()
 
             to_remove = int(count / 10)
@@ -116,33 +115,20 @@ class Room(models.Model):
         else:
             self.play(music=None)
 
-    def push(self, music_id, requestId=None, **kwargs):
-        if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(music_id=music_id, requestId=requestId)
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=temporaryMusic.name,
-                duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail,
-                url=temporaryMusic.url,
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=temporaryMusic.source
-            )
-            TemporaryMusic.clean()
+    def add_music(self, **kwargs):
+        existing_music = Music.objects.filter(
+            music_id=kwargs['music_id'],
+            source=kwargs['source'],
+            room=self,
+        ).first()
+        if existing_music:
+            PlaylistTrack.objects.create(room=self, track=existing_music)
+            return existing_music
         else:
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=kwargs['name'],
-                duration=kwargs['duration'],
-                thumbnail=kwargs['thumbnail'],
-                url=kwargs['url'],
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=kwargs['source']
-            )
+            music = Music(room=self, **kwargs)
+            music.save()
+            PlaylistTrack.objects.create(room=self, track=music)
+            return music
 
         # Autoplay
         if not self.current_music:
@@ -160,7 +146,7 @@ class Room(models.Model):
 
     def get_remaining_time(self):
         if self.current_music:
-            time_left = self.tracks.all().aggregate(Sum('duration')).values()[0] or 0
+            time_left = self.tracks.all().aggregate(Sum('duration')).get("sum__duration") or 0
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
@@ -180,37 +166,25 @@ class Room(models.Model):
         return 0
 
     def get_musics_remaining(self):
-        if self.current_music:
             return self.tracks.all().order_by('playlisttrack__order')
-        return []
 
     def get_count_remaining(self):
-        if self.current_music:
-            return self.tracks.count()
-        return 0
+        return self.tracks.count()
 
-    def signal_dead_link(self):
-        if self.current_music:
-            self.current_music.dead_link = True
-            self.current_music.save()
+    def send_update_message(self):
+        message = {
+            'update': True,
+        }
+        self.send_message(message)
 
-    def increase_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_up',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
+    def update_volume(self, volume):
+        message = {
+            'action': 'volume_change',
+            'volume': self.volume
+        }
+        self.send_message(message)
 
-    def decrease_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_down',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
-
-    def toggle_shuffle(self, to_active):
+    def update_shuffle(self, to_active):
         if to_active:
             self.shuffle = True
             self.save()
@@ -223,21 +197,17 @@ class Room(models.Model):
             self.save()
             self.send_update_message()
 
-    def order_playlist(self, id, action, target=None):
-        if action not in ['top', 'up', 'down', 'bottom', 'to']:
-            return
-        playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
-        if target or target == 0:
-            getattr(playlist, action)(target)
-        else:
-            getattr(playlist, action)()
-        self.send_update_message()
+    def update(self, modifications):
+        for key, value in modifications.items():
+            if key in self.binding:
+                self.binding[key](self, value)
 
-    def send_update_message(self):
-        message = {
-                'update': True,
-        }
-        self.send_message(message)
+    # Bind values updates with function
+    binding = {
+        "shuffle": update_shuffle,
+        "volume": update_volume
+    }
+
 
 events = dict()
 

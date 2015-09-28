@@ -9,5 +9,5 @@ class Init(AppConfig):
         PlaylistTrack = self.get_model('PlaylistTrack')
         try:
             PlaylistTrack.objects.all().delete()
-        except Exception, e:
+        except Exception as e:
             print ('Error during initilization: %s' % e)
