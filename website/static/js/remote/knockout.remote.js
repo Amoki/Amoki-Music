@@ -213,9 +213,6 @@ function RoomViewModel() {
 
   self.postPlaylistSort = function(pk, action, target) {
     target = (typeof target === 'undefined') ? '' : target;
-    console.log(pk);
-    console.log(action);
-    console.log(target);
     $.ajax({
       url: '/playlist/' + pk + '/' + action + '/' + target,
       type: 'post',
@@ -323,7 +320,17 @@ $(function() {
 });
 
 var afterMoveSortable = function(obj) {
-  roomVM.postPlaylistSort(obj.item.pk(), "to", obj.targetIndex);
+  var action = "";
+  var targetPk;
+  if(obj.targetIndex < obj.sourceParent().length - 1) {
+    action = "above";
+    targetPk = obj.sourceParent()[obj.targetIndex + 1].pk();
+  }
+  else {
+    action = "below";
+    targetPk = obj.sourceParent()[obj.targetIndex - 1].pk();
+  }
+  roomVM.postPlaylistSort(obj.item.pk(), action, targetPk);
 };
 
 var sortableOptions = {
