@@ -25,12 +25,6 @@ function timeline(currentTimeLeft, currentTimePastPercent) {
   );
 }
 
-function freezeButtons() {
-  $("#btn-next, #dead-link").prop('disabled', function(index, value) {
-    return !value;
-  });
-}
-
 function resize() {
   var hauteur;
   if($(window).height() > 765) {

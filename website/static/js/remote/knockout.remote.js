@@ -88,6 +88,9 @@ function LibraryViewModel() {
       // TODO Display empty field warning
       return;
     }
+    $("button.btn-search-icon").children("i").attr("class", "fa fa-refresh fa-spin");
+    $("button.btn-search-icon").attr('disabled', 'disabled');
+    $("#overlay-library").show();
     $.getJSON("/search",
       {
         "service": ko.toJS(self.sourceSearch).toLowerCase(),
@@ -100,35 +103,18 @@ function LibraryViewModel() {
         self.musicSearch(mappedMusics);
         $("#tab_btn_library, #library").removeClass('active');
         $("#tab_btn_search, #search-tab").addClass('active');
+        $("button.btn-search-icon").children("i").attr("class", "fa fa-search");
+        $("button.btn-search-icon").removeAttr('disabled');
+        $("#overlay-library").hide();
       }).fail(function(jqxhr) {
         console.error(jqxhr.responseText);
       });
   };
 
-  // self.getOptions = function(request, response) {
-  //   $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
-  //     {
-  //       "hl": "fr", // Language
-  //       "ds": "yt", // Restrict lookup to youtube
-  //       "jsonp": "suggestCallBack", // jsonp callback function name
-  //       "q": request, // query term
-  //       "client": "youtube" // force youtube style response, i.e. jsonp
-  //     }
-  //   );
-  //   suggestCallBack = function(data) {
-  //     var suggestions = [];
-  //     $.each(data[1], function(key, val) {
-  //       val[0] = val[0].substr(0, 40);
-  //       suggestions.push({"value": val[0]});
-  //     });
-  //     suggestions.length = 8; // prune suggestions list to only 8 items
-  //     response(suggestions);
-  //   };
-  // };
-
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
     event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
+    $("#overlay-library").show();
     $.getJSON(url,
       function(allData) {
         var mappedMusics = $.map(allData.results, function(item) {
@@ -137,6 +123,8 @@ function LibraryViewModel() {
         self.musicsLibrary(mappedMusics);
         self.hasPrevious(allData.previous);
         self.hasNext(allData.next);
+        $("#overlay-library").hide();
+        $("#popover-container-custom").scrollTop(0);
       }).fail(function(jqxhr) {
         console.error(jqxhr.responseText);
       });
