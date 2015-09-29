@@ -62,10 +62,12 @@ function LibraryViewModel() {
   self.sourceSearch = ko.observable();
   self.querySearch = ko.observable().trimmed();
 
-  // TEST ONLY
+  // source part
   self.sources = ko.observableArray([]);
 
   self.addMusic = function() {
+    $("button.btn-add-music").children("span").attr("class", "fa fa-2x fa-refresh fa-spin");
+    $("button.btn-add-music").attr('disabled', 'disabled');
     // Return a json serialized Music object
     $.ajax("/music", {
       data: ko.toJSON(this),
@@ -74,6 +76,8 @@ function LibraryViewModel() {
       dataType: "json",
       success: function(result) {
         newMusic = new Music(result);
+        $("button.btn-add-music").children("span").attr("class", "glyphicon glyphicon-play-circle");
+        $("button.btn-add-music").removeAttr('disabled');
       }
     });
   };
@@ -82,7 +86,6 @@ function LibraryViewModel() {
     // Return a json serialized Music object
     if($.type(ko.toJS(self.querySearch)) === "undefined" || !self.querySearch()) {
       // TODO Display empty field warning
-      console.log("empty");
       return;
     }
     $.getJSON("/search",
@@ -102,26 +105,26 @@ function LibraryViewModel() {
       });
   };
 
-  self.getOptions = function(request, response) {
-    $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
-      {
-        "hl": "fr", // Language
-        "ds": "yt", // Restrict lookup to youtube
-        "jsonp": "suggestCallBack", // jsonp callback function name
-        "q": request, // query term
-        "client": "youtube" // force youtube style response, i.e. jsonp
-      }
-    );
-    suggestCallBack = function(data) {
-      var suggestions = [];
-      $.each(data[1], function(key, val) {
-        val[0] = val[0].substr(0, 40);
-        suggestions.push({"value": val[0]});
-      });
-      suggestions.length = 8; // prune suggestions list to only 8 items
-      response(suggestions);
-    };
-  };
+  // self.getOptions = function(request, response) {
+  //   $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
+  //     {
+  //       "hl": "fr", // Language
+  //       "ds": "yt", // Restrict lookup to youtube
+  //       "jsonp": "suggestCallBack", // jsonp callback function name
+  //       "q": request, // query term
+  //       "client": "youtube" // force youtube style response, i.e. jsonp
+  //     }
+  //   );
+  //   suggestCallBack = function(data) {
+  //     var suggestions = [];
+  //     $.each(data[1], function(key, val) {
+  //       val[0] = val[0].substr(0, 40);
+  //       suggestions.push({"value": val[0]});
+  //     });
+  //     suggestions.length = 8; // prune suggestions list to only 8 items
+  //     response(suggestions);
+  //   };
+  // };
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
@@ -213,12 +216,14 @@ function RoomViewModel() {
 
   self.postPlaylistSort = function(pk, action, target) {
     target = (typeof target === 'undefined') ? '' : target;
+    $('#overlay-playlist').show();
     $.ajax({
       url: '/playlist/' + pk + '/' + action + '/' + target,
       type: 'post',
       contentType: 'application/json',
       dataType: 'json',
       success: function(allData) {
+        $('#overlay-playlist').hide();
         console.log(allData);
       },
       error: logErrors,
@@ -254,7 +259,7 @@ function RoomViewModel() {
 function LoginViewModel() {
   var self = this;
 
-  self.isConnected = ko.observable();
+  self.isConnected = ko.observable(false);
 
   self.rooms = ko.observableArray([]);
 
@@ -333,12 +338,19 @@ var afterMoveSortable = function(obj) {
   roomVM.postPlaylistSort(obj.item.pk(), action, targetPk);
 };
 
+$(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
+  var pk = $(this).closest("tr").attr("id");
+  var action = $(this).data("action");
+  roomVM.postPlaylistSort(pk, action);
+});
+
 var sortableOptions = {
   axis: "y",
   containment: ".panel-playlist",
   revert: true,
   cursor: "move",
   scrollSpeed: 5,
+  delay: 250,
   over: function() {
     $(this).find('.ui-sortable-helper').appendTo(this);
   },
@@ -351,6 +363,14 @@ function onWsOpen() {
   musicsLibraryVM.init();
 }
 
+// receive a message though the websocket from the server
+function receiveMessage(message) {
+  message = JSON.parse(message);
+  if(message.update === true) {
+    roomVM.getRoom();
+    musicsLibraryVM.getLibrary();
+  }
+}
 
 ko.bindingHandlers.stopBinding = {
   init: function() {

@@ -1,10 +1,3 @@
-function disabledBtn() {
-  $(document).attr('title', 'Amoki\'s musics');
-  $("#btn-next, #dead-link").attr('disabled', 'disabled');
-  $(".progress-bar").stop().css('width', '0%');
-  $('#time-left-progress-bar').countdown('destroy');
-}
-
 function updateProgressBar(data) {
   $('#time-left-progress-bar').countdown({
     since: -data.currentTimePast,
@@ -48,7 +41,6 @@ function resize() {
   }
   // resize of the remote and the library
   $(".remote, .LIB").height(hauteur);
-  // $(".wrappeur").height(hauteur - 258);
   $(".list-lib").height(hauteur - 90);
   $(".tab-content").height(hauteur - 130);
 }
@@ -222,19 +214,5 @@ $(document).ready(function() {
   //     }
   //   },
   // };
-
-
-  // $("#sortable").sortable({
-  //   axis: "y",
-  //   containment: ".panel-playlist",
-  //   scroll: true,
-  //   revert: true,
-  //   cursor: "move",
-  //   scrollSpeed: 5,
-  //   over: function() {
-  //     $(this).find('.ui-sortable-helper').appendTo(this);
-  //   }
-  // });
-  // $("#sortable").disableSelection();
 
 });
