@@ -87,16 +87,16 @@ $("#slider-volume").slider({
 });
 
 $("#player-wrapper").hover(
-    function() {
-      if($('.player-child').not('.player-child-no-music').filter(":visible").length > 0) {
-        $("#wrapper-slider-volume").stop().fadeIn(300);
-      }
-    },
-    function() {
-      $("#wrapper-slider-volume").stop().fadeOut(300);
+  function() {
+    if($('.player-child').not('.player-child-no-music').filter(":visible").length > 0) {
+      $("#wrapper-slider-volume").stop().fadeIn(300);
     }
- );
+  },
+  function() {
+    $("#wrapper-slider-volume").stop().fadeOut(300);
+  }
+);
 
 $('#icon-volume').click(function() {
-    $("#slider-volume").slider("option", "value", 0);
-  });
+  $("#slider-volume").slider("option", "value", 0);
+});

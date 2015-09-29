@@ -1,16 +1,3 @@
-function humanizeSeconds(s) {
-  var fm = [
-    Math.floor(s / 60) % 60,
-    s % 60
-  ];
-  if(Math.floor(s / 60 / 60) % 24 > 0) {
-    fm.unshift(Math.floor(s / 60 / 60) % 24);
-  }
-  return $.map(fm, function(v) {
-    return ((v < 10) ? '0' : '') + v;
-  }).join(':');
-}
-
 function disabledBtn() {
   $(document).attr('title', 'Amoki\'s musics');
   $("#btn-next, #dead-link").attr('disabled', 'disabled');

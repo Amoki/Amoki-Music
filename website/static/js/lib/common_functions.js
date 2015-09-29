@@ -73,6 +73,23 @@ $(document).on('submit', '.ajax-dead-link', function(e) {
   .fail(logErrors);
 });
 
+/********************
+  HELPER FUNCTIONS
+********************/
+
 String.prototype.capitalize = function() {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
+function humanizeSeconds(s) {
+  var fm = [
+    Math.floor(s / 60) % 60,
+    s % 60
+  ];
+  if(Math.floor(s / 60 / 60) % 24 > 0) {
+    fm.unshift(Math.floor(s / 60 / 60) % 24);
+  }
+  return $.map(fm, function(v) {
+    return ((v < 10) ? '0' : '') + v;
+  }).join(':');
+}

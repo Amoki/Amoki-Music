@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def remote(request):
-    return render(request, 'index.html')
+    return render(request, 'base.html')
 
 
 def player(request):
