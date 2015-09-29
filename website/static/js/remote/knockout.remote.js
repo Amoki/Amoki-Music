@@ -3,7 +3,6 @@ var pageSize = 40;
 // MODEL DEFINITION
 // Music model
 function Music(data) {
-  this.playlist_pk = ko.observable(data.playlist_pk);
   this.pk = ko.observable(data.pk);
   this.music_id = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
@@ -18,6 +17,12 @@ function Music(data) {
   this.timer_start = ko.observable(data.timer_start);
   this.timer_end = ko.observable(data.timer_end);
   this.source = ko.observable(data.source);
+}
+// Playlist model
+function PlaylistTrack(data) {
+  this.pk = ko.observable(data.pk);
+  this.order = ko.observable(data.order);
+  this.music = ko.observable(new Music(data.music));
 }
 // Room model
 function Room(data) {
@@ -35,11 +40,6 @@ function Room(data) {
   else {
     this.currentMusic = null;
   }
-
-  var mappedMusics = $.map(data.playlist, function(item) {
-    return new Music(item);
-  });
-  this.playlist = ko.observableArray(mappedMusics);
 }
 // Source model
 function Source(data) {
@@ -162,6 +162,7 @@ function RoomViewModel() {
   var self = this;
 
   self.room = ko.observable();
+  self.playlistTracks = ko.observableArray([]);
 
   self.getRoom = function() {
     $.getJSON("/room", function(allData) {
@@ -171,8 +172,19 @@ function RoomViewModel() {
     });
   };
 
+  self.getPlaylist = function() {
+    $.getJSON("/playlist", function(allData) {
+      var mappedPlaylistTracks = $.map(allData, function(item) {
+        return new PlaylistTrack(item);
+      });
+      self.playlistTracks(mappedPlaylistTracks);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
+
   self.patchShuffle = function() {
-    self.room().shuffle = !self.room().shuffle();
+    self.room().shuffle(!self.room().shuffle());
     $.ajax({
       url: '/room',
       data: ko.toJSON({shuffle: self.room().shuffle}),
@@ -194,6 +206,23 @@ function RoomViewModel() {
       dataType: 'json',
       success: function(allData) {
         self.room(new Room(allData));
+      },
+      error: logErrors,
+    });
+  };
+
+  self.postPlaylistSort = function(pk, action, target) {
+    target = (typeof target === 'undefined') ? '' : target;
+    console.log(pk);
+    console.log(action);
+    console.log(target);
+    $.ajax({
+      url: '/playlist/' + pk + '/' + action + '/' + target,
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(allData) {
+        console.log(allData);
       },
       error: logErrors,
     });
@@ -294,7 +323,7 @@ $(function() {
 });
 
 var afterMoveSortable = function(obj) {
-  console.log(obj);
+  roomVM.postPlaylistSort(obj.item.pk(), "to", obj.targetIndex);
 };
 
 var sortableOptions = {
@@ -310,6 +339,7 @@ var sortableOptions = {
 
 function onWsOpen() {
   loginVM.isConnected(true);
+  roomVM.getPlaylist();
   roomVM.getRoom();
   musicsLibraryVM.init();
 }

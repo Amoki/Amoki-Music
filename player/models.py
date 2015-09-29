@@ -49,8 +49,8 @@ class Room(models.Model):
             self.current_music = music
             self.save()
             if not music.is_valid():
-                self.signal_dead_link()
                 self.play_next()
+                music.delete()
             else:
                 music.count += 1
                 music.last_play = datetime.now()
