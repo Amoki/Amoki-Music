@@ -20,7 +20,7 @@
   <script type="text/javascript" src="{% static 'js/lib/prefixfree.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/ws4redis.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/jquery.countdown.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/jquery.countTo.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/knockout-sortable.min.js' %}"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
@@ -92,7 +92,7 @@
           <div class="col-md-offset-1 col-md-10 remote">
             <!-- HEADER REMOTE -->
             <div class="row header-remote" data-bind="with: room">
-              <div data-bind="if: $data.currentMusic">
+              <div data-bind="if: currentMusic">
                 <img id="thumbnail" class="col-md-offset-1 col-md-3 img-responsive" data-bind="attr: {src: currentMusic.thumbnail}">
                 <div class="col-md-8 title_playing">
                   <div class="marquee">
@@ -100,7 +100,7 @@
                   </div>
                 </div>
               </div>
-              <div data-bind="if: !$data.currentMusic">
+              <div data-bind="if: !currentMusic">
                 <div class="col-md-12 title">
                   <div class="marquee">
                     <span class="now-playing">No music :'( Add yours now !</span>
@@ -160,7 +160,7 @@
             </div>
             <!-- END PLAYLIST -->
             <!-- PROGRESS BAR -->
-            <div class="row">
+            <div class="row" data-bind="with:room">
               <div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
                 <div class="progress progress-striped active">
                   <div class="progress-bar"></div>
@@ -168,7 +168,9 @@
                 </div>
                 <div id="time-left-progress-bar-wrapper">
                   <span id="time-left-progress-bar"></span>
-                  <span id="time-left-progress-bar-duration"></span>
+                  <span id="time-left-progress-bar-duration">
+                    <!-- ko if: currentMusic -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic.duration()) --><!--/ko--><!--/ko-->
+                  </span>
                 </div>
               </div>
             </div>
@@ -250,9 +252,6 @@
                     </ul>
                   </div>
                   <div class="tab-pane active" id="library">
-                    <div id="overlay-library">
-                      <i class="fa fa-spinner fa-pulse fa-3x fa-fw loader"></i>
-                    </div>
                     <ul id="list-library" class="list-group" data-bind="foreach: musicsLibrary">
                       <li class="list-group-item item-lib row row-list-item">
                         <div class="row-list-item">

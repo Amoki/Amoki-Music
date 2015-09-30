@@ -1,13 +1,23 @@
-function updateProgressBar(data) {
-  $('#time-left-progress-bar').countdown({
-    since: -data.currentTimePast,
-    onTick: function(periods) {
-      if((data.currentMusic.duration) === (periods[4] * 3600 + periods[5] * 60 + periods[6])) {
-        $('#time-left-progress-bar').countdown('destroy');
-      }
+function stopAll() {
+  $(document).attr('title', 'Amoki\'s musics');
+  $(".progress-bar").finish();
+  $(".progress-bar").css('width', '0%');
+  $('#time-left-progress-bar').countTo('stop');
+}
+
+function updateProgressBar(duration, currentTimePast, currentTimeLeft) {
+  $('#time-left-progress-bar').countTo({
+    from: currentTimePast,
+    to: duration,
+    speed: currentTimeLeft * 1000,
+    refreshInterval: 500,
+    formatter: function(value, options) {
+      return humanizeSeconds(value.toFixed(options.decimals));
     },
+    onComplete: function() {
+      $('#time-left-progress-bar').countTo('stop');
+    }
   });
-  $('#time-left-progress-bar-duration').html("/ " + humanizeSeconds(data.currentMusic.duration));
 }
 
 function timeline(currentTimeLeft, currentTimePastPercent) {
@@ -89,12 +99,6 @@ $(document).ready(function() {
       $(this).val(ui.item.value).change();
       $(event.target.form).submit();
     },
-  });
-
-  $('#time-left-progress-bar').countdown('destroy');
-  $.countdown.setDefaults({
-    compact: true,
-    format: 'hMS',
   });
 
   // $('#music_preview').on('show.bs.modal', function(event) {

@@ -27,11 +27,13 @@ function PlaylistTrack(data) {
 // Room model
 function Room(data) {
   this.name = ko.observable(data.name);
-  this.timeLeft = ko.observable(data.time_left);
-  this.currentTimeLeft = ko.observable(data.current_time_left);
-  this.canAdjustVolume = ko.observable(data.can_adjust_volume);
+  this.time_left = ko.observable(data.time_left);
+  this.current_time_left = ko.observable(data.current_time_left);
+  this.current_time_past = ko.observable(data.current_time_past);
+  this.current_time_past_percent = ko.observable(data.current_time_past_percent);
+  this.can_adjust_volume = ko.observable(data.can_adjust_volume);
   this.shuffle = ko.observable(data.shuffle);
-  this.countLeft = ko.observable(data.count_left);
+  this.count_left = ko.observable(data.count_left);
 
   this.currentMusic = ko.observable();
   if(data.current_music) {
@@ -90,7 +92,6 @@ function LibraryViewModel() {
     }
     $("button.btn-search-icon").children("i").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-search-icon").attr('disabled', 'disabled');
-    $("#overlay-library").show();
     $.getJSON("/search",
       {
         "service": ko.toJS(self.sourceSearch).toLowerCase(),
@@ -105,7 +106,6 @@ function LibraryViewModel() {
         $("#tab_btn_search, #search-tab").addClass('active');
         $("button.btn-search-icon").children("i").attr("class", "fa fa-search");
         $("button.btn-search-icon").removeAttr('disabled');
-        $("#overlay-library").hide();
       }).fail(function(jqxhr) {
         console.error(jqxhr.responseText);
       });
@@ -114,7 +114,6 @@ function LibraryViewModel() {
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
     event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
-    $("#overlay-library").show();
     $.getJSON(url,
       function(allData) {
         var mappedMusics = $.map(allData.results, function(item) {
@@ -123,7 +122,6 @@ function LibraryViewModel() {
         self.musicsLibrary(mappedMusics);
         self.hasPrevious(allData.previous);
         self.hasNext(allData.next);
-        $("#overlay-library").hide();
         $("#popover-container-custom").scrollTop(0);
       }).fail(function(jqxhr) {
         console.error(jqxhr.responseText);
@@ -158,6 +156,13 @@ function RoomViewModel() {
   self.getRoom = function() {
     $.getJSON("/room", function(allData) {
       self.room(new Room(allData));
+      if(self.room().currentMusic) {
+        updateProgressBar(self.room().currentMusic.duration(), self.room().current_time_past(), self.room().current_time_left());
+        timeline(self.room().current_time_left(), self.room().current_time_past_percent());
+      }
+      else {
+        stopAll();
+      }
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
