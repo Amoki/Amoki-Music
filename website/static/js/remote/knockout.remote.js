@@ -346,8 +346,8 @@ var sortableOptions = {
 
 function onWsOpen() {
   loginVM.isConnected(true);
-  roomVM.getPlaylist();
   roomVM.getRoom();
+  roomVM.getPlaylist();
   musicsLibraryVM.init();
 }
 
@@ -356,6 +356,7 @@ function receiveMessage(message) {
   message = JSON.parse(message);
   if(message.update === true) {
     roomVM.getRoom();
+    roomVM.getPlaylist();
     musicsLibraryVM.getLibrary();
   }
 }

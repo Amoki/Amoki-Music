@@ -122,13 +122,12 @@ class Room(models.Model):
             room=self,
         ).first()
         if existing_music:
-            PlaylistTrack.objects.create(room=self, track=existing_music)
-            return existing_music
+            music = existing_music
         else:
             music = Music(room=self, **kwargs)
             music.save()
-            PlaylistTrack.objects.create(room=self, track=music)
-            return music
+
+        PlaylistTrack.objects.create(room=self, track=music)
 
         # Autoplay
         if not self.current_music:
@@ -137,6 +136,8 @@ class Room(models.Model):
             self.play_next(forced=True)
         else:
             self.send_update_message()
+
+        return music
 
     def get_current_remaining_time(self):
         if self.current_music:

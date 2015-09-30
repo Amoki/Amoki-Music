@@ -37,6 +37,7 @@ function resize() {
   $(".remote, .LIB").height(hauteur);
   $(".list-lib").height(hauteur - 90);
   $(".tab-content").height(hauteur - 130);
+  $(".playlist").height(hauteur - 250);
 }
 
 $(document).ready(function() {
