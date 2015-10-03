@@ -1,9 +1,10 @@
 from django.test import TestCase
-
+from rest_framework.test import APIClient
+from rest_framework import status
 from player.models import Room
 
 
-class TestSignals(TestCase):
+class TestRoomEndpoint(TestCase):
     def reload(self, item):
         """
         Reload an item from DB
@@ -11,23 +12,14 @@ class TestSignals(TestCase):
         return item.__class__.objects.get(pk=item.pk)
 
     def setUp(self):
-        self.u = User(username="test")
-        self.u.set_password("pwd")
-        self.u.save()
+        self.r = Room(name="a", password="a")
+        self.r.save()
 
-        self.k = Kingdom(user=self.u)
-        self.k.save()
+    def test_enable_shuffle_on_empty_room(self):
 
-        self.c = Client()
-        self.c.login(username=self.u.username, password="pwd")
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.r.token)
+        response = client.patch('/room', {'shuffle': True}, format='json')
 
-    def test_update_token_on_password_change(self):
-        r = Room(name="test", password="123")
-        r.save()
-
-        first_token = r.token
-
-        r.password = 'wqe'
-        r.save()
-
-        self.assertNotEqual(self.reload(r).token, first_token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, "Can't activate shuffle when there is no musics.")

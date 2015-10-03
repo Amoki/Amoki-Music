@@ -15,7 +15,7 @@ from music.models import Music, PlaylistTrack
 
 
 def generate_token():
-    return binascii.b2a_hex(os.urandom(32))
+    return str(binascii.b2a_hex(os.urandom(32)))
 
 
 class UnableToShuffle(Exception):
