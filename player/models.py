@@ -11,11 +11,19 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic, PlaylistTrack
+from music.models import Music, PlaylistTrack
 
 
 def generate_token():
-    return binascii.b2a_hex(os.urandom(32))
+    return str(binascii.b2a_hex(os.urandom(32)))
+
+
+class UnableToUpdate(Exception):
+    """
+    Error triggered when room's update is impossible
+    """
+    def __init__(self, message):
+        self.message = message
 
 
 class Room(models.Model):
@@ -26,6 +34,9 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
+    volume = models.PositiveIntegerField(default=10)
+
+    UnableToUpdate = UnableToUpdate
 
     def __str__(self):
         return self.name
@@ -48,7 +59,7 @@ class Room(models.Model):
             self.current_music = music
             self.save()
             if not music.is_valid():
-                self.signal_dead_link()
+                music.delete()
                 self.play_next()
             else:
                 music.count += 1
@@ -58,7 +69,7 @@ class Room(models.Model):
                 message = {
                     'action': 'play',
                     'update': True,
-                    'source': music.source.name,
+                    'source': music.source,
                     'options': {
                         'name': music.name,
                         'musicId': music.music_id,
@@ -101,11 +112,13 @@ class Room(models.Model):
             to_remove = int(count / 10)
             count -= to_remove
             musics = musics[to_remove:]
+
             a = count / float(5)  # Le point où ca commence à monter
             b = count / float(27)  # La vitesse à laquelle ca monte
             x = random.uniform(1, count - a - 1)
-            i = int(math.floor(x + a - a * math.exp(-x / b)))
-
+            i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
+            if i < 0:
+                i = 0  # Can't get negative index
             shuffled = musics[i]
             shuffled.date = datetime.now()
             shuffled.save()
@@ -114,33 +127,17 @@ class Room(models.Model):
         else:
             self.play(music=None)
 
-    def push(self, music_id, requestId=None, **kwargs):
-        if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(music_id=music_id, requestId=requestId)
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=temporaryMusic.name,
-                duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail,
-                url=temporaryMusic.url,
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=temporaryMusic.source
-            )
-            TemporaryMusic.clean()
-        else:
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=kwargs['name'],
-                duration=kwargs['duration'],
-                thumbnail=kwargs['thumbnail'],
-                url=kwargs['url'],
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=kwargs['source']
-            )
+    def add_music(self, **kwargs):
+        existing_music = Music.objects.filter(
+            music_id=kwargs['music_id'],
+            source=kwargs['source'],
+            room=self,
+        ).first()
+        if not existing_music:
+            existing_music = Music(room=self, **kwargs)
+            existing_music.save()
+        PlaylistTrack.objects.create(room=self, track=existing_music)
+        return existing_music
 
         # Autoplay
         if not self.current_music:
@@ -178,37 +175,33 @@ class Room(models.Model):
         return 0
 
     def get_musics_remaining(self):
-        if self.current_music:
             return self.tracks.all().order_by('playlisttrack__order')
-        return []
 
     def get_count_remaining(self):
-        if self.current_music:
-            return self.tracks.count()
-        return 0
+        return self.tracks.count()
 
-    def signal_dead_link(self):
-        if self.current_music:
-            self.current_music.dead_link = True
-            self.current_music.save()
+    def send_update_message(self):
+        message = {
+            'update': True,
+        }
+        self.send_message(message)
 
-    def increase_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_up',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
+    def update_volume(self, volume):
+        if not self.can_adjust_volume:
+            raise self.UnableToUpdate("This room don't have permission to update volume.")
+        message = {
+            'action': 'volume_change',
+            'volume': self.volume
+        }
+        self.send_message(message)
 
-    def decrease_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_down',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
+    def update_volume_permission(self, value):
+        self.can_adjust_volume = value
+        self.save()
 
-    def toggle_shuffle(self, to_active):
+    def update_shuffle(self, to_active):
+        if to_active and self.music_set.count() == 0:
+            raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
             self.save()
@@ -221,21 +214,18 @@ class Room(models.Model):
             self.save()
             self.send_update_message()
 
-    def order_playlist(self, id, action, target=None):
-        if action not in ['top', 'up', 'down', 'bottom', 'to']:
-            return
-        playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
-        if target or target == 0:
-            getattr(playlist, action)(target)
-        else:
-            getattr(playlist, action)()
-        self.send_update_message()
+    def update(self, modifications):
+        for key, value in modifications.items():
+            if key in self.binding:
+                self.binding[key](self, value)
 
-    def send_update_message(self):
-        message = {
-                'update': True,
-        }
-        self.send_message(message)
+    # Bind values updates with function
+    binding = {
+        "shuffle": update_shuffle,
+        "volume": update_volume,
+        "can_adjust_volume": update_volume_permission,
+    }
+
 
 events = dict()
 
