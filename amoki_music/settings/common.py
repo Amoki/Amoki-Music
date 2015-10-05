@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
@@ -192,3 +194,6 @@ SWAGGER_SETTINGS = {
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'

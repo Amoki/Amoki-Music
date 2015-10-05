@@ -54,11 +54,11 @@ class TestRoom(EndpointTestCase):
 
     def test_patch_shuffle(self):
         m = Music(
-            music_id="Ag00ZorVUtE",
-            name="® Random LoL Moments | Episode 369 (League of Legends)",
-            thumbnail="https://i.ytimg.com/vi/Ag00ZorVUtE/default.jpg",
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
             duration=114,
-            url="https://www.youtube.com/watch?v=Ag00ZorVUtE",
+            url="https://www.a.com",
             source="youtube",
             room=self.r,
         )
@@ -68,7 +68,7 @@ class TestRoom(EndpointTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['shuffle'])
-        self.assertEqual(response.data['current_music']['music_id'], 'Ag00ZorVUtE')
+        self.assertEqual(response.data['current_music']['music_id'], 'a')
 
         response = self.client.patch('/room', {'shuffle': False})
 
