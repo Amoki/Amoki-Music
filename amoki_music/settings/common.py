@@ -187,3 +187,8 @@ SWAGGER_SETTINGS = {
     'doc_expansion': 'none',
     'token_type': 'Bearer'
 }
+
+
+REST_FRAMEWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
