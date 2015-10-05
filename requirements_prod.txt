@@ -9,4 +9,5 @@ markdown==2.6.2
 django-ordered-model==0.4.2
 django-rest-swagger==0.3.4
 docutils==0.12
+gevent==1.1b5
 uwsgi==2.0.10
