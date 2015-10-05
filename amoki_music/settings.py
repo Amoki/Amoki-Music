@@ -10,6 +10,19 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+
+# Environment
+PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
+
+if PYTHON_ENV == 'production':
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+else:
+    DEBUG = True
+    TEMPLATE_DEBUG = True
+    WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
@@ -26,7 +39,6 @@ MANAGERS = ADMINS
 SECRET_KEY = '5h9@)57rjgoe3m_sb12kcp-ku7w!#x86a_k5_59t#g=!e$nhha'
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
