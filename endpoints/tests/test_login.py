@@ -18,6 +18,7 @@ class TestLogin(EndpointTestCase):
                 'time_left': 0,
                 'current_time_left': 0,
                 'playlist': [],
+                'volume': 10,
                 'token': self.r.token
             },
             'websocket': {

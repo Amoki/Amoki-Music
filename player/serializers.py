@@ -35,9 +35,9 @@ class RoomSerializer(serializers.ModelSerializer):
     # Validators for post method
     password = serializers.CharField(max_length=128, write_only=True, required=True)
     name = serializers.CharField(max_length=64, required=True)
-    can_adjust_volume = serializers.BooleanField()
+    can_adjust_volume = serializers.BooleanField(default=False)
     shuffle = serializers.BooleanField(default=False)
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'token', 'password')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'token', 'password', 'volume')

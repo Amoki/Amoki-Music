@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from player.models import Room
+from player.models import Room, events
 
 
 class EndpointTestCase(TestCase):
@@ -16,3 +16,8 @@ class EndpointTestCase(TestCase):
 
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.reload(self.r).token)
+
+    def tearDown(self):
+        for room, event in events.items():
+            if event is not None:
+                event.cancel()

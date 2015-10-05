@@ -18,9 +18,9 @@ def generate_token():
     return str(binascii.b2a_hex(os.urandom(32)))
 
 
-class UnableToShuffle(Exception):
+class UnableToUpdate(Exception):
     """
-    Error triggered when shuffle can't be activated
+    Error triggered when room's update is impossible
     """
     def __init__(self, message):
         self.message = message
@@ -36,7 +36,7 @@ class Room(models.Model):
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
     volume = models.PositiveIntegerField(default=10)
 
-    UnableToShuffle = UnableToShuffle
+    UnableToUpdate = UnableToUpdate
 
     def __str__(self):
         return self.name
@@ -59,7 +59,7 @@ class Room(models.Model):
             self.current_music = music
             self.save()
             if not music.is_valid():
-                self.signal_dead_link()
+                music.delete()
                 self.play_next()
             else:
                 music.count += 1
@@ -112,11 +112,13 @@ class Room(models.Model):
             to_remove = int(count / 10)
             count -= to_remove
             musics = musics[to_remove:]
+
             a = count / float(5)  # Le point où ca commence à monter
             b = count / float(27)  # La vitesse à laquelle ca monte
             x = random.uniform(1, count - a - 1)
-            i = int(math.floor(x + a - a * math.exp(-x / b)))
-
+            i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
+            if i < 0:
+                i = 0  # Can't get negative index
             shuffled = musics[i]
             shuffled.date = datetime.now()
             shuffled.save()
@@ -188,15 +190,21 @@ class Room(models.Model):
         self.send_message(message)
 
     def update_volume(self, volume):
+        if not self.can_adjust_volume:
+            raise self.UnableToUpdate("This room don't have permission to update volume.")
         message = {
             'action': 'volume_change',
             'volume': self.volume
         }
         self.send_message(message)
 
+    def update_volume_permission(self, value):
+        self.can_adjust_volume = value
+        self.save()
+
     def update_shuffle(self, to_active):
         if to_active and self.music_set.count() == 0:
-            raise UnableToShuffle("Can't activate shuffle when there is no musics.")
+            raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
             self.save()
@@ -217,7 +225,8 @@ class Room(models.Model):
     # Bind values updates with function
     binding = {
         "shuffle": update_shuffle,
-        "volume": update_volume
+        "volume": update_volume,
+        "can_adjust_volume": update_volume_permission,
     }
 
 
