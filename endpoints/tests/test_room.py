@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from player.models import Room
-from music.models import Music
+from music.models import Music, PlaylistTrack
 
 
 class TestRoom(EndpointTestCase):
@@ -100,3 +100,41 @@ class TestRoom(EndpointTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, "This room don't have permission to update volume.")
+
+    def test_delete(self):
+        response = self.client.delete('/room')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertFalse(Room.objects.filter(name='a').exists())
+
+    def test_next(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+
+        self.r.current_music = m
+        self.r.save()
+
+        m2 = Music(
+            music_id="b",
+            name="b",
+            thumbnail="https://a.com",
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m2.save()
+        PlaylistTrack.objects.create(room=self.r, track=m2)
+
+        response = self.client.post('/room/next', {'music_pk': m.pk})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['current_music']['music_id'], m2.music_id)

@@ -133,14 +133,11 @@ class Room(models.Model):
             source=kwargs['source'],
             room=self,
         ).first()
-        if existing_music:
-            PlaylistTrack.objects.create(room=self, track=existing_music)
-            return existing_music
-        else:
-            music = Music(room=self, **kwargs)
-            music.save()
-            PlaylistTrack.objects.create(room=self, track=music)
-            return music
+        if not existing_music:
+            existing_music = Music(room=self, **kwargs)
+            existing_music.save()
+        PlaylistTrack.objects.create(room=self, track=existing_music)
+        return existing_music
 
         # Autoplay
         if not self.current_music:
