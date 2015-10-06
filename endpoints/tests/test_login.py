@@ -2,38 +2,20 @@ from endpoints.tests.testcase import EndpointTestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+import sure
+
 
 class TestLogin(EndpointTestCase):
     def test_login_successful(self):
         client = APIClient()
         response = client.get('/login', {'name': 'a', 'password': 'a'})
 
-        expected_response = {
-            'room': {
-                'name': self.r.name,
-                'current_music': None,
-                'shuffle': False,
-                'can_adjust_volume': False,
-                'count_left': 0,
-                'time_left': 0,
-                'current_time_left': 0,
-                'playlist': [],
-                'volume': 10,
-                'token': self.r.token
-            },
-            'websocket': {
-                'heartbeat': '--heartbeat--',
-                'uri': 'ws://testserver/ws/'
-            }
-        }
+        response.status_code.should.eql(status.HTTP_200_OK)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response.data.should.have.key('room')
+        response.data.should.have.key('websocket')
 
-        self.assertIn('room', response.data)
-        self.assertIn('websocket', response.data)
-        self.assertEqual(self.r.token, response.data['room']['token'])
-
-        self.assertEqual(response.data, expected_response)
+        self.assertResponseEqualsRoom(response.data['room'], self.r)
 
     def test_login_fail_bad_params(self):
         client = APIClient()

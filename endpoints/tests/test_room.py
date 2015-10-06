@@ -5,6 +5,8 @@ from rest_framework.test import APIClient
 from player.models import Room
 from music.models import Music, PlaylistTrack
 
+import sure
+
 
 class TestRoom(EndpointTestCase):
     def test_get(self):
@@ -23,29 +25,17 @@ class TestRoom(EndpointTestCase):
             'token': self.r.token
         }
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_result)
+        response.status_code.should.eql(status.HTTP_200_OK)
+        (dict(response.data)).should.eql(expected_result)
 
     def test_post(self):
         client = APIClient()
         response = client.post('/room', {'name': 'b', 'password': 'b'})
 
         room = Room.objects.get(name='b')
-        expected_result = {
-            'name': 'b',
-            'current_music': None,
-            'shuffle': False,
-            'can_adjust_volume': False,
-            'count_left': 0,
-            'time_left': 0,
-            'current_time_left': 0,
-            'playlist': [],
-            'volume': 10,
-            'token': room.token
-        }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, expected_result)
+        self.assertResponseEqualsRoom(response.data, room)
 
     def test_patch_shuffle_while_empty_room(self):
         response = self.client.patch('/room', {'shuffle': True})
