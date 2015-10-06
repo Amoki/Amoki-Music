@@ -48,6 +48,9 @@ class EndpointTestCase(TestCase):
         response['timer_start'].should.eql(music.timer_start)
         response['timer_end'].should.eql(music.timer_end)
         response['source'].should.eql(music.source)
-        datetime.strptime(response['last_play'], '%Y-%m-%dT%H:%M:%S.%f').should.eql(music.last_play)
+        if response['last_play'] is not None:
+            datetime.strptime(response['last_play'], '%Y-%m-%dT%H:%M:%S.%f').should.eql(music.last_play)
+        else:
+            response['last_play'].should.eql(music.last_play)
         if check_room:
             response['room'].should.eql(music.room)
