@@ -84,7 +84,7 @@ ROOT_URLCONF = 'amoki_music.urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -110,7 +110,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = BASE_DIR + '/../collected-static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected-static/')
 
 # URL prefix for static files.
 # Example: "http://media.l
