@@ -207,4 +207,19 @@ REST_FRAMEWORK = {
 }
 
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    TESTING = True
+    MIGRATION_MODULES = DisableMigrations()
