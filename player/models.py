@@ -106,7 +106,7 @@ class Room(models.Model):
 
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
-            musics = self.music_set.exclude(dead_link=True, duration__gte=600).order_by('-last_play')
+            musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
             count = musics.count()
 
             to_remove = int(count / 10)

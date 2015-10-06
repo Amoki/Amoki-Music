@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from player.models import Room, events
 
 import sure
+from datetime import datetime
 
 
 class EndpointTestCase(TestCase):
@@ -36,3 +37,17 @@ class EndpointTestCase(TestCase):
         response['playlist'].should.eql(list(room.playlist.all()))
         if check_token:
             response['token'].should.eql(room.token)
+
+    def assertResponseEqualsMusic(self, response, music, check_room=False):
+        response['name'].should.eql(music.name)
+        response['music_id'].should.eql(music.music_id)
+        response['url'].should.eql(music.url)
+        response['duration'].should.eql(music.duration)
+        response['thumbnail'].should.eql(music.thumbnail)
+        response['count'].should.eql(music.count)
+        response['timer_start'].should.eql(music.timer_start)
+        response['timer_end'].should.eql(music.timer_end)
+        response['source'].should.eql(music.source)
+        datetime.strptime(response['last_play'], '%Y-%m-%dT%H:%M:%S.%f').should.eql(music.last_play)
+        if check_room:
+            response['room'].should.eql(music.room)

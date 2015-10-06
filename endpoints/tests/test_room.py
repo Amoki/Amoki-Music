@@ -127,4 +127,4 @@ class TestRoom(EndpointTestCase):
         response = self.client.post('/room/next', {'music_pk': m.pk})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['current_music']['music_id'], m2.music_id)
+        self.assertResponseEqualsMusic(response.data['current_music'], self.reload(m2))

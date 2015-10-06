@@ -15,8 +15,6 @@ class Music(models.Model):
     thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
-    # signalement de lien mort
-    dead_link = models.BooleanField(default=False)
     timer_start = models.PositiveIntegerField(default=0)
     timer_end = models.PositiveIntegerField(null=True, blank=True)
     source = models.CharField(max_length=255, editable=False)
