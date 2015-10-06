@@ -51,3 +51,41 @@ class TestMusic(EndpointTestCase):
         response = self.client.delete('/music/42')
 
         response.status_code.should.eql(status.HTTP_404_NOT_FOUND)
+
+    def test_patch(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+
+        response = self.client.patch('/music/' + str(m.pk), {'timer_start': 8, "timer_end": 100})
+
+        response.status_code.should.eql(status.HTTP_200_OK)
+
+        m = self.reload(m)
+
+        m.timer_start.should.eql(8)
+        m.timer_end.should.eql(100)
+        m.duration.should.eql(92)
+
+    def test_post(self):
+        music_to_post = {
+            "music_id": "a",
+            "name": "a",
+            "thumbnail": "https://a.com",
+            "duration": 114,
+            "url": "https://www.a.com",
+            "source": "youtube",
+        }
+
+        response = self.client.post('/music', music_to_post)
+
+        response.status_code.should.eql(status.HTTP_201_CREATED)
+
+        Music.objects.filter(music_id='a', room=self.r).exists().should.be.true
