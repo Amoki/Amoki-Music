@@ -10,3 +10,5 @@ dependencies:
 test:
   override:
     - coverage run manage.py test
+  post:
+    - coveralls
