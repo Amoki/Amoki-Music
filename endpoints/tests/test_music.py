@@ -27,6 +27,26 @@ class TestMusic(EndpointTestCase):
 
         Music.objects.filter(music_id="a", room=self.r).exists().should.be.false
 
+    def test_delete_current_music(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+        self.r.current_music = m
+        self.r.save()
+
+        response = self.client.delete('/music/' + str(m.pk))
+
+        response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
+
+        Music.objects.filter(music_id="a", room=self.r).exists().should.be.false
+
     def test_delete_not_exists(self):
         response = self.client.delete('/music/42')
 
