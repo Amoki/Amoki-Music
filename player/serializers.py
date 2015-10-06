@@ -17,7 +17,7 @@ class RoomsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'volume')
 
 
 class RoomSerializer(serializers.ModelSerializer):

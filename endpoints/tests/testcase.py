@@ -24,7 +24,7 @@ class EndpointTestCase(TestCase):
             if event is not None:
                 event.cancel()
 
-    def assertResponseEqualsRoom(self, response, room):
+    def assertResponseEqualsRoom(self, response, room, check_token=True):
         response['name'].should.eql(room.name)
         response['current_music'].should.eql(room.current_music)
         response['shuffle'].should.eql(room.shuffle)
@@ -33,5 +33,6 @@ class EndpointTestCase(TestCase):
         response['time_left'].should.eql(room.get_remaining_time())
         response['current_time_left'].should.eql(room.get_current_remaining_time())
         response['volume'].should.eql(room.volume)
-        response['token'].should.eql(room.token)
         response['playlist'].should.eql(list(room.playlist.all()))
+        if check_token:
+            response['token'].should.eql(room.token)
