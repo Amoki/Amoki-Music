@@ -35,7 +35,7 @@ def post(request, room, pk, action, target=None):
         return Response('Action can only be: "%s"' % '" or "'.join(ACTIONS), status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        playlistTrack = PlaylistTrack.objects.get(pk=pk)
+        playlistTrack = PlaylistTrack.objects.get(pk=pk, room=room)
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
@@ -58,7 +58,7 @@ def delete(request, room, pk, format=None):
     serializer: PlaylistSerializer
     """
     try:
-        PlaylistTrack.objects.get(pk=pk).delete()
+        PlaylistTrack.objects.get(pk=pk, room=room).delete()
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 

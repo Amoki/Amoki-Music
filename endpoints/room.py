@@ -27,6 +27,7 @@ class RoomView(APIView):
         serializer: RoomSerializer
         """
         serializer = RoomSerializer(data=request.data)
+        # TODO: check we can't update existing room
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
