@@ -1,0 +1,5 @@
+[run]
+branch = True
+
+[report]
+omit = */migrations/*,*/__init__.py,*/admin.py,*.v_env/*,*virtualenv*
