@@ -118,7 +118,7 @@ class Room(models.Model):
             music.save()
 
         # Adding the music to the queue
-        PlaylistTrack.objects.create(room=self, track=existing_music)
+        PlaylistTrack.objects.create(room=self, track=music)
 
         # Autoplay
         if not self.current_music:
