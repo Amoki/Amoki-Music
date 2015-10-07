@@ -12,4 +12,4 @@ class Init(AppConfig):
             try:
                 PlaylistTrack.objects.all().delete()
             except Exception as e:
-                print ('Error during initilization: %s' % e)
+                print('Error during initilization: %s' % e)

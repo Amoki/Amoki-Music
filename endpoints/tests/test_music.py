@@ -1,9 +1,7 @@
 from endpoints.tests.testcase import EndpointTestCase
 from rest_framework import status
-from rest_framework.test import APIClient
 
-from player.models import Room
-from music.models import Music, PlaylistTrack
+from music.models import Music
 
 import sure
 

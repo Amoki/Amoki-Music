@@ -55,97 +55,92 @@ class Room(models.Model):
         if events[self.name]:
             events[self.name].cancel()
 
-        if music:
-            self.current_music = music
-            self.save()
-            if not music.is_valid():
-                music.delete()
-                self.play_next()
-            else:
-                music.count += 1
-                music.last_play = datetime.now()
-                music.save()
-
-                message = {
-                    'action': 'play',
-                    'update': True,
-                    'source': music.source,
-                    'options': {
-                        'name': music.name,
-                        'musicId': music.music_id,
-                        'timer_start': music.timer_start,
-                    }
-                }
-                if music.timer_end:
-                    message['options']['timer_end'] = music.timer_end
-
-                self.send_message(message)
-                events[self.name] = Timer(music.duration, self.play_next, ())
-                events[self.name].start()
+        self.current_music = music
+        self.save()
+        if not music.is_valid():
+            music.delete()
+            self.play_next()
         else:
-            self.current_music = None
-            self.save()
-            message = {
-                'stop': True,
-                'update': True,
-            }
-            self.send_message(message)
+            music.count += 1
+            music.last_play = datetime.now()
+            music.save()
 
-    def play_next(self, forced=False):
-        next_music = None
-        previous_music = self.current_music
-        if previous_music:
-            if forced:
-                next_music = previous_music
-            else:
-                next_music = self.tracks.all().order_by('playlisttrack__order').first()
+            message = {
+                'action': 'play',
+                'update': True,
+                'source': music.source,
+                'options': {
+                    'name': music.name,
+                    'musicId': music.music_id,
+                    'timer_start': music.timer_start,
+                    'timer_end': music.timer_end or None,
+                }
+            }
+
+            self.send_message(message)
+            events[self.name] = Timer(music.duration, self.play_next, ())
+            events[self.name].start()
+
+    def stop(self):
+        self.current_music = None
+        self.save()
+        message = {
+            'stop': True,
+            'update': True,
+        }
+        self.send_message(message)
+
+    def play_next(self):
+        next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
             PlaylistTrack.objects.filter(room=self, track=next_music).delete()
             self.play(music=next_music)
 
         elif self.shuffle:
-            # Select random music, excluding 10% last played musics
-            musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
-            count = musics.count()
-
-            to_remove = int(count / 10)
-            count -= to_remove
-            musics = musics[to_remove:]
-
-            a = count / float(5)  # Le point où ca commence à monter
-            b = count / float(27)  # La vitesse à laquelle ca monte
-            x = random.uniform(1, count - a - 1)
-            i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
-            if i < 0:
-                i = 0  # Can't get negative index
-            shuffled = musics[i]
+            shuffled = self.select_random_music()
             shuffled.date = datetime.now()
             shuffled.save()
 
             self.play(music=shuffled)
         else:
-            self.play(music=None)
+            self.stop()
 
     def add_music(self, **kwargs):
-        existing_music = Music.objects.filter(
+        # Check if the music already exists. If not, creating it
+        music = Music.objects.filter(
             music_id=kwargs['music_id'],
             source=kwargs['source'],
             room=self,
         ).first()
-        if not existing_music:
-            existing_music = Music(room=self, **kwargs)
-            existing_music.save()
+        if not music:
+            music = Music(room=self, **kwargs)
+            music.save()
+
+        # Adding the music to the queue
         PlaylistTrack.objects.create(room=self, track=existing_music)
-        return existing_music
 
         # Autoplay
         if not self.current_music:
-            self.current_music = music
-            self.save()
-            self.play_next(forced=True)
+            self.play_next()
         else:
             self.send_update_message()
+
+    def select_random_music(self):
+        musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
+        count = musics.count()
+
+        to_remove = int(count / 10)
+        count -= to_remove
+        musics = musics[to_remove:]
+
+        a = count / float(5)  # Le point où ca commence à monter
+        b = count / float(27)  # La vitesse à laquelle ca monte
+        x = random.uniform(1, count - a - 1)
+        i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
+        if i < 0:
+            i = 0  # Can't get negative index
+        return musics[i]
 
     def get_current_remaining_time(self):
         if self.current_music:

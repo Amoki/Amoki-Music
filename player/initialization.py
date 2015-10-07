@@ -17,4 +17,4 @@ class Init(AppConfig):
                     room.shuffle = False
                     room.save()
             except Exception as e:
-                print ('Error during initilization: %s' % e)
+                print('Error during initilization: %s' % e)
