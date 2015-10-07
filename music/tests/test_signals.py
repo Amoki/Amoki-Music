@@ -1,16 +1,10 @@
-from django.test import TestCase
-from player.models import Room
+from utils.testcase import MusicTestCase
 from music.models import Music
 
 import sure
 
 
-class TestTimer(TestCase):
-
-    def setUp(self):
-        self.r = Room.objects.create(name="test", password="123")
-        self.r.save()
-
+class TestTimer(MusicTestCase):
     def test_update_duration_both_timer(self):
         music = Music(
             room=self.r,

@@ -14,6 +14,6 @@ def update_token_on_password_change(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Room)
-def create_room(sender, instance, created, **kwargs):
+def create_room_event(sender, instance, created, **kwargs):
     if created:
         events[instance.name] = None

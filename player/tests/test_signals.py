@@ -1,22 +1,17 @@
-from django.test import TestCase
+from utils.testcase import MusicTestCase
+from player.models import events, Room
 
-from player.models import Room
 
-
-class TestSignals(TestCase):
-    def reload(self, item):
-        """
-        Reload an item from DB
-        """
-        return item.__class__.objects.get(pk=item.pk)
-
+class TestSignals(MusicTestCase):
     def test_update_token_on_password_change(self):
-        r = Room(name="test", password="123")
-        r.save()
+        first_token = self.r.token
 
-        first_token = r.token
+        self.r.password = 'b'
+        self.r.save()
 
-        r.password = 'wqe'
-        r.save()
+        self.assertNotEqual(self.reload(self.r).token, first_token)
 
-        self.assertNotEqual(self.reload(r).token, first_token)
+    def test_create_room_event(self):
+        Room(name='b', password='b').save()
+
+        events.should.have.key('b')
