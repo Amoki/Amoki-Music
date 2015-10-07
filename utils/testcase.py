@@ -6,7 +6,7 @@ import sure
 from datetime import datetime
 
 
-class EndpointTestCase(TestCase):
+class MusicTestCase(TestCase):
     def reload(self, item):
         """
         Reload an item from DB
@@ -17,6 +17,10 @@ class EndpointTestCase(TestCase):
         self.r = Room(name="a", password="a")
         self.r.save()
 
+
+class EndpointTestCase(MusicTestCase):
+    def setUp(self):
+        super().setUp()
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.reload(self.r).token)
 

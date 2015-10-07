@@ -1,4 +1,4 @@
-from endpoints.tests.testcase import EndpointTestCase
+from utils.testcase import EndpointTestCase
 from rest_framework import status
 from music.models import Music
 from player.models import Room

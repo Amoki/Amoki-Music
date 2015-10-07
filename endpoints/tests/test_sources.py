@@ -1,4 +1,4 @@
-from endpoints.tests.testcase import EndpointTestCase
+from utils.testcase import EndpointTestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 

@@ -36,3 +36,6 @@ class PlaylistTrack(OrderedModel):
 
     class Meta(OrderedModel.Meta):
         pass
+
+
+from music.signals import *
