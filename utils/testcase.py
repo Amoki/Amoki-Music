@@ -17,17 +17,17 @@ class MusicTestCase(TestCase):
         self.r = Room(name="a", password="a")
         self.r.save()
 
+    def tearDown(self):
+        for room, event in events.items():
+            if event is not None:
+                event.cancel()
+
 
 class EndpointTestCase(MusicTestCase):
     def setUp(self):
         super().setUp()
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.reload(self.r).token)
-
-    def tearDown(self):
-        for room, event in events.items():
-            if event is not None:
-                event.cancel()
 
     def assertResponseEqualsRoom(self, response, room, check_token=True):
         response['name'].should.eql(room.name)

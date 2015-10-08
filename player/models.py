@@ -22,8 +22,7 @@ class UnableToUpdate(Exception):
     """
     Error triggered when room's update is impossible
     """
-    def __init__(self, message):
-        self.message = message
+    pass
 
 
 class Room(models.Model):
@@ -40,6 +39,19 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
+
+    setters = {
+        'with_setters': ['shuffle', 'volume'],
+        'without_setters': ['can_adjust_volume'],
+    }
+
+    def update(self, modifications):
+        for key, value in modifications.items():
+            if key in Room.setters['with_setters']:
+                getattr(self, 'set_%s' % key)(value)
+            elif key in Room.setters['without_setters']:
+                setattr(self, key, value)
+                self.save()
 
     def reset_token(self):
         self.token = generate_token()
@@ -149,8 +161,8 @@ class Room(models.Model):
         return 0
 
     def get_remaining_time(self):
-        if self.current_music:
-            time_left = self.tracks.all().aggregate(Sum('duration')).get("sum__duration") or 0
+        if self.tracks.count() > 0:
+            time_left = self.tracks.all().aggregate(Sum('duration')).get("duration__sum") or 0
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
@@ -181,20 +193,20 @@ class Room(models.Model):
         }
         self.send_message(message)
 
-    def update_volume(self, volume):
+    def set_volume(self, volume):
         if not self.can_adjust_volume:
-            raise self.UnableToUpdate("This room don't have permission to update volume.")
+            raise UnableToUpdate("This room don't have permission to update volume.")
+
+        self.volume = volume
+        self.save()
+
         message = {
             'action': 'volume_change',
             'volume': self.volume
         }
         self.send_message(message)
 
-    def update_volume_permission(self, value):
-        self.can_adjust_volume = value
-        self.save()
-
-    def update_shuffle(self, to_active):
+    def set_shuffle(self, to_active):
         if to_active and self.music_set.count() == 0:
             raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
@@ -208,18 +220,6 @@ class Room(models.Model):
             self.shuffle = False
             self.save()
             self.send_update_message()
-
-    def update(self, modifications):
-        for key, value in modifications.items():
-            if key in self.binding:
-                self.binding[key](self, value)
-
-    # Bind values updates with function
-    binding = {
-        "shuffle": update_shuffle,
-        "volume": update_volume,
-        "can_adjust_volume": update_volume_permission,
-    }
 
 
 events = dict()
