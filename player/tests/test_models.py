@@ -1,6 +1,6 @@
 from utils.testcase import MusicTestCase
 from music.models import Music, PlaylistTrack
-from player.models import Room
+from player.models import Room, events
 from datetime import datetime, timedelta
 
 import sure
@@ -19,10 +19,10 @@ class ModelsTestCase(MusicTestCase):
 
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
+            thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
         music.save()
@@ -38,10 +38,10 @@ class ModelsTestCase(MusicTestCase):
 
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
+            thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
         music.save()
@@ -53,10 +53,10 @@ class ModelsTestCase(MusicTestCase):
     def test_get_current_time_past(self):
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
+            thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
         music.save()
@@ -69,10 +69,10 @@ class ModelsTestCase(MusicTestCase):
     def test_get_current_time_past_percent(self):
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=240,
-            thumbnail="https://a.com/a.jpg",
+            thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
         music.save()
@@ -85,11 +85,10 @@ class ModelsTestCase(MusicTestCase):
     def test_get_musics_remaining(self):
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
-            last_play=datetime.now()
+            thumbnail='https://a.com/a.jpg',
         )
         music.save()
 
@@ -100,11 +99,10 @@ class ModelsTestCase(MusicTestCase):
     def test_get_count_remaining(self):
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
-            last_play=datetime.now()
+            thumbnail='https://a.com/a.jpg',
         )
         music.save()
 
@@ -123,18 +121,17 @@ class ModelsTestCase(MusicTestCase):
 
         self.r.set_volume(95)
 
-        self.reload(self.r).volume.should.eql(95)
+        self.r.volume.should.eql(95)
 
     def test_set_shuffle(self):
         self.r.set_shuffle.when.called_with(True).should.throw(Room.UnableToUpdate, "Can't activate shuffle when there is no musics.")
 
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
-            last_play=datetime.now()
+            thumbnail='https://a.com/a.jpg',
         )
         music.save()
 
@@ -149,11 +146,10 @@ class ModelsTestCase(MusicTestCase):
     def test_update(self):
         music = Music(
             room=self.r,
-            music_id="a",
-            name="a",
+            music_id='a',
+            name='a',
             duration=200,
-            thumbnail="https://a.com/a.jpg",
-            last_play=datetime.now()
+            thumbnail='https://a.com/a.jpg',
         )
         music.save()
 
@@ -165,13 +161,109 @@ class ModelsTestCase(MusicTestCase):
 
         self.r.can_adjust_volume.should.be.true
 
+    def test_stop(self):
+        music = Music(
+            room=self.r,
+            music_id='a',
+            name='a',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+        )
+        music.save()
 
-"""
-def update(self, modifications):
-        for key, value in modifications.items():
-            if key in setters['with_setters']:
-                getattr(self, 'set_%s' % key)(value)
-            elif key in setters['without_setters']:
-                setattr(self, key, value)
-                self.save()
-                """
+        self.r.current_music = music
+        self.r.save()
+
+        self.r.stop()
+
+        self.r.current_music.should.be.none
+
+    def test_play_next_without_shuffle(self):
+        music = Music(
+            room=self.r,
+            music_id='a',
+            name='a',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+        )
+        music.save()
+
+        PlaylistTrack(track=music, room=self.r).save()
+
+        self.r.play_next()
+
+        self.r.current_music.should.eql(music)
+
+        self.r.play_next()
+        # No more music in the playlist.
+        self.r.current_music.should.be.none
+
+    def test_play_next_with_shuffle(self):
+        music = Music(
+            room=self.r,
+            music_id='a',
+            name='a',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+        )
+        music.save()
+
+        music2 = Music(
+            room=self.r,
+            music_id='b',
+            name='b',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+        )
+        music2.save()
+
+        self.r.shuffle = True
+        PlaylistTrack(track=music, room=self.r).save()
+
+        self.r.play_next()
+        self.r.current_music.should.eql(music)
+
+        self.r.play_next()
+        # No music in the playlist, but should select an other.
+        self.r.current_music.should_not.be.none
+
+    def test_add_music(self):
+        self.r.add_music(
+            music_id='b',
+            name='b',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+            source='youtube'
+        )
+        self.r.music_set.count().should.eql(1)
+        self.r.current_music.music_id.should.eql('b')
+
+        self.r.add_music(
+            music_id='b',
+            name='b',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+            source='youtube'
+        )
+
+        # Can't add twice the same music
+        self.r.music_set.count().should.eql(1)
+
+    def test_play(self):
+        music = Music(
+            room=self.r,
+            music_id='a',
+            name='a',
+            duration=200,
+            thumbnail='https://a.com/a.jpg',
+        )
+        music.save()
+
+        self.r.play(music)
+
+        self.r.current_music.should.eql(music)
+
+        music.count.should.eql(1)
+        music.last_play.should_not.be.none
+
+        events[self.r.name].should_not.be.none

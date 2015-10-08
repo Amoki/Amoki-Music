@@ -9,7 +9,7 @@ class TestSignals(MusicTestCase):
         self.r.password = 'b'
         self.r.save()
 
-        self.assertNotEqual(self.reload(self.r).token, first_token)
+        self.assertNotEqual(self.r.token, first_token)
 
     def test_create_room_event(self):
         Room(name='b', password='b').save()

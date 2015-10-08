@@ -62,7 +62,7 @@ class Room(models.Model):
         message = RedisMessage(json.dumps(message))
         redis_publisher.publish_message(message)
 
-    def play(self, music=None):
+    def play(self, music):
         # clear the queue
         if events[self.name]:
             events[self.name].cancel()
@@ -90,6 +90,8 @@ class Room(models.Model):
             }
 
             self.send_message(message)
+
+            # Tricky code that create a new thread. Be careful about asynchronousity
             events[self.name] = Timer(music.duration, self.play_next, ())
             events[self.name].start()
 
@@ -146,8 +148,8 @@ class Room(models.Model):
         count -= to_remove
         musics = musics[to_remove:]
 
-        a = count / float(5)  # Le point où ca commence à monter
-        b = count / float(27)  # La vitesse à laquelle ca monte
+        a = count / float(5)  # Le point où la courbe commence à monter (higher is later)
+        b = count / float(27)  # La vitesse à laquelle elle monte (higher is faster)
         x = random.uniform(1, count - a - 1)
         i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
         if i < 0:
