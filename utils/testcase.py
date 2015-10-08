@@ -42,7 +42,7 @@ class EndpointTestCase(MusicTestCase):
         if check_token:
             response['token'].should.eql(room.token)
 
-    def assertResponseEqualsMusic(self, response, music, check_room=False):
+    def assertResponseEqualsMusic(self, response, music):
         response['name'].should.eql(music.name)
         response['music_id'].should.eql(music.music_id)
         response['url'].should.eql(music.url)
@@ -56,5 +56,3 @@ class EndpointTestCase(MusicTestCase):
             datetime.strptime(response['last_play'], '%Y-%m-%dT%H:%M:%S.%f').should.eql(music.last_play)
         else:
             response['last_play'].should.eql(music.last_play)
-        if check_room:
-            response['room'].should.eql(music.room)
