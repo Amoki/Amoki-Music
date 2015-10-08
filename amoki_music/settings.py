@@ -16,7 +16,7 @@ import sys
 # Environment
 PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
 
-if PYTHON_ENV == 'production':
+if PYTHON_ENV == 'production':  # pragma: no cover
     DEBUG = False
     TEMPLATE_DEBUG = False
 else:
