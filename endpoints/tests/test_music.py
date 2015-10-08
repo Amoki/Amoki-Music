@@ -109,10 +109,9 @@ class TestMusic(EndpointTestCase):
 
         Music.objects.filter(music_id='a', room=self.r).exists().should.be.true
 
-    def test_post_invalid_data(self):
+    def test_post_bad_arguments(self):
         music_to_post = {
-            "music_id": "a",
-            "lolilol": "coucou"
+            "music_id": "a"
         }
 
         response = self.client.post('/music', music_to_post)

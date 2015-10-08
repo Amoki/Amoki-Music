@@ -37,6 +37,12 @@ class TestRoom(EndpointTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertResponseEqualsRoom(response.data, room)
 
+    def test_post_bad_arguments(self):
+        client = APIClient()
+        response = client.post('/room', {'name': 'b'})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_patch_shuffle_while_empty_room(self):
         response = self.client.patch('/room', {'shuffle': True})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -91,6 +97,13 @@ class TestRoom(EndpointTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, "This room don't have permission to update volume.")
 
+    def test_patch_bad_argument(self):
+        self.client.patch('/room', {'can_adjust_volume': 'coucou'})
+
+        response = self.client.patch('/room', {'volume': 50})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_delete(self):
         response = self.client.delete('/room')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -128,3 +141,8 @@ class TestRoom(EndpointTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertResponseEqualsMusic(response.data['current_music'], self.reload(m2))
+
+    def test_next_bad_arguments(self):
+        response = self.client.post('/room/next', {})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
