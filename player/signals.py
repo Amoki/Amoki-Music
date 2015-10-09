@@ -1,6 +1,6 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from player.models import Room, generate_token, events
+from player.models import Room, generate_token, Events
 
 
 @receiver(pre_save, sender=Room)
@@ -16,4 +16,4 @@ def update_token_on_password_change(sender, instance, **kwargs):
 @receiver(post_save, sender=Room)
 def create_room_event(sender, instance, created, **kwargs):
     if created:
-        events[instance.name] = None
+        Events.set(instance, None)

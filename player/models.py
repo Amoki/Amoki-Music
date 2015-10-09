@@ -61,8 +61,9 @@ class Room(models.Model):
 
     def play(self, music):
         # clear the queue
-        if events[self.name]:
-            events[self.name].cancel()
+        event = Events.get(self)
+        if event:
+            event.cancel()
 
         self.current_music = music
         self.save()
@@ -89,8 +90,8 @@ class Room(models.Model):
             self.send_message(message)
 
             # Tricky code that create a new thread. Be careful about asynchronousity
-            events[self.name] = Timer(music.duration, self.play_next, ())
-            events[self.name].start()
+            event = Events.set(self, Timer(music.duration, self.play_next, ()))
+            event.start()
 
     def stop(self):
         self.current_music = None
@@ -221,7 +222,21 @@ class Room(models.Model):
             self.send_update_message()
 
 
-events = dict()
+class Events():
+    events = dict()
+
+    @classmethod
+    def get(cls, room):
+        return cls.events[room.name]
+
+    @classmethod
+    def set(cls, room, value=None):
+        cls.events[room.name] = value
+        return value
+
+    @classmethod
+    def get_all(cls):
+        return cls.events
 
 
 from player.signals import *

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from player.models import events
+from player.models import Events
 from django.conf import settings
 
 
@@ -12,7 +12,7 @@ class Init(AppConfig):
             Room = self.get_model('Room')
             try:
                 for room in Room.objects.all():
-                    events[room.name] = None
+                    Events.set(room, None)
                     room.current_music = None
                     room.shuffle = False
                     room.save()

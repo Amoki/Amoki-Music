@@ -1,6 +1,6 @@
 from utils.testcase import TestCase
 from music.models import Music, PlaylistTrack
-from player.models import Room, events
+from player.models import Room, Events
 from datetime import datetime, timedelta
 
 import sure
@@ -270,4 +270,4 @@ class ModelsTestCase(TestCase):
         music.count.should.eql(1)
         music.last_play.should_not.be.none
 
-        events[self.r.name].should_not.be.none
+        Events.get(self.r).should_not.be.none

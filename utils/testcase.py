@@ -1,6 +1,6 @@
 from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
-from player.models import Room, events
+from player.models import Room, Events
 
 import sure
 from datetime import datetime
@@ -18,7 +18,7 @@ class TestCase(DjangoTestCase):
         self.r.save()
 
     def tearDown(self):
-        for room, event in events.items():
+        for room, event in Events.get_all().items():
             if event is not None:
                 event.cancel()
 

@@ -1,5 +1,5 @@
 from utils.testcase import TestCase
-from player.models import events, Room
+from player.models import Events, Room
 
 
 class TestSignals(TestCase):
@@ -14,4 +14,4 @@ class TestSignals(TestCase):
     def test_create_room_event(self):
         Room(name='b', password='b').save()
 
-        events.should.have.key('b')
+        Events.get_all().should.have.key('b')
