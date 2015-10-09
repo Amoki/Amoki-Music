@@ -19,7 +19,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.delete('/music/' + str(m.pk))
+        response = self.client.delete('/music/%s' % m.pk)
 
         response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
 
@@ -39,7 +39,7 @@ class TestMusic(EndpointTestCase):
         self.r.current_music = m
         self.r.save()
 
-        response = self.client.delete('/music/' + str(m.pk))
+        response = self.client.delete('/music/%s' % m.pk)
 
         response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
 
@@ -62,7 +62,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.patch('/music/' + str(m.pk), {'timer_start': 8, "timer_end": 100})
+        response = self.client.patch('/music/%s' % m.pk, {'timer_start': 8, "timer_end": 100})
 
         response.status_code.should.eql(status.HTTP_200_OK)
 
@@ -89,7 +89,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.patch('/music/' + str(m.pk), {'duration': 'wtf'})
+        response = self.client.patch('/music/%s' % m.pk, {'duration': 'wtf'})
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
 
