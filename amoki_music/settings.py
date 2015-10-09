@@ -10,6 +10,19 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+
+# Environment
+PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
+
+if PYTHON_ENV == 'production':
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+else:
+    DEBUG = True
+    TEMPLATE_DEBUG = True
+    WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
@@ -26,7 +39,6 @@ MANAGERS = ADMINS
 SECRET_KEY = '5h9@)57rjgoe3m_sb12kcp-ku7w!#x86a_k5_59t#g=!e$nhha'
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -72,7 +84,7 @@ ROOT_URLCONF = 'amoki_music.urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -98,7 +110,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = BASE_DIR + '/../collected-static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected-static/')
 
 # URL prefix for static files.
 # Example: "http://media.l
@@ -145,7 +157,7 @@ WS4REDIS_CONNECTION = {
 
 WS4REDIS_EXPIRE = 0
 
-WS4REDIS_PREFIX = 'ws'
+WS4REDIS_PREFIX = 'ws_' + PYTHON_ENV
 
 WS4REDIS_HEARTBEAT = '--heartbeat--'
 

@@ -15,7 +15,15 @@ from music.models import Music, PlaylistTrack
 
 
 def generate_token():
-    return binascii.b2a_hex(os.urandom(32))
+    return str(binascii.b2a_hex(os.urandom(32)))
+
+
+class UnableToShuffle(Exception):
+    """
+    Error triggered when shuffle can't be activated
+    """
+    def __init__(self, message):
+        self.message = message
 
 
 class Room(models.Model):
@@ -27,6 +35,8 @@ class Room(models.Model):
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
     volume = models.PositiveIntegerField(default=10)
+
+    UnableToShuffle = UnableToShuffle
 
     def __str__(self):
         return self.name
@@ -186,6 +196,8 @@ class Room(models.Model):
         self.send_message(message)
 
     def update_shuffle(self, to_active):
+        if to_active and self.music_set.count() == 0:
+            raise UnableToShuffle("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
             self.save()
