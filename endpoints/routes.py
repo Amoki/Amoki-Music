@@ -24,7 +24,7 @@ urlpatterns = patterns('endpoints.routes',
     url(r'^login$', login),
     url(r'^playlist$', playlist.get),
     url(r'^playlist/(?P<pk>[0-9]+)$', playlist.delete),
-    url(r'^playlist/(?P<pk>[0-9]+)/(?P<action>[a-z]+)/(?P<target>[0-9]+)?$', playlist.post),
+    url(r'^playlist/(?P<pk>[0-9]+)/(?P<action>[a-z]+)($|/(?P<target>[0-9]+)$)', playlist.post),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

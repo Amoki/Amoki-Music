@@ -34,6 +34,8 @@ class PlaylistTrack(OrderedModel):
     track = models.ForeignKey('music.Music')
     order_with_respect_to = 'room'
 
+    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
+
     class Meta(OrderedModel.Meta):
         pass
 
