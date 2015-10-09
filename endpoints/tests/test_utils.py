@@ -37,4 +37,3 @@ class TestUtils(EndpointTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data, {'detail': _('Invalid token header. No credentials provided.')})
-

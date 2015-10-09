@@ -1,10 +1,10 @@
-from utils.testcase import MusicTestCase
+from utils.testcase import TestCase
 from player.serializers import RoomSerializer, RoomsSerializer
 
 import sure
 
 
-class SerializersTestCase(MusicTestCase):
+class SerializersTestCase(TestCase):
     def test_room_serializer(self):
         expected_result = {
             'name': 'a',

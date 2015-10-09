@@ -1,11 +1,11 @@
-from utils.testcase import MusicTestCase
+from utils.testcase import TestCase
 from music.models import Music, PlaylistTrack
 from music.serializers import MusicSerializer, PlaylistSerializer
 
 import sure
 
 
-class SerializersTestCase(MusicTestCase):
+class SerializersTestCase(TestCase):
     def test_music_serializer(self):
         m = Music(
             music_id='a',

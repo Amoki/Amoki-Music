@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
 from player.models import Room, events
 
@@ -6,7 +6,7 @@ import sure
 from datetime import datetime
 
 
-class MusicTestCase(TestCase):
+class TestCase(DjangoTestCase):
     def reload(self, item):
         """
         Reload an item from DB
@@ -23,7 +23,7 @@ class MusicTestCase(TestCase):
                 event.cancel()
 
 
-class EndpointTestCase(MusicTestCase):
+class EndpointTestCase(TestCase):
     def setUp(self):
         super().setUp()
         self.client = APIClient()

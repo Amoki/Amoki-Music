@@ -1,10 +1,10 @@
-from utils.testcase import MusicTestCase
+from utils.testcase import TestCase
 from music.models import Music
 
 import sure
 
 
-class TestTimer(MusicTestCase):
+class TestTimer(TestCase):
     def test_update_duration_both_timer(self):
         music = Music(
             room=self.r,

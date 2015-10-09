@@ -1,4 +1,4 @@
-from utils.testcase import MusicTestCase
+from utils.testcase import TestCase
 from music.models import Music, PlaylistTrack
 from player.models import Room, events
 from datetime import datetime, timedelta
@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import sure
 
 
-class ModelsTestCase(MusicTestCase):
+class ModelsTestCase(TestCase):
     def test_reset_token(self):
         initial_token = self.r.token
         self.r.reset_token()

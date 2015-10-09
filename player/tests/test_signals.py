@@ -1,8 +1,8 @@
-from utils.testcase import MusicTestCase
+from utils.testcase import TestCase
 from player.models import events, Room
 
 
-class TestSignals(MusicTestCase):
+class TestSignals(TestCase):
     def test_update_token_on_password_change(self):
         first_token = self.r.token
 
