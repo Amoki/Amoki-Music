@@ -10,6 +10,7 @@ class Init(AppConfig):
         if not settings.TESTING:
             PlaylistTrack = self.get_model('PlaylistTrack')
             try:
+                # Delete all playlists
                 PlaylistTrack.objects.all().delete()
             except Exception as e:
                 print('Error during initilization: %s' % e)

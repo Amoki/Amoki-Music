@@ -10,6 +10,7 @@ class Init(AppConfig):
     def ready(self):
         if not settings.TESTING:
             Room = self.get_model('Room')
+            # Initialize events dict and clean rooms
             try:
                 for room in Room.objects.all():
                     Events.set(room, None)
