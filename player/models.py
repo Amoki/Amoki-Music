@@ -62,7 +62,7 @@ class Room(models.Model):
                     'source': music.source,
                     'options': {
                         'name': music.name,
-                        'musicId': music.music_id,
+                        'music_id': music.music_id,
                         'timer_start': music.timer_start,
                     }
                 }

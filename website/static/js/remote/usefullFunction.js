@@ -1,35 +1,32 @@
-function stopAll() {
+function stopProgressBar() {
   $(document).attr('title', 'Amoki\'s musics');
-  $(".progress-bar").finish();
-  $(".progress-bar").css('width', '0%');
+  $('.progress-bar').finish();
+  $('.progress-bar').css('width', '0%');
   $('#time-left-progress-bar').countTo('stop');
 }
 
-function updateProgressBar(duration, currentTimePast, currentTimeLeft) {
+function updateProgressBar(duration, currentTimePast, currentTimePastPercent, currentTimeLeft) {
+  $('.progress-bar').finish();
   $('#time-left-progress-bar').countTo({
     from: currentTimePast,
     to: duration,
     speed: currentTimeLeft * 1000,
-    refreshInterval: 500,
+    refreshInterval: 1000,
     formatter: function(value, options) {
       return humanizeSeconds(value.toFixed(options.decimals));
     },
-    onComplete: function() {
-      $('#time-left-progress-bar').countTo('stop');
-    }
+    onUpdate: function(value) {
+      this.attr('currentTimePast', value);
+    },
   });
-}
+  $('#time-left-progress-bar').countTo('restart');
 
-function timeline(currentTimeLeft, currentTimePastPercent) {
-  $(".progress-bar").finish();
-  var actualTime = currentTimeLeft;
-  actualTime *= 1000;
-  $(".progress-bar").width(currentTimePastPercent + '%').animate(
+  $('.progress-bar').width(currentTimePastPercent + '%').animate(
     {
       'width': '100%'
     },
     {
-      duration: actualTime,
+      duration: currentTimeLeft * 1000,
       easing: 'linear',
     }
   );
@@ -38,16 +35,17 @@ function timeline(currentTimeLeft, currentTimePastPercent) {
 function resize() {
   var hauteur;
   if($(window).height() > 765) {
-    hauteur = $(window).height() - ($("#navbar-top").outerHeight(true) + $("footer.foot").outerHeight(true) + 25);
+    hauteur = $(window).height() - ($('#navbar-top').outerHeight(true) + $('footer.foot').outerHeight(true) + 25);
   }
   else {
     hauteur = 650;
   }
   // resize of the remote and the library
-  $(".remote, .LIB").height(hauteur);
-  $(".list-lib").height(hauteur - 90);
-  $(".tab-content").height(hauteur - 130);
-  $(".playlist").height(hauteur - 250);
+  $('.remote, .LIB').height(hauteur);
+  $('.list-lib').height(hauteur - 90);
+  $('.tab-content').height(hauteur - 130);
+  $('.players').height(hauteur - 250);
+  $('.panel-playlist').height(hauteur - 250);
 }
 
 $(document).ready(function() {
@@ -58,7 +56,6 @@ $(document).ready(function() {
   });
   resize();
 
-  $("#overlay-playlist").hide();
 
   $('body').popover({
     container: '#popover-container-custom',
@@ -68,7 +65,7 @@ $(document).ready(function() {
     placement: 'left',
   });
 
-  $("#querySearch").autocomplete({
+  $('#querySearch').autocomplete({
     minLength: 2,
     source: function(request, response) {
       $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
@@ -91,7 +88,7 @@ $(document).ready(function() {
           response(suggestions);
         }
         else {
-          $("#querySearch").autocomplete("close");
+          $('#querySearch').autocomplete('close');
         }
       };
     },
@@ -213,5 +210,6 @@ $(document).ready(function() {
   //     }
   //   },
   // };
+  $('.overlay-playlist').hide();
 
 });

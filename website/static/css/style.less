@@ -134,9 +134,6 @@ button > .glyphicon, a > .glyphicon {
 [class*="col-"], header {
 	border-radius: 12px;
 }
-[class*="col-"] {
-	height: 100%;
-}
 
 .error {
 	color: red;
@@ -259,12 +256,18 @@ button > .glyphicon, a > .glyphicon {
 	color:black;
 }
 
+.players {
+	height: 100%;
+	margin-bottom: 20px;
+}
+
 .playlist table {
 	color: black;
 }
 
 .playlist {
-	padding-bottom: 20px;
+	height: 95%;
+	margin-bottom: 20px;
 }
 
 .panel-playlist {
@@ -272,7 +275,6 @@ button > .glyphicon, a > .glyphicon {
 	overflow-y : auto;
 	overflow-x: hidden;
 	background-color: rgba(255,255,255,0.5) !important;
-	min-height: 390px;
 	position: relative;
 }
 
@@ -294,7 +296,7 @@ button > .glyphicon, a > .glyphicon {
 	background: initial;
 }
 
-#overlay-playlist {
+.overlay-playlist {
 	width: 100%;
     height: 100%;
     position: absolute;
@@ -337,6 +339,15 @@ button > .glyphicon, a > .glyphicon {
 	}
 }
 
+#btn-open-player {
+	display: table-cell;
+    vertical-align: middle;
+
+    background-color: rgba(50,50,50,0.4);
+    border-radius: 50px;
+    border: rgba(100,100,100,0.8) 1px solid;
+}
+
 .btn-control {
 	border-radius: 40px;
 	padding: 20px 20px;
@@ -362,6 +373,10 @@ button > .glyphicon, a > .glyphicon {
 
 
 /********************** LIBRARY STUFF ***********/
+#tab_btn_playlist .badge {
+    position: relative;
+    left: 10px;
+}
 
 .LIB {
 	min-height: 550px;
@@ -389,7 +404,6 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .list-lib {
-	overflow: hidden;
 	margin-top: 20px;
 }
 
@@ -488,7 +502,7 @@ button > .glyphicon, a > .glyphicon {
 
 .tooltip {
 	position: absolute;
-	display: block;
+	display: none;
 	min-width: 30px;
 	background-color: #222222;
 	color: #4a9fff;
@@ -544,26 +558,22 @@ button > .glyphicon, a > .glyphicon {
 
 /********************** PLAYER STUFF ***********/
 
-.player {
-	height: 390px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	.panel-playlist {
-		height: 390px;
-	}
+#player-wrapper {
+	height: 100%;
 }
 
 .player-child {
+	height: 100%;
+	padding: 0;
 	position: absolute;
 	left: 0;
 	top: 0;
-	height: 390px;
 	display: none;
 	z-index: 1;
 	&.player-child-no-music {
-		display: block;
+		display: table;
 		z-index: 0;
-		background: url('../img/cover_center_small.jpg') no-repeat;
+		//background: url('../img/cover_center_small.jpg') no-repeat;
 		background-position: 50%;
 	}
 }

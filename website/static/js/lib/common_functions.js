@@ -2,6 +2,9 @@
   INIT VARS
   INIT AJAX CSRF
 ********************/
+if(!Cookies.get('volumePlayer')) {
+  Cookies.set('volumePlayer', 10);
+}
 var csrftoken = Cookies.get('csrftoken');
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
@@ -24,7 +27,7 @@ function setRoomConnexion(token, heartbeat, wsUri) {
     uri: wsUri + token + '?subscribe-broadcast',
     receive_message: receiveMessage,
     heartbeat_msg: heartbeat,
-    on_open: onWsOpen,
+    onOpen: onWsOpen,
   });
 }
 
@@ -59,19 +62,6 @@ function modalConfirm(target) {
     }, 1000);
   });
 }
-
-/********************
-  AJAX CALLS
-********************/
-$(document).on('submit', '.ajax-dead-link', function(e) {
-  freezeButtons();
-  e.preventDefault();
-  var $this = $(this);
-  ajax($this).done(function() {
-    modalConfirm($('#modal-next-music'));
-  })
-  .fail(logErrors);
-});
 
 /********************
   HELPER FUNCTIONS
