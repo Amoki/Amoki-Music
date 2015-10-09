@@ -51,6 +51,8 @@ class ModelsTestCase(MusicTestCase):
         self.r.get_remaining_time().should.eql(200)
 
     def test_get_current_time_past(self):
+        self.r.get_current_time_past().should.eql(0)
+
         music = Music(
             room=self.r,
             music_id='a',
@@ -67,6 +69,8 @@ class ModelsTestCase(MusicTestCase):
         self.r.get_current_time_past().should.eql(120)
 
     def test_get_current_time_past_percent(self):
+        self.r.get_current_time_past().should.eql(0)
+
         music = Music(
             room=self.r,
             music_id='a',

@@ -37,9 +37,6 @@ class Room(models.Model):
 
     UnableToUpdate = UnableToUpdate
 
-    def __str__(self):
-        return self.name
-
     setters = {
         'with_setters': ['shuffle', 'volume'],
         'without_setters': ['can_adjust_volume'],
