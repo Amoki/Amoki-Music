@@ -78,11 +78,11 @@
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav" data-bind="with: room">
-              <li class="active"><a class="navbar-brand" data-bind="text: name"></a></li>
-              <li>
-                <a id="btn-navbar" href="#log-out" data-bind=""><!-- TODO logout toom -->
-                  <button class="btn btn-primary" type="button">Change Room</button>
+            <ul class="nav navbar-nav">
+              <li class="active" data-bind="with:room"><a class="navbar-brand" data-bind="text: name"></a></li>
+              <li data-bind="stopBinding">
+                <a id="btn-navbar" class="ko-login"><!-- TODO logout toom -->
+                  <button class="btn btn-primary" type="button" data-bind="click: $root.logOut">Change Room</button>
                 </a>
               </li>
               <li data-bind="if: !$root.playerOpen()">

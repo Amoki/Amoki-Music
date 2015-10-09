@@ -109,4 +109,9 @@ function WS4Redis(options, $) {
   this.send_message = function(message) {
     ws.send(message);
   };
+
+  this.close = function() {
+    ws.onclose = function() {};
+    ws.close();
+  };
 }

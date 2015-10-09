@@ -6,6 +6,7 @@ if(!Cookies.get('volumePlayer')) {
   Cookies.set('volumePlayer', 10);
 }
 var csrftoken = Cookies.get('csrftoken');
+var ws4redis;
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -23,12 +24,20 @@ function setRoomConnexion(token, heartbeat, wsUri) {
       xhr.setRequestHeader("Authorization", "Bearer " + token);
     }
   });
-  var ws4redis = new WS4Redis({
+  ws4redis = new WS4Redis({
     uri: wsUri + token + '?subscribe-broadcast',
     receive_message: receiveMessage,
     heartbeat_msg: heartbeat,
     onOpen: onWsOpen,
   });
+  console.log(ws4redis);
+}
+
+function logOutRoom() {
+  Cookies.remove('room_token');
+  Cookies.remove('room_heartbeat');
+  Cookies.remove('room_wsUri');
+  ws4redis.close();
 }
 
 /********************

@@ -17,6 +17,17 @@ function LibraryViewModel() {
   // source part
   self.sources = ko.observableArray([]);
 
+  self.clear = function() {
+    self.musicsLibrary([]);
+    self.hasPrevious(null);
+    self.hasNext(null);
+    self.currentPage(null);
+    self.musicSearch([]);
+    self.sourceSearch(null);
+    self.querySearch(null);
+    self.sources([]);
+  };
+
   self.addMusic = function() {
     $("button.btn-add-music").children("span").attr("class", "fa fa-2x fa-refresh fa-spin");
     $("button.btn-add-music").attr('disabled', 'disabled');
@@ -105,6 +116,13 @@ function RoomViewModel() {
   self.playlistTracks = ko.observableArray([]);
 
   self.playerOpen = ko.observable(false);
+
+  self.clear = function() {
+    self.room(null);
+    self.playlistTracks([]);
+    self.playerOpen(false);
+    self.closePlayer();
+  };
 
   self.openPlayer = function() {
     self.playerOpen(true);
@@ -290,5 +308,13 @@ function LoginViewModel() {
       // TODO Front bad password
       return;
     }
+  };
+
+  self.logOut = function() {
+    self.isConnected(false);
+    roomVM.clear();
+    musicsLibraryVM.clear();
+    logOutRoom();
+    self.getRooms();
   };
 }
