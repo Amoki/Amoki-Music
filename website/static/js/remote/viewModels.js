@@ -220,14 +220,17 @@ function RoomViewModel() {
 
   self.postPlaylistSort = function(pk, action, target) {
     target = (typeof target === 'undefined') ? '' : target;
-    $('#overlay-playlist').show();
+    $('.overlay-playlist').show();
+    console.log(pk);
+    console.log(action);
+    console.log(target);
     $.ajax({
       url: '/playlist/' + pk + '/' + action + '/' + target,
       type: 'post',
       contentType: 'application/json',
       dataType: 'json',
       success: function(allData) {
-        $('#overlay-playlist').hide();
+        $('.overlay-playlist').hide();
         console.log(allData);
       },
       error: logErrors,

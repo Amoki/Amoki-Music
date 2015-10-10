@@ -150,9 +150,9 @@
             </div>
 
             <!-- Playlist -->
-            <div class="row playlist-mid">
-              <div class="col-md-offset-1 col-md-10" data-bind="css: { 'display-none': playerOpen() }">
-                <div data-bind="template: { name: 'playlist-template' }"></div>
+            <div class="row playlist-mid" data-bind="css: { 'display-none': playerOpen() }">
+              <div class="col-md-offset-1 col-md-10 wrappeur">
+                <div class="wrappeur" data-bind="template: { name: 'playlist-template' }"></div>
               </div>
             </div>
             
@@ -426,7 +426,7 @@
         <table class="table table-striped table-condensed header-fixed">
           <!-- ko if: playlistTracks().length  -->
           <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
-            <tr class="playlist-item">
+            <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
               <td data-bind="text: music().name"></td>
               <td><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
               <td>

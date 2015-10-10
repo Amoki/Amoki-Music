@@ -25,7 +25,7 @@ $(function() {
 });
 
 $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
-  var pk = $(this).closest("tr").attr("id");
+  var pk = $(this).closest("tr").data("pkplaylisttrack");
   var action = $(this).data("action");
   roomVM.postPlaylistSort(pk, action);
 });

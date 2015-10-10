@@ -4,7 +4,7 @@ var sortableOptions = {
   revert: true,
   cursor: "move",
   scrollSpeed: 5,
-  delay: 250,
+  delay: 150,
   over: function() {
     $(this).find('.ui-sortable-helper').appendTo(this);
   },
