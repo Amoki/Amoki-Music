@@ -200,3 +200,6 @@ SWAGGER_SETTINGS = {
     'doc_expansion': 'none',
     'token_type': 'Bearer'
 }
+
+# Keep the original host behind a proxy for direct use of ws://
+USE_X_FORWARDED_HOST = True
