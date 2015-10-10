@@ -44,8 +44,8 @@ function resize() {
   $('.remote, .LIB').height(hauteur);
   $('.list-lib').height(hauteur - 90);
   $('.tab-content').height(hauteur - 130);
-  $('.players').height(hauteur - 250);
-  $('.panel-playlist').height(hauteur - 250);
+  $('.list-lib .panel-playlist').height(hauteur - 160);
+  $('.players, .playlist-mid .panel-playlist').height(hauteur - 250);
 }
 
 $(document).ready(function() {

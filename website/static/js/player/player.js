@@ -12,7 +12,7 @@ function updateVolume(volume) {
 
 function displaySlider(value) {
   var offset1 = $("#slider-volume").children('.ui-slider-handle').offset();
-  $(".tooltip-volume-player").css('top', offset1.top - 40).css('left', offset1.left).text(value);
+  $(".tooltip-volume-player").css('top', offset1.top - 40).css('left', offset1.left - 5).text(value);
 
   var volume = $('#icon-volume');
   if(value === 0) {

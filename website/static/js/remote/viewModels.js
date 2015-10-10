@@ -135,7 +135,6 @@ function RoomViewModel() {
       var options = {
         music_id: self.room().currentMusic.music_id(),
         timer_start: self.room().currentMusic.timer_start() + $('#time-left-progress-bar').attr('currentTimePast'),
-        timer_end: self.room().currentMusic.timer_end(),
       };
       playerControlWrapper[self.room().currentMusic.source()].play(options);
     }
@@ -155,7 +154,7 @@ function RoomViewModel() {
     });
   };
 
-  self.getRoom = function(callback) {
+  self.getRoom = function() {
     $.getJSON("/room", function(allData) {
       self.room(new Room(allData));
       if(self.room().currentMusic) {
@@ -163,9 +162,6 @@ function RoomViewModel() {
       }
       else {
         stopProgressBar();
-      }
-      if(callback) {
-        callback();
       }
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
@@ -271,6 +267,8 @@ function LoginViewModel() {
   var self = this;
 
   self.isConnected = ko.observable(false);
+  self.wsError = ko.observable(false);
+  self.badLogin = ko.observable(false);
 
   self.rooms = ko.observableArray([]);
 
@@ -299,14 +297,13 @@ function LoginViewModel() {
         roomVM.room(new Room(allData.room));
         setRoomConnexion(allData.room.token, allData.websocket.heartbeat, allData.websocket.uri);
       }).fail(function(jqxhr) {
+        self.badLogin(true);
         console.error(jqxhr.responseText);
       }
       );
     }
     else {
-      console.log("no pass");
-      // TODO Front bad password
-      return;
+      self.badLogin(true);
     }
   };
 

@@ -13,7 +13,6 @@ function Music(data) {
   this.last_play = ko.observable(data.last_play);
   this.dead_link = ko.observable(data.dead_link);
   this.timer_start = ko.observable(data.timer_start);
-  this.timer_end = ko.observable(data.timer_end);
   this.source = ko.observable(data.source);
 }
 // Playlist model

@@ -17,9 +17,6 @@ var youtubePlayerControl = {
       if(options.timer_start) {
         musicOptions.startSeconds = options.timer_start;
       }
-      if(options.timer_end) {
-        musicOptions.endSeconds = options.timer_end;
-      }
       youtubePlayer.loadVideoById(musicOptions);
       $('#wrapper-youtube-player').stop().fadeIn(250);
     }

@@ -49,6 +49,7 @@
         </div>
         <div class="jumbotron">
           <h1>Select a room</h1>
+          <p class="text-danger" data-bind="css: { 'display-none': !badLogin() }">Wrong or missing room / password</p>
           <form class="form-inline" role="form" data-bind="submit: getLogin">
             <div class="form-group">
               <label for="rooms">Rooms:</label>
@@ -130,7 +131,7 @@
                 <!-- PLAYER ZONE -->
                 <div id="player-wrapper" class="col-md-12 player">
                   <div class="player-child player-child-no-music col-xs-12">
-                    <a href="#" id="btn-open-player"><img src="{% static 'img/btn-play-large.png' %}"></a>
+                    <a id="btn-open-player"><img src="{% static 'img/btn-play-large.png' %}"></a>
                   </div>
 
                   <div id="wrapper-youtube-player" class="player-child col-xs-12">
@@ -149,8 +150,10 @@
             </div>
 
             <!-- Playlist -->
-            <div class="col-md-offset-1 col-md-10" data-bind="css: { 'display-none': playerOpen() }">
-              <div data-bind="template: { name: 'playlist-template' }"></div>
+            <div class="row playlist-mid">
+              <div class="col-md-offset-1 col-md-10" data-bind="css: { 'display-none': playerOpen() }">
+                <div data-bind="template: { name: 'playlist-template' }"></div>
+              </div>
             </div>
             
             <!-- END PLAYLIST -->
@@ -314,12 +317,23 @@
       <form class="pull-left" data-bind="submit: $root.deleteMusic">
         <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic">Dead link ?</button>
       </form>
-      <a class="btn btn-primary pull-right" href="">Company Terms</a>
+      <a class="btn btn-primary pull-right">Company Terms</a>
     </footer>
     <!-- END FOOTER -->
   </div>
 
   <!-- END PAGE -->
+  <div class="modal fade modal-on-top ko-login" id="modal-error-ws" data-bind="css: { 'display-block' : wsError() }">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          Connexion to server lost !<br/>
+          Trying to reconnect...
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade modal-on-top" id="modal-next-music">
     <div class="modal-dialog modal-sm">
       <div class="modal-content modal-content-custom">

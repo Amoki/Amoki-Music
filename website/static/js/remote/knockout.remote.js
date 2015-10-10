@@ -15,12 +15,12 @@ $(function() {
     ko.applyBindings(loginVM, $('.ko-login')[index]);
   });
 
+  loginVM.getRooms();
   if(Cookies.get('room_token') && Cookies.get('room_heartbeat') && Cookies.get('room_wsUri')) {
     setRoomConnexion(Cookies.get('room_token'), Cookies.get('room_heartbeat'), Cookies.get('room_wsUri'));
   }
   else {
     loginVM.isConnected(false);
-    loginVM.getRooms();
   }
 });
 
@@ -32,10 +32,15 @@ $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-dow
 
 
 function onWsOpen() {
+  loginVM.wsError(false);
   loginVM.isConnected(true);
   roomVM.getRoom();
   roomVM.getPlaylist();
   musicsLibraryVM.init();
+}
+
+function onWsError() {
+  loginVM.wsError(true);
 }
 
 // receive a message though the websocket from the server

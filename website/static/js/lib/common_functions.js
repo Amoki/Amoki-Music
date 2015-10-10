@@ -24,13 +24,16 @@ function setRoomConnexion(token, heartbeat, wsUri) {
       xhr.setRequestHeader("Authorization", "Bearer " + token);
     }
   });
+  if(typeof(ws4redis) === "object") {
+    ws4redis.close();
+  }
   ws4redis = new WS4Redis({
     uri: wsUri + token + '?subscribe-broadcast',
     receive_message: receiveMessage,
     heartbeat_msg: heartbeat,
     onOpen: onWsOpen,
+    onError: onWsError,
   });
-  console.log(ws4redis);
 }
 
 function logOutRoom() {
@@ -69,6 +72,13 @@ function modalConfirm(target) {
     setTimeout(function() {
       target.modal('hide');
     }, 1000);
+  });
+}
+
+function modalError(target) {
+  target.modal({
+    'show': true,
+    'backdrop': false
   });
 }
 

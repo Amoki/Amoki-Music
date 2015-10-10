@@ -2,6 +2,7 @@
 @bleu: #4a9fff;
 @bleuDur: #428fe5;
 .display-none {display: none !important;}
+.display-block {display: block !important;}
 .visibility-hidden {visibility: hidden;}
 .bold {font-weight: bold;}
 .shadow {box-shadow: 0px 0px 10px 4px #5a5a5a};
@@ -92,6 +93,11 @@ button > .glyphicon, a > .glyphicon {
 	color: black;
 }
 
+#modal-error-ws {
+	color: red;
+	top: 0 !important;
+}
+
 #extensions .modal-dialog {
 	top:150px;
 }
@@ -103,11 +109,15 @@ button > .glyphicon, a > .glyphicon {
 	margin-left: -150px;
 	left:50% !important;
 	bottom: auto !important;
-	/*opacity: 0.7 !important;*/
+	opacity: 0.8 !important;
+}
+
+.modal {
+	z-index: 9999999999;
 }
 
 .modal-content-custom {
-	height: 55px !important;
+	min-height: 55px !important;
 }
 
 .fa-stack-1x, .fa-stack-2x {
@@ -581,7 +591,7 @@ button > .glyphicon, a > .glyphicon {
 #wrapper-slider-volume {
 	padding-left: 10%;
 	padding-right: 10%;
-	height: 20%;
+	height: 25%;
 	line-height:20%;
 	margin-left: -15px;
 	display: none;
@@ -590,11 +600,12 @@ button > .glyphicon, a > .glyphicon {
 	bottom: 0%;
 	z-index: 99;
 	background: linear-gradient(to bottom,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(0, 0, 0, 0.5) 20%,
-		rgba(0, 0, 0, 0.8) 45%,
-		rgba(0, 0, 0, 1) 100%);
+    	rgba(0, 0, 0, 0) 0%,
+    	rgba(0, 0, 0, 0.2) 20%,
+    	rgba(0, 0, 0, 0.7) 50%,
+    	rgba(0, 0, 0, 0.9) 100%);
 }
+
 
 #slider-volume {
 	position: absolute;

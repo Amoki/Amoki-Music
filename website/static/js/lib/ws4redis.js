@@ -62,6 +62,9 @@ function WS4Redis(options, $) {
   function onError(evt) {
     console.error("Websocket connection is broken!");
     deferred.reject(new Error(evt));
+    if(typeof opts.onError === 'function') {
+      return opts.onError();
+    }
   }
 
   function onMessage(evt) {
@@ -112,6 +115,13 @@ function WS4Redis(options, $) {
 
   this.close = function() {
     ws.onclose = function() {};
+    ws.onerror = function() {};
+    if(timer) {
+      clearInterval(timer);
+    }
+    if(heartbeatInterval) {
+      clearInterval(heartbeatInterval);
+    }
     ws.close();
   };
 }
