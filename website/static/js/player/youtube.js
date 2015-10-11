@@ -64,15 +64,13 @@ function onYouTubeIframeAPIReady() {
     }
   });
 
-  // function onYouTubeIframeAPIReady() {
-  //   var previewPlayer = new YT.Player('preview_player', {
-  //     height: '300px',
-  //     width: '100%',
-  //     playerVars: {
-  //       iv_load_policy: '3',
-  //       modestbranding: '1',
-  //       rel: '0',
-  //       autoplay: '0'},
-  //     });
-  // }
+  previewPlayer = new YT.Player('preview_player', {
+    height: '300px',
+    width: '100%',
+    playerVars: {
+      iv_load_policy: '3',
+      modestbranding: '1',
+      rel: '0',
+      autoplay: '0'},
+  });
 }

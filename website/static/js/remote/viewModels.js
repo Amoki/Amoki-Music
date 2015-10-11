@@ -17,6 +17,9 @@ function LibraryViewModel() {
   // source part
   self.sources = ko.observableArray([]);
 
+  // preview part
+  self.musicPreview = ko.observable();
+
   self.clear = function() {
     self.musicsLibrary([]);
     self.hasPrevious(null);
@@ -26,14 +29,16 @@ function LibraryViewModel() {
     self.sourceSearch(null);
     self.querySearch(null);
     self.sources([]);
+    self.musicPreview(null);
   };
 
-  self.addMusic = function() {
+  self.addMusic = function(music) {
+    var musicToAdd = music || this;
     $("button.btn-add-music").children("span").attr("class", "fa fa-2x fa-refresh fa-spin");
     $("button.btn-add-music").attr('disabled', 'disabled');
     // Return a json serialized Music object
     $.ajax("/music", {
-      data: ko.toJSON(this),
+      data: ko.toJSON(musicToAdd),
       type: "post",
       contentType: "application/json",
       dataType: "json",
@@ -44,6 +49,26 @@ function LibraryViewModel() {
         modalConfirm($('#modal-add-music'));
       }
     });
+  };
+
+  self.openPreviewMusic = function() {
+    self.musicPreview(this);
+    customSlider.slide({
+      element: $("#slider-preview"),
+      max: self.musicPreview().duration(),
+      values: [0, self.musicPreview().duration()],
+    });
+    playerPreviewControl.play({music_id: self.musicPreview().music_id()});
+  };
+
+  self.closePreviewMusic = function(valid) {
+    $('#music_preview').modal('hide');
+    if(valid) {
+      self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
+      self.musicPreview().timer_end($('#slider-preview').slider("values", 1));
+      self.addMusic(self.musicPreview());
+    }
+    self.musicPreview(null);
   };
 
   self.searchMusic = function() {
@@ -76,19 +101,18 @@ function LibraryViewModel() {
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
     event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
-    $.getJSON(url,
-      function(allData) {
-        var mappedMusics = $.map(allData.results, function(item) {
-          return new Music(item);
-        });
-        self.musicsLibrary(mappedMusics);
-        self.hasPrevious(allData.previous);
-        self.hasNext(allData.next);
-        $("#popover-container-custom").scrollTop(0);
-      }).fail(function(jqxhr) {
-        console.error(jqxhr.responseText);
+    $.getJSON(url, function(allData) {
+      var mappedMusics = $.map(allData.results, function(item) {
+        return new Music(item);
       });
-    };
+      self.musicsLibrary(mappedMusics);
+      self.hasPrevious(allData.previous);
+      self.hasNext(allData.next);
+      $("#popover-container-custom").scrollTop(0);
+    }).fail(function(jqxhr) {
+      console.error(jqxhr.responseText);
+    });
+  };
 
   // Load Sources from server, convert it to Source instances, then populate self.sources
   self.getSources = function() {
@@ -221,17 +245,13 @@ function RoomViewModel() {
   self.postPlaylistSort = function(pk, action, target) {
     target = (typeof target === 'undefined') ? '' : target;
     $('.overlay-playlist').show();
-    console.log(pk);
-    console.log(action);
-    console.log(target);
     $.ajax({
       url: '/playlist/' + pk + '/' + action + '/' + target,
       type: 'post',
       contentType: 'application/json',
       dataType: 'json',
-      success: function(allData) {
+      success: function() {
         $('.overlay-playlist').hide();
-        console.log(allData);
       },
       error: logErrors,
     });

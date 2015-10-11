@@ -252,11 +252,15 @@
                                 </div>
                               </div>
                             </div>
-                            <form class="add-music-form" data-bind="submit: $root.addMusic">
-                              <button class="btn btn-default btn-add-music" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
-                                <span class="glyphicon glyphicon-play-circle"></span>
-                              </button>
+                            <form class="add-music-form" data-bind="submit: $root.addMusic, attr: { id: 'form-add-music-' + music_id() }">
+                              <a tabindex="0" class="btn btn-default btn-lg" role="button" data-toggle="popover" alt="Options" title="Options"
+                              data-template="
+                              <div class='popover' role='tooltip'>
+                                <div class='arrow'></div>
+                                <div class='popover-content'></div>
+                              </div>"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                             </form>
+                            <form class="display-none" data-bind="submit: $root.openPreviewMusic, attr: { id: 'form-preview-music-' + music_id() }"></form>
                           </div>
                         </li>
                       </ul>
@@ -379,29 +383,34 @@
       </div>
     </div>
   </div>
-<!--   <div class="tooltip tooltip1"></div>
-  <div class="tooltip tooltip2"></div> -->
-  <div class="modal fade" id="music_preview">
+
+  <div class="tooltip tooltip-preview-timer-start"></div>
+  <div class="tooltip tooltip-preview-timer-end"></div>
+  <div class="modal fade ko-library" id="music_preview">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Preview</h4>
         </div>
         <div id="preview_player">Youtube Player</div>
-        <div class="modal-body">
-          <div id="slider"></div>
-          <p>
-            <label for="">Time range:</label>
-            <span id="time_start" style="font-weight:bold;"></span>
-            <span> - </span>
-            <span id="time_end" style="font-weight:bold;"></span>
-          </p>
-          <div id="music-channel"></div>
-          <div id="music-description"></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal">Ajouter</button>
-          <button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal">Annuler</button>
+        <div data-bind="if: musicPreview()">
+          <div class="modal-body">
+            <div id="slider-preview"></div>
+            <p>
+              <label for="timers">Time range:</label>
+              <span id="timers">
+                <span id="time_start" style="font-weight:bold;"></span>
+                <span> - </span>
+                <span id="time_end" style="font-weight:bold;"></span>
+              </span>
+            </p>
+            <div id="music-channel" data-bind="text: 'Posted by : ' + musicPreview().channel_name()"></div>
+            <div id="music-description" data-bind="text: musicPreview().description()"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { $root.closePreviewMusic(true) }">Ajouter</button>
+            <button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal" data-bind="click: function() { $root.closePreviewMusic(false) }">Annuler</button>
+          </div>
         </div>
       </div>
     </div>
