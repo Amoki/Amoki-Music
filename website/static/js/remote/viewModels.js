@@ -33,12 +33,11 @@ function LibraryViewModel() {
   };
 
   self.addMusic = function(music) {
-    var musicToAdd = music || this;
     $("button.btn-add-music").children("span").attr("class", "fa fa-2x fa-refresh fa-spin");
     $("button.btn-add-music").attr('disabled', 'disabled');
     // Return a json serialized Music object
     $.ajax("/music", {
-      data: ko.toJSON(musicToAdd),
+      data: ko.toJSON(music),
       type: "post",
       contentType: "application/json",
       dataType: "json",
