@@ -271,13 +271,13 @@ function RoomViewModel() {
     });
   };
 
-  self.deletePlaylistTrack = function() {
-    $.ajax("/?/", {
+  self.deletePlaylistTrack = function(playlistTrackPk) {
+    $.ajax("/playlist/" + playlistTrackPk, {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
-      success: function(allData) {
-        console.log(allData);
+      success: function() {
+        modalConfirm($('#modal-delete-playlistTrack'));
       },
       error: logErrors,
     });

@@ -355,6 +355,16 @@
       </div>
     </div>
   </div>
+  <div class="modal fade modal-on-top" id="modal-delete-playlistTrack">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          Playlist track deleted !
+          <button type="button" class="close" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade modal-on-top" id="modal-shuffle-on">
     <div class="modal-dialog modal-sm">
       <div class="modal-content modal-content-custom">
@@ -443,6 +453,7 @@
           <!-- ko if: playlistTracks().length  -->
           <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
             <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
+              <td data-bind="click: function() { $root.deletePlaylistTrack(pk()) }">delete</td>
               <td data-bind="text: music().name"></td>
               <td><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
               <td>

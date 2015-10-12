@@ -101,7 +101,7 @@ class Room(models.Model):
                 next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
-            PlaylistTrack.objects.filter(room=self, track=next_music).delete()
+            PlaylistTrack.objects.filter(room=self, track=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
