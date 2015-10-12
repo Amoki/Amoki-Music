@@ -138,7 +138,7 @@ $(document).ready(function() {
     content: function() {
       return "<div class='wrapper-popover-add-music'>" +
       "<div>" +
-      "<button form='" + $(this).closest('form').attr('id') + "' class='btn btn-default btn-add-music' type='submit' alt='Ajouter à la playlist' title='Ajouter à la playlist'>" +
+      "<button form='" + $(this).closest('form').attr('id') + "' class='btn btn-default btn-lg btn-add-music' type='submit' alt='Ajouter à la playlist' title='Ajouter à la playlist'>" +
       "<span class='glyphicon glyphicon-play-circle'></span> Play music" +
       "</button>" +
       "</div>" +
