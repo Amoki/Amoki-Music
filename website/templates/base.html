@@ -231,6 +231,7 @@
 
                   </ul>
                   <div id="popover-container-custom" class="tab-content">
+                    <!-- Tab Search -->
                     <div class="tab-pane" id="search-tab" data-bind="if: musicSearch().length">
                       <ul id="list-search" class="list-group" data-bind="foreach: musicSearch">
                         <li class="list-group-item item-lib row row-list-item">
@@ -252,7 +253,7 @@
                                 </div>
                               </div>
                             </div>
-                            <form class="add-music-form" data-bind="submit: $root.addMusic, attr: { id: 'form-add-music-' + music_id() }">
+                            <form class="add-music-form" data-bind="submit: $root.addMusic, attr: { id: 'form-search-add-music-' + music_id() }">
                               <a tabindex="0" class="btn btn-default btn-lg" role="button" data-toggle="popover" alt="Options" title="Options"
                               data-template="
                               <div class='popover' role='tooltip'>
@@ -260,19 +261,13 @@
                                 <div class='popover-content'></div>
                               </div>"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                             </form>
-                            <form class="display-none" data-bind="submit: $root.openPreviewMusic, attr: { id: 'form-preview-music-' + music_id() }"></form>
+                            <form class="display-none" data-bind="submit: $root.openPreviewMusic, attr: { id: 'form-search-preview-music-' + music_id() }"></form>
                           </div>
                         </li>
                       </ul>
                     </div>
-
-                    <!-- Playlist -->
-                    <div class="tab-pane playlist" id="playlist" data-bind="stopBinding">
-                      <div class="ko-room" data-bind="css: { 'display-none': !playerOpen() }">
-                        <div data-bind="template: { name: 'playlist-template' }"></div>
-                      </div>
-                    </div>
-
+                    <!-- End Tab Search -->
+                    <!-- TAB Library -->
                     <div class="tab-pane active" id="library">
                       <ul id="list-library" class="list-group" data-bind="foreach: musicsLibrary">
                         <li class="list-group-item item-lib row row-list-item">
@@ -293,11 +288,15 @@
                                 </div>
                               </div>
                             </div>
-                            <form class="add-music-form" data-bind="submit: $root.addMusic">
-                              <button class="btn btn-default btn-add-music" type="submit" alt="Ajouter à la playlist" title="Ajouter à la playlist">
-                                <span class="glyphicon glyphicon-play-circle"></span>
-                              </button>
+                            <form class="add-music-form" data-bind="submit: $root.addMusic, attr: { id: 'form-library-add-music-' + music_id() }">
+                              <a tabindex="0" class="btn btn-default btn-lg" role="button" data-toggle="popover" alt="Options" title="Options"
+                              data-template="
+                              <div class='popover' role='tooltip'>
+                                <div class='arrow'></div>
+                                <div class='popover-content'></div>
+                              </div>"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                             </form>
+                            <form class="display-none" data-bind="submit: $root.openPreviewMusic, attr: { id: 'form-library-preview-music-' + music_id() }"></form>
                           </div>
                         </li>
                       </ul>
@@ -306,6 +305,14 @@
                         <button title="Next" class="btn btn-default" data-bind="click: getLibrary, value: hasNext, enable: hasNext">Next musics</button>
                       </div>
                     </div>
+                    <!-- End Tab Library -->
+                    <!-- Tab Playlist -->
+                    <div class="tab-pane playlist" id="playlist" data-bind="stopBinding">
+                      <div class="ko-room" data-bind="css: { 'display-none': !playerOpen() }">
+                        <div data-bind="template: { name: 'playlist-template' }"></div>
+                      </div>
+                    </div>
+                    <!-- End Tab Playlist -->
                   </div>
                 </div>
               </div>
