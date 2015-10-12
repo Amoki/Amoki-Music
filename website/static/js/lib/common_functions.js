@@ -1,6 +1,6 @@
 /********************
-  INIT VARS
-  INIT AJAX CSRF
+INIT VARS
+INIT AJAX CSRF
 ********************/
 if(!Cookies.get('volumePlayer')) {
   Cookies.set('volumePlayer', 10);
@@ -44,7 +44,7 @@ function logOutRoom() {
 }
 
 /********************
-  AJAX SKELETON DECLARATION
+AJAX SKELETON DECLARATION
 ********************/
 function ajax(source) {
   return $.ajax({
@@ -62,7 +62,7 @@ function logErrors(resultat, statut, erreur) {
 }
 
 /********************
-  MODAL WINDOWS
+MODAL WINDOWS
 ********************/
 function modalConfirm(target) {
   target.modal({
@@ -83,17 +83,31 @@ function modalError(target) {
 }
 
 /********************
-  HELPER FUNCTIONS
+HELPER FUNCTIONS
 ********************/
 
 String.prototype.capitalize = function() {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
+jQuery.fn.noOpacity = function() {
+  return this.css('opacity', 0);
+};
+
+jQuery.fn.fullOpacity = function() {
+  return this.css('opacity', 1);
+};
+
+jQuery.fn.opacityToggle = function() {
+  return this.css('opacity', function(i, opacity) {
+    return (opacity === 1) ? 0 : 1;
+  });
+};
+
 function humanizeSeconds(s) {
   var fm = [
-    Math.floor(s / 60) % 60,
-    s % 60
+  Math.floor(s / 60) % 60,
+  s % 60
   ];
   if(Math.floor(s / 60 / 60) % 24 > 0) {
     fm.unshift(Math.floor(s / 60 / 60) % 24);

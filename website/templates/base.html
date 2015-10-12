@@ -453,10 +453,10 @@
           <!-- ko if: playlistTracks().length  -->
           <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
             <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
-              <td data-bind="click: function() { $root.deletePlaylistTrack(pk()) }">delete</td>
-              <td data-bind="text: music().name"></td>
-              <td><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
-              <td>
+              <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack(pk()) }"><i class="fa fa-2x fa-trash-o"></i></td>
+              <td class="name" data-bind="text: music().name"></td>
+              <td class="duration"><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
+              <td class="ordering" data-bind="css : { 'max' : $index()!=0 && $index() < $parent.playlistTracks().length - 1, 'medium' : $parent.playlistTracks().length > 1 }">
                 <i class="fa fa-1-5 fa-angle-double-up ordering-to-top" data-action="top" data-bind="visible : $index()!=0" ></i>
                 <i class="fa fa-1-5 fa-angle-up ordering-move-up" data-action="up" data-bind="visible : $index()!=0" ></i>
                 <i class="fa fa-1-5 fa-angle-down ordering-move-down" data-action="down" data-bind="visible: $index() < $parent.playlistTracks().length - 1"></i>

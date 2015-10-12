@@ -184,6 +184,16 @@ $(document).ready(function() {
     },
   });
 
+
+  $(document).on({
+    mouseenter: function() {
+      $(this).children('.icon-trash').children('.fa-trash-o').fullOpacity();
+    },
+    mouseleave: function() {
+      $(this).children('.icon-trash').children('.fa-trash-o').noOpacity();
+    }
+  }, '.playlist-item');
+
   $('#music_preview').on('hide.bs.modal', function() {
     playerPreviewControl.stop();
   });

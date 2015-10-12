@@ -7,7 +7,7 @@
 .bold {font-weight: bold;}
 .shadow {box-shadow: 0px 0px 10px 4px #5a5a5a};
 .fa-1-5 {font-size: 1.5em !important; margin-right: 5px;}
-.ui-sortable-helper {display: table;}
+.ui-sortable-helper {display: table !important;}
 .beauti-btn {
 	box-shadow: 0px 0px 4px 1px;
 	outline: none !important;
@@ -285,6 +285,42 @@ button > .glyphicon, a > .glyphicon {
 .playlist {
 	height: 95%;
 	margin-bottom: 20px;
+}
+
+.table>tbody>tr.playlist-item>td {
+	line-height: 1.8em;
+	font-size: 15px;
+	.badge {
+		font-size: 14px;
+	}
+}
+
+.table>tbody>tr.playlist-item {
+	.icon-trash {
+		width: 5%;
+	}
+	.name {
+		width: 65%;
+	}
+	.duration {
+		width: 10%;
+	}
+	.ordering {
+		width: 5%;
+	}
+	.ordering.medium {
+		width: 15%;
+	}
+	.ordering.max {
+		width: 20%;
+	}
+}
+
+.playlist-item .icon-trash .fa-trash-o {
+	font-size: 1.4em;
+	transition: all 250ms linear;
+	cursor: pointer;
+	opacity: 0;
 }
 
 .panel-playlist {
