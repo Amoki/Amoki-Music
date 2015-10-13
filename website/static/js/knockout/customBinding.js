@@ -90,8 +90,11 @@ ko.subscribable.fn.trimmed = function() {
     write: function(value) {
       if(value) {
         this(value.trim());
-        this.valueHasMutated();
       }
+      else {
+        this(null);
+      }
+      this.valueHasMutated();
     },
     owner: this
   });

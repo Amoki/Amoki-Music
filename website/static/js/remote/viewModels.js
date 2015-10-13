@@ -76,7 +76,9 @@ function LibraryViewModel() {
 
   self.searchMusic = function() {
     // Return a json serialized Music object
-    if($.type(ko.toJS(self.querySearch())) === "undefined" || !self.querySearch()) {
+    console.log(self.querySearch());
+    if(!self.querySearch()) {
+      console.log("empty");
       // TODO Display empty field warning
       return;
     }
@@ -248,8 +250,12 @@ function RoomViewModel() {
   self.postPlaylistSort = function(pk, action, target) {
     target = (typeof target === 'undefined') ? '' : target;
     $('.overlay-playlist').show();
+    var url = '/playlist';
+    url += pk ? '/' + pk : '';
+    url += action ? '/' + action : '';
+    url += target ? '/' + target : '';
     $.ajax({
-      url: '/playlist/' + pk + '/' + action + '/' + target,
+      url: url,
       type: 'post',
       contentType: 'application/json',
       dataType: 'json',
@@ -261,7 +267,7 @@ function RoomViewModel() {
   };
 
   self.deleteMusic = function(music) {
-    music ? pk = music.pk() : pk = self.room().currentMusic().pk();
+    pk = music ? music.pk() : self.room().currentMusic().pk();
 
     $.ajax("/music/" + pk, {
       type: "delete",
