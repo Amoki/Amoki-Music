@@ -24,7 +24,7 @@ function PlaylistTrack(data) {
 // Room model
 function Room(data) {
   this.name = ko.observable(data.name);
-  data.current_music ? this.currentMusic = ko.observable(new Music(data.current_music)) : this.currentMusic = ko.observable(null);
+  this.currentMusic = ko.observable(data.current_music ? new Music(data.current_music) : null);
   this.shuffle = ko.observable(data.shuffle);
   this.can_adjust_volume = ko.observable(data.can_adjust_volume);
   this.count_left = ko.observable(data.count_left);
