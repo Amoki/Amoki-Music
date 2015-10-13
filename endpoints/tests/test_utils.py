@@ -4,6 +4,8 @@ from rest_framework.test import APIClient
 
 from django.utils.translation import ugettext_lazy as _
 
+import sure
+
 
 class TestUtils(EndpointTestCase):
     def test_fail_authentication(self):
@@ -12,8 +14,8 @@ class TestUtils(EndpointTestCase):
 
         response = client.get('/room')
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, {'detail': _('Invalid token.')})
+        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.data.should.eql({'detail': _('Invalid token.')})
 
     def test_bad_formatted_authentication(self):
         client = APIClient()
@@ -21,19 +23,19 @@ class TestUtils(EndpointTestCase):
 
         response = client.get('/room')
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, {'detail': _('Invalid token header. No credentials provided.')})
+        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.data.should.eql({'detail': _('Invalid token header. No credentials provided.')})
 
         client.credentials(HTTP_AUTHORIZATION='Bearer token1 token2')
 
         response = client.get('/room')
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, {'detail': _('Invalid token header. Token string should not contain spaces.')})
+        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.data.should.eql({'detail': _('Invalid token header. Token string should not contain spaces.')})
 
         client.credentials(HTTP_AUTHORIZATION='token')
 
         response = client.get('/room')
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, {'detail': _('Invalid token header. No credentials provided.')})
+        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.data.should.eql({'detail': _('Invalid token header. No credentials provided.')})
