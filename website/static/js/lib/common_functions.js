@@ -106,8 +106,8 @@ jQuery.fn.opacityToggle = function() {
 
 function humanizeSeconds(s) {
   var fm = [
-  Math.floor(s / 60) % 60,
-  s % 60
+    Math.floor(s / 60) % 60,
+    s % 60
   ];
   if(Math.floor(s / 60 / 60) % 24 > 0) {
     fm.unshift(Math.floor(s / 60 / 60) % 24);
