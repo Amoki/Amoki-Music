@@ -84,11 +84,6 @@ button > .glyphicon, a > .glyphicon {
 	}
 }
 
-.btn-add-music {
-	padding: 10px 14px;
-    border-radius: 8px;
-}
-
 .modal {
 	color: black;
 }
@@ -483,6 +478,16 @@ button > .glyphicon, a > .glyphicon {
     float: none;
     vertical-align: middle;
     padding: 0;
+    button {
+		padding: 10px 14px;
+	    border-radius: 8px;
+    }
+    button.icon-refresh {
+    	padding: 12.5px 16px !important;
+    }
+    .fa-refresh {
+    	font-size: 22px;
+    }
 }
 
 .search-music-info, .library-music-info{
@@ -517,6 +522,7 @@ button > .glyphicon, a > .glyphicon {
 
 .popover {
 	border-radius: 8px !important;
+	max-width: 200px;
 }
 
 .popover img {

@@ -130,27 +130,6 @@ $(document).ready(function() {
 
   $('.overlay-playlist').hide();
 
-  $('body').popover({
-    selector: '[data-toggle="popover"]',
-    trigger: 'focus',
-    html: true,
-    placement: 'left',
-    content: function() {
-      return "<div class='wrapper-popover-add-music'>" +
-      "<div>" +
-      "<button form='" + $(this).closest('form').attr('id') + "' class='btn btn-default btn-lg btn-add-music' type='submit' alt='Ajouter à la playlist' title='Ajouter à la playlist'>" +
-      "<span class='glyphicon glyphicon-play-circle'></span> Play music" +
-      "</button>" +
-      "</div>" +
-      "<div>" +
-      "<button form='" + $(this).closest('form').next('form.display-none').attr('id') + "' href='#music_preview' class='btn btn-default btn-lg' type='submit' alt='Edit duration' title='Edit duration' data-toggle='modal' data-backdrop='static'>" +
-      "<span class='glyphicon glyphicon-time'></span> Edit duration" +
-      "</button>" +
-      "</div>" +
-      "</div>";
-    }
-  });
-
   $('#querySearch').autocomplete({
     minLength: 2,
     source: function(request, response) {

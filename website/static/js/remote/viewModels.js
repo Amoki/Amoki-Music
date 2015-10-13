@@ -33,7 +33,7 @@ function LibraryViewModel() {
   };
 
   self.addMusic = function(music) {
-    $("button.btn-add-music").children("span").attr("class", "fa fa-2x fa-refresh fa-spin");
+    $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music").attr('disabled', 'disabled');
     // Return a json serialized Music object
     $.ajax("/music", {
@@ -43,15 +43,15 @@ function LibraryViewModel() {
       dataType: "json",
       success: function(result) {
         newMusic = new Music(result);
-        $("button.btn-add-music").children("span").attr("class", "glyphicon glyphicon-play-circle");
+        $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
         $("button.btn-add-music").removeAttr('disabled');
         modalConfirm($('#modal-add-music'));
       }
     });
   };
 
-  self.openPreviewMusic = function() {
-    self.musicPreview(this);
+  self.openPreviewMusic = function(music) {
+    self.musicPreview(music);
     customSlider.slide({
       element: $("#slider-preview"),
       max: self.musicPreview().duration(),
@@ -68,6 +68,10 @@ function LibraryViewModel() {
       self.addMusic(self.musicPreview());
     }
     self.musicPreview(null);
+  };
+
+  self.deleteMusic = function(music) {
+    roomVM.deleteMusic(music);
   };
 
   self.searchMusic = function() {
@@ -256,16 +260,16 @@ function RoomViewModel() {
     });
   };
 
-  self.deleteMusic = function() {
-    $('.btn-skip-music').prop('disabled', true);
-    $.ajax("/music/" + self.room().currentMusic().pk(), {
+  self.deleteMusic = function(music) {
+    music ? pk = music.pk() : pk = self.room().currentMusic().pk();
+
+    $.ajax("/music/" + pk, {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
-      success: function(allData) {
-        console.log(allData);
-        $('.btn-skip-music').prop('disabled', false);
-        modalConfirm($('#modal-next-music'));
+      success: function() {
+        musicsLibraryVM.musicsLibrary.remove(music);
+        modalConfirm($('#modal-delete-music'));
       },
       error: logErrors,
     });
