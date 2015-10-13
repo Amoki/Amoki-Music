@@ -21,12 +21,12 @@ class TestLogin(EndpointTestCase):
         client = APIClient()
         response = client.get('/login')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, "Missing name or password parameter")
+        response.status_code.should.be.eql(status.HTTP_400_BAD_REQUEST)
+        response.data.should.be.eql("Missing name or password parameter")
 
     def test_login_fail_bad_credentials(self):
         client = APIClient()
         response = client.get('/login', {'name': 'a', 'password': 'b'})
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, {'detail': 'Invalid credentials.'})
+        response.status_code.should.be.eql(status.HTTP_403_FORBIDDEN)
+        response.data.should.eql({'detail': 'Invalid credentials.'})
