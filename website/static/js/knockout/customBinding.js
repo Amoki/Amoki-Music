@@ -52,8 +52,8 @@ ko.bindingHandlers.selectPicker = {
       var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
       if(typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
         var options = selectPickerOptions.optionsArray;
-        isDisabled = selectPickerOptions.disabledCondition || false,
-        resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
+        var isDisabled = selectPickerOptions.disabledCondition || false;
+        var resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
         if(ko.utils.unwrapObservable(options).length > 0) {
           // call the default Knockout options binding
           ko.bindingHandlers.options.update(element, options, allBindingsAccessor);
@@ -85,9 +85,6 @@ ko.subscribable.fn.trimmed = function() {
     read: function() {
       if(this()) {
         return this().trim();
-      }
-      else {
-        return this();
       }
     },
     write: function(value) {

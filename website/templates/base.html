@@ -4,7 +4,7 @@
 <head>
   <span class="ko-room">
     <!-- ko with: room -->
-    <!-- ko with: currentMusic -->
+    <!-- ko with: currentMusic() -->
     <title data-bind="text: name">Amoki's Musics</title>
     <!-- /ko -->
     <!-- /ko -->
@@ -108,15 +108,15 @@
           <div class="col-md-offset-1 col-md-10 remote">
             <!-- HEADER REMOTE -->
             <div class="row header-remote" data-bind="with: room">
-              <div data-bind="if: currentMusic">
-                <img id="thumbnail" class="col-md-offset-1 col-md-3 img-responsive" data-bind="attr: {src: currentMusic.thumbnail}">
+              <div data-bind="if: currentMusic()">
+                <img id="thumbnail" class="col-md-offset-1 col-md-3 img-responsive" data-bind="attr: {src: currentMusic().thumbnail()}">
                 <div class="col-md-8 title_playing">
                   <div class="marquee">
-                    <a class="now-playing" data-bind="attr: {href: currentMusic.url  }, text: currentMusic.name"></a>
+                    <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
                   </div>
                 </div>
               </div>
-              <div data-bind="if: !currentMusic">
+              <div data-bind="if: !currentMusic()">
                 <div class="col-md-12 title">
                   <div class="marquee">
                     <span class="now-playing">No music :'( Add yours now !</span>
@@ -167,7 +167,7 @@
                 <div id="time-left-progress-bar-wrapper">
                   <span id="time-left-progress-bar"></span>
                   <span id="time-left-progress-bar-duration">
-                    <!-- ko if: currentMusic -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic.duration()) --><!--/ko--><!--/ko-->
+                    <!-- ko if: currentMusic() -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic().duration()) --><!--/ko--><!--/ko-->
                   </span>
                 </div>
               </div>
@@ -185,7 +185,7 @@
                 </div>
                 <div class="col-xs-offset-3 col-xs-4">
                   <form data-bind="submit: $root.postNext">
-                    <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control btn-skip-music" data-bind="enable: currentMusic">
+                    <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control btn-skip-music" data-bind="enable: currentMusic()">
                       <i class="fa fa-fast-forward fa-2x"></i>
                     </button>
                   </form>
@@ -326,7 +326,7 @@
     <!-- FOOTER  -->
     <footer class="foot ko-room" data-bind="with: room">
       <form class="pull-left" data-bind="submit: $root.deleteMusic">
-        <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic">Dead link ?</button>
+        <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic()">Dead link ?</button>
       </form>
       <a class="btn btn-primary pull-right">Company Terms</a>
     </footer>

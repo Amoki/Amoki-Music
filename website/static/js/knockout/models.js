@@ -4,16 +4,13 @@ function Music(data) {
   this.pk = ko.observable(data.pk);
   this.music_id = ko.observable(data.music_id);
   this.name = ko.observable(data.name);
-  this.url = ko.observable(data.url);
-  this.room = ko.observable(data.room);
-  this.date = ko.observable(data.date);
-  this.duration = ko.observable(data.duration);
   this.thumbnail = ko.observable(data.thumbnail);
   this.count = ko.observable(data.count || data.views);
-  this.last_play = ko.observable(data.last_play);
-  this.dead_link = ko.observable(data.dead_link);
+  this.duration = ko.observable(data.duration);
   this.timer_start = ko.observable(data.timer_start);
   this.timer_end = ko.observable(data.timer_end);
+  this.url = ko.observable(data.url);
+  this.room_id = ko.observable(data.room_id);
   this.source = ko.observable(data.source);
   this.channel_name = ko.observable(data.channel_name);
   this.description = ko.observable(data.description);
@@ -27,21 +24,14 @@ function PlaylistTrack(data) {
 // Room model
 function Room(data) {
   this.name = ko.observable(data.name);
+  data.current_music ? this.currentMusic = ko.observable(new Music(data.current_music)) : this.currentMusic = ko.observable(null);
+  this.shuffle = ko.observable(data.shuffle);
+  this.can_adjust_volume = ko.observable(data.can_adjust_volume);
+  this.count_left = ko.observable(data.count_left);
   this.time_left = ko.observable(data.time_left);
   this.current_time_left = ko.observable(data.current_time_left);
   this.current_time_past = ko.observable(data.current_time_past);
   this.current_time_past_percent = ko.observable(data.current_time_past_percent);
-  this.can_adjust_volume = ko.observable(data.can_adjust_volume);
-  this.shuffle = ko.observable(data.shuffle);
-  this.count_left = ko.observable(data.count_left);
-
-  this.currentMusic = ko.observable();
-  if(data.current_music) {
-    this.currentMusic = new Music(data.current_music);
-  }
-  else {
-    this.currentMusic = null;
-  }
 }
 // Source model
 function Source(data) {

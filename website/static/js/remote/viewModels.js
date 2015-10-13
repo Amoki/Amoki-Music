@@ -72,7 +72,7 @@ function LibraryViewModel() {
 
   self.searchMusic = function() {
     // Return a json serialized Music object
-    if($.type(ko.toJS(self.querySearch)) === "undefined" || !self.querySearch()) {
+    if($.type(ko.toJS(self.querySearch())) === "undefined" || !self.querySearch()) {
       // TODO Display empty field warning
       return;
     }
@@ -149,17 +149,17 @@ function RoomViewModel() {
 
   self.openPlayer = function() {
     self.playerOpen(true);
-    if(self.room().currentMusic) {
+    if(self.room().currentMusic()) {
       Object.keys(playerControlWrapper).forEach(function(player) {
-        if(player !== self.room().currentMusic.source()) {
+        if(player !== self.room().currentMusic().source()) {
           playerControlWrapper[player].stop();
         }
       });
       var options = {
-        music_id: self.room().currentMusic.music_id(),
-        timer_start: self.room().currentMusic.timer_start() + $('#time-left-progress-bar').attr('currentTimePast'),
+        music_id: self.room().currentMusic().music_id(),
+        timer_start: self.room().currentMusic().timer_start() + $('#time-left-progress-bar').attr('currentTimePast'),
       };
-      playerControlWrapper[self.room().currentMusic.source()].play(options);
+      playerControlWrapper[self.room().currentMusic().source()].play(options);
     }
     else {
       self.patchShuffle();
@@ -180,8 +180,8 @@ function RoomViewModel() {
   self.getRoom = function() {
     $.getJSON("/room", function(allData) {
       self.room(new Room(allData));
-      if(self.room().currentMusic) {
-        updateProgressBar(self.room().currentMusic.duration(), self.room().current_time_past(), self.room().current_time_past_percent(), self.room().current_time_left());
+      if(self.room().currentMusic()) {
+        updateProgressBar(self.room().currentMusic().duration(), self.room().current_time_past(), self.room().current_time_past_percent(), self.room().current_time_left());
       }
       else {
         stopProgressBar();
@@ -228,7 +228,7 @@ function RoomViewModel() {
   self.postNext = function() {
     $('.btn-skip-music').prop('disabled', true);
     $.ajax("/room/next", {
-      data: ko.toJSON({music_pk: self.room().currentMusic.pk()}),
+      data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
@@ -258,7 +258,7 @@ function RoomViewModel() {
 
   self.deleteMusic = function() {
     $('.btn-skip-music').prop('disabled', true);
-    $.ajax("/music/" + self.room().currentMusic.pk(), {
+    $.ajax("/music/" + self.room().currentMusic().pk(), {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
