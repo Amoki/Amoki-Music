@@ -27,6 +27,7 @@ class RoomView(APIView):
         serializer: RoomSerializer
         """
         serializer = RoomSerializer(data=request.data)
+        # TODO: check we can't update existing room
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,8 +45,8 @@ class RoomView(APIView):
             serializer.save()
             try:
                 room.update(request.data)
-            except room.UnableToShuffle as err:
-                return Response(err.message, status=status.HTTP_400_BAD_REQUEST)
+            except room.UnableToUpdate as err:
+                return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -73,7 +74,11 @@ class RoomNextView(APIView):
             required: true
             type: int
             paramType: body
+            description: The pk of the current music to be sure to not skip twice the same music
         """
+        if 'music_pk' not in request.data:
+            return Response("Missing music_pk parameter", status=status.HTTP_400_BAD_REQUEST)
+
         if request.data['music_pk'] == room.current_music.pk:
             room.play_next()
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)

@@ -11,6 +11,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='playlisttrack',
+            name='room',
+            field=models.ForeignKey(related_name='playlist', to='player.Room'),
+            preserve_default=True,
+        ),
+        migrations.RemoveField(
+            model_name='music',
+            name='dead_link',
+        ),
         migrations.AlterUniqueTogether(
             name='music',
             unique_together=set([('music_id', 'room')]),

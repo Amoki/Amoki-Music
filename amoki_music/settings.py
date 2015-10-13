@@ -10,12 +10,13 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 
 
 # Environment
 PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
 
-if PYTHON_ENV == 'production':
+if PYTHON_ENV == 'production':  # pragma: no cover
     DEBUG = False
     TEMPLATE_DEBUG = False
 else:
@@ -201,5 +202,27 @@ SWAGGER_SETTINGS = {
     'token_type': 'Bearer'
 }
 
+REST_FRAMEWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
 # Keep the original host behind a proxy for direct use of ws://
 USE_X_FORWARDED_HOST = True
+
+
+class DisableMigrations(object):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+TESTING = False
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',  # Replace hasher with a simpler and faster hash method
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    TESTING = True
+    MIGRATION_MODULES = DisableMigrations()  # Disable migrations during tests

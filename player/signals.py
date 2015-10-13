@@ -1,7 +1,6 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from player.models import Room, generate_token, events
-from music.models import Music
+from player.models import Room, generate_token, Events
 
 
 @receiver(pre_save, sender=Room)
@@ -14,14 +13,7 @@ def update_token_on_password_change(sender, instance, **kwargs):
             instance.token = generate_token()
 
 
-@receiver(pre_save, sender=Music)
-def update_duration(sender, instance, **kwargs):
-    if instance.timer_end:
-        instance.duration = instance.duration - (instance.duration - instance.timer_end)
-    instance.duration -= instance.timer_start
-
-
 @receiver(post_save, sender=Room)
-def create_room(sender, instance, created, **kwargs):
+def create_room_event(sender, instance, created, **kwargs):
     if created:
-        events[instance.name] = None
+        Events.set(instance, None)

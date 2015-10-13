@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 
 
 class Init(AppConfig):
@@ -6,8 +7,10 @@ class Init(AppConfig):
     verbose_name = 'Music'
 
     def ready(self):
-        PlaylistTrack = self.get_model('PlaylistTrack')
-        try:
-            PlaylistTrack.objects.all().delete()
-        except Exception as e:
-            print ('Error during initilization: %s' % e)
+        if not settings.TESTING:
+            PlaylistTrack = self.get_model('PlaylistTrack')
+            try:
+                # Delete all playlists
+                PlaylistTrack.objects.all().delete()
+            except Exception as e:
+                print('Error during initilization: %s' % e)

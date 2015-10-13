@@ -70,7 +70,7 @@ class Music_endpointView(APIView):
         serializer: MusicSerializer
         """
         try:
-            music = Music.objects.get(pk=pk)
+            music = Music.objects.get(pk=pk, room=room)
         except Music.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = MusicSerializer(music, data=request.data, partial=True)
@@ -86,9 +86,11 @@ class Music_endpointView(APIView):
         ---
         """
         try:
-            music_to_delete = Music.objects.get(pk=pk)
+            music_to_delete = Music.objects.get(pk=pk, room=room)
         except Music.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # We can't delete the current_music (SQL...), then skip the music before deletion
         if music_to_delete == room.current_music:
             room.play_next()
         music_to_delete.delete()

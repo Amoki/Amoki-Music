@@ -1,10 +1,10 @@
 import re
+import isodate
 
 from apiclient.discovery import build as youtube_api
 
 from django.conf import settings
 
-from utils.time import get_time_in_seconds
 
 URL_REGEX = "(?:v=|youtu\.be\/)([^&?]+)"
 
@@ -13,6 +13,10 @@ youtube = youtube_api(
     "v3",
     developerKey=settings.YOUTUBE_KEY
 )
+
+
+def get_time_in_seconds(time):
+    return isodate.parse_duration(time).total_seconds()
 
 
 def get_info(ids):
