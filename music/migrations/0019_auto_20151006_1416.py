@@ -17,12 +17,12 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(related_name='playlist', to='player.Room'),
             preserve_default=True,
         ),
-        migrations.AlterUniqueTogether(
-            name='music',
-            unique_together=set([('music_id', 'room')]),
-        ),
         migrations.RemoveField(
             model_name='music',
             name='dead_link',
+        ),
+        migrations.AlterUniqueTogether(
+            name='music',
+            unique_together=set([('music_id', 'room')]),
         ),
     ]
