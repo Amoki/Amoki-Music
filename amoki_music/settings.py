@@ -60,7 +60,8 @@ INSTALLED_APPS = (
     'player',
     'music',
     'endpoints',
-    'sources'
+    'sources',
+    'website',
 )
 
 SOURCES = ["youtube", "soundcloud"]

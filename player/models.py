@@ -59,8 +59,8 @@ class Room(models.Model):
             self.current_music = music
             self.save()
             if not music.is_valid():
-                self.signal_dead_link()
                 self.play_next()
+                music.delete()
             else:
                 music.count += 1
                 music.last_play = datetime.now()
@@ -72,7 +72,7 @@ class Room(models.Model):
                     'source': music.source,
                     'options': {
                         'name': music.name,
-                        'musicId': music.music_id,
+                        'music_id': music.music_id,
                         'timer_start': music.timer_start,
                     }
                 }
@@ -101,12 +101,19 @@ class Room(models.Model):
                 next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
-            PlaylistTrack.objects.filter(room=self, track=next_music).delete()
+            PlaylistTrack.objects.filter(room=self, track=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
             # Select random music, excluding 10% last played musics
-            musics = self.music_set.exclude(dead_link=True, duration__gte=600).order_by('-last_play')
+            """
+             exclude(dead_link=True).exclude(duration__gte=600) mean :
+             "exclude music where dead_link=True OR duration__gte=600"
+             exclude(dead_link=True, duration__gte=600) mean :
+             "exclude music where dead_link=True AND duration__gte=600"
+             which still shuffle duration > 600 who have dead_link=False !
+            """
+            musics = self.music_set.exclude(dead_link=True).exclude(duration__gte=600).order_by('-last_play')
             count = musics.count()
 
             to_remove = int(count / 10)
@@ -132,13 +139,12 @@ class Room(models.Model):
             room=self,
         ).first()
         if existing_music:
-            PlaylistTrack.objects.create(room=self, track=existing_music)
-            return existing_music
+            music = existing_music
         else:
             music = Music(room=self, **kwargs)
             music.save()
-            PlaylistTrack.objects.create(room=self, track=music)
-            return music
+
+        PlaylistTrack.objects.create(room=self, track=music)
 
         # Autoplay
         if not self.current_music:
@@ -147,6 +153,8 @@ class Room(models.Model):
             self.play_next(forced=True)
         else:
             self.send_update_message()
+
+        return music
 
     def get_current_remaining_time(self):
         if self.current_music:

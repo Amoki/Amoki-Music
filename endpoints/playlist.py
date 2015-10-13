@@ -26,10 +26,10 @@ def post(request, room, pk, action, target=None):
     ---
     serializer: PlaylistSerializer
     """
-    ACTIONS = ['top', 'up', 'down', 'bottom', 'to']
+    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
 
-    if action == 'to' and target is None:
-        return Response('"to" action needs a target parameter', status=status.HTTP_400_BAD_REQUEST)
+    if action in {'above', 'below'} and target is None:
+        return Response('"above" or "below" action needs a target parameter', status=status.HTTP_400_BAD_REQUEST)
 
     if action not in ACTIONS:
         return Response('Action can only be: "%s"' % '" or "'.join(ACTIONS), status=status.HTTP_400_BAD_REQUEST)
@@ -40,7 +40,11 @@ def post(request, room, pk, action, target=None):
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
     if target is not None:
-        getattr(playlistTrack, action)(int(target))
+        try:
+            playlistTrackTarget = PlaylistTrack.objects.get(pk=target)
+            getattr(playlistTrack, action)(playlistTrackTarget)
+        except PlaylistTrack.DoesNotExist:
+            return Response("Can't find the above or below playlistTrack", status=status.HTTP_404_NOT_FOUND)
     else:
         getattr(playlistTrack, action)()
 

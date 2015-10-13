@@ -91,5 +91,5 @@ class Music_endpointView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         if music_to_delete == room.current_music:
             room.play_next()
-            music_to_delete.delete()
+        music_to_delete.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
