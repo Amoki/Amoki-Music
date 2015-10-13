@@ -1,11 +1,13 @@
 @gris: #7A7A7A;
 @bleu: #4a9fff;
 @bleuDur: #428fe5;
-.display-none {display: none;}
+.display-none {display: none !important;}
+.display-block {display: block !important;}
 .visibility-hidden {visibility: hidden;}
+.bold {font-weight: bold;}
 .shadow {box-shadow: 0px 0px 10px 4px #5a5a5a};
 .fa-1-5 {font-size: 1.5em !important; margin-right: 5px;}
-.ui-sortable-helper {display: table;}
+.ui-sortable-helper {display: table !important;}
 .beauti-btn {
 	box-shadow: 0px 0px 4px 1px;
 	outline: none !important;
@@ -15,6 +17,31 @@
 			box-shadow: 0px 0px 4px 1px #fff;}
 	&:active {outline: none !important;}
 };
+
+.LOGIN {
+	top: 20%;
+}
+
+.wrapper-login {
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 999999;
+    background-color: rgba(0,0,0,0.9);
+}
+
+span.filter-option {
+	text-align: center !important;
+}
+
+.input-group-btn select {
+	border-color: #ccc;
+	margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
 
 body, html {
 	margin: 0;
@@ -39,7 +66,8 @@ select {
 }
 
 button > .glyphicon, a > .glyphicon {
-	top: 2px;
+	top: 3px;
+	font-size: 25px;
 }
 
 .btn {
@@ -60,6 +88,11 @@ button > .glyphicon, a > .glyphicon {
 	color: black;
 }
 
+#modal-error-ws {
+	color: red;
+	top: 0 !important;
+}
+
 #extensions .modal-dialog {
 	top:150px;
 }
@@ -71,11 +104,15 @@ button > .glyphicon, a > .glyphicon {
 	margin-left: -150px;
 	left:50% !important;
 	bottom: auto !important;
-	/*opacity: 0.7 !important;*/
+	opacity: 0.8 !important;
+}
+
+.modal {
+	z-index: 9999999999;
 }
 
 .modal-content-custom {
-	height: 55px !important;
+	min-height: 55px !important;
 }
 
 .fa-stack-1x, .fa-stack-2x {
@@ -85,6 +122,18 @@ button > .glyphicon, a > .glyphicon {
 .list-group-item:first-child {
 	border-top-right-radius: 0px;
 	border-top-left-radius: 0px;
+}
+.list-group-item:last-child {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+.LIB.ko-library .list-group {
+	margin-bottom: 0px;
+}
+#form_infini_scroll {
+	border-bottom-right-radius: 4px !important;
+	border-bottom-left-radius: 4px !important;
+	padding: 20px 10px;
 }
 
 [class*="col-"], header {
@@ -167,7 +216,7 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .header-remote img {
-	height: 90px;
+	width: auto;
 }
 
 .title_playing {
@@ -212,29 +261,95 @@ button > .glyphicon, a > .glyphicon {
 	color:black;
 }
 
-.playlist table {
-	color: black;
+.players {
+	height: 100%;
+	margin-bottom: 20px;
+}
+
+.playlist, .playlist-mid {
+	table {
+		color: black;
+	}
+}
+
+.playlist-mid {
+	height: 100%;
+	margin-bottom: 20px;
+}
+
+.playlist {
+	height: 95%;
+	margin-bottom: 20px;
+}
+
+.table>tbody>tr.playlist-item>td {
+	line-height: 1.8em;
+	font-size: 15px;
+	.badge {
+		font-size: 14px;
+	}
+}
+
+.table>tbody>tr.playlist-item {
+	.icon-trash {
+		width: 5%;
+	}
+	.name {
+		width: 65%;
+	}
+	.duration {
+		width: 10%;
+	}
+	.ordering {
+		width: 5%;
+	}
+	.ordering.medium {
+		width: 15%;
+	}
+	.ordering.max {
+		width: 20%;
+	}
+}
+
+.playlist-item .icon-trash .fa-trash-o {
+	font-size: 1.4em;
+	cursor: pointer;
+	opacity: 0;
 }
 
 .panel-playlist {
+	height: 100%;
 	overflow-y : auto;
 	overflow-x: hidden;
 	background-color: rgba(255,255,255,0.5) !important;
-	min-height: 390px;
 	position: relative;
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
-	background: rgba(255,255,255,0.5) !important;
+.wrappeur {
+	position: relative;
+	height: 100%;
 }
 
-#overlay-playlist {
+.table-striped>tbody>tr:not(.ui-sortable-helper):not(.ui-sortable-placeholder):nth-of-type(2n+1){
+	background: rgba(255,255,255,0.9) !important;
+}
+
+.table-striped>tbody>tr.ui-sortable-helper{
+	background: rgba(247,233,195,1) !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+	background: initial;
+}
+
+.overlay-playlist {
 	width: 100%;
     height: 100%;
     position: absolute;
     background-color: rgba(160,160,160,0.8);
     display: table;
     overflow: hidden;
+    z-index: 10;
 }
 .loader{
     display: table-cell !important;
@@ -270,6 +385,15 @@ button > .glyphicon, a > .glyphicon {
 	}
 }
 
+#btn-open-player {
+	display: table-cell;
+    vertical-align: middle;
+
+    background-color: rgba(50,50,50,0.4);
+    border-radius: 50px;
+    border: rgba(100,100,100,0.8) 1px solid;
+}
+
 .btn-control {
 	border-radius: 40px;
 	padding: 20px 20px;
@@ -295,37 +419,25 @@ button > .glyphicon, a > .glyphicon {
 
 
 /********************** LIBRARY STUFF ***********/
+#tab_btn_playlist .badge {
+    position: relative;
+    left: 10px;
+}
 
 .LIB {
 	min-height: 550px;
-	//margin-bottom: 10px;
 	background: rgba(34,34,34,0.7);
 	.shadow;
 }
 
-.selected {
-	width: 111px;
-}
-
-.selected:hover > .menu-source {
-	display: block;
-	height: 100px;
-}
-
-.menu-source {
-	transition: all .20s linear;
-	position: absolute;
-	top: 34px;
-	left: 0;
-	height: 0px;
-	overflow: hidden;
-	z-index: 100;
-	width: 111px;
-}
-
-.menu-source > ul > li > .btn{
-	width: 100%;
-	line-height: 2;
+.search-form {
+	button {
+		height: 34px;
+	}
+	.dropdown-toggle {
+		border-bottom-left-radius: 4px !important;
+    	border-top-left-radius: 4px !important;
+	}
 }
 
 .input-lib {
@@ -337,7 +449,6 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .list-lib {
-	overflow: hidden;
 	margin-top: 20px;
 }
 
@@ -352,12 +463,49 @@ button > .glyphicon, a > .glyphicon {
 
 .list-group-item{
 	padding: initial;
+    display: table;
+    width: 100%;
 }
 
 .row-list-item {
 	margin-right: 0px !important;
 	margin-left: 0px !important;
-	padding: 10px 10px;
+	padding: 10px 5px;
+}
+
+.add-music-form{
+	display: table-cell;
+    float: none;
+    vertical-align: middle;
+    padding: 0;
+    button {
+		padding: 10px 14px;
+	    border-radius: 8px;
+    }
+    button.icon-refresh {
+    	padding: 12.5px 16px !important;
+    }
+    .fa-refresh {
+    	font-size: 22px;
+    }
+}
+
+.search-music-info, .library-music-info{
+	padding: 0;
+    float: none;
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.search-img-music, .library-img-music{
+	display: table-cell;
+    vertical-align: middle;
+    width: 25%;
+    img{
+    	border-radius: 20px;
+    	width: 120px;
+    }
 }
 
 .show-more{
@@ -372,15 +520,26 @@ button > .glyphicon, a > .glyphicon {
 	}
 }
 
+.popover {
+	border-radius: 8px !important;
+	max-width: 200px;
+}
+
 .popover img {
 	float: left;
 	margin-right: 10px;
 }
 
 .popover-content {
-	padding: 10px;
-	#wrapper-popover-add-music button{
+	padding: 8px;
+	.wrapper-popover-add-music button{
 		width: 100%;
+		.glyphicon {
+			vertical-align: text-bottom;
+		}
+		.fa-2x {
+			font-size: 1.4em !important;
+		}
 	}
 }
 
@@ -409,7 +568,7 @@ button > .glyphicon, a > .glyphicon {
 
 .tooltip {
 	position: absolute;
-	display: block;
+	display: none;
 	min-width: 30px;
 	background-color: #222222;
 	color: #4a9fff;
@@ -465,26 +624,21 @@ button > .glyphicon, a > .glyphicon {
 
 /********************** PLAYER STUFF ***********/
 
-.player {
-	height: 390px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	.panel-playlist {
-		height: 390px;
-	}
+#player-wrapper {
+	height: 100%;
 }
 
 .player-child {
+	height: 100%;
+	padding: 0;
 	position: absolute;
 	left: 0;
 	top: 0;
-	height: 390px;
 	display: none;
 	z-index: 1;
 	&.player-child-no-music {
-		display: block;
+		display: table;
 		z-index: 0;
-		background: url('../img/cover_center_small.jpg') no-repeat;
 		background-position: 50%;
 	}
 }
@@ -492,7 +646,7 @@ button > .glyphicon, a > .glyphicon {
 #wrapper-slider-volume {
 	padding-left: 10%;
 	padding-right: 10%;
-	height: 20%;
+	height: 25%;
 	line-height:20%;
 	margin-left: -15px;
 	display: none;
@@ -501,11 +655,12 @@ button > .glyphicon, a > .glyphicon {
 	bottom: 0%;
 	z-index: 99;
 	background: linear-gradient(to bottom,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(0, 0, 0, 0.5) 20%,
-		rgba(0, 0, 0, 0.8) 45%,
-		rgba(0, 0, 0, 1) 100%);
+    	rgba(0, 0, 0, 0) 0%,
+    	rgba(0, 0, 0, 0.2) 20%,
+    	rgba(0, 0, 0, 0.7) 50%,
+    	rgba(0, 0, 0, 0.9) 100%);
 }
+
 
 #slider-volume {
 	position: absolute;
@@ -568,4 +723,4 @@ a#btn-link-remote{
 	border-radius: 100px;
 }
 
-/********************** FOOTER STUFF ***********/
+/********************** PLAYER STUFF ***********/

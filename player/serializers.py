@@ -28,6 +28,8 @@ class RoomSerializer(serializers.ModelSerializer):
     count_left = serializers.IntegerField(source='get_count_remaining', read_only=True)
     time_left = serializers.IntegerField(source='get_remaining_time', read_only=True)
     token = serializers.CharField(max_length=64, read_only=True)
+    current_time_past = serializers.IntegerField(source='get_current_time_past', read_only=True)
+    current_time_past_percent = serializers.IntegerField(source='get_current_time_past_percent', read_only=True)
     current_time_left = serializers.IntegerField(source='get_current_remaining_time', read_only=True)
     playlist = serializers.ListField(source='playlist.all', child=PlaylistSerializer(), read_only=True)
     current_music = MusicSerializer(read_only=True)
@@ -40,4 +42,4 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'token', 'password', 'volume')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'current_time_past', 'current_time_past_percent', 'playlist', 'token', 'password', 'volume')

@@ -68,8 +68,8 @@ class Room(models.Model):
         self.current_music = music
         self.save()
         if not music.is_valid():
-            music.delete()
             self.play_next()
+            music.delete()
         else:
             music.count += 1
             music.last_play = datetime.now()
@@ -81,7 +81,7 @@ class Room(models.Model):
                 'source': music.source,
                 'options': {
                     'name': music.name,
-                    'musicId': music.music_id,
+                    'music_id': music.music_id,
                     'timer_start': music.timer_start,
                     'timer_end': music.timer_end or None,
                 }
@@ -106,7 +106,7 @@ class Room(models.Model):
         next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
-            PlaylistTrack.objects.filter(room=self, track=next_music).delete()
+            PlaylistTrack.objects.filter(room=self, track=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
@@ -136,9 +136,12 @@ class Room(models.Model):
         if not self.current_music:
             self.play_next()
         else:
+
             self.send_update_message()
+        return music
 
     def select_random_music(self):
+        # Select random music, excluding 10% last played musics
         musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
         count = musics.count()
 
@@ -146,12 +149,13 @@ class Room(models.Model):
         count -= to_remove
         musics = musics[to_remove:]
 
-        a = count / float(5)  # Le point où la courbe commence à monter (higher is later)
-        b = count / float(27)  # La vitesse à laquelle elle monte (higher is faster)
+        a = count / float(5)  # Le point où ca commence à monter
+        b = count / float(27)  # La vitesse à laquelle ca monte
         x = random.uniform(1, count - a - 1)
         i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
         if i < 0:
             i = 0  # Can't get negative index
+
         return musics[i]
 
     def get_current_remaining_time(self):

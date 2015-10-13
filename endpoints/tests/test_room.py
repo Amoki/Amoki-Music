@@ -22,7 +22,9 @@ class TestRoom(EndpointTestCase):
             'current_time_left': 0,
             'playlist': [],
             'volume': 10,
-            'token': self.r.token
+            'token': self.r.token,
+            'current_time_past': 0,
+            'current_time_past_percent': 0
         }
 
         response.status_code.should.eql(status.HTTP_200_OK)

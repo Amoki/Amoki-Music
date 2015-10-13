@@ -16,7 +16,9 @@ class SerializersTestCase(TestCase):
             'current_time_left': 0,
             'playlist': [],
             'volume': 10,
-            'token': self.r.token
+            'token': self.r.token,
+            'current_time_past': 0,
+            'current_time_past_percent': 0
         }
 
         dict(RoomSerializer(self.r).data).should.eql(expected_result)
@@ -31,7 +33,7 @@ class SerializersTestCase(TestCase):
             'time_left': 0,
             'current_time_left': 0,
             'playlist': [],
-            'volume': 10,
+            'volume': 10
         }
 
         dict(RoomsSerializer(self.r).data).should.eql(expected_result)
