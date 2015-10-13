@@ -76,9 +76,7 @@ function LibraryViewModel() {
 
   self.searchMusic = function() {
     // Return a json serialized Music object
-    console.log(self.querySearch());
     if(!self.querySearch()) {
-      console.log("empty");
       // TODO Display empty field warning
       return;
     }
