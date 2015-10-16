@@ -23,6 +23,7 @@ if PYTHON_ENV == 'production':  # pragma: no cover
 else:
     DEBUG = True
     TEMPLATE_DEBUG = True
+    WS4REDIS_DB = 0
     WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -153,7 +154,7 @@ WEBSOCKET_URL = '/ws/'
 WS4REDIS_CONNECTION = {
     'host': 'localhost',
     'port': 6379,
-    'db': WS4REDIS_DB or 0,
+    'db': WS4REDIS_DB,
     'password': None,
 }
 
