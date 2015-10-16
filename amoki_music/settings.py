@@ -19,6 +19,7 @@ PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
 if PYTHON_ENV == 'production':  # pragma: no cover
     DEBUG = False
     TEMPLATE_DEBUG = False
+    WS4REDIS_DB = 1
 else:
     DEBUG = True
     TEMPLATE_DEBUG = True
@@ -152,7 +153,7 @@ WEBSOCKET_URL = '/ws/'
 WS4REDIS_CONNECTION = {
     'host': 'localhost',
     'port': 6379,
-    'db': 0,
+    'db': WS4REDIS_DB or 0,
     'password': None,
 }
 
