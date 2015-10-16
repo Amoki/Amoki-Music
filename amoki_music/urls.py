@@ -9,7 +9,5 @@ urlpatterns = patterns('',
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^', include('endpoints.routes')),
 
-
     url(r'^$', 'website.views.home.remote', name='remote'),
-    url(r'^player/$', 'website.views.home.player', name='player'),
 )
