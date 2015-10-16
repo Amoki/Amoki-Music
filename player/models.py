@@ -42,6 +42,9 @@ class Room(models.Model):
         'without_setters': ['can_adjust_volume'],
     }
 
+    def __str__(self):
+        return self.name
+
     def update(self, modifications):
         for key, value in modifications.items():
             if key in Room.setters['with_setters']:
