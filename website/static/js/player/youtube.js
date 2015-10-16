@@ -11,24 +11,20 @@ var youtubePlayerControl = {
   play: function(options) {
     if(youtubePlayer.initialized) {
       var musicOptions = {
-        videoId: options.musicId,
+        videoId: options.music_id,
         suggestedQuality: 'default',
       };
-      if(options.timerStart) {
-        musicOptions.startSeconds = options.timerStart;
-      }
-      if(options.timerEnd) {
-        musicOptions.endSeconds = options.timerEnd;
+      if(options.timer_start) {
+        musicOptions.startSeconds = options.timer_start;
       }
       youtubePlayer.loadVideoById(musicOptions);
-      $(document).attr('title', options.name);
-      $('#youtubePlayer').fadeIn(250);
+      $('#wrapper-youtube-player').stop().fadeIn(250);
     }
   },
   stop: function() {
     if(youtubePlayer.initialized) {
       youtubePlayer.stopVideo();
-      $('#youtubePlayer').fadeOut(250);
+      $('#wrapper-youtube-player').stop().fadeOut(250);
     }
   },
   volumeUp: function() {
@@ -52,8 +48,8 @@ var youtubePlayerControl = {
 // after the API code downloads.
 function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player('youtubePlayer', {
-    height: '390',
-    width: '640',
+    height: '100%',
+    width: '100%',
     playerVars: {
       iv_load_policy: '3',
       modestbranding: '1',
@@ -63,15 +59,18 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function() {
         youtubePlayer.initialized = true;
-        youtubePlayerControl.setVolume(cookieVolume);
-        if(typeof currentMusic !== "undefined" && currentMusicSource === "Youtube") {
-          youtubePlayerControl.play({
-            musicId: currentMusic,
-            timerStart: currentTimePast,
-            timerEnd: currentMusicTimerEnd,
-          });
-        }
+        youtubePlayerControl.setVolume(Cookies.get('volumePlayer'));
       },
     }
+  });
+
+  previewPlayer = new YT.Player('preview_player', {
+    height: '300px',
+    width: '100%',
+    playerVars: {
+      iv_load_policy: '3',
+      modestbranding: '1',
+      rel: '0',
+      autoplay: '0'},
   });
 }

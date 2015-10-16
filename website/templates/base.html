@@ -1,39 +1,511 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>{% block title %}{% if current_music %}{{current_music}}{% else %}Amoki's musics{% endif %}{% endblock title %}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="content-language" content="fr" />
+<head>
+  <span class="ko-room">
+    <!-- ko with: room -->
+    <!-- ko with: currentMusic() -->
+    <title data-bind="text: name">Amoki's Musics</title>
+    <!-- /ko -->
+    <!-- /ko -->
+  </span>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="content-language" content="fr" />
 
-		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-		<link href="{% static 'css/style.less' %}" rel="stylesheet/less">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.less' %}" rel="stylesheet/less">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css">
 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script type="text/javascript" src="{% static 'js/lib/jquery.cookie.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/lib/bootstrap.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/lib/prefixfree.min.js' %}"></script>
-		{% block pre_end_head %}
-		{% endblock pre_end_head %}
-	</head>
-	<body>
-		<div id="wrapper">
-			{% block navbar %}
-			{% endblock navbar %}
-			<div class="container-fluid ligne">
-				{% block first_Col %}
-				{% endblock first_Col %}
-				{% block second_Col %}
-				{% endblock second_Col %}
-			</div>
-			{% block footer %}
-			{% endblock footer %}
-			<!-- END PAGE -->
-			{% include "include/common/common_modals.html" %}
-			{% block pre_end_body %}
-			{% endblock pre_end_body %}
-		</div>
-	</body>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/lib/js.cookie-2.0.3.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/prefixfree.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/ws4redis.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/jquery.countTo.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/knockout-sortable.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/knockout-bootstrap-custom.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/common_functions.js' %}"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
+
+  <script type="text/javascript" src="{% static 'js/knockout/customBinding.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/knockout/models.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'js/remote/viewModels.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/remote/knockout.remote.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
+</head>
+<body>
+  <div id="wrapper">
+    <!-- BEGIN LOGIN -->
+    <div class="wrapper-login ko-login" data-bind="css: { 'display-none': isConnected }">
+      <div class="container col-md-4 col-md-offset-4 LOGIN">
+        <div class="header">
+          <h3 class="text-muted">Log In</h3>
+        </div>
+        <div class="jumbotron">
+          <h1>Select a room</h1>
+          <p class="text-danger" data-bind="css: { 'display-none': !badLogin() }">Wrong or missing room / password</p>
+          <form class="form-inline" role="form" data-bind="submit: getLogin">
+            <div class="form-group">
+              <label for="rooms">Rooms:</label>
+              <select id="rooms" class="form-control" name="room" data-bind="options: rooms, optionsText: 'name', optionsValue: 'name', value: selectedRoom,"></select>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input id="password" type="password" name="password" data-bind="value: password">
+            </div>
+            <button type="submit" class="btn btn-primary">Valider</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END LOGIN -->
+    <div class="ko-room">
+      <nav id="navbar-top" class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active" data-bind="with:room"><a class="navbar-brand" data-bind="text: name"></a></li>
+              <li data-bind="stopBinding">
+                <a id="btn-navbar" class="ko-login"><!-- TODO logout toom -->
+                  <button class="btn btn-primary" type="button" data-bind="click: $root.logOut">Change Room</button>
+                </a>
+              </li>
+              <li data-bind="if: !$root.playerOpen()">
+                <a id="btn-navbar">
+                  <button class="btn btn-primary" type="button" data-bind="click: $root.openPlayer">Open the player</button>
+                </a>
+              </li>
+              <li data-bind="if: $root.playerOpen()">
+                <a id="btn-navbar">
+                  <button class="btn btn-primary" type="button" data-bind="click: $root.closePlayer">Close the player</button>
+                </a>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div>
+      </nav>
+    </div>
+    <div class="container-fluid ligne">
+      <div class="REMOTE">
+        <!-- REMOTE ZONE -->
+        <div class="col-md-8 ko-room">
+          <div class="col-md-offset-1 col-md-10 remote">
+            <!-- HEADER REMOTE -->
+            <div class="row header-remote" data-bind="with: room">
+              <div data-bind="if: currentMusic()">
+                <img id="thumbnail" class="col-md-offset-1 col-md-3 img-responsive" data-bind="attr: {src: currentMusic().thumbnail()}">
+                <div class="col-md-8 title_playing">
+                  <div class="marquee">
+                    <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
+                  </div>
+                </div>
+              </div>
+              <div data-bind="if: !currentMusic()">
+                <div class="col-md-12 title">
+                  <div class="marquee">
+                    <span class="now-playing">No music :'( Add yours now !</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END HEADER REMOTE -->
+            <!-- PLAYLIST -->
+            <div class="row players" data-bind="css: { 'display-none': !playerOpen() }">
+              <div class="col-md-offset-1 col-md-10 wrappeur">
+                <!-- PLAYER ZONE -->
+                <div id="player-wrapper" class="col-md-12 player">
+                  <div class="player-child player-child-no-music col-xs-12">
+                    <a id="btn-open-player"><img src="{% static 'img/btn-play-large.png' %}"></a>
+                  </div>
+
+                  <div id="wrapper-youtube-player" class="player-child col-xs-12">
+                    <div id="youtubePlayer"></div>
+                  </div>
+                  <div id="wrapper-soundcloud-player" class="player-child col-xs-12">
+                    <iframe id="soundcloudPlayer" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/" width="100%" height="100%" scrolling="no" frameborder="no"></iframe>
+                  </div>
+                  <div id="wrapper-slider-volume">
+                    <span id="icon-volume" class="col-xs-1"></span>
+                    <div id="slider-volume" class="col-xs-offset-1 col-xs-10"></div>
+                  </div>
+                </div>
+                <!-- END PLAYER ZONE -->
+              </div>
+            </div>
+
+            <!-- Playlist -->
+            <div class="row playlist-mid" data-bind="css: { 'display-none': playerOpen() }">
+              <div class="col-md-offset-1 col-md-10 wrappeur">
+                <div class="wrappeur" data-bind="template: { name: 'playlist-template' }"></div>
+              </div>
+            </div>
+
+            <!-- END PLAYLIST -->
+            <!-- PROGRESS BAR -->
+            <div class="row" data-bind="with:room">
+              <div class="col-md-offset-1 col-md-10 wrapper-progress-bar">
+                <div class="progress progress-striped active">
+                  <div class="progress-bar"></div>
+
+                </div>
+                <div id="time-left-progress-bar-wrapper">
+                  <span id="time-left-progress-bar"></span>
+                  <span id="time-left-progress-bar-duration">
+                    <!-- ko if: currentMusic() -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic().duration()) --><!--/ko--><!--/ko-->
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- END PROGRESS BAR -->
+            <!-- CONTROL BUTTONS -->
+            <div>
+              <div class="row" data-bind="with: room">
+                <div class="col-xs-offset-2 col-xs-2">
+                  <form data-bind="submit: $root.patchShuffle">
+                    <button type="submit" id="submit-shuffle" class="btn btn-default btn-control" title="Shuffle" alt="Shuffle" data-bind="css: {'btn-shuffle-false' : !shuffle()}">
+                      <i class="fa fa-random fa-2x"></i>
+                    </button>
+                  </form>
+                </div>
+                <div class="col-xs-offset-3 col-xs-4">
+                  <form data-bind="submit: $root.postNext">
+                    <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control btn-skip-music" data-bind="enable: currentMusic()">
+                      <i class="fa fa-fast-forward fa-2x"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- END CONTROL BUTTONS -->
+          </div>
+        </div>
+        <!-- END REMOTE ZONE -->
+        <!-- LIBRARY  -->
+        <div class="col-md-4 ko-library">
+          <div class=" col-md-12 LIB">
+            <div class="row input-lib">
+              <div class="col-lg-12">
+                <form class="search-form" data-bind="submit: searchMusic">
+                  <div class="input-group">
+                    <span class="input-group-btn">
+                      <select data-width="auto" data-bind="selectPicker: sourceSearch, optionsText: 'name', optionsValue : 'name', selectPickerOptions: { optionsArray: sources }"></select>
+                    </span>
+                    <input type="text" name="query" class="form-control query" id="querySearch" placeholder="Titre" data-bind="textInput: querySearch">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default btn-search-icon" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row list-lib">
+              <div class="col-md-12">
+                <div class="wrappeur">
+                  <ul class="nav nav-tabs nav-justified">
+                    <li id="tab_btn_search" data-bind="if: musicSearch().length, css: { 'display-none': musicSearch().length < 1 }"><a data-toggle="tab" href="#search-tab">Search Result</a></li>
+                    <li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
+                    <!-- ko stopBinding -->
+                    <li id="tab_btn_playlist" class="ko-room" data-bind="css: { 'display-none': !playerOpen() }">
+                      <a data-toggle="tab" href="#playlist">
+                        Playlist
+                        <span class="badge" data-bind="text: playlistTracks().length"></span>
+                      </a>
+                    </li>
+                    <!-- /ko -->
+
+                  </ul>
+                  <div id="popover-container-custom" class="tab-content">
+                    <!-- Tab Search -->
+                    <div class="tab-pane" id="search-tab" data-bind="if: musicSearch().length">
+                      <ul id="list-search" class="list-group" data-bind="foreach: musicSearch">
+                        <li class="list-group-item item-lib row row-list-item">
+                          <!-- SEARCH MUSIC DATA -->
+                          <div class="row-list-item">
+                            <div class="search-img-music">
+                              <img data-bind="attr: { src: thumbnail }">
+                            </div>
+                            <div class="search-music-info">
+                              <div class="row">
+                                <div class="col-xs-12" style="min-height:45px" data-bind="text: name"></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-8" style="color:black;font-weight:normal;">
+                                  <span class="bold" data-bind="text: count"></span>&nbsp;views
+                                </div>
+                                <div class="col-xs-4">
+                                  <span class="badge" data-bind="text: humanizeSeconds(duration())"></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="add-music-form">
+                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.addMusic($data) }">
+                                <span class='glyphicon glyphicon-play-circle'></span>
+                              </button>
+                              <button class="btn btn-default btn-lg" type="button" data-bind="popover: {template: 'popover-edit-music-template',
+                                  options: {trigger: 'click', placement: 'left', trigger: 'focus', canDelete: false} }">
+                                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- End Tab Search -->
+                    <!-- TAB Library -->
+                    <div class="tab-pane active" id="library">
+                      <ul id="list-library" class="list-group" data-bind="foreach: musicsLibrary">
+                        <li class="list-group-item item-lib row row-list-item">
+                          <div class="row-list-item">
+                            <div class="library-img-music">
+                              <img data-bind="attr: { src: thumbnail }">
+                            </div>
+                            <div class="library-music-info">
+                              <div class="row">
+                                <div class="col-xs-12" style="min-height:45px" data-bind="text: name"></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-8" style="color:black;font-weight:normal;">
+                                  Played&nbsp;<span class="bold" data-bind="text: count"></span>&nbsp;times
+                                </div>
+                                <div class="col-xs-4">
+                                  <span class="badge" data-bind="text: humanizeSeconds(duration())"></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="add-music-form">
+                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.addMusic($data) }">
+                                <span class='glyphicon glyphicon-play-circle'></span>
+                              </button>
+                              <button class="btn btn-default btn-lg" type="button" data-bind="popover: {template: 'popover-edit-music-template',
+                                  options: {trigger: 'click', placement: 'left', trigger: 'focus', canDelete: true} }">
+                                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="list-group-item row-list-item">
+                        <button title="Previous" class="btn btn-default" data-bind="click: getLibrary, value: hasPrevious, enable: hasPrevious" style="margin-right: 30px;">Previous musics</button>
+                        <button title="Next" class="btn btn-default" data-bind="click: getLibrary, value: hasNext, enable: hasNext">Next musics</button>
+                      </div>
+                    </div>
+                    <!-- End Tab Library -->
+                    <!-- Tab Playlist -->
+                    <div class="tab-pane playlist" id="playlist" data-bind="stopBinding">
+                      <div class="ko-room" data-bind="css: { 'display-none': !playerOpen() }">
+                        <div data-bind="template: { name: 'playlist-template' }"></div>
+                      </div>
+                    </div>
+                    <!-- End Tab Playlist -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END LIBRARY -->
+      </div>
+
+    </div>
+    <!-- FOOTER  -->
+    <footer class="foot ko-room" data-bind="with: room">
+      <form class="pull-left" data-bind="submit: $root.deleteMusic">
+        <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic()">Dead link ?</button>
+      </form>
+      <a class="btn btn-primary pull-right">Company Terms</a>
+    </footer>
+    <!-- END FOOTER -->
+  </div>
+
+  <!-- END PAGE -->
+  <div class="modal fade modal-on-top ko-login" id="modal-error-ws" data-bind="css: { 'display-block' : wsError() }">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          Connexion to server lost !<br/>
+          Trying to reconnect...
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-on-top" id="modal-next-music">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          Skipped !
+          <button type="button" class="close" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-on-top" id="modal-delete-playlistTrack">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          Playlist track deleted !
+          <button type="button" class="close" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-on-top" id="modal-shuffle-on">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          <p class="col-xs-8">Everyday i'm shuffling</p>
+          <i class="fa fa-music fa-2x col-xs-1"></i>
+          <button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-on-top" id="modal-shuffle-off">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          <p class="col-xs-8">Shuffle is off</p>
+          <span class="fa-stack fa-lg col-xs-1">
+            <i class="fa fa-music fa-stack-1x"></i>
+            <i class="fa fa-ban fa-stack-2x"></i>
+          </span>
+          <button type="button" class="close col-xs-1 col-xs-offset-1" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-on-top" id="modal-add-music">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-body">
+          <p>Music added to the playlist ;)</p>
+          <button type="button" class="close" data-dismiss="modal">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tooltip tooltip-preview-timer-start"></div>
+  <div class="tooltip tooltip-preview-timer-end"></div>
+  <div class="modal fade ko-library" id="music_preview">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Preview</h4>
+        </div>
+        <div id="preview_player">Youtube Player</div>
+        <div data-bind="if: musicPreview()">
+          <div class="modal-body">
+            <div id="slider-preview"></div>
+            <p>
+              <label for="timers">Time range:</label>
+              <span id="timers">
+                <span id="time_start" style="font-weight:bold;"></span>
+                <span> - </span>
+                <span id="time_end" style="font-weight:bold;"></span>
+              </span>
+            </p>
+            <div data-bind="if: musicPreview().channel_name() && musicPreview().description()">
+              <div id="music-channel" data-bind="text: 'Posted by : ' + musicPreview().channel_name()"></div>
+              <div id="music-description" data-bind="text: musicPreview().description()"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true) }">Ajouter</button>
+            <button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(false) }">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip_volume_slider" class="tooltip tooltip-volume-player"></div>
+  <script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
+  <script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/player/youtube.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/player/player.js' %}"></script>
+
+  <!-- TEMPLATES -->
+  <script type="text/html" id="playlist-template">
+    <div class="wrappeur">
+      <div class="overlay-playlist">
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw loader"></i>
+      </div>
+      <div class="panel panel-default panel-playlist">
+        <div class="panel-heading">
+          <h3 class="panel-title">Playlist</h3>
+        </div>
+        <table class="table table-striped table-condensed header-fixed">
+          <!-- ko if: playlistTracks().length  -->
+          <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
+            <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
+              <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack(pk()) }"><i class="fa fa-2x fa-trash-o"></i></td>
+              <td class="name" data-bind="text: music().name"></td>
+              <td class="duration"><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
+              <td class="ordering" data-bind="css : { 'max' : $index()!=0 && $index() < $parent.playlistTracks().length - 1, 'medium' : $parent.playlistTracks().length > 1 }">
+                <i class="fa fa-1-5 fa-angle-double-up ordering-to-top" data-action="top" data-bind="visible : $index()!=0" ></i>
+                <i class="fa fa-1-5 fa-angle-up ordering-move-up" data-action="up" data-bind="visible : $index()!=0" ></i>
+                <i class="fa fa-1-5 fa-angle-down ordering-move-down" data-action="down" data-bind="visible: $index() < $parent.playlistTracks().length - 1"></i>
+                <i class="fa fa-1-5 fa-angle-double-down ordering-to-bot" data-action="bottom" data-bind="visible: $index() < $parent.playlistTracks().length - 1"></i>
+
+                <span class="pull-right">| <i class="fa fa-arrows"></i></span>
+              </td>
+            </tr>
+          </tbody>
+          <!-- /ko -->
+          <!-- ko with: room -->
+          <!-- ko if: (shuffle() && $root.playlistTracks().length === 0) -->
+          <tbody>
+            <tr class="empty">
+              <td>Shuffle activated...<br /><br />Let the music be your guide</td>
+            </tr>
+          </tbody>
+          <!-- /ko -->
+          <!-- ko if: (!shuffle() && $root.playlistTracks().length === 0) -->
+          <tbody>
+            <tr class="empty">
+              <td>No more musics in the playlist !</td>
+            </tr>
+          </tbody>
+          <!-- /ko -->
+          <!-- /ko -->
+        </table>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="popover-edit-music-template">
+    <div class='wrapper-popover-add-music'>
+      <div data-bind='visible: false'>
+        <i class="fa fa-2x fa-refresh fa-spin"></i>
+      </div>
+      <div>
+        <button class='btn btn-default btn-lg' type='button' href='#music_preview' data-toggle='modal' data-backdrop='static' alt='Edit duration' title='Edit duration' data-bind='click: function() { $root.openPreviewMusic($data)}, visible: true' style='display: none'>
+          <span class='glyphicon glyphicon-time'></span> Edit duration
+        </button>
+        <!-- ko if: options.canDelete === true -->
+        <button class='btn btn-default btn-lg' type='button' alt='Delete music' title='Delete music' data-bind='click: function() { $root.deleteMusic($data) }, visible: options.canDelete === true' style='display: none;'>
+          <i class="fa fa-2x fa-trash-o"></i> Delete music
+        </button>
+        <!-- /ko -->
+      </div>
+    </div>
+  </script>
+</body>
 </html>

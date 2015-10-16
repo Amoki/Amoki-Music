@@ -11,11 +11,18 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, TemporaryMusic, PlaylistTrack
+from music.models import Music, PlaylistTrack
 
 
 def generate_token():
-    return binascii.b2a_hex(os.urandom(32))
+    return str(binascii.b2a_hex(os.urandom(32)))
+
+
+class UnableToUpdate(Exception):
+    """
+    Error triggered when room's update is impossible
+    """
+    pass
 
 
 class Room(models.Model):
@@ -26,9 +33,25 @@ class Room(models.Model):
     can_adjust_volume = models.BooleanField(default=False)
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
+    volume = models.PositiveIntegerField(default=10)
+
+    UnableToUpdate = UnableToUpdate
+
+    setters = {
+        'with_setters': ['shuffle', 'volume'],
+        'without_setters': ['can_adjust_volume'],
+    }
 
     def __str__(self):
         return self.name
+
+    def update(self, modifications):
+        for key, value in modifications.items():
+            if key in Room.setters['with_setters']:
+                getattr(self, 'set_%s' % key)(value)
+            elif key in Room.setters['without_setters']:
+                setattr(self, key, value)
+                self.save()
 
     def reset_token(self):
         self.token = generate_token()
@@ -39,123 +62,104 @@ class Room(models.Model):
         message = RedisMessage(json.dumps(message))
         redis_publisher.publish_message(message)
 
-    def play(self, music=None):
+    def play(self, music):
         # clear the queue
-        if events[self.name]:
-            events[self.name].cancel()
+        event = Events.get(self)
+        if event:
+            event.cancel()
 
-        if music:
-            self.current_music = music
-            self.save()
-            if not music.is_valid():
-                self.signal_dead_link()
-                self.play_next()
-            else:
-                music.count += 1
-                music.last_play = datetime.now()
-                music.save()
-
-                message = {
-                    'action': 'play',
-                    'update': True,
-                    'source': music.source.name,
-                    'options': {
-                        'name': music.name,
-                        'musicId': music.music_id,
-                        'timer_start': music.timer_start,
-                    }
-                }
-                if music.timer_end:
-                    message['options']['timer_end'] = music.timer_end
-
-                self.send_message(message)
-                events[self.name] = Timer(music.duration, self.play_next, ())
-                events[self.name].start()
+        self.current_music = music
+        self.save()
+        if not music.is_valid():
+            self.play_next()
+            music.delete()
         else:
-            self.current_music = None
-            self.save()
+            music.count += 1
+            music.last_play = datetime.now()
+            music.save()
+
             message = {
-                'stop': True,
+                'action': 'play',
                 'update': True,
+                'source': music.source,
+                'options': {
+                    'name': music.name,
+                    'music_id': music.music_id,
+                    'timer_start': music.timer_start,
+                    'timer_end': music.timer_end or None,
+                }
             }
+
             self.send_message(message)
 
-    def play_next(self, forced=False):
-        next_music = None
-        previous_music = self.current_music
-        if previous_music:
-            if forced:
-                next_music = previous_music
-            else:
-                next_music = self.tracks.all().order_by('playlisttrack__order').first()
+            # Tricky code that create a new thread. Be careful about asynchronousity
+            event = Events.set(self, Timer(music.duration, self.play_next, ()))
+            event.start()
+
+    def stop(self):
+        self.current_music = None
+        self.save()
+        message = {
+            'stop': True,
+            'update': True,
+        }
+        self.send_message(message)
+
+    def play_next(self):
+        next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
-            PlaylistTrack.objects.filter(room=self, track=next_music).delete()
+            PlaylistTrack.objects.filter(room=self, track=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
-            # Select random music, excluding 10% last played musics
-            """
-             exclude(dead_link=True).exclude(duration__gte=600) mean :
-             "exclude music where dead_link=True OR duration__gte=600"
-             exclude(dead_link=True, duration__gte=600) mean :
-             "exclude music where dead_link=True AND duration__gte=600"
-             which still shuffle duration > 600 who have dead_link=False !
-            """
-            musics = self.music_set.exclude(dead_link=True).exclude(duration__gte=600).order_by('-last_play')
-            count = musics.count()
-
-            to_remove = int(count / 10)
-            count -= to_remove
-            musics = musics[to_remove:]
-            a = count / float(5)  # Le point où ca commence à monter
-            b = count / float(27)  # La vitesse à laquelle ca monte
-            x = random.uniform(1, count - a - 1)
-            i = int(math.floor(x + a - a * math.exp(-x / b)))
-
-            shuffled = musics[i]
+            shuffled = self.select_random_music()
             shuffled.date = datetime.now()
             shuffled.save()
 
             self.play(music=shuffled)
         else:
-            self.play(music=None)
+            self.stop()
 
-    def push(self, music_id, requestId=None, **kwargs):
-        if requestId:
-            temporaryMusic = TemporaryMusic.objects.get(music_id=music_id, requestId=requestId)
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=temporaryMusic.name,
-                duration=temporaryMusic.duration,
-                thumbnail=temporaryMusic.thumbnail,
-                url=temporaryMusic.url,
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=temporaryMusic.source
-            )
-            TemporaryMusic.clean()
-        else:
-            music = Music.add(
-                room=self,
-                music_id=music_id,
-                name=kwargs['name'],
-                duration=kwargs['duration'],
-                thumbnail=kwargs['thumbnail'],
-                url=kwargs['url'],
-                timer_start=kwargs['timer_start'],
-                timer_end=kwargs['timer_end'],
-                source=kwargs['source']
-            )
+    def add_music(self, **kwargs):
+        # Check if the music already exists. If not, creating it
+        music = Music.objects.filter(
+            music_id=kwargs['music_id'],
+            source=kwargs['source'],
+            room=self,
+        ).first()
+        if not music:
+            music = Music(room=self, **kwargs)
+            music.save()
+
+        # Adding the music to the queue
+        PlaylistTrack.objects.create(room=self, track=music)
 
         # Autoplay
         if not self.current_music:
-            self.current_music = music
-            self.save()
-            self.play_next(forced=True)
+            self.play_next()
         else:
+
             self.send_update_message()
+        return music
+
+    def select_random_music(self):
+        # Select random music, excluding 10% last played musics
+        musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
+        count = musics.count()
+
+        to_remove = int(count / 10)
+        count -= to_remove
+        musics = musics[to_remove:]
+
+        a = count / float(5)  # Le point où ca commence à monter
+        b = count / float(27)  # La vitesse à laquelle ca monte
+        x = random.uniform(1, count - a - 1)
+        i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
+        if i < 0:
+            i = 0  # Can't get negative index
+
+        return musics[i]
 
     def get_current_remaining_time(self):
         if self.current_music:
@@ -164,8 +168,8 @@ class Room(models.Model):
         return 0
 
     def get_remaining_time(self):
-        if self.current_music:
-            time_left = self.tracks.all().aggregate(Sum('duration')).get("sum__duration") or 0
+        if self.tracks.count() > 0:
+            time_left = self.tracks.all().aggregate(Sum('duration')).get("duration__sum") or 0
             time_left += self.get_current_remaining_time()
             return int(time_left)
         return 0
@@ -185,37 +189,33 @@ class Room(models.Model):
         return 0
 
     def get_musics_remaining(self):
-        if self.current_music:
             return self.tracks.all().order_by('playlisttrack__order')
-        return []
 
     def get_count_remaining(self):
-        if self.current_music:
-            return self.tracks.count()
-        return 0
+        return self.tracks.count()
 
-    def signal_dead_link(self):
-        if self.current_music:
-            self.current_music.dead_link = True
-            self.current_music.save()
+    def send_update_message(self):
+        message = {
+            'update': True,
+        }
+        self.send_message(message)
 
-    def increase_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_up',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
+    def set_volume(self, volume):
+        if not self.can_adjust_volume:
+            raise UnableToUpdate("This room don't have permission to update volume.")
 
-    def decrease_volume(self):
-        if self.can_adjust_volume:
-            message = {
-                'action': 'volume_down',
-                'source': self.current_music.source.name,
-            }
-            self.send_message(message)
+        self.volume = volume
+        self.save()
 
-    def toggle_shuffle(self, to_active):
+        message = {
+            'action': 'volume_change',
+            'volume': self.volume
+        }
+        self.send_message(message)
+
+    def set_shuffle(self, to_active):
+        if to_active and self.music_set.count() == 0:
+            raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
             self.save()
@@ -228,23 +228,22 @@ class Room(models.Model):
             self.save()
             self.send_update_message()
 
-    def order_playlist(self, id, action, target=None):
-        if action not in ['top', 'up', 'down', 'bottom', 'to']:
-            return
-        playlist = PlaylistTrack.objects.get(room=self, track__music_id=id)
-        if target or target == 0:
-            getattr(playlist, action)(target)
-        else:
-            getattr(playlist, action)()
-        self.send_update_message()
 
-    def send_update_message(self):
-        message = {
-                'update': True,
-        }
-        self.send_message(message)
+class Events():
+    events = dict()
 
-events = dict()
+    @classmethod
+    def get(cls, room):
+        return cls.events[room.name]
+
+    @classmethod
+    def set(cls, room, value=None):
+        cls.events[room.name] = value
+        return value
+
+    @classmethod
+    def get_all(cls):
+        return cls.events
 
 
 from player.signals import *

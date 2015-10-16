@@ -1,6 +1,6 @@
 Amoki-Music
 ===========
-
+[![Circle CI](https://circleci.com/gh/Amoki/Amoki-Music.svg?style=svg)](https://circleci.com/gh/Amoki/Amoki-Music)[![Coverage Status](https://coveralls.io/repos/Amoki/Amoki-Music/badge.svg?branch=endpoints-tests&service=github)](https://coveralls.io/github/Amoki/Amoki-Music?branch=master)
 External Requirements
 ---------------------
 * libevent
