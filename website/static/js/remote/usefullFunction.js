@@ -1,3 +1,12 @@
+function freezeBtn() {
+  $('.btn-skip-music').prop('disabled', true);
+  $('#submit-shuffle').prop('disabled', true);
+  setTimeout(function() {
+    $('.btn-skip-music').prop('disabled', false);
+    $('#submit-shuffle').prop('disabled', false);
+  },2000);
+}
+
 function stopProgressBar() {
   $(document).attr('title', 'Amoki\'s musics');
   $('.progress-bar').finish();

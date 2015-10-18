@@ -34,7 +34,7 @@ function LibraryViewModel() {
 
   self.addMusic = function(music) {
     $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
-    $("button.btn-add-music").attr('disabled', 'disabled');
+    $("button.btn-add-music").prop('disabled', true);
     // Return a json serialized Music object
     $.ajax("/music", {
       data: ko.toJSON(music),
@@ -44,7 +44,7 @@ function LibraryViewModel() {
       success: function(result) {
         newMusic = new Music(result);
         $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
-        $("button.btn-add-music").removeAttr('disabled');
+        $("button.btn-add-music").prop('disabled', false);
         modalConfirm($('#modal-add-music'));
       }
     });
@@ -81,7 +81,7 @@ function LibraryViewModel() {
       return;
     }
     $("button.btn-search-icon").children("i").attr("class", "fa fa-refresh fa-spin");
-    $("button.btn-search-icon").attr('disabled', 'disabled');
+    $("button.btn-search-icon").prop('disabled', true);
     $.getJSON("/search",
     {
       "service": ko.toJS(self.sourceSearch).toLowerCase(),
@@ -95,7 +95,7 @@ function LibraryViewModel() {
       $("#tab_btn_library, #library").removeClass('active');
       $("#tab_btn_search, #search-tab").addClass('active');
       $("button.btn-search-icon").children("i").attr("class", "fa fa-search");
-      $("button.btn-search-icon").removeAttr('disabled');
+      $("button.btn-search-icon").prop('disabled', false);
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
@@ -208,7 +208,7 @@ function RoomViewModel() {
 
   self.patchShuffle = function() {
     self.room().shuffle(!self.room().shuffle());
-    $('#submit-shuffle').prop('disabled', true);
+    freezeBtn();
     $.ajax({
       url: '/room',
       data: ko.toJSON({shuffle: self.room().shuffle}),
@@ -217,7 +217,6 @@ function RoomViewModel() {
       dataType: 'json',
       success: function(allData) {
         self.room(new Room(allData));
-        $('#submit-shuffle').prop('disabled', false);
         if(self.room().shuffle()) {
           modalConfirm($('#modal-shuffle-on'));
         }
@@ -230,7 +229,7 @@ function RoomViewModel() {
   };
 
   self.postNext = function() {
-    $('.btn-skip-music').prop('disabled', true);
+    freezeBtn();
     $.ajax("/room/next", {
       data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
       type: "post",
@@ -238,8 +237,8 @@ function RoomViewModel() {
       dataType: 'json',
       success: function(allData) {
         self.room(new Room(allData));
-        $('.btn-skip-music').prop('disabled', false);
         modalConfirm($('#modal-next-music'));
+        unfreezeBtn();
       },
       error: logErrors,
     });
@@ -265,6 +264,7 @@ function RoomViewModel() {
   };
 
   self.deleteMusic = function(music) {
+    freezeBtn();
     pk = music ? music.pk() : self.room().currentMusic().pk();
 
     $.ajax("/music/" + pk, {

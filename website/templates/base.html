@@ -326,7 +326,7 @@
     </div>
     <!-- FOOTER  -->
     <footer class="foot ko-room" data-bind="with: room">
-      <form class="pull-left" data-bind="submit: $root.deleteMusic">
+      <form class="pull-left" data-bind="submit: function(){ $root.deleteMusic($data.currentMusic()) }">
         <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic()">Dead link ?</button>
       </form>
       <a class="btn btn-primary pull-right">Company Terms</a>
