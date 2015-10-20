@@ -92,15 +92,6 @@ var soundcloudPlayerPreviewControl = {
     }
   },
   getState: function() {
-    var uneVariable;
-    soundcloudPreviewPlayer.isPaused(function(isPaused) {
-      if(isPaused) {
-        uneVariable = 0;
-      }
-      else {
-        uneVariable = 1;
-      }
-    });
-    return uneVariable;
+    return 1;
   }
 };
