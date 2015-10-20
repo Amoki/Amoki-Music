@@ -94,7 +94,6 @@ var customSlider = {
 
         $("#time_start").html(humanizeSeconds(ui.values[0]));
         $("#time_end").html(humanizeSeconds(ui.values[1]));
-        console.log(options.currentPlayerControl.getState());
         if(options.currentPlayerControl.getState() !== 0) {
           options.currentPlayerControl.seekTo({secondes: ui.value, seekAhead: false});
         }

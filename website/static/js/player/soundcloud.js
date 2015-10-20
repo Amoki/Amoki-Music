@@ -70,7 +70,6 @@ var soundcloudPlayerControl = {
 
 var soundcloudPlayerPreviewControl = {
   play: function(options) {
-    console.log(options);
     if(soundcloudPreviewPlayer.initialized) {
       soundcloudPreviewPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.music_id,
@@ -88,21 +87,20 @@ var soundcloudPlayerPreviewControl = {
     }
   },
   seekTo: function(options) {
-    console.log(options.secondes);
     if(soundcloudPreviewPlayer.initialized) {
       soundcloudPreviewPlayer.seekTo(options.secondes * 1000);
     }
   },
   getState: function() {
-    var isPaused = "cul";
+    var uneVariable;
     soundcloudPreviewPlayer.isPaused(function(isPaused) {
       if(isPaused) {
-        isPaused = 0;
+        uneVariable = 0;
       }
       else {
-        isPaused = 1;
+        uneVariable = 1;
       }
     });
-    return isPaused;
+    return uneVariable;
   }
 };
