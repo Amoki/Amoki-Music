@@ -143,7 +143,8 @@ function RoomViewModel() {
   self.room = ko.observable();
   self.playlistTracks = ko.observableArray([]);
 
-  self.playerOpen = ko.observable(false);
+  (!Cookies.get('playerOpen') || Cookies.get('playerOpen') === false) ? Cookies.set('playerOpen', false) : null;
+  self.playerOpen = ko.observable((Cookies.get('playerOpen') === "true"));
 
   self.clear = function() {
     self.room(null);
@@ -154,6 +155,7 @@ function RoomViewModel() {
 
   self.openPlayer = function() {
     self.playerOpen(true);
+    Cookies.set('playerOpen', true);
     if(self.room().currentMusic()) {
       Object.keys(playerControlWrapper).forEach(function(player) {
         if(player !== self.room().currentMusic().source()) {
@@ -166,17 +168,15 @@ function RoomViewModel() {
       };
       playerControlWrapper[self.room().currentMusic().source()].play(options);
     }
-    else {
-      self.patchShuffle();
-    }
   };
 
   self.closePlayer = function() {
+    self.playerOpen(false);
+    Cookies.set('playerOpen', false);
     if($('#tab_btn_playlist').hasClass('active')) {
       $('#tab_btn_playlist, #playlist').removeClass('active');
       $('#tab_btn_library, #library').addClass('active');
     }
-    self.playerOpen(false);
     Object.keys(playerControlWrapper).forEach(function(player) {
       playerControlWrapper[player].stop();
     });
