@@ -1,12 +1,21 @@
 var iframeElement = document.querySelector('iframe#soundcloudPlayer');
+var iframeElementPreview = document.querySelector('iframe#soundcloudPreviewPlayer');
 var soundcloudPlayer = SC.Widget(iframeElement);
+var soundcloudPreviewPlayer = SC.Widget(iframeElementPreview);
 soundcloudPlayer.initialized = false;
+soundcloudPreviewPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
 });
+soundcloudPreviewPlayer.bind(SC.Widget.Events.READY, function() {
+  soundcloudPreviewPlayer.initialized = true;
+});
 
 soundcloudPlayer.bind(SC.Widget.Events.ERROR, function() {
+  console.error("Soundcloud error occured");
+});
+soundcloudPreviewPlayer.bind(SC.Widget.Events.ERROR, function() {
   console.error("Soundcloud error occured");
 });
 
@@ -59,5 +68,41 @@ var soundcloudPlayerControl = {
   },
 };
 
-
-
+var soundcloudPlayerPreviewControl = {
+  play: function(options) {
+    console.log(options);
+    if(soundcloudPreviewPlayer.initialized) {
+      soundcloudPreviewPlayer.load(
+        'https://api.soundcloud.com/tracks/' + options.music_id,
+        {
+          buying: false,
+          visual: true,
+          hide_related: true,
+        }
+      );
+    }
+  },
+  stop: function() {
+    if(soundcloudPreviewPlayer.initialized) {
+      soundcloudPreviewPlayer.pause();
+    }
+  },
+  seekTo: function(options) {
+    console.log(options.secondes);
+    if(soundcloudPreviewPlayer.initialized) {
+      soundcloudPreviewPlayer.seekTo(options.secondes * 1000);
+    }
+  },
+  getState: function() {
+    var isPaused = "cul";
+    soundcloudPreviewPlayer.isPaused(function(isPaused) {
+      if(isPaused) {
+        isPaused = 0;
+      }
+      else {
+        isPaused = 1;
+      }
+    });
+    return isPaused;
+  }
+};

@@ -99,3 +99,22 @@ ko.subscribable.fn.trimmed = function() {
     owner: this
   });
 };
+
+ko.bindingHandlers.visibleKeepDOM = {
+  init: function(element) {
+    $(element).children().each(function() {
+      $(this).hide();
+    });
+  },
+  update: function(element, valueAccessor) {
+    values = ko.unwrap(valueAccessor());
+    if(values) {
+      $(element).children('.' + values.source()).show();
+    }
+    else {
+      $(element).children().each(function() {
+        $(this).fadeOut(1000);
+      });
+    }
+  }
+};

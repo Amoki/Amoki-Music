@@ -1,12 +1,3 @@
-function freezeBtn() {
-  $('.btn-skip-music').prop('disabled', true);
-  $('#submit-shuffle').prop('disabled', true);
-  setTimeout(function() {
-    $('.btn-skip-music').prop('disabled', false);
-    $('#submit-shuffle').prop('disabled', false);
-  },2000);
-}
-
 function stopProgressBar() {
   $(document).attr('title', 'Amoki\'s musics');
   $('.progress-bar').finish();
@@ -56,77 +47,6 @@ function resize() {
   $('.list-lib .panel-playlist').height(hauteur - 160);
   $('.players, .playlist-mid').height(hauteur - 250);
 }
-
-var playerPreviewControl = {
-  play: function(options) {
-    var musicOptions = {
-      videoId: options.music_id,
-      suggestedQuality: 'default',
-    };
-    if(options.timerStart) {
-      musicOptions.startSeconds = options.timerStart;
-    }
-    if(options.timerEnd) {
-      musicOptions.endSeconds = options.timerEnd;
-    }
-    previewPlayer.cueVideoById(musicOptions);
-  },
-  stop: function() {
-    previewPlayer.stopVideo();
-  },
-  seekTo: function(options) {
-    previewPlayer.seekTo(options.secondes, options.seekAhead);
-  },
-  getState: function() {
-    if([-1, 0, 5].indexOf(previewPlayer.getPlayerState()) > -1) {
-      return 0;
-    }
-    else {
-      return previewPlayer.getPlayerState();
-    }
-  }
-};
-
-
-var customSlider = {
-  slide: function(options) {
-    options.element.slider({
-      range: true,
-      min: 0,
-      max: options.max,
-      values: options.values,
-      create: function() {
-        $("#time_start").html(humanizeSeconds(0));
-        $("#time_end").html(humanizeSeconds(options.max));
-      },
-      slide: function(event, ui) {
-        var offset1 = $(this).children('.ui-slider-handle').first().offset();
-        var offset2 = $(this).children('.ui-slider-handle').last().offset();
-        $(".tooltip-preview-timer-start").css('top', offset1.top + 30).css('left', offset1.left - 15).text(humanizeSeconds(ui.values[0]));
-        $(".tooltip-preview-timer-end").css('top', offset2.top + 30).css('left', offset2.left - 15).text(humanizeSeconds(ui.values[1]));
-
-        $("#time_start").html(humanizeSeconds(ui.values[0]));
-        $("#time_end").html(humanizeSeconds(ui.values[1]));
-        if(playerPreviewControl.getState() !== 0) {
-          playerPreviewControl.seekTo({secondes: ui.value, seekAhead: false});
-        }
-      },
-      change: function(event, ui) {
-        $("#time_start").html(humanizeSeconds(ui.values[0]));
-        $("#time_end").html(humanizeSeconds(ui.values[1]));
-      },
-      start: function() {
-        $('.tooltip-preview-timer-start, .tooltip-preview-timer-end').fadeIn('fast');
-      },
-      stop: function(event, ui) {
-        $('.tooltip-preview-timer-start, .tooltip-preview-timer-end').fadeOut('fast');
-        if(playerPreviewControl.getState() !== 0) {
-          playerPreviewControl.seekTo({secondes: ui.value, seekAhead: true});
-        }
-      },
-    });
-  },
-};
 
 
 $(document).ready(function() {
@@ -183,6 +103,8 @@ $(document).ready(function() {
   }, '.playlist-item');
 
   $('#music_preview').on('hide.bs.modal', function() {
-    playerPreviewControl.stop();
+    Object.keys(playerPreviewControlWrapper).forEach(function(player) {
+      playerPreviewControlWrapper[player].stop();
+    });
   });
 });

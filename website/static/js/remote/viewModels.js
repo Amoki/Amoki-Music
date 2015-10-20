@@ -56,8 +56,9 @@ function LibraryViewModel() {
       element: $("#slider-preview"),
       max: self.musicPreview().duration(),
       values: [0, self.musicPreview().duration()],
+      currentPlayerControl: playerPreviewControlWrapper[music.source()],
     });
-    playerPreviewControl.play({music_id: self.musicPreview().music_id()});
+    playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});
   };
 
   self.closePreviewMusic = function(valid) {
@@ -208,7 +209,6 @@ function RoomViewModel() {
 
   self.patchShuffle = function() {
     self.room().shuffle(!self.room().shuffle());
-    freezeBtn();
     $.ajax({
       url: '/room',
       data: ko.toJSON({shuffle: self.room().shuffle}),
@@ -229,7 +229,6 @@ function RoomViewModel() {
   };
 
   self.postNext = function() {
-    freezeBtn();
     $.ajax("/room/next", {
       data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
       type: "post",
@@ -238,7 +237,6 @@ function RoomViewModel() {
       success: function(allData) {
         self.room(new Room(allData));
         modalConfirm($('#modal-next-music'));
-        unfreezeBtn();
       },
       error: logErrors,
     });
@@ -264,7 +262,6 @@ function RoomViewModel() {
   };
 
   self.deleteMusic = function(music) {
-    freezeBtn();
     pk = music ? music.pk() : self.room().currentMusic().pk();
 
     $.ajax("/music/" + pk, {
@@ -279,8 +276,9 @@ function RoomViewModel() {
     });
   };
 
-  self.deletePlaylistTrack = function(playlistTrackPk) {
-    $.ajax("/playlist/" + playlistTrackPk, {
+  self.deletePlaylistTrack = function(playlistTrack) {
+    self.playlistTracks.remove(playlistTrack);
+    $.ajax("/playlist/" + playlistTrack.pk(), {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',

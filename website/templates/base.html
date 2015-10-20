@@ -2,13 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <span class="ko-room">
-    <!-- ko with: room -->
-    <!-- ko with: currentMusic() -->
-    <title data-bind="text: name">Amoki's Musics</title>
-    <!-- /ko -->
-    <!-- /ko -->
-  </span>
+
+  <title>Amoki's Musics</title>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta http-equiv="content-language" content="fr" />
 
@@ -410,7 +406,12 @@
         <div class="modal-header">
           <h4 class="modal-title">Preview</h4>
         </div>
-        <div id="preview_player">Youtube Player</div>
+        <div data-bind="visibleKeepDOM: musicPreview()">
+          <div id="preview_player" class="youtube">Youtube Player</div>
+          <div id="wrapper-soundcloud-player" class="soundcloud">
+            <iframe id="soundcloudPreviewPlayer" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/" width="100%" height="300px" scrolling="no" frameborder="no"></iframe>
+          </div>
+        </div>
         <div data-bind="if: musicPreview()">
           <div class="modal-body">
             <div id="slider-preview"></div>
@@ -456,7 +457,7 @@
           <!-- ko if: playlistTracks().length  -->
           <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
             <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
-              <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack(pk()) }"><i class="fa fa-2x fa-trash-o"></i></td>
+              <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack($data) }"><i class="fa fa-2x fa-trash-o"></i></td>
               <td class="name" data-bind="text: music().name"></td>
               <td class="duration"><span class="badge" data-bind="text: humanizeSeconds(music().duration())"></span></td>
               <td class="ordering" data-bind="css : { 'max' : $index()!=0 && $index() < $parent.playlistTracks().length - 1, 'medium' : $parent.playlistTracks().length > 1 }">
