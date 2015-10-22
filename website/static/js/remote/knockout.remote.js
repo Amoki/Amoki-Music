@@ -34,8 +34,7 @@ $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-dow
 function onWsOpen() {
   loginVM.wsError(false);
   loginVM.isConnected(true);
-  roomVM.getRoom();
-  roomVM.getPlaylist();
+  roomVM.init();
   musicsLibraryVM.init();
 }
 

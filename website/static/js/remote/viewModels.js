@@ -288,6 +288,11 @@ function RoomViewModel() {
       error: logErrors,
     });
   };
+
+  self.init = function() {
+    self.getRoom();
+    self.getPlaylist();
+  };
 }
 
 // Login viewModel

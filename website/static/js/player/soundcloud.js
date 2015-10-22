@@ -7,6 +7,9 @@ soundcloudPreviewPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
+  if(Cookies.get('playerOpen') && Cookies.get('playerOpen') === "true" && roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "soundcloud") {
+    roomVM.openPlayer();
+  }
 });
 soundcloudPreviewPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPreviewPlayer.initialized = true;
