@@ -51,9 +51,9 @@ function WS4Redis(options) {
     }
   }
 
-  function onError() {
+  function onError(evt) {
     console.error("Websocket connection is broken!");
-    return options.onError();
+    return options.onError(evt);
   }
 
   function onMessage(evt) {
