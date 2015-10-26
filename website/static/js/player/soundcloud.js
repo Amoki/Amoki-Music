@@ -16,10 +16,14 @@ soundcloudPreviewPlayer.bind(SC.Widget.Events.READY, function() {
 });
 
 soundcloudPlayer.bind(SC.Widget.Events.ERROR, function() {
-  console.error("Soundcloud error occured");
+  if($('iframe#soundcloudPlayer').is(":visible")) {
+    console.error("Soundcloud error occured");
+  }
 });
 soundcloudPreviewPlayer.bind(SC.Widget.Events.ERROR, function() {
-  console.error("Soundcloud error occured");
+  if($('iframe#soundcloudPreviewPlayer').is(":visible")) {
+    console.error("Soundcloud error occured");
+  }
 });
 
 var soundcloudPlayerControl = {
