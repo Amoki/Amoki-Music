@@ -88,4 +88,16 @@ function WS4Redis(options) {
   this.send_message = function(message) {
     ws.send(message);
   };
+
+  this.close = function() {
+    // Avoid reconnect
+    ws.onclose = function() {};
+    if(timer) {
+      clearInterval(timer);
+    }
+    if(heartbeatInterval) {
+      clearInterval(heartbeatInterval);
+    }
+    ws.close();
+  };
 }
