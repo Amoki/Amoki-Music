@@ -29,8 +29,8 @@ function setRoomConnexion(token, heartbeat, wsUri) {
   }
   ws4redis = new WS4Redis({
     uri: wsUri + token + '?subscribe-broadcast',
-    receive_message: receiveMessage,
-    heartbeat_msg: heartbeat,
+    onMessage: receiveMessage,
+    heartbeat: heartbeat,
     onOpen: onWsOpen,
     onError: onWsError,
   });

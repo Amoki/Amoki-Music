@@ -1,50 +1,42 @@
-function WS4Redis(options, $) {
-  'use strict';
-  var opts, ws, deferred, timer, attempts = 1;
-  var heartbeatInterval = null, missedHeartbeats = 0;
+"use strict";
+
+function WS4Redis(options) {
+  var ws;
+  var timer;
+  var attempts = 1;
+  var heartbeatInterval = null;
+  var missedHeartbeats = 0;
 
   function connect(uri) {
-    try {
-      console.log("Connecting to " + uri + " ...");
-      deferred = $.Deferred();
-      ws = new WebSocket(uri);
-      ws.onopen = onOpen;
-      ws.onmessage = onMessage;
-      ws.onerror = onError;
-      ws.onclose = onClose;
-      timer = null;
-    } catch (err) {
-      deferred.reject(new Error(err));
-    }
+    console.log("Connecting to " + uri + " ...");
+    ws = new WebSocket(uri);
+    ws.onopen = onOpen;
+    ws.onmessage = onMessage;
+    ws.onerror = onError;
+    ws.onclose = onClose;
+    timer = null;
   }
 
   function sendHeartbeat() {
-    try {
-      missedHeartbeats += 1;
-      if(missedHeartbeats > 3) {
-        throw new Error("Too many missed heartbeats.");
-      }
-      ws.send(opts.heartbeat_msg);
-    } catch(e) {
+    missedHeartbeats += 1;
+    if(missedHeartbeats > 3) {
       clearInterval(heartbeatInterval);
       heartbeatInterval = null;
-      console.warn("Closing connection. Reason: " + e.message);
+      console.warn("Closing connection. Reason: Too many missed heartbeats.");
       ws.close();
     }
+    ws.send(options.heartbeat_msg);
   }
 
   function onOpen() {
     console.log('Connected!');
     // new connection, reset attemps counter
     attempts = 1;
-    deferred.resolve();
-    if(opts.heartbeat_msg && heartbeatInterval === null) {
+    if(options.heartbeat && heartbeatInterval === null) {
       missedHeartbeats = 0;
       heartbeatInterval = setInterval(sendHeartbeat, 5000);
     }
-    if(typeof opts.onOpen === 'function') {
-      return opts.onOpen();
-    }
+    return options.onOpen();
   }
 
   function onClose() {
@@ -61,21 +53,16 @@ function WS4Redis(options, $) {
 
   function onError(evt) {
     console.error("Websocket connection is broken!");
-    deferred.reject(new Error(evt));
-    if(typeof opts.onError === 'function') {
-      return opts.onError();
-    }
+    return options.onError(evt);
   }
 
   function onMessage(evt) {
-    if(opts.heartbeat_msg && evt.data === opts.heartbeat_msg) {
+    if(evt.data === options.heartbeat) {
       // reset the counter for missed heartbeats
       missedHeartbeats = 0;
     }
     else {
-      if(typeof opts.receive_message === 'function') {
-        return opts.receive_message(evt.data);
-      }
+      return options.onMessage(JSON.parse(evt.data));
     }
   }
 
@@ -96,25 +83,16 @@ function WS4Redis(options, $) {
     return Math.random() * maxInterval;
   }
 
-  if(this === undefined) {
-    return new WS4Redis(options, $);
-  }
-  if(options.uri === undefined) {
-    throw new Error('No Websocket URI in options');
-  }
-  if($ === undefined) {
-    $ = jQuery;
-  }
-
-  opts = $.extend({heartbeat_msg: null}, options);
-  connect(opts.uri);
+  connect(options.uri);
 
   this.send_message = function(message) {
     ws.send(message);
   };
 
   this.close = function() {
+    // Avoid reconnect
     ws.onclose = function() {};
+    // Ignore errors cause of Chrome bad implementation...
     ws.onerror = function() {};
     if(timer) {
       clearInterval(timer);

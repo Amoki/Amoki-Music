@@ -44,7 +44,6 @@ function onWsError() {
 
 // receive a message though the websocket from the server
 function receiveMessage(message) {
-  message = JSON.parse(message);
   if(message.stop) {
     // Stop all players
     Object.keys(playerControlWrapper).forEach(function(player) {
