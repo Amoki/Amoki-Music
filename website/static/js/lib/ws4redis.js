@@ -92,6 +92,8 @@ function WS4Redis(options) {
   this.close = function() {
     // Avoid reconnect
     ws.onclose = function() {};
+    // Ignore errors cause of Chrome bad implementation...
+    ws.onerror = function() {};
     if(timer) {
       clearInterval(timer);
     }
