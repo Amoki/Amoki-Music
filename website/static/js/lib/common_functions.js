@@ -5,22 +5,13 @@ INIT AJAX CSRF
 if(!Cookies.get('volumePlayer')) {
   Cookies.set('volumePlayer', 10);
 }
-var csrftoken = Cookies.get('csrftoken');
 var ws4redis;
-function csrfSafeMethod(method) {
-  // these HTTP methods do not require CSRF protection
-  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
 function setRoomConnexion(token, heartbeat, wsUri) {
   Cookies.set('room_token', token);
   Cookies.set('room_heartbeat', heartbeat);
   Cookies.set('room_wsUri', wsUri);
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
-      if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-      }
       xhr.setRequestHeader("Authorization", "Bearer " + token);
     }
   });
