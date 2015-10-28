@@ -24,6 +24,7 @@ class SerializersTestCase(TestCase):
             'name': 'a',
             'thumbnail': 'https://a.com',
             'total_duration': 114,
+            'duration': 114,
             'url': 'https://www.a.com',
             'source': 'youtube',
             'timer_start': 0,
