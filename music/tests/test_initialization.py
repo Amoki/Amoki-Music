@@ -21,7 +21,7 @@ class InitilizationTestCase(TestCase):
             room=self.r,
             music_id="a",
             name="a",
-            duration=211,
+            total_duration=211,
             thumbnail="https://a.com/a.jpg",
         )
         music.save()

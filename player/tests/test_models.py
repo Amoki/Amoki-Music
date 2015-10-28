@@ -21,7 +21,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
@@ -40,7 +40,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
@@ -57,7 +57,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
@@ -75,7 +75,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=240,
+            total_duration=240,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
@@ -91,7 +91,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -105,7 +105,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -134,7 +134,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -152,7 +152,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -170,7 +170,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -187,7 +187,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -207,7 +207,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -216,7 +216,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='b',
             name='b',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music2.save()
@@ -235,7 +235,7 @@ class ModelsTestCase(TestCase):
         self.r.add_music(
             music_id='b',
             name='b',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
             source='youtube'
         )
@@ -245,7 +245,7 @@ class ModelsTestCase(TestCase):
         self.r.add_music(
             music_id='b',
             name='b',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
             source='youtube'
         )
@@ -258,7 +258,7 @@ class ModelsTestCase(TestCase):
             room=self.r,
             music_id='a',
             name='a',
-            duration=200,
+            total_duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()

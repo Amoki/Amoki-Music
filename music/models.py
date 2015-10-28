@@ -9,10 +9,10 @@ class Music(models.Model):
     name = models.CharField(max_length=255, editable=False)
     url = models.CharField(max_length=512, editable=False)
     room = models.ForeignKey('player.Room')
-    # Duration in second which will be played
-    duration = models.PositiveIntegerField()
     # Total duration of the music
     total_duration = models.PositiveIntegerField(editable=False)
+    # Duration in second which will be played
+    duration = models.PositiveIntegerField(default=total_duration)
     # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)

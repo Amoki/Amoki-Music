@@ -12,7 +12,7 @@ class TestMusic(EndpointTestCase):
             music_id="a",
             name="a",
             thumbnail="https://a.com",
-            duration=114,
+            total_duration=114,
             url="https://www.a.com",
             source="youtube",
             room=self.r,
@@ -30,7 +30,7 @@ class TestMusic(EndpointTestCase):
             music_id="a",
             name="a",
             thumbnail="https://a.com",
-            duration=114,
+            total_duration=114,
             url="https://www.a.com",
             source="youtube",
             room=self.r,
@@ -55,7 +55,7 @@ class TestMusic(EndpointTestCase):
             music_id="a",
             name="a",
             thumbnail="https://a.com",
-            duration=114,
+            total_duration=114,
             url="https://www.a.com",
             source="youtube",
             room=self.r,
@@ -82,14 +82,14 @@ class TestMusic(EndpointTestCase):
             music_id="a",
             name="a",
             thumbnail="https://a.com",
-            duration=114,
+            total_duration=114,
             url="https://www.a.com",
             source="youtube",
             room=self.r,
         )
         m.save()
 
-        response = self.client.patch('/music/%s' % m.pk, {'duration': 'wtf'})
+        response = self.client.patch('/music/%s' % m.pk, {'total_duration': 'wtf'})
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
 
@@ -98,7 +98,7 @@ class TestMusic(EndpointTestCase):
             "music_id": "a",
             "name": "a",
             "thumbnail": "https://a.com",
-            "duration": 114,
+            "total_duration": 114,
             "url": "https://www.a.com",
             "source": "youtube",
         }

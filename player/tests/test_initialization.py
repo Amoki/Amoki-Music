@@ -29,7 +29,7 @@ class InitilizationTestCase(TestCase):
             room=room,
             music_id="a",
             name="a",
-            duration=211,
+            total_duration=211,
             thumbnail="https://a.com/a.jpg",
         )
         music.save()

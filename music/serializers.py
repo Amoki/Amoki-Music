@@ -11,7 +11,7 @@ class MusicSerializer(serializers.ModelSerializer):
     # Validators for post method
     name = serializers.CharField(max_length=255, required=True)
     url = serializers.CharField(max_length=512, required=True)
-    total_duration = serializers.IntegerField(required=True, write_only=True)
+    total_duration = serializers.IntegerField(required=True)
     room_id = serializers.IntegerField(required=True, write_only=True)
     source = serializers.CharField(required=True)
 
