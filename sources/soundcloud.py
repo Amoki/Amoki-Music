@@ -36,6 +36,7 @@ def search(query):
             "thumbnail": video['artwork_url'] if video['artwork_url'] else "/static/img/soundcloud-100x100.jpg",
             "views": video['playback_count'],
             "total_duration": int(video['duration'] / 1000),
+            "duration": int(video['duration'] / 1000),
             "url": video['permalink_url'],
             "source": "soundcloud"
         }

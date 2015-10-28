@@ -52,10 +52,12 @@ function LibraryViewModel() {
 
   self.openPreviewMusic = function(music) {
     self.musicPreview(music);
+    handlerStart = self.musicPreview().timer_start() ? self.musicPreview().timer_start() : 0;
+    handlerEnd = self.musicPreview().timer_end() ? self.musicPreview().timer_end() : self.musicPreview().total_duration();
     customSlider.slide({
       element: $("#slider-preview"),
-      max: self.musicPreview().duration(),
-      values: [0, self.musicPreview().duration()],
+      max: self.musicPreview().total_duration(),
+      values: [handlerStart, handlerEnd],
       currentPlayerControl: playerPreviewControlWrapper[music.source()],
     });
     playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});

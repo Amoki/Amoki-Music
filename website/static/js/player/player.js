@@ -83,8 +83,8 @@ var customSlider = {
       max: options.max,
       values: options.values,
       create: function() {
-        $("#time_start").html(humanizeSeconds(0));
-        $("#time_end").html(humanizeSeconds(options.max));
+        $("#time_start").html(humanizeSeconds(options.values[0]));
+        $("#time_end").html(humanizeSeconds(options.values[1]));
       },
       slide: function(event, ui) {
         var offset1 = $(this).children('.ui-slider-handle').first().offset();
