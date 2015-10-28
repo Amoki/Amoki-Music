@@ -49,7 +49,7 @@ def get_info(ids):
                 'description': detail["snippet"]["description"][:200] + "...",
                 'thumbnail': detail["snippet"]["thumbnails"]["default"]["url"],
                 'views': detail["statistics"]["viewCount"],
-                'duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
+                'total_duration': get_time_in_seconds(detail["contentDetails"]["duration"]),
             }
             videos.append(detailedVideo)
 
@@ -87,7 +87,7 @@ def search(query):
             "description": video['description'],
             "thumbnail": video['thumbnail'],
             "views": video['views'],
-            "duration": video['duration'],
+            "total_duration": video['duration'],
             "url": "https://www.youtube.com/watch?v=" + video['music_id'],
             "source": "youtube"
         }

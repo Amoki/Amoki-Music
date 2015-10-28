@@ -32,7 +32,7 @@ class Music_endpointView(APIView):
             paramType: body
             required: true
 
-          - name: duration
+          - name: total_duration
             type: integer
             paramType: body
             required: true
