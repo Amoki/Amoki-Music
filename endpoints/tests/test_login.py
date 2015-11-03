@@ -28,5 +28,5 @@ class TestLogin(EndpointTestCase):
         client = APIClient()
         response = client.get('/login', {'name': 'a', 'password': 'b'})
 
-        response.status_code.should.be.eql(status.HTTP_403_FORBIDDEN)
+        response.status_code.should.be.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': 'Invalid credentials.'})

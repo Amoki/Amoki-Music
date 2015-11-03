@@ -14,7 +14,7 @@ class TestUtils(EndpointTestCase):
 
         response = client.get('/room')
 
-        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.status_code.should.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': _('Invalid token.')})
 
     def test_bad_formatted_authentication(self):
@@ -23,19 +23,19 @@ class TestUtils(EndpointTestCase):
 
         response = client.get('/room')
 
-        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.status_code.should.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': _('Invalid token header. No credentials provided.')})
 
         client.credentials(HTTP_AUTHORIZATION='Bearer token1 token2')
 
         response = client.get('/room')
 
-        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.status_code.should.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': _('Invalid token header. Token string should not contain spaces.')})
 
         client.credentials(HTTP_AUTHORIZATION='token')
 
         response = client.get('/room')
 
-        response.status_code.should.eql(status.HTTP_403_FORBIDDEN)
+        response.status_code.should.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': _('Invalid token header. No credentials provided.')})
