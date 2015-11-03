@@ -17,32 +17,6 @@
 			box-shadow: 0px 0px 4px 1px #fff;}
 	&:active {outline: none !important;}
 };
-
-.LOGIN {
-	top: 20%;
-}
-
-.wrapper-login {
-	width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 999999;
-    background-color: rgba(0,0,0,0.9);
-}
-
-span.filter-option {
-	text-align: center !important;
-}
-
-.input-group-btn select {
-	border-color: #ccc;
-	margin-top: 0px;
-    margin-bottom: 0px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-}
-
-
 body, html {
 	margin: 0;
 	padding: 0;
@@ -51,25 +25,28 @@ body, html {
 	text-align: center;
 	background-image: url(../img/background-2.png);
 }
-
 #wrapper {
 	min-height:100%;
 	position:relative;
 }
-
+.main-col {
+	max-width: 1600px;
+	margin: auto;
+}
+.ligne {
+	max-width: 1600px;
+	padding: 15px 0 55px 0;
+}
 select {
 	border-radius: 4px;
 }
-
 .jumbotron  {
 	color:black;
 }
-
 button > .glyphicon, a > .glyphicon {
 	top: 3px;
 	font-size: 25px;
 }
-
 .btn {
 	background-color: rgb(34,34,34);
 	color: @bleu;
@@ -83,99 +60,35 @@ button > .glyphicon, a > .glyphicon {
 		color : black !important;
 	}
 }
-
-.modal {
-	color: black;
-}
-
-#modal-error-ws {
-	color: red;
-	top: 0 !important;
-}
-
-#extensions .modal-dialog {
-	top:150px;
-}
-
-.modal-on-top {
-	color: black;
-	top: -30px !important;
-	width: 300px;
-	margin-left: -150px;
-	left:50% !important;
-	bottom: auto !important;
-	opacity: 0.8 !important;
-}
-
-.modal {
-	z-index: 9999999999;
-}
-
-.modal-content-custom {
-	min-height: 55px !important;
-}
-
-.fa-stack-1x, .fa-stack-2x {
-	bottom: 5px !important;
-}
-
-.list-group-item:first-child {
-	border-top-right-radius: 0px;
-	border-top-left-radius: 0px;
-}
-.list-group-item:last-child {
-	border-bottom-right-radius: 0px;
-	border-bottom-left-radius: 0px;
-}
-.LIB .list-group {
-	margin-bottom: 0px;
-}
-#form_infini_scroll {
-	border-bottom-right-radius: 4px !important;
-	border-bottom-left-radius: 4px !important;
-	padding: 20px 10px;
-}
-
 [class*="col-"], header {
 	border-radius: 12px;
 }
-
+.fa-stack-1x, .fa-stack-2x {
+	bottom: 5px !important;
+}
 .error {
 	color: red;
 }
-#music_preview .ui-state-default,
-#music_preview .ui-widget-content .ui-state-default,
-#music_preview .ui-widget-header .ui-state-default {
-  border: 1px solid #d3d3d3;
-  border-radius: 4px;
-  background: #e6e6e6;
-  font-weight: normal;
-  color: #555555;
-}
-#music_preview .ui-state-hover,
-#music_preview .ui-widget-content .ui-state-hover,
-#music_preview .ui-widget-header .ui-state-hover,
-#music_preview .ui-state-focus,
-#music_preview .ui-widget-content .ui-state-focus,
-#music_preview .ui-widget-header .ui-state-focus {
-	border: 1px solid #999999;
-	background: #dadada;
-	font-weight: normal;
-	color: #212121;
+
+/***************** LOGIN STUFF *****************/
+
+.LOGIN {
+	top: 20%;
 }
 
-#music_preview .ui-state-active,
-#music_preview .ui-widget-content .ui-state-active,
-#music_preview .ui-widget-header .ui-state-active {
-	border: 1px solid #aaaaaa;
-	background: #ffffff;
-	font-weight: normal;
-	color: #212121;
+.wrapper-login {
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 999999;
+    background-color: rgba(0,0,0,0.9);
 }
+
+/***************** LOGIN STUFF *****************/
+
+
 /***************** NAVBAR STUFF ****************/
-
 .navbar {
-	height: 50px;
 	margin-bottom: 0px !important;
 	box-shadow: 0px 0px 12px 2px #000;
 	border-radius: 0px;
@@ -196,13 +109,15 @@ button > .glyphicon, a > .glyphicon {
 	.navbar-nav>li>a#btn-navbar{
 		padding-left: 12px;
 		padding-top: 8px;
+		padding-bottom: 0;
 	}
 }
 
-.ligne {
-	padding-top: 15px;
-	padding-bottom: 55px;
+.navbar-brand {
+	color: #fff !important;
+    background-color: #080808 !important;
 }
+
 
 /********************** REMOTE STUFF ***********/
 .remote {
@@ -216,12 +131,13 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .header-remote img {
-	max-height: 90px;
-	width: auto;
+	width: 135px;
+	padding: 0 0 0 15px;
 }
 
 .title_playing {
 	margin-top: 10px;
+	margin-left: 20px;
 }
 .title{
 	height: 96px;
@@ -232,17 +148,17 @@ button > .glyphicon, a > .glyphicon {
 	white-space: nowrap;
 	overflow: hidden;
 	font-size: 2em;
-}
 
-.marquee a {
-	display: inline-block;
-	padding-left: 100%;
-	text-indent: 0;
-	transform: translateZ(0);
-	animation: marquee 15s linear infinite;
-	&:hover {
-		animation-play-state: paused
-	};
+	a {
+		display: inline-block;
+		padding-left: 100%;
+		text-indent: 0;
+		transform: translateZ(0);
+		animation: marquee 15s linear infinite;
+		&:hover {
+			animation-play-state: paused
+		};
+	}
 }
 
 /* Make it move */
@@ -292,23 +208,39 @@ button > .glyphicon, a > .glyphicon {
 }
 
 .table>tbody>tr.playlist-item {
-	.icon-trash {
-		width: 5%;
+	@media (min-width: 1350px) {
+		.icon-trash {
+			width: 5%;
+		}
+		.name {
+			width: 65%;
+		}
+		.duration {
+			width: 10%;
+		}
+		.ordering {
+			width: 5%;
+		}
+		.ordering.medium {
+			width: 15%;
+		}
+		.ordering.max {
+			width: 20%;
+		}
 	}
-	.name {
-		width: 65%;
-	}
-	.duration {
-		width: 10%;
-	}
-	.ordering {
-		width: 5%;
-	}
-	.ordering.medium {
-		width: 15%;
-	}
-	.ordering.max {
-		width: 20%;
+	@media (max-width: 1350px) {
+		.icon-trash {
+			width: 1%;
+		}
+		.name {
+			width: 35%;
+		}
+		.duration {
+			width: 1%;
+		}
+		.ordering.max {
+			width: 20%;
+		}
 	}
 }
 
@@ -364,12 +296,11 @@ button > .glyphicon, a > .glyphicon {
 .wrapper-progress-bar{
 	height: 20px;
 	margin-bottom: 20px;
-}
-
-.wrapper-progress-bar > .progress {
-	position: absolute;
-	left: 15px;
-	right: 15px;
+	>.progress {
+		position: absolute;
+		left: 15px;
+		right: 15px;
+	}
 }
 
 #time-left-progress-bar-wrapper {
@@ -415,6 +346,37 @@ button > .glyphicon, a > .glyphicon {
 	position: relative;
 	top: 1px;
 }
+
+#music_preview .ui-state-default,
+#music_preview .ui-widget-content .ui-state-default,
+#music_preview .ui-widget-header .ui-state-default {
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+  background: #e6e6e6;
+  font-weight: normal;
+  color: #555555;
+}
+#music_preview .ui-state-hover,
+#music_preview .ui-widget-content .ui-state-hover,
+#music_preview .ui-widget-header .ui-state-hover,
+#music_preview .ui-state-focus,
+#music_preview .ui-widget-content .ui-state-focus,
+#music_preview .ui-widget-header .ui-state-focus {
+	border: 1px solid #999999;
+	background: #dadada;
+	font-weight: normal;
+	color: #212121;
+}
+
+#music_preview .ui-state-active,
+#music_preview .ui-widget-content .ui-state-active,
+#music_preview .ui-widget-header .ui-state-active {
+	border: 1px solid #aaaaaa;
+	background: #ffffff;
+	font-weight: normal;
+	color: #212121;
+}
+
 /********************** REMOTE STUFF ***********/
 
 
@@ -429,6 +391,32 @@ button > .glyphicon, a > .glyphicon {
 	min-height: 550px;
 	background: rgba(34,34,34,0.7);
 	.shadow;
+	.list-group {
+		margin-bottom: 0px;
+		color: blue;
+	}
+}
+
+.list-group-item{
+	padding: initial;
+    display: table;
+    width: 100%;
+}
+
+.list-group-item:first-child {
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+}
+
+.list-group-item:last-child {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+#form_infini_scroll {
+	border-bottom-right-radius: 4px !important;
+	border-bottom-left-radius: 4px !important;
+	padding: 20px 10px;
 }
 
 .search-form {
@@ -441,12 +429,20 @@ button > .glyphicon, a > .glyphicon {
 	}
 }
 
-.input-lib {
-	padding-top: 20px;
+.input-group-btn select {
+	border-color: #ccc;
+	margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 7px;
+    padding-bottom: 7px;
 }
 
-.list-group {
-	color: blue;
+span.filter-option {
+	text-align: center !important;
+}
+
+.input-lib {
+	padding-top: 20px;
 }
 
 .list-lib {
@@ -460,12 +456,6 @@ button > .glyphicon, a > .glyphicon {
 .item-lib {
 	font-size: 14px;
 	font-weight: bold;
-}
-
-.list-group-item{
-	padding: initial;
-    display: table;
-    width: 100%;
 }
 
 .row-list-item {
@@ -509,10 +499,6 @@ button > .glyphicon, a > .glyphicon {
     }
 }
 
-.show-more{
-	cursor: pointer;
-}
-
 [class$="-list-music"] {
 	word-wrap:break-word;
 	hr{
@@ -524,11 +510,10 @@ button > .glyphicon, a > .glyphicon {
 .popover {
 	border-radius: 8px !important;
 	max-width: 200px;
-}
-
-.popover img {
-	float: left;
-	margin-right: 10px;
+	img {
+		float: left;
+		margin-right: 10px;
+	}
 }
 
 .popover-content {
@@ -587,6 +572,10 @@ button > .glyphicon, a > .glyphicon {
 	transition: all 200ms linear;
 	visibility: hidden;
 	display: block;
+
+	#slider {
+		margin-bottom: 15px;
+	}
 }
 
 #music_preview.modal.fade.in {
@@ -594,9 +583,6 @@ button > .glyphicon, a > .glyphicon {
 	z-index: 9999;
 }
 
-#music_preview #slider {
-	margin-bottom: 15px;
-}
 
 /********************** LIBRARY STUFF ***********/
 
@@ -662,7 +648,6 @@ button > .glyphicon, a > .glyphicon {
     	rgba(0, 0, 0, 0.9) 100%);
 }
 
-
 #slider-volume {
 	position: absolute;
     width: 70%;
@@ -677,6 +662,7 @@ button > .glyphicon, a > .glyphicon {
     height: 13px;
 	top: 44%;
 }
+
 .ui-slider-range {
     background: linear-gradient(to top, #ffffff 0%,#bbbbbb 100%) !important;
     border-radius: 25px;
@@ -716,12 +702,54 @@ button > .glyphicon, a > .glyphicon {
     background: linear-gradient(to top, rgba(69,72,77,0.5) 0%,rgba(0,0,0,0.5) 100%);
 }
 
-a#btn-link-remote{
-	position: relative;
-	top: 100px;
-	display: inline-block;
-	box-shadow: 0px 25px 40px 0px #000000;
-	border-radius: 100px;
-}
 
 /********************** PLAYER STUFF ***********/
+
+
+/********************** MODAL STUFF ************/
+
+.modal {
+	color: black;
+	z-index: 9999999999;
+}
+
+#modal-error-ws {
+	color: red;
+	top: 0 !important;
+}
+
+#extensions .modal-dialog {
+	top:150px;
+}
+
+.modal-on-top {
+	color: black;
+	top: -30px !important;
+	width: 300px;
+	margin-left: -150px;
+	left:50% !important;
+	bottom: auto !important;
+	opacity: 0.8 !important;
+}
+
+.modal-content-custom {
+	min-height: 55px !important;
+}
+
+/********************** MODAL STUFF ************/
+
+
+/********************** MEDIA STUFF ************/
+@media (max-width: 768px){
+	.navbar-nav>li>a#btn-navbar{
+		padding: 10px 15px 5px 15px !important;
+	}
+}
+
+@media (min-width: 768px){
+	#navbar-top {
+		max-height: 50px;
+	}
+}
+
+/********************** MEDIA STUFF ************/
