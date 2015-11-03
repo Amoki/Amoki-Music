@@ -139,7 +139,6 @@ class Room(models.Model):
         if not self.current_music:
             self.play_next()
         else:
-
             self.send_update_message()
         return music
 
@@ -189,7 +188,7 @@ class Room(models.Model):
         return 0
 
     def get_musics_remaining(self):
-            return self.tracks.all().order_by('playlisttrack__order')
+        return self.tracks.all().order_by('playlisttrack__order')
 
     def get_count_remaining(self):
         return self.tracks.count()
