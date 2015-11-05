@@ -36,4 +36,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(null=True),
             preserve_default=True,
         ),
+        migrations.RemoveField(
+            model_name='music',
+            name='timer_end',
+        ),
     ]
