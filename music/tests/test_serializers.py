@@ -12,6 +12,7 @@ class SerializersTestCase(TestCase):
             name='a',
             thumbnail='https://a.com',
             total_duration=114,
+            duration=114,
             url='https://www.a.com',
             source='youtube',
             room=self.r,
@@ -28,7 +29,6 @@ class SerializersTestCase(TestCase):
             'url': 'https://www.a.com',
             'source': 'youtube',
             'timer_start': 0,
-            'timer_end': None,
             'count': 0,
             'last_play': None
         }
@@ -41,6 +41,7 @@ class SerializersTestCase(TestCase):
             name='a',
             thumbnail='https://a.com',
             total_duration=114,
+            duration=114,
             url='https://www.a.com',
             source='youtube',
             room=self.r,
@@ -63,7 +64,6 @@ class SerializersTestCase(TestCase):
                 'url': 'https://www.a.com',
                 'source': 'youtube',
                 'timer_start': 0,
-                'timer_end': None,
                 'count': 0,
                 'last_play': None
             }

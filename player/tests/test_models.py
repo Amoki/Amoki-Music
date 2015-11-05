@@ -22,6 +22,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
@@ -41,6 +42,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now()
         )
@@ -58,6 +60,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
@@ -76,6 +79,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=240,
+            duration=240,
             thumbnail='https://a.com/a.jpg',
             last_play=datetime.now() - timedelta(minutes=2)  # Music started 2 minutes ago
         )
@@ -92,6 +96,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -106,6 +111,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -135,6 +141,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -153,6 +160,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -171,6 +179,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -188,6 +197,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -208,6 +218,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()
@@ -217,6 +228,7 @@ class ModelsTestCase(TestCase):
             music_id='b',
             name='b',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music2.save()
@@ -236,6 +248,7 @@ class ModelsTestCase(TestCase):
             music_id='b',
             name='b',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
             source='youtube'
         )
@@ -246,6 +259,7 @@ class ModelsTestCase(TestCase):
             music_id='b',
             name='b',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
             source='youtube'
         )
@@ -259,6 +273,7 @@ class ModelsTestCase(TestCase):
             music_id='a',
             name='a',
             total_duration=200,
+            duration=200,
             thumbnail='https://a.com/a.jpg',
         )
         music.save()

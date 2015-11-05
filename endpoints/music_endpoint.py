@@ -37,9 +37,10 @@ class Music_endpointView(APIView):
             paramType: body
             required: true
 
-          - name: timer_end
+          - name: duration
             type: integer
             paramType: body
+            required: true
 
           - name: timer_start
             type: integer

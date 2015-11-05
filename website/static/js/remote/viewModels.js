@@ -67,7 +67,7 @@ function LibraryViewModel() {
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
-      self.musicPreview().timer_end($('#slider-preview').slider("values", 1));
+      self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
       self.addMusic(self.musicPreview());
     }
     self.musicPreview(null);

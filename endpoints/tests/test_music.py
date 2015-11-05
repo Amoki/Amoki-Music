@@ -56,24 +56,24 @@ class TestMusic(EndpointTestCase):
             name="a",
             thumbnail="https://a.com",
             total_duration=114,
+            duration=114,
             url="https://www.a.com",
             source="youtube",
             room=self.r,
         )
         m.save()
 
-        response = self.client.patch('/music/%s' % m.pk, {'timer_start': 8, "timer_end": 100})
+        response = self.client.patch('/music/%s' % m.pk, {'timer_start': 8, 'duration': 106})
 
         response.status_code.should.eql(status.HTTP_200_OK)
 
         m = self.reload(m)
 
         m.timer_start.should.eql(8)
-        m.timer_end.should.eql(100)
-        m.duration.should.eql(92)
+        m.duration.should.eql(106)
 
     def test_patch_unexisting_music(self):
-        response = self.client.patch('/music/165423123', {'timer_start': 8, "timer_end": 100})
+        response = self.client.patch('/music/165423123', {'timer_start': 8})
 
         response.status_code.should.eql(status.HTTP_404_NOT_FOUND)
 

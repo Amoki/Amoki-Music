@@ -5,7 +5,7 @@ from music.serializers import MusicSerializer
 
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'thumbnail', 'room', 'timer_start', 'timer_end')
+    list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'thumbnail', 'room', 'timer_start')
     actions = ('add_music',)
 
     def has_add_permission(self, request):

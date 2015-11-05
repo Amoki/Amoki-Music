@@ -9,7 +9,9 @@ function Music(data) {
   this.total_duration = ko.observable(data.total_duration);
   this.duration = ko.observable(data.duration);
   this.timer_start = ko.observable(data.timer_start);
-  this.timer_end = ko.observable(data.timer_end);
+  this.timer_end = ko.computed(function() {
+    return this.timer_start() + this.duration();
+  }, this);
   this.url = ko.observable(data.url);
   this.room_id = ko.observable(data.room_id);
   this.source = ko.observable(data.source);

@@ -86,7 +86,6 @@ class Room(models.Model):
                     'name': music.name,
                     'music_id': music.music_id,
                     'timer_start': music.timer_start,
-                    'timer_end': music.timer_end or None,
                 }
             }
 
