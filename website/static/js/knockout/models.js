@@ -17,6 +17,8 @@ function Music(data) {
   this.source = ko.observable(data.source);
   this.channel_name = ko.observable(data.channel_name);
   this.description = ko.observable(data.description);
+
+  this.from = data.from;
 }
 // Playlist model
 function PlaylistTrack(data) {

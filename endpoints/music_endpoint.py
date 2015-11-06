@@ -57,7 +57,13 @@ class Music_endpointView(APIView):
             required: true
         """
         request.data.update({'room_id': room.id})
-        serializer = MusicSerializer(data=request.data)
+        try:
+            music = Music.objects.get(music_id=request.data.get('music_id'), room=room)
+            serializer = MusicSerializer(music, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+        except Music.DoesNotExist:
+            serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
             music = room.add_music(**serializer.data)
             return Response(MusicSerializer(music).data, status=status.HTTP_201_CREATED)
