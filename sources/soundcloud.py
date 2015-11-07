@@ -24,7 +24,7 @@ def search(query):
     else:
         # Get the id from url
         raw_response = client.get('/resolve.json', url=query)
-        response = json.loads(raw_response.raw_data)
+        response = [json.loads(raw_response.raw_data)]
 
     videos = []
     for video in response:
