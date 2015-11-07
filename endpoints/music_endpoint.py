@@ -60,12 +60,11 @@ class Music_endpointView(APIView):
         try:
             music = Music.objects.get(music_id=request.data.get('music_id'), room=room)
             serializer = MusicSerializer(music, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
         except Music.DoesNotExist:
             serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
-            music = room.add_music(**serializer.data)
+            music = serializer.save()
+            music = room.add_music(music)
             return Response(MusicSerializer(music).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

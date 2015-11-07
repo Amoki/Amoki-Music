@@ -120,17 +120,7 @@ class Room(models.Model):
         else:
             self.stop()
 
-    def add_music(self, **kwargs):
-        # Check if the music already exists. If not, creating it
-        music = Music.objects.filter(
-            music_id=kwargs['music_id'],
-            source=kwargs['source'],
-            room=self,
-        ).first()
-        if not music:
-            music = Music(room=self, **kwargs)
-            music.save()
-
+    def add_music(self, music):
         # Adding the music to the queue
         PlaylistTrack.objects.create(room=self, track=music)
 
