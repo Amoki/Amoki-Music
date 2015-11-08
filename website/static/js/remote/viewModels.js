@@ -76,7 +76,12 @@ function LibraryViewModel() {
       self.addMusic(music);
     }
     else if(music.from === 'library') {
-      self.patchMusic(music, play);
+      if(play === 'play') {
+        self.addMusic(music);
+      }
+      else {
+        self.patchMusic(music, play);
+      }
     }
   };
 
