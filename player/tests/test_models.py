@@ -244,7 +244,8 @@ class ModelsTestCase(TestCase):
         self.r.current_music.should_not.be.none
 
     def test_add_music(self):
-        self.r.add_music(
+        music = Music(
+            room=self.r,
             music_id='b',
             name='b',
             total_duration=200,
@@ -252,20 +253,15 @@ class ModelsTestCase(TestCase):
             thumbnail='https://a.com/a.jpg',
             source='youtube'
         )
+        music.save()
+
+        self.r.add_music(music)
         self.r.music_set.count().should.eql(1)
         self.r.current_music.music_id.should.eql('b')
 
-        self.r.add_music(
-            music_id='b',
-            name='b',
-            total_duration=200,
-            duration=200,
-            thumbnail='https://a.com/a.jpg',
-            source='youtube'
-        )
+        self.r.add_music(music)
 
-        # Can't add twice the same music
-        self.r.music_set.count().should.eql(1)
+        self.r.tracks.count().should.eql(1)
 
     def test_play(self):
         music = Music(

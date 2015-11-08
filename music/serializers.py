@@ -20,7 +20,9 @@ class MusicSerializer(serializers.ModelSerializer):
         fields = ('pk', 'music_id', 'name', 'thumbnail', 'count', 'duration', 'total_duration', 'timer_start', 'url', 'room_id', 'source', 'last_play')
 
     def create(self, validated_data):
-        return Music(**validated_data)
+        music = Music(**validated_data)
+        music.save()
+        return music
 
     def update(self, instance, validated_data):
         Music.objects.filter(pk=instance.pk).update(**validated_data)
