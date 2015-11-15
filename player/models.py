@@ -129,7 +129,6 @@ class Room(models.Model):
             self.play_next()
         else:
             self.send_update_message()
-        return music
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics

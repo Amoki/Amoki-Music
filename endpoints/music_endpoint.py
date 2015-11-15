@@ -64,8 +64,8 @@ class Music_endpointView(APIView):
             serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
             music = serializer.save()
-            music = room.add_music(music)
-            return Response(MusicSerializer(music).data, status=status.HTTP_201_CREATED)
+            room.add_music(music)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @room_required
