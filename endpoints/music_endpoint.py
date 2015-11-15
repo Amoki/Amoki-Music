@@ -83,6 +83,7 @@ class Music_endpointView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        room.send_update_message()
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @room_required
@@ -100,4 +101,5 @@ class Music_endpointView(APIView):
         if music_to_delete == room.current_music:
             room.play_next()
         music_to_delete.delete()
+        room.send_update_message()
         return Response(status=status.HTTP_204_NO_CONTENT)
