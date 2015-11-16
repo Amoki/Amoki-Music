@@ -1,6 +1,7 @@
 from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
 from player.models import Room, Events
+from django.conf import settings
 
 import sure
 from datetime import datetime
@@ -14,6 +15,7 @@ class TestCase(DjangoTestCase):
         return item.__class__.objects.get(pk=item.pk)
 
     def setUp(self):
+        settings.TESTING = True
         self.r = Room(name="a", password="a")
         self.r.save()
 

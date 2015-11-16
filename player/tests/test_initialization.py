@@ -30,6 +30,7 @@ class InitilizationTestCase(TestCase):
             music_id="a",
             name="a",
             total_duration=211,
+            duration=211,
             thumbnail="https://a.com/a.jpg",
         )
         music.save()

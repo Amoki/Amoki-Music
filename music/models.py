@@ -12,7 +12,7 @@ class Music(models.Model):
     # Total duration of the music
     total_duration = models.PositiveIntegerField(editable=False)
     # Duration in second which will be played
-    duration = models.PositiveIntegerField(null=True)
+    duration = models.PositiveIntegerField()
     # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)

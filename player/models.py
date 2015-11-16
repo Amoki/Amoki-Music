@@ -43,7 +43,7 @@ class Room(models.Model):
     }
 
     def __str__(self):
-        return self.name
+        return "{} \n playing: {}".format(self.name, self.current_music)
 
     def update(self, modifications):
         for key, value in modifications.items():

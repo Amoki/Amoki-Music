@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='music',
             name='duration',
-            field=models.PositiveIntegerField(null=True),
+            field=models.PositiveIntegerField(editable=True),
             preserve_default=True,
         ),
         migrations.RemoveField(

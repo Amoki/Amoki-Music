@@ -162,6 +162,7 @@ class ModelsTestCase(TestCase):
             total_duration=200,
             duration=200,
             thumbnail='https://a.com/a.jpg',
+            source='youtube'
         )
         music.save()
 
