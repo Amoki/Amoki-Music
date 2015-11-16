@@ -33,8 +33,6 @@ function LibraryViewModel() {
   };
 
   self.addMusic = function(music) {
-    $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
-    $("button.btn-add-music").prop('disabled', true);
     // Return a json serialized Music object
     $.ajax("/music", {
       data: ko.toJSON(music),
@@ -50,23 +48,62 @@ function LibraryViewModel() {
     });
   };
 
+  self.patchMusic = function(music, play) {
+    // Return a json serialized Music object
+    $.ajax("/music/" + music.pk(), {
+      data: ko.toJSON(music),
+      type: "patch",
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+        newMusic = new Music(result);
+        if(!play) {
+          $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
+          $("button.btn-add-music").prop('disabled', false);
+          modalConfirm($('#modal-add-music'));
+        }
+        else {
+          self.addMusic(music);
+        }
+      }
+    });
+  };
+
+  self.sendMusic = function(music, play) {
+    $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
+    $("button.btn-add-music").prop('disabled', true);
+    if(music.from === 'search') {
+      self.addMusic(music);
+    }
+    else if(music.from === 'library') {
+      if(play === 'play') {
+        self.addMusic(music);
+      }
+      else {
+        self.patchMusic(music, play);
+      }
+    }
+  };
+
   self.openPreviewMusic = function(music) {
     self.musicPreview(music);
+    handlerStart = self.musicPreview().timer_start() ? self.musicPreview().timer_start() : 0;
+    handlerEnd = self.musicPreview().timer_end() ? self.musicPreview().timer_end() : self.musicPreview().total_duration();
     customSlider.slide({
       element: $("#slider-preview"),
-      max: self.musicPreview().duration(),
-      values: [0, self.musicPreview().duration()],
+      max: self.musicPreview().total_duration(),
+      values: [handlerStart, handlerEnd],
       currentPlayerControl: playerPreviewControlWrapper[music.source()],
     });
     playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});
   };
 
-  self.closePreviewMusic = function(valid) {
+  self.closePreviewMusic = function(valid, play) {
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
-      self.musicPreview().timer_end($('#slider-preview').slider("values", 1));
-      self.addMusic(self.musicPreview());
+      self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
+      self.sendMusic(self.musicPreview(), play);
     }
     self.musicPreview(null);
   };
@@ -90,6 +127,7 @@ function LibraryViewModel() {
     },
     function(allData) {
       var mappedMusics = $.map(allData, function(item) {
+        item.from = 'search';
         return new Music(item);
       });
       self.musicSearch(mappedMusics);
@@ -107,6 +145,7 @@ function LibraryViewModel() {
     event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
     $.getJSON(url, function(allData) {
       var mappedMusics = $.map(allData.results, function(item) {
+        item.from = 'library';
         return new Music(item);
       });
       self.musicsLibrary(mappedMusics);

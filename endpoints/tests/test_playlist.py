@@ -13,9 +13,11 @@ class TestPlaylist(EndpointTestCase):
             music_id="a",
             name="a",
             thumbnail="https://a.com",
-            duration=114,
+            total_duration=114,
+            duration=104,
             url="https://www.a.com",
             source="youtube",
+            timer_start=10,
             room=self.r,
         )
         self.m.save()
@@ -36,11 +38,11 @@ class TestPlaylist(EndpointTestCase):
                 'music_id': 'a',
                 'name': 'a',
                 'thumbnail': 'https://a.com',
-                'duration': 114,
+                'total_duration': 114,
+                'duration': 104,
                 'url': 'https://www.a.com',
                 'source': 'youtube',
-                'timer_start': 0,
-                'timer_end': None,
+                'timer_start': 10,
                 'count': 0,
                 'last_play': None
             }
@@ -95,6 +97,7 @@ class TestPlaylist(EndpointTestCase):
             music_id="b",
             name="b",
             thumbnail="https://a.com",
+            total_duration=114,
             duration=114,
             url="https://www.a.com",
             source="youtube",
@@ -120,6 +123,7 @@ class TestPlaylist(EndpointTestCase):
             music_id="b",
             name="b",
             thumbnail="https://a.com",
+            total_duration=114,
             duration=114,
             url="https://www.a.com",
             source="youtube",

@@ -11,7 +11,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, PlaylistTrack
+from music.models import PlaylistTrack
 
 
 def generate_token():
@@ -43,7 +43,7 @@ class Room(models.Model):
     }
 
     def __str__(self):
-        return self.name
+        return "{} \n playing: {}".format(self.name, self.current_music)
 
     def update(self, modifications):
         for key, value in modifications.items():
@@ -86,7 +86,6 @@ class Room(models.Model):
                     'name': music.name,
                     'music_id': music.music_id,
                     'timer_start': music.timer_start,
-                    'timer_end': music.timer_end or None,
                 }
             }
 
@@ -121,17 +120,7 @@ class Room(models.Model):
         else:
             self.stop()
 
-    def add_music(self, **kwargs):
-        # Check if the music already exists. If not, creating it
-        music = Music.objects.filter(
-            music_id=kwargs['music_id'],
-            source=kwargs['source'],
-            room=self,
-        ).first()
-        if not music:
-            music = Music(room=self, **kwargs)
-            music.save()
-
+    def add_music(self, music):
         # Adding the music to the queue
         PlaylistTrack.objects.create(room=self, track=music)
 
@@ -140,7 +129,6 @@ class Room(models.Model):
             self.play_next()
         else:
             self.send_update_message()
-        return music
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics

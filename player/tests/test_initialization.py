@@ -29,6 +29,7 @@ class InitilizationTestCase(TestCase):
             room=room,
             music_id="a",
             name="a",
+            total_duration=211,
             duration=211,
             thumbnail="https://a.com/a.jpg",
         )

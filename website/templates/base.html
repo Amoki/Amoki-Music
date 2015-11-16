@@ -249,12 +249,12 @@
                                   <span class="bold" data-bind="text: count"></span>&nbsp;views
                                 </div>
                                 <div class="col-xs-4">
-                                  <span class="badge" data-bind="text: humanizeSeconds(duration())"></span>
+                                  <span class="badge" data-bind="text: humanizeSeconds(total_duration())"></span>
                                 </div>
                               </div>
                             </div>
                             <div class="add-music-form">
-                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.addMusic($data) }">
+                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.sendMusic($data, 'play') }">
                                 <span class='glyphicon glyphicon-play-circle'></span>
                               </button>
                               <button class="btn btn-default btn-lg" type="button" data-bind="popover: {template: 'popover-edit-music-template',
@@ -289,7 +289,7 @@
                               </div>
                             </div>
                             <div class="add-music-form">
-                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.addMusic($data) }">
+                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.sendMusic($data, 'play') }">
                                 <span class='glyphicon glyphicon-play-circle'></span>
                               </button>
                               <button class="btn btn-default btn-lg" type="button" data-bind="popover: {template: 'popover-edit-music-template',
@@ -420,7 +420,7 @@
         <div data-bind="if: musicPreview()">
           <div class="modal-body">
             <div id="slider-preview"></div>
-            <p>
+            <p class="timers_wrapper">
               <label for="timers">Time range:</label>
               <span id="timers">
                 <span id="time_start" style="font-weight:bold;"></span>
@@ -434,7 +434,10 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true) }">Ajouter</button>
+            <button class="btn btn-info" id="btn-modal-preview-valid-play" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, true) }">Editer et jouer</button>
+            <!-- ko if: musicPreview().from === "library" -->
+            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, false) }">Editer seulement</button>
+            <!-- /ko -->
             <button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(false) }">Annuler</button>
           </div>
         </div>

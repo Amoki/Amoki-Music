@@ -5,6 +5,8 @@ from rest_framework import status
 from endpoints.utils.decorators import room_required
 from music.serializers import MusicSerializer
 from music.models import Music
+from player.models import Events
+from threading import Timer
 
 
 class Music_endpointView(APIView):
@@ -32,14 +34,15 @@ class Music_endpointView(APIView):
             paramType: body
             required: true
 
-          - name: duration
+          - name: total_duration
             type: integer
             paramType: body
             required: true
 
-          - name: timer_end
+          - name: duration
             type: integer
             paramType: body
+            required: true
 
           - name: timer_start
             type: integer
@@ -56,10 +59,15 @@ class Music_endpointView(APIView):
             required: true
         """
         request.data.update({'room_id': room.id})
-        serializer = MusicSerializer(data=request.data)
+        try:
+            music = Music.objects.get(music_id=request.data.get('music_id'), room=room)
+            serializer = MusicSerializer(music, data=request.data, partial=True)
+        except Music.DoesNotExist:
+            serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
-            music = room.add_music(**serializer.data)
-            return Response(MusicSerializer(music).data, status=status.HTTP_201_CREATED)
+            music = serializer.save()
+            room.add_music(music)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @room_required
@@ -76,6 +84,7 @@ class Music_endpointView(APIView):
         serializer = MusicSerializer(music, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            room.send_update_message()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -94,4 +103,5 @@ class Music_endpointView(APIView):
         if music_to_delete == room.current_music:
             room.play_next()
         music_to_delete.delete()
+        room.send_update_message()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -9,21 +9,25 @@ class Music(models.Model):
     name = models.CharField(max_length=255, editable=False)
     url = models.CharField(max_length=512, editable=False)
     room = models.ForeignKey('player.Room')
-    # Duration in second
-    duration = models.PositiveIntegerField(editable=False)
+    # Total duration of the music
+    total_duration = models.PositiveIntegerField(editable=False)
+    # Duration in second which will be played
+    duration = models.PositiveIntegerField()
     # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255)
     count = models.PositiveIntegerField(default=0, editable=False)
     last_play = models.DateTimeField(null=True)
     timer_start = models.PositiveIntegerField(default=0)
-    timer_end = models.PositiveIntegerField(null=True, blank=True)
     source = models.CharField(max_length=255, editable=False)
 
     class Meta():
         unique_together = ("music_id", "room")
 
     def __str__(self):
-        return self.name
+        return """Music : {} \n
+                Total duration : {} \n
+                Duration : {} \n
+                """.format(self.name, self.total_duration, self.duration)
 
     def is_valid(self):
         return source.check_validity(self.source, self.music_id)
@@ -38,6 +42,3 @@ class PlaylistTrack(OrderedModel):
 
     class Meta(OrderedModel.Meta):
         pass
-
-
-from music.signals import *

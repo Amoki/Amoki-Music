@@ -50,7 +50,6 @@ class EndpointTestCase(TestCase):
         response['thumbnail'].should.eql(music.thumbnail)
         response['count'].should.eql(music.count)
         response['timer_start'].should.eql(music.timer_start)
-        response['timer_end'].should.eql(music.timer_end)
         response['source'].should.eql(music.source)
         if response['last_play'] is not None:
             datetime.strptime(response['last_play'], '%Y-%m-%dT%H:%M:%S.%f').should.eql(music.last_play)

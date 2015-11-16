@@ -6,14 +6,19 @@ function Music(data) {
   this.name = ko.observable(data.name);
   this.thumbnail = ko.observable(data.thumbnail);
   this.count = ko.observable(data.count || data.views);
+  this.total_duration = ko.observable(data.total_duration);
   this.duration = ko.observable(data.duration);
   this.timer_start = ko.observable(data.timer_start);
-  this.timer_end = ko.observable(data.timer_end);
+  this.timer_end = ko.computed(function() {
+    return this.timer_start() + this.duration();
+  }, this);
   this.url = ko.observable(data.url);
   this.room_id = ko.observable(data.room_id);
   this.source = ko.observable(data.source);
   this.channel_name = ko.observable(data.channel_name);
   this.description = ko.observable(data.description);
+
+  this.from = data.from;
 }
 // Playlist model
 function PlaylistTrack(data) {
