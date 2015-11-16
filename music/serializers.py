@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from music.models import Music, PlaylistTrack
+from player.models import Events
+from threading import Timer
 
 
 class MusicSerializer(serializers.ModelSerializer):
@@ -56,7 +58,14 @@ class MusicSerializer(serializers.ModelSerializer):
             :return: The Music object UPDATED with the valid data from the Serializer
             :rtype: Music
         """
-        Music.objects.filter(pk=instance.pk).update(**validated_data)
+        music = Music.objects.filter(pk=instance.pk)
+        music.update(**validated_data)
+        music = music.first()
+        room = instance.room
+        if room.current_music == music:
+            Events.get(room).cancel()
+            event = Events.set(room, Timer(room.get_current_remaining_time(), room.play_next, ()))
+            event.start()
         return instance
 
 

@@ -84,10 +84,6 @@ class Music_endpointView(APIView):
         serializer = MusicSerializer(music, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            if room.current_music == music:
-                Events.get(room).cancel()
-                event = Events.set(room, Timer(room.get_current_remaining_time(), room.play_next, ()))
-                event.start()
             room.send_update_message()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

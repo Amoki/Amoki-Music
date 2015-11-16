@@ -75,7 +75,7 @@ class TestMusic(EndpointTestCase):
         m.timer_start.should.eql(8)
         m.duration.should.eql(106)
 
-    def test_patch_current_music(self):
+    def test_post_or_patch_current_music(self):
         music_to_post = {
             "music_id": "a",
             "name": "a",
@@ -94,7 +94,14 @@ class TestMusic(EndpointTestCase):
 
         # Can't check more precisely the event because of the variable time for the script to execute
         # We at least check if the event is different so we can deduce that it has been updated
-        Events.get(self.reload(self.r)).shouldnt.eql(firstEvent)
+        secondEvent = Events.get(self.reload(self.r))
+        secondEvent.shouldnt.eql(firstEvent)
+
+        self.client.post('/music', music_to_post)
+        self.r = self.reload(self.r)
+        lastEvent = Events.get(self.r)
+
+        lastEvent.shouldnt.eql(secondEvent)
 
     def test_patch_unexisting_music(self):
         response = self.client.patch('/music/165423123', {'timer_start': 8})
