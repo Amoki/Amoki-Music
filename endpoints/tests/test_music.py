@@ -113,6 +113,37 @@ class TestMusic(EndpointTestCase):
 
         Music.objects.filter(music_id='a', room=self.r).exists().should.be.true
 
+    def test_post_existing_music(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            total_duration=114,
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+
+        Music.objects.filter(music_id='a', room=self.r).first().duration.should.be.eql(114)
+
+        music_to_post = {
+            "music_id": "a",
+            "name": "a",
+            "thumbnail": "https://a.com",
+            "total_duration": 114,
+            "duration": 100,
+            "url": "https://www.a.com",
+            "source": "youtube",
+        }
+
+        response = self.client.post('/music', music_to_post)
+
+        response.status_code.should.eql(status.HTTP_201_CREATED)
+
+        Music.objects.filter(music_id='a', room=self.r).first().duration.should.be.eql(100)
+
     def test_post_bad_arguments(self):
         music_to_post = {
             "music_id": "a"
