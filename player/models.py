@@ -11,7 +11,7 @@ from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from music.models import Music, PlaylistTrack
+from music.models import PlaylistTrack
 
 
 def generate_token():
