@@ -2,6 +2,7 @@ from utils.testcase import EndpointTestCase
 from rest_framework import status
 
 from music.models import Music
+from player.models import Events
 
 import sure
 
@@ -74,6 +75,27 @@ class TestMusic(EndpointTestCase):
         m.timer_start.should.eql(8)
         m.duration.should.eql(106)
 
+    def test_patch_current_music(self):
+        music_to_post = {
+            "music_id": "a",
+            "name": "a",
+            "thumbnail": "https://a.com",
+            "total_duration": 114,
+            "duration": 114,
+            "url": "https://www.a.com",
+            "source": "youtube",
+        }
+        self.client.post('/music', music_to_post)
+        self.r = self.reload(self.r)
+        firstEvent = Events.get(self.r)
+
+        m = self.r.current_music
+        self.client.patch('/music/%s' % m.pk, {'duration': 100})
+
+        # Can't check more precisely the event because of the variable time for the script to execute
+        # We at least check if the event is different so we can deduce that it has been updated
+        Events.get(self.reload(self.r)).shouldnt.eql(firstEvent)
+
     def test_patch_unexisting_music(self):
         response = self.client.patch('/music/165423123', {'timer_start': 8})
 
@@ -125,8 +147,6 @@ class TestMusic(EndpointTestCase):
             room=self.r,
         )
         m.save()
-
-        Music.objects.filter(music_id='a', room=self.r).first().duration.should.be.eql(114)
 
         music_to_post = {
             "music_id": "a",
