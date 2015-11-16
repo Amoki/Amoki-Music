@@ -19,6 +19,12 @@ class TestUtils(EndpointTestCase):
 
     def test_bad_formatted_authentication(self):
         client = APIClient()
+
+        response = client.get('/room')
+
+        response.status_code.should.eql(status.HTTP_401_UNAUTHORIZED)
+        response.data.should.eql({'detail': _('Invalid token header. No credentials provided.')})
+
         client.credentials(HTTP_AUTHORIZATION='Bearer')
 
         response = client.get('/room')
