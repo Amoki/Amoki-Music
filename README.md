@@ -63,8 +63,8 @@ location /ws/ {
 
 #### Update production
 ```bash
-ggpull
-pyhton manage.py collectstatic
+git pull origin master
+python manage.py collectstatic
 yes
 python manage.py migrate
 ```
