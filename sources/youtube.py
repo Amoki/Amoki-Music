@@ -20,14 +20,18 @@ def get_time_in_seconds(time):
 
 
 def get_info(ids):
+    videos = []
     if not isinstance(ids, str):
         ids = ','.join(ids)
-    details = youtube.videos().list(
-        id=ids,
-        part='snippet, contentDetails, statistics'
-    ).execute()
+        try:
+            details = youtube.videos().list(
+                id=ids,
+                part='snippet, contentDetails, statistics'
+            ).execute()
+        except ConnectionError as e:
+            print(e)
+            return videos
 
-    videos = []
     for detail in details.get("items", []):
         added = True
         if "regionRestriction" in detail["contentDetails"]:
@@ -63,18 +67,21 @@ def search(query):
     regexVideoId = re.compile(URL_REGEX, re.IGNORECASE | re.MULTILINE)
     if regexVideoId.search(query) is None:
         # The query is not an url
-        search_response = youtube.search().list(
-            q=query,
-            part="id",
-            type="video",
-            maxResults=15,
-            videoSyndicated="true",
-            videoEmbeddable="true",
-            regionCode="FR",
-            relevanceLanguage="fr"
-        ).execute()
-        for video in search_response.get("items", []):
-            ids.append(video["id"]["videoId"])
+        try:
+            search_response = youtube.search().list(
+                q=query,
+                part="id",
+                type="video",
+                maxResults=15,
+                videoSyndicated="true",
+                videoEmbeddable="true",
+                regionCode="FR",
+                relevanceLanguage="fr"
+            ).execute()
+            for video in search_response.get("items", []):
+                ids.append(video["id"]["videoId"])
+        except ConnectionError as e:
+            print(e)
     else:
         # Get the id from url
         ids.append(regexVideoId.search(query).group(1))
@@ -99,11 +106,15 @@ def search(query):
 
 
 def check_validity(id):
-    detail = youtube.videos().list(
-        id=id,
-        part='contentDetails,status'
-    ).execute()
-
+    try:
+        detail = youtube.videos().list(
+            id=id,
+            part='contentDetails,status'
+        ).execute()
+    except ConnectionError as e:
+        print(e)
+        return True
+    
     # General validity
     validity = True
 
