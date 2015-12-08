@@ -37,6 +37,7 @@ function Room(data) {
   this.current_time_left = ko.observable(data.current_time_left);
   this.current_time_past = ko.observable(data.current_time_past);
   this.current_time_past_percent = ko.observable(data.current_time_past_percent);
+  this.listeners = ko.observable(data.listeners);
 }
 // Source model
 function Source(data) {
