@@ -7,7 +7,7 @@ function LibraryViewModel() {
   self.musicsLibrary = ko.observableArray([]);
   self.hasPrevious = ko.observable();
   self.hasNext = ko.observable();
-  self.currentPage = ko.observable();
+  self.currentPage = ko.observable(1);
 
   // search part
   self.musicSearch = ko.observableArray([]);
@@ -142,7 +142,7 @@ function LibraryViewModel() {
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
-    event ? url = event.target.value : url = "/musics?page_size=" + pageSize;
+    event ? url = event.target.value : url = "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
     $.getJSON(url, function(allData) {
       var mappedMusics = $.map(allData.results, function(item) {
         item.from = 'library';
@@ -151,7 +151,8 @@ function LibraryViewModel() {
       self.musicsLibrary(mappedMusics);
       self.hasPrevious(allData.previous);
       self.hasNext(allData.next);
-      $("#popover-container-custom").scrollTop(0);
+      event ? ($(event.currentTarget).data('action') === "getNextPage" ? self.currentPage(self.currentPage() + 1) : self.currentPage(self.currentPage() - 1)) : null ;
+      event ? $("#popover-container-custom").scrollTop(0) : null;
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
