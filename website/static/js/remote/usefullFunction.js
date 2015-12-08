@@ -90,6 +90,11 @@ $(document).ready(function() {
       $(this).val(ui.item.value).change();
       $(event.target.form).submit();
     },
+  }).keypress(function(e) {
+    (!e) ? e = window.event : null;
+    if(e.which === 13) {
+      $(this).autocomplete('close');
+    }
   });
 
 
