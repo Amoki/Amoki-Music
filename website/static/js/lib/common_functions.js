@@ -7,12 +7,12 @@ var getCookie = null;
 var removeCookie = null;
 if(typeof(Storage) !== "undefined") {
   storeCookie = new Function('key', 'value', 'localStorage.setItem(key, value);');
-  getCookie = new Function('key', 'localStorage.getItem(key);');
+  getCookie = new Function('key', 'return localStorage.getItem(key);');
   removeCookie = new Function('key', 'localStorage.removeItem(key);');
 }
 else {
   storeCookie = new Function('key', 'value', 'Cookies.set(key, value);');
-  getCookie = new Function('key', 'Cookies.get(key);');
+  getCookie = new Function('key', 'return Cookies.get(key);');
   removeCookie = new Function('key', 'Cookies.remove(key);');
 }
 
