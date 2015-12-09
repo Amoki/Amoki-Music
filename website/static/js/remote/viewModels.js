@@ -182,8 +182,8 @@ function RoomViewModel() {
   self.room = ko.observable();
   self.playlistTracks = ko.observableArray([]);
 
-  (!Cookies.get('playerOpen') || Cookies.get('playerOpen') === false) ? Cookies.set('playerOpen', false) : null;
-  self.playerOpen = ko.observable((Cookies.get('playerOpen') === "true"));
+  (!getCookie('playerOpen') || getCookie('playerOpen') === false) ? storeCookie('playerOpen', false) : null;
+  self.playerOpen = ko.observable((getCookie('playerOpen') === "true"));
 
   self.clear = function() {
     self.room(null);
@@ -194,7 +194,7 @@ function RoomViewModel() {
 
   self.openPlayer = function() {
     self.playerOpen(true);
-    Cookies.set('playerOpen', true);
+    storeCookie('playerOpen', true);
     if(self.room().currentMusic()) {
       Object.keys(playerControlWrapper).forEach(function(player) {
         if(player !== self.room().currentMusic().source()) {
@@ -211,7 +211,7 @@ function RoomViewModel() {
 
   self.closePlayer = function() {
     self.playerOpen(false);
-    Cookies.set('playerOpen', false);
+    storeCookie('playerOpen', false);
     if($('#tab_btn_playlist').hasClass('active')) {
       $('#tab_btn_playlist, #playlist').removeClass('active');
       $('#tab_btn_library, #library').addClass('active');

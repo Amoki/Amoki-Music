@@ -10,7 +10,7 @@ var playerPreviewControlWrapper = {
 
 function updateVolume(volume) {
   Object.keys(playerControlWrapper).forEach(function(player) {
-    Cookies.set('volumePlayer', volume);
+    storeCookie('volumePlayer', volume);
     playerControlWrapper[player].setVolume(volume);
   });
 }
@@ -42,7 +42,7 @@ $("#slider-volume").slider({
   min: 0,
   max: 100,
   create: function() {
-    $("#slider-volume").slider("option", "value", Cookies.get('volumePlayer'));
+    $("#slider-volume").slider("option", "value", getCookie('volumePlayer'));
   },
   slide: function(event, ui) {
     updateVolume(ui.value);
