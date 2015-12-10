@@ -48,6 +48,9 @@ class TestMusic(EndpointTestCase):
 
         Music.objects.filter(music_id="a", room=self.r).exists().should.be.false
 
+        self.r = self.reload(self.r)
+        self.r.current_music.should.eql(None)
+
     def test_delete_not_exists(self):
         response = self.client.delete('/music/42')
 
@@ -69,6 +72,8 @@ class TestMusic(EndpointTestCase):
         response = self.client.patch('/music/%s' % m.pk, {'timer_start': 8, 'duration': 106})
 
         response.status_code.should.eql(status.HTTP_200_OK)
+        response.data.should.have.key('timer_start').which.should.equal(8)
+        response.data.should.have.key('duration').which.should.equal(106)
 
         m = self.reload(m)
 
@@ -139,6 +144,8 @@ class TestMusic(EndpointTestCase):
         response = self.client.post('/music', music_to_post)
 
         response.status_code.should.eql(status.HTTP_201_CREATED)
+        response.data.should.be.a("dict")
+        response.data.should.have.key("music_id").which.should.eql("a")
 
         Music.objects.filter(music_id='a', room=self.r).exists().should.be.true
 
@@ -168,6 +175,7 @@ class TestMusic(EndpointTestCase):
         response = self.client.post('/music', music_to_post)
 
         response.status_code.should.eql(status.HTTP_201_CREATED)
+        response.data.should.have.key('duration').which.should.eql(100)
 
         Music.objects.filter(music_id='a', room=self.r).first().duration.should.be.eql(100)
 

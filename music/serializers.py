@@ -66,7 +66,7 @@ class MusicSerializer(serializers.ModelSerializer):
             Events.get(room).cancel()
             event = Events.set(room, Timer(room.get_current_remaining_time(), room.play_next, ()))
             event.start()
-        return instance
+        return music
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
