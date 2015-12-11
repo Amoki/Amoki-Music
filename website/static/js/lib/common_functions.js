@@ -11,7 +11,7 @@ if(typeof(Storage) !== "undefined") {
   removeCookie = new Function('key', 'localStorage.removeItem(key);');
 }
 else {
-  storeCookie = new Function('key', 'value', 'Cookies.set(key, value);');
+  storeCookie = new Function('key', 'value', 'Cookies.set(key, value, {expires: 7});');
   getCookie = new Function('key', 'return Cookies.get(key);');
   removeCookie = new Function('key', 'Cookies.remove(key);');
 }
