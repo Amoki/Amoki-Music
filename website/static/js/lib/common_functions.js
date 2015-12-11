@@ -2,14 +2,29 @@
 INIT VARS
 INIT AJAX CSRF
 ********************/
-if(!Cookies.get('volumePlayer')) {
-  Cookies.set('volumePlayer', 10, {expires: 7});
+var storeCookie = null;
+var getCookie = null;
+var removeCookie = null;
+if(typeof(Storage) !== "undefined") {
+  storeCookie = new Function('key', 'value', 'localStorage.setItem(key, value);');
+  getCookie = new Function('key', 'return localStorage.getItem(key);');
+  removeCookie = new Function('key', 'localStorage.removeItem(key);');
 }
+else {
+  storeCookie = new Function('key', 'value', 'Cookies.set(key, value, {expires: 7});');
+  getCookie = new Function('key', 'return Cookies.get(key);');
+  removeCookie = new Function('key', 'Cookies.remove(key);');
+}
+
+if(!getCookie('volumePlayer')) {
+  storeCookie('volumePlayer', 10);
+}
+
 var ws4redis;
 function setRoomConnexion(token, heartbeat, wsUri) {
-  Cookies.set('room_token', token, {expires: 7});
-  Cookies.set('room_heartbeat', heartbeat, {expires: 7});
-  Cookies.set('room_wsUri', wsUri, {expires: 7});
+  storeCookie('room_token', token);
+  storeCookie('room_heartbeat', heartbeat);
+  storeCookie('room_wsUri', wsUri);
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
       xhr.setRequestHeader("Authorization", "Bearer " + token);
@@ -28,9 +43,9 @@ function setRoomConnexion(token, heartbeat, wsUri) {
 }
 
 function logOutRoom() {
-  Cookies.remove('room_token');
-  Cookies.remove('room_heartbeat');
-  Cookies.remove('room_wsUri');
+  removeCookie('room_token');
+  removeCookie('room_heartbeat');
+  removeCookie('room_wsUri');
   ws4redis.close();
 }
 

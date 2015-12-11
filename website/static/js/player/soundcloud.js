@@ -7,7 +7,7 @@ soundcloudPreviewPlayer.initialized = false;
 
 soundcloudPlayer.bind(SC.Widget.Events.READY, function() {
   soundcloudPlayer.initialized = true;
-  if(Cookies.get('playerOpen') && Cookies.get('playerOpen') === "true" && roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "soundcloud") {
+  if(getCookie('playerOpen') && getCookie('playerOpen') === "true" && roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "soundcloud") {
     roomVM.openPlayer();
   }
 });
@@ -42,7 +42,7 @@ var soundcloudPlayerControl = {
           hide_related: true,
           auto_play: true,
           callback: function() {
-            soundcloudPlayer.setVolume(Cookies.get('volumePlayer') / 100);
+            soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
           },
         }
         );
