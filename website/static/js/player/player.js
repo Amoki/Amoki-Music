@@ -10,7 +10,7 @@ var playerPreviewControlWrapper = {
 
 function updateVolume(volume) {
   Object.keys(playerControlWrapper).forEach(function(player) {
-    Cookies.set('volumePlayer', volume);
+    Cookies.set('volumePlayer', volume, {expires: 7});
     playerControlWrapper[player].setVolume(volume);
   });
 }
