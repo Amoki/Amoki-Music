@@ -3,13 +3,13 @@ INIT VARS
 INIT AJAX CSRF
 ********************/
 if(!Cookies.get('volumePlayer')) {
-  Cookies.set('volumePlayer', 10);
+  Cookies.set('volumePlayer', 10, {expires: 7});
 }
 var ws4redis;
 function setRoomConnexion(token, heartbeat, wsUri) {
-  Cookies.set('room_token', token);
-  Cookies.set('room_heartbeat', heartbeat);
-  Cookies.set('room_wsUri', wsUri);
+  Cookies.set('room_token', token, {expires: 7});
+  Cookies.set('room_heartbeat', heartbeat, {expires: 7});
+  Cookies.set('room_wsUri', wsUri, {expires: 7});
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
       xhr.setRequestHeader("Authorization", "Bearer " + token);
