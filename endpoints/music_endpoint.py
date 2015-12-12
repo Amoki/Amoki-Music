@@ -5,8 +5,6 @@ from rest_framework import status
 from endpoints.utils.decorators import room_required
 from music.serializers import MusicSerializer
 from music.models import Music
-from player.models import Events
-from threading import Timer
 
 
 class Music_endpointView(APIView):
@@ -84,7 +82,11 @@ class Music_endpointView(APIView):
         serializer = MusicSerializer(music, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            room.send_update_message()
+            message = {
+                'action': 'music_patched',
+                'music': serializer.data,
+            }
+            room.send_message(message)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,6 +104,10 @@ class Music_endpointView(APIView):
         # We can't delete the current_music (SQL...), then skip the music before deletion
         if music_to_delete == room.current_music:
             room.play_next()
+        message = {
+            'action': 'music_deleted',
+            'music': MusicSerializer(music_to_delete).data
+        }
         music_to_delete.delete()
-        room.send_update_message()
+        room.send_message(message)
         return Response(status=status.HTTP_204_NO_CONTENT)

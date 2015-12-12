@@ -42,26 +42,124 @@ function onWsError() {
   loginVM.wsError(true);
 }
 
+
+function updatePlaylistTrack(newPlaylistTracks) {
+  mappedPlaylistTracks = $.map(newPlaylistTracks, function(item) {
+    return new PlaylistTrack(item);
+  });
+  roomVM.playlistTracks(mappedPlaylistTracks);
+}
+
 // receive a message though the websocket from the server
 function receiveMessage(message) {
-  if(message.stop) {
-    // Stop all players
-    Object.keys(playerControlWrapper).forEach(function(player) {
-      playerControlWrapper[player].stop();
-      $('.player-child').not('.player-child-no-music').stop().fadeOut(250);
-    });
-  }
-  if(message.action) {
-    if(message.action !== "play" || message.action === "play" && roomVM.playerOpen()) {
-      // stop all others players
+  switch(message.action) {
+    case 'stop':
+      // Stop the players
       Object.keys(playerControlWrapper).forEach(function(player) {
-        if(player !== message.source) {
-          playerControlWrapper[player].stop();
-        }
+        playerControlWrapper[player].stop();
+        $('.player-child').not('.player-child-no-music').stop().fadeOut(250);
       });
-      playerControlWrapper[message.source][message.action](message.options);
-    }
+
+      // Clean the room
+      roomVM.room().current_music(null);
+      roomVM.room().time_left(null);
+      roomVM.room().current_time_past(null);
+      roomVM.room().current_time_left(null);
+      roomVM.room().current_time_past_percent(null);
+      stopProgressBar();
+
+      break;
+    case 'shuffle_changed':
+      if(message.shuffle) {
+        roomVM.room().shuffle(true);
+      }
+      else {
+        roomVM.room().shuffle(false);
+      }
+      break;
+    case 'music_patched':
+      music = new Music(message.music);
+      music.from = 'library';
+
+      // modify the music in the library
+      musicsLibraryVM.musicsLibrary()[arrayFirstIndexOf(musicsLibraryVM.musicsLibrary(), function(item) {
+        return item.pk() === music.pk();
+      })] = music;
+      // notify the modification to ²
+      musicsLibraryVM.musicsLibrary.valueHasMutated();
+
+      break;
+    case 'music_deleted':
+      music = new Music(message.music);
+      music.from = 'library';
+
+      // remove the music in the library if it exist
+      musicsLibraryVM.musicsLibrary.remove(music);
+
+      // refresh the library
+      url = "/musics?page=" + musicsLibraryVM.currentPage() + "&page_size=" + pageSize;
+      $.getJSON(url, function(allData) {
+        var mappedMusics = $.map(allData.results, function(item) {
+          item.from = 'library';
+          return new Music(item);
+        });
+        musicsLibraryVM.musicsLibrary(mappedMusics);
+        musicsLibraryVM.hasPrevious(allData.previous);
+        musicsLibraryVM.hasNext(allData.next);
+      }).fail(function(jqxhr) {
+        console.error(jqxhr.responseText);
+      });
+
+      break;
+    case 'playlistTrack_updated':
+      updatePlaylistTrack(message.playlistTracks);
+      break;
+    case 'playlistTrack_deleted':
+      updatePlaylistTrack(message.playlistTracks);
+      break;
+    case 'music_added':
+      updatePlaylistTrack(message.playlistTracks);
+      break;
+    case 'volume_changed':
+      // TODO
+      break;
+    case 'play':
+      // Built the room
+      room = new Room(message.room);
+
+      // Update the room
+      roomVM.room(room);
+      message.room.current_music ? updateProgressBar(message.room.current_music.duration, message.room.current_time_past, message.room.current_time_past_percent, message.room.current_time_left) : stopProgressBar();
+
+      // Update the library
+      musicsLibraryVM.musicsLibrary.remove(function(item) {
+        return item.pk() === message.room.current_music.pk;
+      });
+      musicsLibraryVM.musicsLibrary.unshift(roomVM.room().currentMusic());
+      musicsLibraryVM.musicsLibrary.pop();
+
+      // Update the playlist
+      roomVM.playlistTracks.shift();
+
+      if(roomVM.playerOpen()) {
+        // stop all others players
+        Object.keys(playerControlWrapper).forEach(function(player) {
+          if(player !== message.room.current_music.source) {
+            playerControlWrapper[player].stop();
+          }
+        });
+        playerControlWrapper[message.room.current_music.source].play(message.room.current_music);
+      }
+      break;
+    case 'listeners_updated':
+      roomVM.room().listeners(message.listeners);
+      break;
+    default:
+      console.warn("Unknow socket received : ");
+      console.log(message);
+      break;
   }
+
   if(message.update === true) {
     roomVM.getRoom();
     roomVM.getPlaylist();

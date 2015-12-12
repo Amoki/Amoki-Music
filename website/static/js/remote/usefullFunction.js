@@ -6,6 +6,7 @@ function stopProgressBar() {
 }
 
 function updateProgressBar(duration, currentTimePast, currentTimePastPercent, currentTimeLeft) {
+  console.log(duration, currentTimePast, currentTimePastPercent, currentTimeLeft);
   $('.progress-bar').finish();
   $('#time-left-progress-bar').countTo({
     from: currentTimePast,

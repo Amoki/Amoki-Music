@@ -10,6 +10,7 @@ from datetime import datetime
 from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
+from django.conf import settings
 
 from music.models import PlaylistTrack
 
@@ -34,6 +35,7 @@ class Room(models.Model):
     token = models.CharField(max_length=64, default=generate_token)
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
     volume = models.PositiveIntegerField(default=10)
+    listeners = models.PositiveIntegerField(editable=False, default=0)
 
     UnableToUpdate = UnableToUpdate
 
@@ -60,7 +62,16 @@ class Room(models.Model):
     def send_message(self, message):
         redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
         message = RedisMessage(json.dumps(message))
-        redis_publisher.publish_message(message)
+
+        listeners = redis_publisher.publish_message(message)
+        self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
+        
+        message = {
+            'action': 'listeners_updated',
+            'listeners': self.listeners
+        }
+        listenersMessage = RedisMessage(json.dumps(message))
+        redis_publisher.publish_message(listenersMessage)
 
     def play(self, music):
         # clear the queue
@@ -80,13 +91,7 @@ class Room(models.Model):
 
             message = {
                 'action': 'play',
-                'update': True,
-                'source': music.source,
-                'options': {
-                    'name': music.name,
-                    'music_id': music.music_id,
-                    'timer_start': music.timer_start,
-                }
+                'room': self.get_serialized_room(),
             }
 
             self.send_message(message)
@@ -99,8 +104,7 @@ class Room(models.Model):
         self.current_music = None
         self.save()
         message = {
-            'stop': True,
-            'update': True,
+            'action': 'stop',
         }
         self.send_message(message)
 
@@ -128,7 +132,11 @@ class Room(models.Model):
         if not self.current_music:
             self.play_next()
         else:
-            self.send_update_message()
+            message = {
+                'action': 'music_added',
+                'playlistTracks': self.get_serialized_playlist(),
+            }
+            self.send_message(message)
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics
@@ -181,12 +189,6 @@ class Room(models.Model):
     def get_count_remaining(self):
         return self.tracks.count()
 
-    def send_update_message(self):
-        message = {
-            'update': True,
-        }
-        self.send_message(message)
-
     def set_volume(self, volume):
         if not self.can_adjust_volume:
             raise UnableToUpdate("This room don't have permission to update volume.")
@@ -195,7 +197,7 @@ class Room(models.Model):
         self.save()
 
         message = {
-            'action': 'volume_change',
+            'action': 'volume_changed',
             'volume': self.volume
         }
         self.send_message(message)
@@ -205,15 +207,40 @@ class Room(models.Model):
             raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
+            message = {
+                'action': 'shuffle_changed',
+                'shuffle': True,
+            }
             self.save()
+            self.send_message(message)
             if not self.current_music:
                 self.play_next()
-            else:
-                self.send_update_message()
         else:
             self.shuffle = False
+            message = {
+                'action': 'shuffle_changed',
+                'shuffle': False,
+            }
             self.save()
-            self.send_update_message()
+            self.send_message(message)
+
+    def get_serialized_music(self, music):
+        # Horrible but Mom said me I can :3
+        # http://sametmax.com/quelques-erreurs-tordues-et-leurs-solutions-en-python/
+        from music.serializers import MusicSerializer
+        return MusicSerializer(music).data
+
+    def get_serialized_playlist(self):
+        # Horrible but Mom said me I can :3
+        # http://sametmax.com/quelques-erreurs-tordues-et-leurs-solutions-en-python/
+        from music.serializers import PlaylistSerializer
+        return PlaylistSerializer(self.playlist.all(), many=True).data
+
+    def get_serialized_room(self):
+        # Horrible but Mom said me I can :3
+        # http://sametmax.com/quelques-erreurs-tordues-et-leurs-solutions-en-python/
+        from player.serializers import RoomSerializer
+        return RoomSerializer(self).data
 
 
 class Events():

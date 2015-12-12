@@ -39,12 +39,12 @@ function LibraryViewModel() {
       type: "post",
       contentType: "application/json",
       dataType: "json",
-      success: function(result) {
-        newMusic = new Music(result);
+      success: function() {
         $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
         $("button.btn-add-music").prop('disabled', false);
         modalConfirm($('#modal-add-music'));
-      }
+      },
+      error: logErrors,
     });
   };
 
@@ -55,8 +55,7 @@ function LibraryViewModel() {
       type: "patch",
       contentType: "application/json",
       dataType: "json",
-      success: function(result) {
-        newMusic = new Music(result);
+      success: function() {
         if(!play) {
           $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
           $("button.btn-add-music").prop('disabled', false);
@@ -65,7 +64,8 @@ function LibraryViewModel() {
         else {
           self.addMusic(music);
         }
-      }
+      },
+      error: logErrors,
     });
   };
 
@@ -76,12 +76,7 @@ function LibraryViewModel() {
       self.addMusic(music);
     }
     else if(music.from === 'library') {
-      if(play === 'play') {
-        self.addMusic(music);
-      }
-      else {
-        self.patchMusic(music, play);
-      }
+      (play === 'play') ? self.addMusic(music) : self.patchMusic(music, play);
     }
   };
 
