@@ -19,7 +19,8 @@ function updateProgressBar(duration, currentTimePast, currentTimePastPercent, cu
   });
   $('#time-left-progress-bar').countTo('restart');
 
-  // $('.progress-bar').finish().css('width', currentTimePastPercent + '%');
+  $('.progress-bar').finish();
+  $('.progress-bar').width(currentTimePastPercent + '%');
   // .animate(
   //   {
   //     'width': '100%'
