@@ -1,6 +1,5 @@
 var sortableOptions = {
   axis: "y",
-  containment: ".panel-playlist",
   revert: true,
   cursor: "move",
   scrollSpeed: 5,
