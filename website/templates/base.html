@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
   <script type="text/javascript" src="{% static 'js/lib/js.cookie-2.0.3.min.js' %}"></script>
@@ -81,11 +81,13 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-              <li data-bind="stopBinding">
-                <a class="btn-navbar" class="ko-login">
+              <!-- ko stopBinding -->
+              <li class="ko-login">
+                <a class="btn-navbar">
                   <button class="btn btn-primary btn-navbar" type="button" data-bind="click: $root.logOut">Change Room</button>
                 </a>
               </li>
+              <!-- /ko -->
               <li data-bind="if: !$root.playerOpen()">
                 <a class="btn-navbar">
                   <button class="btn btn-primary btn-navbar" type="button" data-bind="click: $root.openPlayer">Open the player</button>
@@ -166,14 +168,14 @@
             <!-- END PLAYLIST -->
 
             <!-- PROGRESS BAR -->
-            <div class="row" data-bind="with:room">
+            <div class="row">
               <div class="col-xs-offset-1 col-xs-10 wrapper-progress-bar">
-                <div class="progress progress-striped active">
+                <div class="progress progress-striped">
                   <div class="progress-bar"></div>
                 </div>
                 <div id="time-left-progress-bar-wrapper">
                   <span id="time-left-progress-bar"></span>
-                  <span id="time-left-progress-bar-duration">
+                  <span id="time-left-progress-bar-duration" data-bind="with:room">
                     <!-- ko if: currentMusic() -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic().duration()) --><!--/ko--><!--/ko-->
                   </span>
                 </div>

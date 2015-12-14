@@ -1,13 +1,10 @@
 function stopProgressBar() {
-  $(document).attr('title', 'Amoki\'s musics');
   $('.progress-bar').finish();
   $('.progress-bar').css('width', '0%');
-  $('#time-left-progress-bar').countTo('stop');
+  $('#time-left-progress-bar').countTo('stop').html('');
 }
 
 function updateProgressBar(duration, currentTimePast, currentTimePastPercent, currentTimeLeft) {
-  console.log(duration, currentTimePast, currentTimePastPercent, currentTimeLeft);
-  $('.progress-bar').finish();
   $('#time-left-progress-bar').countTo({
     from: currentTimePast,
     to: duration,
@@ -22,15 +19,16 @@ function updateProgressBar(duration, currentTimePast, currentTimePastPercent, cu
   });
   $('#time-left-progress-bar').countTo('restart');
 
-  $('.progress-bar').width(currentTimePastPercent + '%').animate(
-  {
-    'width': '100%'
-  },
-  {
-    duration: currentTimeLeft * 1000,
-    easing: 'linear',
-  }
-  );
+  // $('.progress-bar').finish().css('width', currentTimePastPercent + '%');
+  // .animate(
+  //   {
+  //     'width': '100%'
+  //   },
+  //   {
+  //     duration: currentTimeLeft * 1000,
+  //     easing: 'linear',
+  //   }
+  // );
 }
 
 function resize() {

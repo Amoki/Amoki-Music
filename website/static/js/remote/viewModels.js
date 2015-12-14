@@ -24,7 +24,7 @@ function LibraryViewModel() {
     self.musicsLibrary([]);
     self.hasPrevious(null);
     self.hasNext(null);
-    self.currentPage(null);
+    self.currentPage(1);
     self.musicSearch([]);
     self.sourceSearch(null);
     self.querySearch(null);
@@ -222,9 +222,11 @@ function RoomViewModel() {
       self.room(new Room(allData));
       if(self.room().currentMusic()) {
         updateProgressBar(self.room().currentMusic().duration(), self.room().current_time_past(), self.room().current_time_past_percent(), self.room().current_time_left());
+        document.title = self.room().currentMusic().name();
       }
       else {
         stopProgressBar();
+        document.title = self.room().name();
       }
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
@@ -250,8 +252,7 @@ function RoomViewModel() {
       type: 'patch',
       contentType: 'application/json',
       dataType: 'json',
-      success: function(allData) {
-        self.room(new Room(allData));
+      success: function() {
         if(self.room().shuffle()) {
           modalConfirm($('#modal-shuffle-on'));
         }
@@ -269,8 +270,7 @@ function RoomViewModel() {
       type: "post",
       contentType: "application/json",
       dataType: 'json',
-      success: function(allData) {
-        self.room(new Room(allData));
+      success: function() {
         modalConfirm($('#modal-next-music'));
       },
       error: logErrors,
@@ -304,7 +304,6 @@ function RoomViewModel() {
       contentType: "application/json",
       dataType: 'json',
       success: function() {
-        musicsLibraryVM.musicsLibrary.remove(music);
         modalConfirm($('#modal-delete-music'));
       },
       error: logErrors,

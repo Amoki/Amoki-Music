@@ -61,21 +61,17 @@ function receiveMessage(message) {
       });
 
       // Clean the room
-      roomVM.room().current_music(null);
+      roomVM.room().currentMusic(null);
       roomVM.room().time_left(null);
       roomVM.room().current_time_past(null);
       roomVM.room().current_time_left(null);
       roomVM.room().current_time_past_percent(null);
       stopProgressBar();
+      document.title = roomVM.room().name();
 
       break;
     case 'shuffle_changed':
-      if(message.shuffle) {
-        roomVM.room().shuffle(true);
-      }
-      else {
-        roomVM.room().shuffle(false);
-      }
+      (message.shuffle) ? roomVM.room().shuffle(true) : roomVM.room().shuffle(false);
       break;
     case 'music_patched':
       music = new Music(message.music);
@@ -85,7 +81,7 @@ function receiveMessage(message) {
       musicsLibraryVM.musicsLibrary()[arrayFirstIndexOf(musicsLibraryVM.musicsLibrary(), function(item) {
         return item.pk() === music.pk();
       })] = music;
-      // notify the modification to ²
+      // notify the modification to subscribers
       musicsLibraryVM.musicsLibrary.valueHasMutated();
 
       break;
@@ -141,6 +137,10 @@ function receiveMessage(message) {
       // Update the playlist
       roomVM.playlistTracks.shift();
 
+      // Update the page title
+      document.title = roomVM.room().currentMusic().name();
+
+      // Play the music
       if(roomVM.playerOpen()) {
         // stop all others players
         Object.keys(playerControlWrapper).forEach(function(player) {
@@ -158,12 +158,6 @@ function receiveMessage(message) {
       console.warn("Unknow socket received : ");
       console.log(message);
       break;
-  }
-
-  if(message.update === true) {
-    roomVM.getRoom();
-    roomVM.getPlaylist();
-    musicsLibraryVM.getLibrary();
   }
 }
 
