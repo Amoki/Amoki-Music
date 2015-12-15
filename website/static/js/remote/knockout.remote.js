@@ -78,11 +78,28 @@ function receiveMessage(message) {
       music.from = 'library';
 
       // modify the music in the library
-      musicsLibraryVM.musicsLibrary()[arrayFirstIndexOf(musicsLibraryVM.musicsLibrary(), function(item) {
+      var index = arrayFirstIndexOf(musicsLibraryVM.musicsLibrary(), function(item) {
         return item.pk() === music.pk();
-      })] = music;
+      });
+      (index >= 0) ? musicsLibraryVM.musicsLibrary()[index] = music : null;
       // notify the modification to subscribers
       musicsLibraryVM.musicsLibrary.valueHasMutated();
+
+      // modify the musics in the playlistTracks
+      ko.utils.arrayForEach(roomVM.playlistTracks(), function(item) {
+        (item.music().pk() === music.pk()) ? item.music(music) : null;
+      });
+      // notify the modification to subscribers
+      roomVM.playlistTracks.valueHasMutated();
+
+      if(roomVM.room().currentMusic().pk() === music.pk()) {
+        roomVM.room().currentMusic(music);
+        roomVM.room().current_time_past($('#time-left-progress-bar').data('currentTimePast'));
+        roomVM.room().current_time_left(roomVM.room().currentMusic().duration() - roomVM.room().current_time_past());
+        roomVM.room().current_time_past_percent(((roomVM.room().currentMusic().duration() - roomVM.room().current_time_left()) * 100) / roomVM.room().currentMusic().duration());
+
+        updateProgressBar(roomVM.room().currentMusic().duration(), roomVM.room().current_time_past(), roomVM.room().current_time_past_percent(), roomVM.room().current_time_left(), true);
+      }
 
       break;
     case 'music_deleted':
@@ -125,13 +142,13 @@ function receiveMessage(message) {
 
       // Update the room
       roomVM.room(room);
-      message.room.current_music ? updateProgressBar(message.room.current_music.duration, message.room.current_time_past, message.room.current_time_past_percent, message.room.current_time_left) : stopProgressBar();
+      updateProgressBar(message.room.current_music.duration, message.room.current_time_past, message.room.current_time_past_percent, message.room.current_time_left);
 
       // Update the library
-      musicsLibraryVM.musicsLibrary.remove(function(item) {
+      musicExtracted = musicsLibraryVM.musicsLibrary.remove(function(item) {
         return item.pk() === message.room.current_music.pk;
       });
-      musicsLibraryVM.musicsLibrary.unshift(roomVM.room().currentMusic());
+      musicsLibraryVM.musicsLibrary.unshift(musicExtracted[0]);
       musicsLibraryVM.musicsLibrary.pop();
 
       // Update the playlist

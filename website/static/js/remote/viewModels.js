@@ -199,7 +199,7 @@ function RoomViewModel() {
       });
       var options = {
         music_id: self.room().currentMusic().music_id(),
-        timer_start: self.room().currentMusic().timer_start() + $('#time-left-progress-bar').attr('currentTimePast'),
+        timer_start: self.room().currentMusic().timer_start() + $('#time-left-progress-bar').data('currentTimePast'),
       };
       playerControlWrapper[self.room().currentMusic().source()].play(options);
     }
