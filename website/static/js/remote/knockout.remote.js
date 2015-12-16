@@ -45,7 +45,7 @@ function onWsError() {
   reconnectTry += 1;
   loginVM.wsError(true);
   loginVM.wsConnected(false);
-  if(reconnectTry > 10) {
+  if(reconnectTry > 6) {
     loginVM.logOut();
   }
 }

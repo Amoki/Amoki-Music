@@ -383,6 +383,7 @@ function LoginViewModel() {
   self.logOut = function() {
     self.isConnected(false);
     self.wsConnected(false);
+    self.wsError(false);
     roomVM.clear();
     musicsLibraryVM.clear();
     logOutRoom();
