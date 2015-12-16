@@ -36,6 +36,7 @@ function setRoomConnexion(token, heartbeat, wsUri) {
   else {
     $.getJSON("/check_credentials",
       function(data) {
+        loginVM.isConnected(true);
         storeCookie('room_heartbeat', data.heartbeat);
         storeCookie('room_wsUri', data.uri);
         connectWs(token, data.uri, data.heartbeat);

@@ -35,10 +35,9 @@ $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-dow
 function onWsOpen() {
   reconnectTry = 0;
   loginVM.wsError(false);
-  loginVM.wsConnected(true);
-  loginVM.isConnected(true);
   roomVM.init();
   musicsLibraryVM.init();
+  loginVM.wsConnected(true);
 }
 
 function onWsError() {
@@ -76,7 +75,3 @@ function receiveMessage(message) {
     musicsLibraryVM.getLibrary();
   }
 }
-
-$(document).on('click', '#btn-open-player', function() {
-  roomVM.openPlayer();
-});

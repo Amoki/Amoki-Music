@@ -368,6 +368,7 @@ function LoginViewModel() {
       },
       function(allData) {
         roomVM.room(new Room(allData.room));
+        self.isConnected(true);
         setRoomConnexion(allData.room.token, allData.websocket.heartbeat, allData.websocket.uri);
       }).fail(function(jqxhr) {
         self.badLogin(true);
