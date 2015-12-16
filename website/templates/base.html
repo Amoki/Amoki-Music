@@ -8,42 +8,36 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta http-equiv="content-language" content="fr" />
 
-  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
   <link href="{% static 'css/style.less' %}" rel="stylesheet/less">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css">
 
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
-  <script type="text/javascript" src="{% static 'js/lib/js.cookie-2.0.3.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/bootstrap.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/prefixfree.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/ws4redis.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/jquery.plugin.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/jquery.countTo.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/jquery-ui.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/knockout-sortable.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/knockout-bootstrap-custom.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/lib/common_functions.js' %}"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/g/jquery@1.11.3,knockout@3.4.0,less@2.5.3,js-cookie@2.0.4,bootstrap@3.3.6,prefixfree@1.0.7,jquery.ui@1.11.4,bootstrap.select@2.0.0-beta1"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout-sortable/0.11.0/knockout-sortable.min.js"></script>
 
-  <script type="text/javascript" src="{% static 'js/knockout/customBinding.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/knockout/models.js' %}"></script>
-
-  <script type="text/javascript" src="{% static 'js/remote/viewModels.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/remote/knockout.remote.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/remote/usefullFunction.js' %}"></script>
 </head>
 <body>
   <div id="wrapper">
     <!-- BEGIN LOGIN -->
-    <div class="wrapper-login ko-login" data-bind="css: { 'display-none': isConnected }">
-      <div class="container col-xs-4 col-xs-offset-4 LOGIN">
+    <div class="wrapper-login ko-login" data-bind="css: { 'display-none': isConnected && wsConnected }">
+      <div class="sk-cube-grid" data-bind="css: { 'display-none': (wsConnected() || !isConnected()) }">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+      </div>
+
+      <div class="container col-xs-4 col-xs-offset-4 LOGIN" data-bind="css: { 'display-none': isConnected }">
         <div class="header">
           <h3 class="text-muted">Log In</h3>
         </div>
@@ -109,7 +103,7 @@
             <!-- HEADER REMOTE -->
             <div class="row header-remote" data-bind="with: room">
               <div data-bind="if: currentMusic()">
-                <img id="thumbnail" class="col-xs-offset-1 col-xs-3" data-bind="attr: {src: currentMusic().thumbnail()}">
+                <img id="thumbnail" class="col-xs-offset-1 col-xs-3" data-bind="attr: {src: currentMusic().thumbnail() , alt: 'Thumbnail of current song : ' + currentMusic().name(), title:'Thumbnail of current song : ' + currentMusic().name() }">
                 <div class="col-xs-7 title_playing">
                   <div class="marquee">
                     <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
@@ -131,7 +125,9 @@
               <div class="col-xs-offset-1 col-xs-10 wrappeur">
                 <div id="player-wrapper" class="col-xs-12 player">
                   <div class="player-child player-child-no-music col-xs-12">
-                    <a id="btn-open-player"><img src="{% static 'img/btn-play-large.png' %}"></a>
+                    <div id="wrapper-btn-open-player">
+                      <img id="btn-open-player" width="172px" height="172px" title="Start the shuffle mode" alt="Button play which start the shuffle mode" data-bind="click: patchShuffle" src="{% static 'img/btn-play-large.png' %}">
+                    </div>
                   </div>
 
                   <div id="wrapper-youtube-player" class="player-child col-xs-12">
@@ -238,7 +234,7 @@
                           <!-- SEARCH MUSIC DATA -->
                           <div class="row-list-item">
                             <div class="search-img-music">
-                              <img data-bind="attr: { src: thumbnail }">
+                              <img title="The thumbnail of the video" alt="The thumbnail of the video" data-bind="attr: { src: thumbnail, alt: 'The thumbnail of ' + name(), title: 'The thumbnail of ' + name() }">
                             </div>
                             <div class="search-music-info">
                               <div class="row">
@@ -273,7 +269,7 @@
                         <li class="list-group-item item-lib row row-list-item">
                           <div class="row-list-item">
                             <div class="library-img-music">
-                              <img data-bind="attr: { src: thumbnail }">
+                              <img title="The thumbnail of the video" alt="The thumbnail of the video" data-bind="attr: { src: thumbnail, alt: 'The thumbnail of ' + name(), title: 'The thumbnail of ' + name() }">
                             </div>
                             <div class="library-music-info">
                               <div class="row">
@@ -446,10 +442,9 @@
   </div>
 
   <div id="tooltip_volume_slider" class="tooltip tooltip-volume-player"></div>
+
   <script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
-  <script type="text/javascript" src="{% static 'js/player/soundcloud.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/player/youtube.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/player/player.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/unified.custom.min.js' %}"></script>
 
   <!-- TEMPLATES -->
   <script type="text/html" id="playlist-template">
