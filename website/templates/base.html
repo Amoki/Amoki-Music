@@ -42,8 +42,8 @@
 <body>
   <div id="wrapper">
     <!-- BEGIN LOGIN -->
-    <div class="wrapper-login ko-login" data-bind="css: { 'display-none': isConnected }">
-      <div class="container col-xs-4 col-xs-offset-4 LOGIN">
+    <div class="wrapper-login ko-login" data-bind="css: { 'display-none': isConnected && wsConnected }">
+      <div class="container col-xs-4 col-xs-offset-4 LOGIN" data-bind="css: { 'display-none': isConnected }">
         <div class="header">
           <h3 class="text-muted">Log In</h3>
         </div>

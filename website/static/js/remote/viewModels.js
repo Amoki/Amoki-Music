@@ -339,6 +339,7 @@ function LoginViewModel() {
   var self = this;
 
   self.isConnected = ko.observable(false);
+  self.wsConnected = ko.observable(false);
   self.wsError = ko.observable(false);
   self.badLogin = ko.observable(false);
 
@@ -381,6 +382,7 @@ function LoginViewModel() {
 
   self.logOut = function() {
     self.isConnected(false);
+    self.wsConnected(false);
     roomVM.clear();
     musicsLibraryVM.clear();
     logOutRoom();

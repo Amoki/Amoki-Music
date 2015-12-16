@@ -1,4 +1,5 @@
 var pageSize = 40;
+var reconnectTry = 0;
 
 $(function() {
   loginVM = new LoginViewModel();
@@ -32,14 +33,21 @@ $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-dow
 
 
 function onWsOpen() {
+  reconnectTry = 0;
   loginVM.wsError(false);
+  loginVM.wsConnected(true);
   loginVM.isConnected(true);
   roomVM.init();
   musicsLibraryVM.init();
 }
 
 function onWsError() {
+  reconnectTry += 1;
   loginVM.wsError(true);
+  loginVM.wsConnected(false);
+  if(reconnectTry > 10) {
+    loginVM.logOut();
+  }
 }
 
 // receive a message though the websocket from the server
