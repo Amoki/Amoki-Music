@@ -62,11 +62,10 @@ class Room(models.Model):
     def send_message(self, message):
         redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
         message = RedisMessage(json.dumps(message))
-
         listeners = redis_publisher.publish_message(message)
-        self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
         
         if listeners != self.listeners:
+            self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
             message = {
                 'action': 'listeners_updated',
                 'listeners': self.listeners
