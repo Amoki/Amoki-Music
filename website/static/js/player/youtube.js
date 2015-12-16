@@ -88,7 +88,7 @@ function onYouTubeIframeAPIReady() {
       onReady: function() {
         youtubePlayer.initialized = true;
         youtubePlayerControl.setVolume(getCookie('volumePlayer'));
-        if(getCookie('playerOpen') && getCookie('playerOpen') === "true" && roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "youtube") {
+        if(getCookie('playerOpen') && getCookie('playerOpen') === "true" && roomVM.room() && roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "youtube") {
           roomVM.openPlayer();
         }
       },

@@ -16,8 +16,8 @@ $(function() {
   });
 
   loginVM.getRooms();
-  if(getCookie('room_token') && getCookie('room_heartbeat') && getCookie('room_wsUri')) {
-    setRoomConnexion(getCookie('room_token'), getCookie('room_heartbeat'), getCookie('room_wsUri'));
+  if(getCookie('room_token')) {
+    setRoomConnexion(getCookie('room_token'));
   }
   else {
     loginVM.isConnected(false);
