@@ -66,12 +66,13 @@ class Room(models.Model):
         listeners = redis_publisher.publish_message(message)
         self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
         
-        message = {
-            'action': 'listeners_updated',
-            'listeners': self.listeners
-        }
-        listenersMessage = RedisMessage(json.dumps(message))
-        redis_publisher.publish_message(listenersMessage)
+        if listeners != self.listeners:
+            message = {
+                'action': 'listeners_updated',
+                'listeners': self.listeners
+            }
+            listenersMessage = RedisMessage(json.dumps(message))
+            redis_publisher.publish_message(listenersMessage)
 
     def play(self, music):
         # clear the queue
