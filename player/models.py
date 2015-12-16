@@ -224,12 +224,6 @@ class Room(models.Model):
             self.save()
             self.send_message(message)
 
-    def get_serialized_music(self, music):
-        # Horrible but Mom said me I can :3
-        # http://sametmax.com/quelques-erreurs-tordues-et-leurs-solutions-en-python/
-        from music.serializers import MusicSerializer
-        return MusicSerializer(music).data
-
     def get_serialized_playlist(self):
         # Horrible but Mom said me I can :3
         # http://sametmax.com/quelques-erreurs-tordues-et-leurs-solutions-en-python/
