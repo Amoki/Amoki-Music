@@ -1,35 +1,52 @@
 function stopProgressBar() {
-  $(document).attr('title', 'Amoki\'s musics');
-  $('.progress-bar').finish();
+  $('style#expand, style#progress-bar-stripes').remove();
+  $('.progress-bar').pauseKeyframe();
   $('.progress-bar').css('width', '0%');
-  $('#time-left-progress-bar').countTo('stop');
+  $('#time-left-progress-bar').countTo('stop').html('');
 }
 
-function updateProgressBar(duration, currentTimePast, currentTimePastPercent, currentTimeLeft) {
-  $('.progress-bar').finish();
-  $('#time-left-progress-bar').countTo({
-    from: currentTimePast,
-    to: duration,
-    speed: currentTimeLeft * 1000,
-    refreshInterval: 1000,
-    formatter: function(value, options) {
-      return humanizeSeconds(value.toFixed(options.decimals));
-    },
-    onUpdate: function(value) {
-      this.attr('currentTimePast', value);
-    },
-  });
-  $('#time-left-progress-bar').countTo('restart');
-
-  $('.progress-bar').width(currentTimePastPercent + '%').animate(
-  {
-    'width': '100%'
-  },
-  {
-    duration: currentTimeLeft * 1000,
-    easing: 'linear',
+function updateProgressBar(duration, currentTimePast, currentTimePastPercent, currentTimeLeft, keepCounter) {
+  if(!keepCounter) {
+    $('#time-left-progress-bar').countTo({
+      from: currentTimePast,
+      to: duration,
+      speed: currentTimeLeft * 1000,
+      refreshInterval: 1000,
+      formatter: function(value, options) {
+        return humanizeSeconds(value.toFixed(options.decimals));
+      },
+      onUpdate: function(value) {
+        this.data('currentTimePast', value);
+      },
+    });
+    $('#time-left-progress-bar').countTo('restart');
   }
-  );
+
+  $('style#expand, style#progress-bar-stripes').remove();
+  $('.progress-bar').pauseKeyframe();
+  $('.progress-bar').width(currentTimePastPercent + '%');
+  $.keyframe.define([{
+    name: 'expand',
+    from: {
+      'width': currentTimePastPercent + '%'
+    },
+    to: {
+      'width': '100%'
+    }
+  },{
+    name: 'progress-bar-stripes',
+    from: {
+      'background-position': '40px 0'
+    },
+    to: {
+      'background-position': '0 0'
+    }
+  }
+  ]);
+  $('.progress-bar').playKeyframe([
+    'expand ' + currentTimeLeft + 's linear 0s 1 normal forwards',
+    'progress-bar-stripes 2s linear infinite'
+  ]);
 }
 
 function resize() {
@@ -90,6 +107,11 @@ $(document).ready(function() {
       $(this).val(ui.item.value).change();
       $(event.target.form).submit();
     },
+  }).keypress(function(e) {
+    (!e) ? e = window.event : null;
+    if(e.which === 13) {
+      $(this).autocomplete('close');
+    }
   });
 
 

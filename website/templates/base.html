@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
   <script type="text/javascript" src="{% static 'js/lib/js.cookie-2.0.3.min.js' %}"></script>
@@ -30,6 +30,7 @@
   <script type="text/javascript" src="{% static 'js/lib/knockout-sortable.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/knockout-bootstrap-custom.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/common_functions.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/lib/jquery.keyframes.min.js' %}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
 
   <script type="text/javascript" src="{% static 'js/knockout/customBinding.js' %}"></script>
@@ -81,19 +82,28 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-              <li data-bind="stopBinding">
-                <a id="btn-navbar" class="ko-login">
+              <!-- ko stopBinding -->
+              <li class="ko-login">
+                <a class="btn-navbar">
                   <button class="btn btn-primary btn-navbar" type="button" data-bind="click: $root.logOut">Change Room</button>
                 </a>
               </li>
+              <!-- /ko -->
               <li data-bind="if: !$root.playerOpen()">
-                <a id="btn-navbar">
+                <a class="btn-navbar">
                   <button class="btn btn-primary btn-navbar" type="button" data-bind="click: $root.openPlayer">Open the player</button>
                 </a>
               </li>
               <li data-bind="if: $root.playerOpen()">
-                <a id="btn-navbar">
+                <a class="btn-navbar">
                   <button class="btn btn-primary btn-navbar" type="button" data-bind="click: $root.closePlayer">Close the player</button>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right navbar-listeners" data-bind="with:room">
+              <li data-bind="if: listeners">
+                <a class="btn-navbar">
+                  <button class="btn btn-primary btn-navbar btn-navbar-listeners" type="button"><span data-bind="text: listeners"></span> music addict(s) online</button>
                 </a>
               </li>
             </ul>
@@ -131,7 +141,7 @@
               <div class="col-xs-offset-1 col-xs-10 wrappeur">
                 <div id="player-wrapper" class="col-xs-12 player">
                   <div class="player-child player-child-no-music col-xs-12">
-                    <a id="btn-open-player"><img src="{% static 'img/btn-play-large.png' %}"></a>
+                    <a id="btn-open-player"><img width="172px" height="172px" src="{% static 'img/btn-play-large.png' %}"></a>
                   </div>
 
                   <div id="wrapper-youtube-player" class="player-child col-xs-12">
@@ -159,14 +169,14 @@
             <!-- END PLAYLIST -->
 
             <!-- PROGRESS BAR -->
-            <div class="row" data-bind="with:room">
+            <div class="row">
               <div class="col-xs-offset-1 col-xs-10 wrapper-progress-bar">
-                <div class="progress progress-striped active">
+                <div class="progress progress-striped">
                   <div class="progress-bar"></div>
                 </div>
                 <div id="time-left-progress-bar-wrapper">
                   <span id="time-left-progress-bar"></span>
-                  <span id="time-left-progress-bar-duration">
+                  <span id="time-left-progress-bar-duration" data-bind="with:room">
                     <!-- ko if: currentMusic() -->/&nbsp;<!--ko text: humanizeSeconds(currentMusic().duration()) --><!--/ko--><!--/ko-->
                   </span>
                 </div>
@@ -301,8 +311,8 @@
                         </li>
                       </ul>
                       <div class="list-group-item row-list-item">
-                        <button title="Previous" class="btn btn-default" data-bind="click: getLibrary, value: hasPrevious, enable: hasPrevious" style="margin-right: 30px;">Previous musics</button>
-                        <button title="Next" class="btn btn-default" data-bind="click: getLibrary, value: hasNext, enable: hasNext">Next musics</button>
+                        <button title="Previous" class="btn btn-default" data-action="getPreviousPage" data-bind="click: getLibrary, value: hasPrevious, enable: hasPrevious" style="margin-right: 30px;">Previous musics</button>
+                        <button title="Next" class="btn btn-default" data-action="getNextPage" data-bind="click: getLibrary, value: hasNext, enable: hasNext">Next musics</button>
                       </div>
                     </div>
                     <!-- End Tab Library -->
