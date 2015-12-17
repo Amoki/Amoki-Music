@@ -13,3 +13,5 @@
 
 # Static files
 collected-static/*
+
+node_modules/*

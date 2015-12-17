@@ -66,6 +66,7 @@ class Room(models.Model):
         
         if listeners != self.listeners:
             self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
+            self.save()
             message = {
                 'action': 'listeners_updated',
                 'listeners': self.listeners
