@@ -79,6 +79,9 @@ class RoomNextView(APIView):
         if 'music_pk' not in request.data:
             return Response("Missing music_pk parameter", status=status.HTTP_400_BAD_REQUEST)
 
+        if not room.current_music:
+            return Response("Can't next while no music is currently played", status.HTTP_400_BAD_REQUEST)
+
         if request.data['music_pk'] == room.current_music.pk:
             room.play_next()
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)

@@ -107,7 +107,7 @@ button > .glyphicon, a > .glyphicon {
 	.navbar-nav>li>a>button{
 		.beauti-btn;
 	}
-	.navbar-nav>li>a#btn-navbar{
+	.navbar-nav>li>a.btn-navbar{
 		padding-left: 12px;
 		padding-top: 8px;
 		padding-bottom: 0;
@@ -117,6 +117,23 @@ button > .glyphicon, a > .glyphicon {
 .navbar-brand {
 	color: #fff !important;
 	background-color: #080808 !important;
+}
+
+.navbar-listeners li a.btn-navbar {
+	text-align: right;
+
+	.btn-navbar-listeners {
+		cursor: default;
+		border-radius: 50px;
+	    width: 36px;
+	    overflow: hidden;
+	    letter-spacing: 20px;
+	    transition: all .8s;
+	    &:hover {
+	    	width:100%;
+	    	letter-spacing: 0px;
+	    };
+	}
 }
 
 
@@ -302,6 +319,9 @@ button > .glyphicon, a > .glyphicon {
 		position: absolute;
 		left: 15px;
 		right: 15px;
+		>.progress-bar {
+			border-radius: 4px;
+		}
 	}
 }
 
@@ -314,9 +334,6 @@ button > .glyphicon, a > .glyphicon {
 
 .progress{
 	margin-bottom: 0;
-	.progress-bar{
-		transition:initial;
-	}
 }
 
 #wrapper-btn-open-player {
@@ -753,7 +770,7 @@ span.filter-option {
 
 /********************** MEDIA STUFF ************/
 @media (max-width: 768px){
-	.navbar-nav>li>a#btn-navbar{
+	.navbar-nav>li>a.btn-navbar{
 		padding: 10px 15px 5px 15px !important;
 	}
 }

@@ -47,8 +47,11 @@ def post(request, room, pk, action, target=None):
     else:
         getattr(playlistTrack, action)()
 
-    room.send_update_message()
-
+    message = {
+        'action': 'playlistTrack_updated',
+        'playlistTracks': PlaylistSerializer(room.playlist.all(), many=True).data
+    }
+    room.send_message(message)
     return Response(PlaylistSerializer(room.playlist.all(), many=True).data, status=status.HTTP_200_OK)
 
 
@@ -65,5 +68,9 @@ def delete(request, room, pk, format=None):
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
-    room.send_update_message()
+    message = {
+        'action': 'playlistTrack_deleted',
+        'playlistTracks': PlaylistSerializer(room.playlist.all(), many=True).data
+    }
+    room.send_message(message)
     return Response(PlaylistSerializer(room.playlist.all(), many=True).data, status=status.HTTP_204_NO_CONTENT)

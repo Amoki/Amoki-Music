@@ -17,7 +17,7 @@ class RoomsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'volume')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'playlist', 'volume', 'listeners')
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -42,4 +42,4 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'current_time_past', 'current_time_past_percent', 'playlist', 'token', 'password', 'volume')
+        fields = ('name', 'current_music', 'shuffle', 'can_adjust_volume', 'count_left', 'time_left', 'current_time_left', 'current_time_past', 'current_time_past_percent', 'playlist', 'token', 'password', 'volume', 'listeners')

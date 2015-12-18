@@ -30,10 +30,6 @@ var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized) {
       $('#wrapper-soundcloud-player').stop().fadeIn(250);
-      soundcloudPlayer.bind(SC.Widget.Events.PLAY, function() {
-        soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
-        soundcloudPlayer.unbind(SC.Widget.Events.PLAY);
-      });
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.music_id,
         {
@@ -43,9 +39,10 @@ var soundcloudPlayerControl = {
           auto_play: true,
           callback: function() {
             soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
+            soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
           },
         }
-        );
+      );
     }
   },
   stop: function() {
