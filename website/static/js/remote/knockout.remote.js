@@ -137,9 +137,13 @@ function wsActionPlay(message) {
   musicExtracted = musicsLibraryVM.musicsLibrary.remove(function(item) {
     return item.pk() === message.room.current_music.pk;
   });
-  musicsLibraryVM.musicsLibrary.unshift(musicExtracted[0]);
-  musicsLibraryVM.musicsLibrary.pop();
-
+  if(musicExtracted.length > 0) {
+    musicsLibraryVM.musicsLibrary.unshift(musicExtracted[0]);
+  }
+  else {
+    musicsLibraryVM.musicsLibrary.unshift(new Music(message.room.current_music));
+    musicsLibraryVM.musicsLibrary.pop();
+  }
   // Update the playlist
   roomVM.playlistTracks.shift();
 
