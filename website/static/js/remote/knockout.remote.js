@@ -111,18 +111,7 @@ function wsActionMusicDeleted(message) {
   musicsLibraryVM.musicsLibrary.remove(music);
 
   // refresh the library
-  url = "/musics?page=" + musicsLibraryVM.currentPage() + "&page_size=" + pageSize;
-  $.getJSON(url, function(allData) {
-    var mappedMusics = $.map(allData.results, function(item) {
-      item.from = 'library';
-      return new Music(item);
-    });
-    musicsLibraryVM.musicsLibrary(mappedMusics);
-    musicsLibraryVM.hasPrevious(allData.previous);
-    musicsLibraryVM.hasNext(allData.next);
-  }).fail(function(jqxhr) {
-    console.error(jqxhr.responseText);
-  });
+  musicsLibraryVM.getLibrary();
 }
 
 function wsActionPlay(message) {
@@ -134,16 +123,8 @@ function wsActionPlay(message) {
   updateProgressBar(message.room.current_music.duration, message.room.current_time_past, message.room.current_time_past_percent, message.room.current_time_left);
 
   // Update the library
-  musicExtracted = musicsLibraryVM.musicsLibrary.remove(function(item) {
-    return item.pk() === message.room.current_music.pk;
-  });
-  if(musicExtracted.length > 0) {
-    musicsLibraryVM.musicsLibrary.unshift(musicExtracted[0]);
-  }
-  else {
-    musicsLibraryVM.musicsLibrary.unshift(new Music(message.room.current_music));
-    musicsLibraryVM.musicsLibrary.pop();
-  }
+  musicsLibraryVM.getLibrary();
+
   // Update the playlist
   roomVM.playlistTracks.shift();
 
