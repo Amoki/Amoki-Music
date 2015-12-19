@@ -172,7 +172,6 @@ button > .glyphicon, a > .glyphicon {
 		display: inline-block;
 		padding-left: 100%;
 		text-indent: 0;
-		transform: translateZ(0);
 		animation: marquee 15s linear infinite;
 		&:hover {
 			animation-play-state: paused
@@ -183,10 +182,10 @@ button > .glyphicon, a > .glyphicon {
 /* Make it move */
 @keyframes marquee {
 	from {
-		transform: translateX(0%);
+		transform: translate3d(0%, 0, 0);
 	}
 	to {
-		transform: translateX(-100%);
+		transform: translate3d(-100%, 0, 0);
 	}
 }
 
@@ -661,7 +660,7 @@ span.filter-option {
 #wrapper-slider-volume {
 	padding-left: 10%;
 	padding-right: 10%;
-	height: 25%;
+	height: 100%;
 	line-height:20%;
 	margin-left: -15px;
 	display: none;
@@ -671,8 +670,8 @@ span.filter-option {
 	z-index: 99;
 	background: linear-gradient(to bottom,
 		rgba(0, 0, 0, 0) 0%,
-		rgba(0, 0, 0, 0.2) 20%,
-		rgba(0, 0, 0, 0.7) 50%,
+		rgba(0, 0, 0, 0.2) 50%,
+		rgba(0, 0, 0, 0.7) 70%,
 		rgba(0, 0, 0, 0.9) 100%);
 }
 
@@ -688,7 +687,7 @@ span.filter-option {
 	box-shadow: inset 0 1px 5px 0px rgba(0, 0, 0, .5),
 				 0 1px 0 0px rgba(250, 250, 250, .5);
 	height: 13px;
-	top: 44%;
+	bottom: 10%;
 }
 
 .ui-slider-range {

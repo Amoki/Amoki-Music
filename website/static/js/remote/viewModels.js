@@ -128,6 +128,7 @@ function LibraryViewModel() {
       self.musicSearch(mappedMusics);
       $("#tab_btn_library, #library").removeClass('active');
       $("#tab_btn_search, #search-tab").addClass('active');
+      $("#popover-container-custom").scrollTop(0);
       $("button.btn-search-icon").children("i").attr("class", "fa fa-search");
       $("button.btn-search-icon").prop('disabled', false);
     }).fail(function(jqxhr) {
@@ -197,9 +198,10 @@ function RoomViewModel() {
           playerControlWrapper[player].stop();
         }
       });
+      timePast = ($('#time-left-progress-bar').data('currentTimePast') ? $('#time-left-progress-bar').data('currentTimePast') : self.room().current_time_past());
       var options = {
         music_id: self.room().currentMusic().music_id(),
-        timer_start: $('#time-left-progress-bar').data('currentTimePast'),
+        timer_start: self.room().currentMusic().timer_start() + timePast,
       };
       playerControlWrapper[self.room().currentMusic().source()].play(options);
     }
