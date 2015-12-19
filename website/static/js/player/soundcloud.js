@@ -29,7 +29,6 @@ soundcloudPreviewPlayer.bind(SC.Widget.Events.ERROR, function() {
 var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized) {
-      $('#wrapper-soundcloud-player').stop().fadeIn(250);
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.music_id,
         {
@@ -40,6 +39,7 @@ var soundcloudPlayerControl = {
           callback: function() {
             soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
             soundcloudPlayer.play();
+            $('#wrapper-soundcloud-player').stop().fadeIn(250);
           },
         }
       );
