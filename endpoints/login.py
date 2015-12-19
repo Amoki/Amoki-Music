@@ -73,5 +73,3 @@ def check_credentials(request):
             "uri": ws_protocol + request.get_host() + settings.WEBSOCKET_URL
         }
         return Response(response, status=status.HTTP_200_OK)
-    else:
-        return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
