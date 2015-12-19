@@ -199,7 +199,7 @@ function RoomViewModel() {
       });
       var options = {
         music_id: self.room().currentMusic().music_id(),
-        timer_start: self.room().currentMusic().timer_start() + $('#time-left-progress-bar').data('currentTimePast'),
+        timer_start: $('#time-left-progress-bar').data('currentTimePast'),
       };
       playerControlWrapper[self.room().currentMusic().source()].play(options);
     }
@@ -253,12 +253,7 @@ function RoomViewModel() {
       contentType: 'application/json',
       dataType: 'json',
       success: function() {
-        if(self.room().shuffle()) {
-          modalConfirm($('#modal-shuffle-on'));
-        }
-        else {
-          modalConfirm($('#modal-shuffle-off'));
-        }
+        (self.room().shuffle()) ? modalConfirm($('#modal-shuffle-on')) : modalConfirm($('#modal-shuffle-off'));
       },
       error: logErrors,
     });
