@@ -79,7 +79,7 @@ $(document).ready(function() {
   $('#querySearch').autocomplete({
     minLength: 2,
     source: function(request, response) {
-      $.getJSON("http://suggestqueries.google.com/complete/search?callback=?",
+      $.getJSON("https://suggestqueries.google.com/complete/search?callback=?",
       {
           "hl": "fr", // Language
           "ds": "yt", // Restrict lookup to youtube
