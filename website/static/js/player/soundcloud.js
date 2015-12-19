@@ -36,15 +36,16 @@ var soundcloudPlayerControl = {
           buying: false,
           visual: true,
           hide_related: true,
-          auto_play: true,
+          auto_play: false,
           callback: function() {
             soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
-            setTimeout(function() {
-              soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
-            }, 100);
+            soundcloudPlayer.play();
           },
         }
       );
+      soundcloudPlayer.bind(SC.Widget.Events.PLAY, function() {
+        soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+      });
     }
   },
   stop: function() {
