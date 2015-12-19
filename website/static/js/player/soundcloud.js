@@ -39,7 +39,9 @@ var soundcloudPlayerControl = {
           auto_play: true,
           callback: function() {
             soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
-            soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+            setTimeout(function() {
+              soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+            }, 100);
           },
         }
       );
