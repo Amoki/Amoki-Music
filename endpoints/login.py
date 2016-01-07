@@ -7,6 +7,8 @@ from player.serializers import RoomSerializer
 
 from django.conf import settings
 
+from endpoints.utils.authentication import authenticate
+
 
 @api_view(['GET'])
 def login(request):
@@ -60,3 +62,14 @@ def login(request):
     }
 
     return Response(response, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def check_credentials(request):
+    ws_protocol = request.is_secure() and 'wss://' or 'ws://'
+    if authenticate(request):
+        response = {
+            "heartbeat": settings.WS4REDIS_HEARTBEAT,
+            "uri": ws_protocol + request.get_host() + settings.WEBSOCKET_URL
+        }
+        return Response(response, status=status.HTTP_200_OK)

@@ -152,3 +152,21 @@ class TestRoom(EndpointTestCase):
         response = self.client.post('/room/next', {})
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
+
+    def test_next_no_current_music(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            total_duration=114,
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+
+        response = self.client.post('/room/next', {'music_pk': m.pk})
+
+        response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
+        response.data.should.eql("Can't next while no music is currently played")

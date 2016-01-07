@@ -30,3 +30,13 @@ class TestLogin(EndpointTestCase):
 
         response.status_code.should.be.eql(status.HTTP_401_UNAUTHORIZED)
         response.data.should.eql({'detail': 'Invalid credentials.'})
+
+    # only test the case of a good credential check is done
+    # the cases of wrong / malformed credentials is already heavily tested in test_utils.py
+    def test_check_good_credentials(self):
+        response = self.client.get('/check_credentials')
+
+        response.status_code.should.be.eql(status.HTTP_200_OK)
+
+        response.data.should.have.key('heartbeat')
+        response.data.should.have.key('uri')

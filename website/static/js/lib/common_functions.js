@@ -23,18 +23,38 @@ if(!getCookie('volumePlayer')) {
 var ws4redis;
 function setRoomConnexion(token, heartbeat, wsUri) {
   storeCookie('room_token', token);
-  storeCookie('room_heartbeat', heartbeat);
-  storeCookie('room_wsUri', wsUri);
   $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
+    beforeSend: function(xhr) {
       xhr.setRequestHeader("Authorization", "Bearer " + token);
     }
   });
+  if(heartbeat && wsUri) {
+    storeCookie('room_heartbeat', heartbeat);
+    storeCookie('room_wsUri', wsUri);
+    connectWs(getCookie('room_token'), getCookie('room_wsUri'), getCookie('room_heartbeat'));
+  }
+  else {
+    $.getJSON("/check_credentials",
+      function(data) {
+        loginVM.isConnected(true);
+        storeCookie('room_heartbeat', data.heartbeat);
+        storeCookie('room_wsUri', data.uri);
+        connectWs(token, data.uri, data.heartbeat);
+      }).fail(function(jqxhr) {
+        loginVM.badLogin(true);
+        console.error(jqxhr.responseText);
+        return false;
+      }
+    );
+  }
+}
+
+function connectWs(token, uri, heartbeat) {
   if(typeof(ws4redis) === "object") {
     ws4redis.close();
   }
   ws4redis = new WS4Redis({
-    uri: wsUri + token + '?subscribe-broadcast',
+    uri: uri + token + '?subscribe-broadcast',
     onMessage: receiveMessage,
     heartbeat: heartbeat,
     onOpen: onWsOpen,

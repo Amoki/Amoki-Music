@@ -1,4 +1,5 @@
 var pageSize = 40;
+var reconnectTry = 0;
 
 $(function() {
   loginVM = new LoginViewModel();
@@ -16,8 +17,8 @@ $(function() {
   });
 
   loginVM.getRooms();
-  if(getCookie('room_token') && getCookie('room_heartbeat') && getCookie('room_wsUri')) {
-    setRoomConnexion(getCookie('room_token'), getCookie('room_heartbeat'), getCookie('room_wsUri'));
+  if(getCookie('room_token')) {
+    setRoomConnexion(getCookie('room_token'));
   }
   else {
     loginVM.isConnected(false);
@@ -36,14 +37,20 @@ $(document).on('click', '#btn-open-player', function() {
 
 
 function onWsOpen() {
+  reconnectTry = 0;
   loginVM.wsError(false);
-  loginVM.isConnected(true);
   roomVM.init();
   musicsLibraryVM.init();
+  loginVM.wsConnected(true);
 }
 
 function onWsError() {
+  reconnectTry += 1;
   loginVM.wsError(true);
+  loginVM.wsConnected(false);
+  if(reconnectTry > 6) {
+    loginVM.logOut();
+  }
 }
 
 function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
@@ -190,5 +197,3 @@ function receiveMessage(message) {
       break;
   }
 }
-
-

@@ -255,12 +255,7 @@ function RoomViewModel() {
       contentType: 'application/json',
       dataType: 'json',
       success: function() {
-        if(self.room().shuffle()) {
-          modalConfirm($('#modal-shuffle-on'));
-        }
-        else {
-          modalConfirm($('#modal-shuffle-off'));
-        }
+        (self.room().shuffle()) ? modalConfirm($('#modal-shuffle-on')) : modalConfirm($('#modal-shuffle-off'));
       },
       error: logErrors,
     });
@@ -336,6 +331,7 @@ function LoginViewModel() {
   var self = this;
 
   self.isConnected = ko.observable(false);
+  self.wsConnected = ko.observable(false);
   self.wsError = ko.observable(false);
   self.badLogin = ko.observable(false);
 
@@ -364,6 +360,7 @@ function LoginViewModel() {
       },
       function(allData) {
         roomVM.room(new Room(allData.room));
+        self.isConnected(true);
         setRoomConnexion(allData.room.token, allData.websocket.heartbeat, allData.websocket.uri);
       }).fail(function(jqxhr) {
         self.badLogin(true);
@@ -378,6 +375,8 @@ function LoginViewModel() {
 
   self.logOut = function() {
     self.isConnected(false);
+    self.wsConnected(false);
+    self.wsError(false);
     roomVM.clear();
     musicsLibraryVM.clear();
     logOutRoom();
