@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from player.models import Events
 from django.conf import settings
 
 
@@ -8,6 +7,7 @@ class Init(AppConfig):
     verbose_name = 'Player'
 
     def ready(self):
+        from player.models import Events
         if not settings.TESTING:
             Room = self.get_model('Room')
             # Initialize events dict and clean rooms

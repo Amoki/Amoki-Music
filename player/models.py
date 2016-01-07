@@ -63,7 +63,7 @@ class Room(models.Model):
         redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
         message = RedisMessage(json.dumps(message))
         listeners = redis_publisher.publish_message(message)
-        
+
         if listeners != self.listeners:
             self.listeners = listeners[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
             self.save()
@@ -110,6 +110,7 @@ class Room(models.Model):
         self.send_message(message)
 
     def play_next(self):
+        self.refresh_from_db()
         next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
