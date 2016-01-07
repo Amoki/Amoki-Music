@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'ordered_model',
     'rest_framework_swagger',
+    'django_nose',
 
     # Our apps
     'player',
@@ -203,6 +204,8 @@ SWAGGER_SETTINGS = {
     'doc_expansion': 'none',
     'token_type': 'Bearer'
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
