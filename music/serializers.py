@@ -37,9 +37,7 @@ class MusicSerializer(serializers.ModelSerializer):
             :return: The Music object CREATED with the valid data from the Serializer
             :rtype: Music
         """
-        music = Music(**validated_data)
-        music.save()
-        return music
+        return Music.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """

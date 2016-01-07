@@ -110,6 +110,7 @@ class Room(models.Model):
         self.send_message(message)
 
     def play_next(self):
+        self = Room.objects.get(id=self.id)
         next_music = self.tracks.all().order_by('playlisttrack__order').first()
 
         if next_music:
