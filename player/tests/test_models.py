@@ -235,6 +235,7 @@ class ModelsTestCase(TestCase):
         music2.save()
 
         self.r.shuffle = True
+        self.r.save()
         PlaylistTrack(track=music, room=self.r).save()
 
         self.r.play_next()
