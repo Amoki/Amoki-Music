@@ -210,6 +210,7 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
 # Keep the original host behind a proxy for direct use of ws://
 USE_X_FORWARDED_HOST = True
 
