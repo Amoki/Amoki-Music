@@ -29,22 +29,23 @@ soundcloudPreviewPlayer.bind(SC.Widget.Events.ERROR, function() {
 var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized) {
-      $('#wrapper-soundcloud-player').stop().fadeIn(250);
       soundcloudPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.music_id,
         {
           buying: false,
           visual: true,
           hide_related: true,
-          auto_play: true,
+          auto_play: false,
           callback: function() {
             soundcloudPlayer.setVolume(getCookie('volumePlayer') / 100);
-            setTimeout(function() {
-              soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
-            }, 100);
+            soundcloudPlayer.play();
+            $('#wrapper-soundcloud-player').stop().fadeIn(250);
           },
         }
       );
+      soundcloudPlayer.bind(SC.Widget.Events.PLAY, function() {
+        soundcloudPlayer.seekTo(options.timer_start * 1000 || 0);
+      });
     }
   },
   stop: function() {

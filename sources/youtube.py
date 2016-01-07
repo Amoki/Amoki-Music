@@ -28,7 +28,7 @@ def get_info(ids):
                 id=ids,
                 part='snippet, contentDetails, statistics'
             ).execute()
-        except ConnectionError as e:
+        except Exception as e:
             print(e)
             return videos
 
@@ -80,7 +80,7 @@ def search(query):
             ).execute()
             for video in search_response.get("items", []):
                 ids.append(video["id"]["videoId"])
-        except ConnectionError as e:
+        except Exception as e:
             print(e)
     else:
         # Get the id from url
@@ -111,7 +111,7 @@ def check_validity(id):
             id=id,
             part='contentDetails,status'
         ).execute()
-    except ConnectionError as e:
+    except Exception as e:
         print(e)
         return True
     
