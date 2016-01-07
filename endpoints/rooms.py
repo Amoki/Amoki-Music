@@ -1,4 +1,5 @@
 from rest_framework.generics import ListAPIView
+from endpoints.utils.paginators import StandardResultsSetPagination
 
 from player.serializers import RoomsSerializer
 from player.models import Room
@@ -10,9 +11,7 @@ class RoomsView(ListAPIView):
     """
     queryset = Room.objects.all()
     serializer_class = RoomsSerializer
-    paginate_by = 40
-    paginate_by_param = 'page_size'
-    max_paginate_by = 200
+    pagination_class = StandardResultsSetPagination
 
     def get(self, request, *args, **kwargs):
         """

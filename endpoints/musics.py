@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView
 from endpoints.utils.decorators import room_required
+from endpoints.utils.paginators import StandardResultsSetPagination
 
 from music.serializers import MusicSerializer
 from music.models import Music
@@ -10,9 +11,7 @@ class MusicsView(ListAPIView):
     Musics resource.
     """
     serializer_class = MusicSerializer
-    paginate_by = 40
-    paginate_by_param = 'page_size'
-    max_paginate_by = 200
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         return Music.objects.filter(room=self.room).order_by('-last_play')

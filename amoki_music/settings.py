@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'ordered_model',
     'rest_framework_swagger',
+    'django_nose',
 
     # Our apps
     'player',
@@ -204,12 +205,15 @@ SWAGGER_SETTINGS = {
     'token_type': 'Bearer'
 }
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
 # Keep the original host behind a proxy for direct use of ws://
 USE_X_FORWARDED_HOST = True
 
