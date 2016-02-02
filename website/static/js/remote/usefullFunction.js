@@ -1,6 +1,5 @@
 function stopProgressBar() {
-  $('style#expand, style#progress-bar-stripes').remove();
-  $('.progress-bar').pauseKeyframe();
+  $('.progress-bar').resetKeyframe();
   $('.progress-bar').css('width', '0%');
   $('#time-left-progress-bar').countTo('stop').html('');
 }
@@ -22,11 +21,10 @@ function updateProgressBar(duration, currentTimePast, currentTimePastPercent, cu
     $('#time-left-progress-bar').countTo('restart');
   }
 
-  $('style#expand, style#progress-bar-stripes').remove();
-  $('.progress-bar').pauseKeyframe();
+  $('.progress-bar').resetKeyframe();
   $('.progress-bar').width(currentTimePastPercent + '%');
   $.keyframe.define([{
-    name: 'expand',
+    name: 'custom-expand',
     from: {
       'width': currentTimePastPercent + '%'
     },
@@ -34,7 +32,7 @@ function updateProgressBar(duration, currentTimePast, currentTimePastPercent, cu
       'width': '100%'
     }
   },{
-    name: 'progress-bar-stripes',
+    name: 'custom-progress-bar-stripes',
     from: {
       'background-position': '40px 0'
     },
@@ -44,8 +42,8 @@ function updateProgressBar(duration, currentTimePast, currentTimePastPercent, cu
   }
   ]);
   $('.progress-bar').playKeyframe([
-    'expand ' + currentTimeLeft + 's linear 0s 1 normal forwards',
-    'progress-bar-stripes 2s linear infinite'
+    'custom-expand ' + currentTimeLeft + 's linear 0s 1 normal forwards',
+    'custom-progress-bar-stripes 2s linear infinite'
   ]);
 }
 
