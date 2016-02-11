@@ -178,10 +178,13 @@ class Room(models.Model):
 
     def get_current_time_past_percent(self):
         if self.current_music:
-            current_total_time = self.current_music.duration
-            current_time_left = self.get_current_remaining_time()
-            current_time_past_percent = ((current_total_time - current_time_left) * 100) / current_total_time
-            return current_time_past_percent
+            try:
+                current_total_time = self.current_music.duration
+                current_time_left = self.get_current_remaining_time()
+                current_time_past_percent = ((current_total_time - current_time_left) * 100) / current_total_time
+                return current_time_past_percent
+            except ZeroDivisionError:
+                pass
         return 0
 
     def get_musics_remaining(self):
