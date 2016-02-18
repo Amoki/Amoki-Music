@@ -132,18 +132,13 @@
             <!-- HEADER REMOTE -->
             <div class="row header-remote" data-bind="with: room">
               <div data-bind="if: currentMusic()">
-                <img id="thumbnail" class="col-xs-offset-1 col-xs-3" data-bind="attr: {src: currentMusic().thumbnail() , alt: 'Thumbnail of current song : ' + currentMusic().name(), title:'Thumbnail of current song : ' + currentMusic().name() }">
-                <div class="col-xs-7 title_playing">
-                  <div class="marquee">
+                <div class="col-xs-offset-1 col-xs-10 title">
                     <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
-                  </div>
                 </div>
               </div>
               <div data-bind="if: !currentMusic()">
-                <div class="col-xs-12 title">
-                  <div class="marquee">
+                <div class="col-xs-offset-1 col-xs-10 title">
                     <span class="now-playing">No music :'( Add yours now !</span>
-                  </div>
                 </div>
               </div>
             </div>
