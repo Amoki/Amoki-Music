@@ -10,7 +10,8 @@ function LibraryViewModel() {
   self.currentPage = ko.observable(1);
 
   // search part
-  self.musicSearch = ko.observableArray([]);
+  self.serviceMusicSearch = ko.observableArray([]);
+  self.libraryMusicSearch = ko.observableArray([]);
   self.sourceSearch = ko.observable();
   self.querySearch = ko.observable().trimmed();
 
@@ -25,7 +26,8 @@ function LibraryViewModel() {
     self.hasPrevious(null);
     self.hasNext(null);
     self.currentPage(1);
-    self.musicSearch([]);
+    self.serviceMusicSearch([]);
+    self.libraryMusicSearch([]);
     self.sourceSearch(null);
     self.querySearch(null);
     self.sources([]);
@@ -123,11 +125,17 @@ function LibraryViewModel() {
       "query": self.querySearch()
     },
     function(allData) {
-      var mappedMusics = $.map(allData, function(item) {
+      var mappedMusics = $.map(allData.serviceSearch, function(item) {
         item.from = 'search';
         return new Music(item);
       });
-      self.musicSearch(mappedMusics);
+      self.serviceMusicSearch(mappedMusics);
+      mappedMusics = $.map(allData.librarySearch, function(item) {
+        item.from = 'library';
+        return new Music(item);
+      });
+      self.libraryMusicSearch(mappedMusics);
+
       $("#tab_btn_library, #library").removeClass('active');
       $("#tab_btn_search, #search-tab").addClass('active');
       $("#popover-container-custom").scrollTop(0);

@@ -12,3 +12,5 @@ django-rest-swagger==0.3.4
 docutils==0.12
 django-nose==1.4.3
 uwsgi==2.0.10
+git+ssh://git@github.com/seatgeek/fuzzywuzzy.git@0.8.1#egg=fuzzywuzzy
+python-levenshtein==0.12.0

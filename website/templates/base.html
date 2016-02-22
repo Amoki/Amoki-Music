@@ -239,7 +239,7 @@
               <div class="col-xs-12">
                 <div class="wrappeur">
                   <ul class="nav nav-tabs nav-justified">
-                    <li id="tab_btn_search" data-bind="if: musicSearch().length, css: { 'display-none': musicSearch().length < 1 }"><a data-toggle="tab" href="#search-tab">Search Result</a></li>
+                    <li id="tab_btn_search" data-bind="if: serviceMusicSearch().length || libraryMusicSearch().length, css: { 'display-none': serviceMusicSearch().length < 1 && libraryMusicSearch().length < 1 }"><a data-toggle="tab" href="#search-tab">Search Result</a></li>
                     <li id="tab_btn_library" class="active"><a data-toggle="tab" href="#library">Library</a></li>
                     <!-- ko stopBinding -->
                     <li id="tab_btn_playlist" class="ko-room" data-bind="css: { 'display-none': !playerOpen() }">
@@ -253,8 +253,40 @@
                   </ul>
                   <div id="popover-container-custom" class="tab-content">
                     <!-- Tab Search -->
-                    <div class="tab-pane" id="search-tab" data-bind="if: musicSearch().length">
-                      <ul id="list-search" class="list-group" data-bind="foreach: musicSearch">
+                    <div class="tab-pane" id="search-tab" data-bind="if: serviceMusicSearch().length || libraryMusicSearch().length">
+                    <ul id="list-search" class="list-group" data-bind="foreach: libraryMusicSearch">
+                        <li class="list-group-item item-lib row row-list-item">
+                          <!-- SEARCH MUSIC DATA -->
+                          <div class="row-list-item">
+                            <div class="search-img-music">
+                              <img title="The thumbnail of the video" alt="The thumbnail of the video" data-bind="attr: { src: thumbnail, alt: 'The thumbnail of ' + name(), title: 'The thumbnail of ' + name() }">
+                            </div>
+                            <div class="search-music-info">
+                              <div class="row">
+                                <div class="col-xs-12" style="min-height:45px" data-bind="text: name"></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-8" style="color:black;font-weight:normal;">
+                                  Played&nbsp;<span class="bold" data-bind="text: count"></span>&nbsp;times
+                                </div>
+                                <div class="col-xs-4">
+                                  <span class="badge" data-bind="text: humanizeSeconds(total_duration())"></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="add-music-form">
+                              <button class='btn btn-default btn-lg btn-add-music' type='button' alt='Ajouter à la playlist' title='Ajouter à la playlist' data-bind="click: function() { $root.sendMusic($data, 'play') }">
+                                <span class='glyphicon glyphicon-play-circle'></span>
+                              </button>
+                              <button class="btn btn-default btn-lg" type="button" data-bind="popover: {template: 'popover-edit-music-template',
+                                  options: {trigger: 'click', placement: 'left', trigger: 'focus', canDelete: true} }">
+                                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <ul id="list-search" class="list-group" data-bind="foreach: serviceMusicSearch">
                         <li class="list-group-item item-lib row row-list-item">
                           <!-- SEARCH MUSIC DATA -->
                           <div class="row-list-item">
