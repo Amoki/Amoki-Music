@@ -8,9 +8,11 @@ from django.db import models
 from music.serializers import MusicSerializer
 
 class UpdateActionForm(ActionForm):
-    room = models.CharField(choices=Room.objects.all(),)
-
-
+    rooms = []
+    for room in Room.objects.all():
+        tuple = (room.name,room.name)
+        rooms.append(tuple)
+    nrroom = forms.ChoiceField(required="false",label=" Target Room for duplication",choices=rooms)
 
 class MusicAdmin(admin.ModelAdmin):
     list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'thumbnail', 'room', 'timer_start')
@@ -27,10 +29,16 @@ class MusicAdmin(admin.ModelAdmin):
         return
 
     def duplicate_music(self,request,queryset):
-        room = request.POST['room']
-        for music in queryset:
-            room.add_music(**MusicSerializer(music).data)
-        return
+        nbrroom = request.POST['nrroom']
+        roomto = Room.objects.get(name=nbrroom)
+        if roomto:
+            for music in queryset:
+                if roomto.name != music.room.name:
+                    new_entry = music
+                    new_entry.room=roomto
+                    new_entry.id = None
+                    new_entry.save()
+            return
 
 
 
