@@ -10,8 +10,8 @@ from music.serializers import MusicSerializer
 class UpdateActionForm(ActionForm):
     rooms = []
     for room in Room.objects.all():
-        tuple = (room.name,room.name)
-        rooms.append(tuple)
+        new_tuple = (room.name,room.name)
+        rooms.append(new_tuple)
     nrroom = forms.ChoiceField(required="false",label=" Target Room for duplication",choices=rooms)
 
 class MusicAdmin(admin.ModelAdmin):
@@ -29,13 +29,12 @@ class MusicAdmin(admin.ModelAdmin):
         return
 
     def duplicate_music(self,request,queryset):
-        nbrroom = request.POST['nrroom']
-        roomto = Room.objects.get(name=nbrroom)
-        if roomto:
+        targetRoom = Room.objects.get(name=request.POST['nrroom'])
+        if targetRoom:
             for music in queryset:
-                if roomto.name != music.room.name:
+                if targetRoom.name != music.room.name:
                     new_entry = music
-                    new_entry.room=roomto
+                    new_entry.room=targetRoom
                     new_entry.id = None
                     new_entry.save()
             return
