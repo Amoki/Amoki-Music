@@ -3,7 +3,6 @@ from music.models import Music
 from player.models import Room
 from django.contrib.admin.helpers import ActionForm
 from django import forms
-from django.db import models
 
 from music.serializers import MusicSerializer
 
@@ -15,7 +14,7 @@ class UpdateActionForm(ActionForm):
     nrroom = forms.ChoiceField(required="false",label=" Target Room for duplication",choices=rooms)
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'thumbnail', 'room', 'timer_start')
+    list_display = ('name', 'count', 'music_id', 'source', 'duration', 'last_play', 'thumbnail', 'room', 'timer_start','one_shot')
     actions = ('add_music','duplicate_music')
 
     action_form = UpdateActionForm

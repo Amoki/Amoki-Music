@@ -14,7 +14,7 @@ class MusicsView(ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        return Music.objects.filter(room=self.room).order_by('-last_play')
+        return Music.objects.filter(room=self.room,one_shot=False).order_by('-last_play')
 
     @room_required
     def get(self, request, room, *args, **kwargs):

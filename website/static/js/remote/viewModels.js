@@ -32,8 +32,16 @@ function LibraryViewModel() {
     self.musicPreview(null);
   };
 
-  self.addMusic = function(music) {
+  self.addMusic = function(music,one_shot) {
     // Return a json serialized Music object
+    if(one_shot === 'oui')
+    {
+      music['one_shot']= true
+    }
+    else
+    {
+      music['one_shot'] = false
+    }
     $.ajax("/music", {
       data: ko.toJSON(music),
       type: "post",
@@ -42,6 +50,8 @@ function LibraryViewModel() {
       success: function() {
         $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
         $("button.btn-add-music").prop('disabled', false);
+        $("button.btn-add-music-one-shot").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
+        $("button.btn-add-music-one-shot").prop('disabled', false);
         modalConfirm($('#modal-add-music'));
       },
       error: logErrors,
@@ -59,24 +69,28 @@ function LibraryViewModel() {
         if(!play) {
           $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
           $("button.btn-add-music").prop('disabled', false);
+          $("button.btn-add-music-one-shot").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
+          $("button.btn-add-music-one-shot").prop('disabled', false);
           modalConfirm($('#modal-add-music'));
         }
         else {
-          self.addMusic(music);
+          self.addMusic(music,'non');
         }
       },
       error: logErrors,
     });
   };
 
-  self.sendMusic = function(music, play) {
+  self.sendMusic = function(music, play, one_shot) {
     $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music").prop('disabled', true);
+    $("button.btn-add-music-one-shot").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
+    $("button.btn-add-music-one-shot").prop('disabled', true);
     if(music.from === 'search') {
-      self.addMusic(music);
+      self.addMusic(music,one_shot);
     }
     else if(music.from === 'library') {
-      (play === 'play') ? self.addMusic(music) : self.patchMusic(music, play);
+      (play === 'play') ? self.addMusic(music,false) : self.patchMusic(music, play);
     }
   };
 
@@ -98,7 +112,7 @@ function LibraryViewModel() {
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
       self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
-      self.sendMusic(self.musicPreview(), play);
+      self.sendMusic(self.musicPreview(), play,'non');
     }
     self.musicPreview(null);
   };

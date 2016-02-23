@@ -19,6 +19,7 @@ class Music(models.Model):
     last_play = models.DateTimeField(null=True)
     timer_start = models.PositiveIntegerField(default=0)
     source = models.CharField(max_length=255, editable=False)
+    one_shot = models.BooleanField(default=False)
 
     class Meta():
         unique_together = ("music_id", "room")
