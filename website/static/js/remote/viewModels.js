@@ -107,7 +107,7 @@ function LibraryViewModel() {
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
       self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
-      self.sendMusic(self.musicPreview(), play,'non');
+      self.sendMusic(self.musicPreview(), play,false);
     }
     self.musicPreview(null);
   };
