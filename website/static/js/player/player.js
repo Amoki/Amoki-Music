@@ -8,9 +8,9 @@ var playerPreviewControlWrapper = {
   soundcloud: soundcloudPlayerPreviewControl,
 };
 
-function updateVolume(volume) {
+function updateVolume(volume, doNotCookieSave) {
   Object.keys(playerControlWrapper).forEach(function(player) {
-    storeCookie('volumePlayer', volume);
+    doNotCookieSave ? null : storeCookie('volumePlayer', volume);
     playerControlWrapper[player].setVolume(volume);
   });
 }

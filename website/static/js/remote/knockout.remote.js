@@ -123,10 +123,19 @@ function wsActionMusicDeleted(message) {
 
 function wsActionPlay(message) {
   // Built the room
-  room = new Room(message.room);
+  roomVM.room().currentMusic(new Music(message.room.current_music));
+  roomVM.room().count_left(message.room.count_left);
+  roomVM.room().time_left(message.room.time_left);
+  roomVM.room().current_time_left(message.room.current_time_left);
+  roomVM.room().current_time_past(message.room.current_time_past);
+  roomVM.room().current_time_past_percent(message.room.current_time_past_percent);
 
-  // Update the room
-  roomVM.room(room);
+  // Lock the buttons
+  $('.btn-to-lock').prop('disabled', true);
+  setTimeout(function() {
+    $('.btn-to-lock').prop('disabled', false);
+  }, 1000);
+
   updateProgressBar(message.room.current_music.duration, message.room.current_time_past, message.room.current_time_past_percent, message.room.current_time_left);
 
   // Update the library

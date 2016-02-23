@@ -206,7 +206,7 @@
               </div>
               <div class="col-xs-offset-3 col-xs-4">
                 <form data-bind="submit: $root.postNext">
-                  <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control btn-skip-music" data-bind="enable: currentMusic()">
+                  <button id="btn-next" type="submit" title="Next Music" alt="Next Music" class="btn btn-default btn-control btn-to-lock" data-bind="enable: currentMusic()">
                     <i class="fa fa-fast-forward fa-2x"></i>
                   </button>
                 </form>
@@ -351,7 +351,7 @@
     <footer class="foot ko-room" data-bind="with: room">
       <div class="main-col">
         <form class="pull-left" data-bind="submit: function(){ $root.deleteMusic($data.currentMusic()) }">
-          <button id="dead-link" class="btn btn-primary btn-skip-music" type="submit" data-bind="enable: currentMusic()">Dead link ?</button>
+          <button id="dead-link" class="btn btn-primary btn-to-lock" type="submit" data-bind="enable: currentMusic()">Dead link ?</button>
         </form>
         <a class="btn btn-primary pull-right">Company Terms</a>
       </div>

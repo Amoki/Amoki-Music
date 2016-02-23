@@ -95,6 +95,7 @@ function LibraryViewModel() {
   };
 
   self.openPreviewMusic = function(music) {
+    updateVolume(0, true);
     self.musicPreview(music);
     handlerStart = self.musicPreview().timer_start() ? self.musicPreview().timer_start() : 0;
     handlerEnd = self.musicPreview().timer_end() ? self.musicPreview().timer_end() : self.musicPreview().total_duration();
@@ -108,6 +109,7 @@ function LibraryViewModel() {
   };
 
   self.closePreviewMusic = function(valid, play) {
+    updateVolume(getCookie('volumePlayer'), true);
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
