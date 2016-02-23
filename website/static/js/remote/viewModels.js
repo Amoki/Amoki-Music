@@ -34,14 +34,7 @@ function LibraryViewModel() {
 
   self.addMusic = function(music,one_shot) {
     // Return a json serialized Music object
-    if(one_shot === 'oui')
-    {
-      music['one_shot']= true
-    }
-    else
-    {
-      music['one_shot'] = false
-    }
+      music['one_shot']= one_shot
     $.ajax("/music", {
       data: ko.toJSON(music),
       type: "post",
@@ -74,7 +67,7 @@ function LibraryViewModel() {
           modalConfirm($('#modal-add-music'));
         }
         else {
-          self.addMusic(music,'non');
+          self.addMusic(music,false);
         }
       },
       error: logErrors,
