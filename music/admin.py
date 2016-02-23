@@ -3,6 +3,10 @@ from music.models import Music
 from player.models import Room
 from django.contrib.admin.helpers import ActionForm
 from django import forms
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4b1807f9b899186a192b563b0d97d4283ef2674d
 
 from music.serializers import MusicSerializer
 
