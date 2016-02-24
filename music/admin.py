@@ -30,12 +30,13 @@ class MusicAdmin(admin.ModelAdmin):
 
     def duplicate_music(self,request,queryset):
         targetRoom = Room.objects.get(name=request.POST['nrroom'])
-        if targetRoom:
-            for music in queryset:
+        if targetRoom :
+            for music in queryset :
                 if targetRoom.name != music.room.name:
-                    if not Music.objects.filter(music_id=music.music_id,room=targetRoom).exists()  :
-                        new_entry = Music(count=0,duration=music.duration,last_play=None,music_id=music.music_id,name=music.name,one_shot=False,source=music.source,total_duration=music.total_duration,thumbnail=music.thumbnail,url=music.url)
-                        new_entry.room=targetRoom
+                    if not Music.objects.filter(music_id=music.music_id,room=targetRoom).exists() :
+                        new_entry = music
+                        new_entry.room = targetRoom
+                        new_entry.pk = None
                         new_entry.save()
             return
 
