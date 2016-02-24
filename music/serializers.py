@@ -20,7 +20,7 @@ class MusicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Music
-        fields = ('pk', 'music_id', 'name', 'thumbnail', 'count', 'duration', 'total_duration', 'timer_start', 'url', 'room_id', 'source', 'last_play','one_shot')
+        fields = ('pk', 'music_id', 'name', 'thumbnail', 'count', 'duration', 'total_duration', 'timer_start', 'url', 'room_id', 'source', 'last_play', 'one_shot')
 
     def create(self, validated_data):
         """

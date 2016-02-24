@@ -30,7 +30,8 @@ class SerializersTestCase(TestCase):
             'source': 'youtube',
             'timer_start': 0,
             'count': 0,
-            'last_play': None
+            'last_play': None,
+            'one_shot': False
         }
 
         dict(MusicSerializer(m).data).should.eql(expected_serialization)
@@ -65,7 +66,8 @@ class SerializersTestCase(TestCase):
                 'source': 'youtube',
                 'timer_start': 0,
                 'count': 0,
-                'last_play': None
+                'last_play': None,
+                'one_shot': False
             }
         }
 
