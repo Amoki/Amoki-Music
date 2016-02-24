@@ -8,13 +8,13 @@ from music.serializers import MusicSerializer
 
 
 class UpdateActionForm(ActionForm):
-    def __init__(self, form, fieldsets, prepopulated_fields, readonly_fields=None, model_admin=None):
+    def __init__(self, *args, **kwargs):
         rooms = []
         for room in Room.objects.all():
             new_tuple = (room.name, room.name)
             rooms.append(new_tuple)
         self.nrroom = forms.ChoiceField(required="false", label="Target Room for duplication", choices=rooms)
-        super().__init__(self, form, fieldsets, prepopulated_fields, readonly_fields=readonly_fields, model_admin=model_admin)
+        super().__init__(self, *args, **kwargs)
 
 
 class MusicAdmin(admin.ModelAdmin):
