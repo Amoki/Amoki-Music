@@ -44,7 +44,8 @@ class TestPlaylist(EndpointTestCase):
                 'source': 'youtube',
                 'timer_start': 10,
                 'count': 0,
-                'last_play': None
+                'last_play': None,
+                'one_shot': False
             }
         }]
 
