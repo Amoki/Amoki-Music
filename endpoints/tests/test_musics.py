@@ -10,18 +10,6 @@ import sure
 
 class TestMusics(EndpointTestCase):
     def test_get(self):
-        # Create a one-shot music that should NOT be sent by /musics
-        Music(
-            music_id="b",
-            name="b",
-            thumbnail="https://a.com",
-            total_duration=112,
-            duration=112,
-            url="https://www.a.com",
-            source="youtube",
-            one_shot=True,
-            room=self.r,
-        ).save()
 
         # Create a classic music that should be sent by /musics
         Music(
