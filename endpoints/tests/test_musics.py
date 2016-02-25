@@ -1,9 +1,7 @@
 from utils.testcase import EndpointTestCase
 from rest_framework import status
 from music.models import Music
-from music.serializers import MusicSerializer
 from player.models import Room
-from collections import OrderedDict
 
 import sure
 
