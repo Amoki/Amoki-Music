@@ -461,9 +461,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-info" id="btn-modal-preview-valid-play" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, true) }">Editer et jouer</button>
+              <button class="btn btn-info" id="btn-modal-preview-valid-one-shot" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, true, true) }">Editer et one shoter</button>
+
+            <button class="btn btn-info" id="btn-modal-preview-valid-play" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, true, false) }">Editer et jouer</button>
             <!-- ko if: musicPreview().from === "library" -->
-            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, false) }">Editer seulement</button>
+            <button class="btn btn-info" id="btn-modal-preview-valid" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(true, false, false) }">Editer seulement</button>
             <!-- /ko -->
             <button class="btn btn-info" id="btn-modal-preview-cancel" data-dismiss="modal" data-bind="click: function() { closePreviewMusic(false) }">Annuler</button>
           </div>

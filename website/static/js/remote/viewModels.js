@@ -101,13 +101,13 @@ function LibraryViewModel() {
     playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});
   };
 
-  self.closePreviewMusic = function(valid, play) {
+  self.closePreviewMusic = function(valid, play , one_shot) {
     updateVolume(getCookie('volumePlayer'), true);
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
       self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
-      self.sendMusic(self.musicPreview(), play,false);
+      self.sendMusic(self.musicPreview(), play, one_shot);
     }
     self.musicPreview(null);
   };
