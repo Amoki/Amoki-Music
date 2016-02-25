@@ -141,7 +141,7 @@ class Room(models.Model):
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics
-        musics = self.music_set.exclude(duration__gte=600).order_by('-last_play')
+        musics = self.music_set.exclude(one_shot=True).exclude(duration__gte=600).order_by('-last_play')
         count = musics.count()
 
         to_remove = int(count / 10)

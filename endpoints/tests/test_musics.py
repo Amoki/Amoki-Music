@@ -8,7 +8,9 @@ import sure
 
 class TestMusics(EndpointTestCase):
     def test_get(self):
-        m = Music(
+
+        # Create a classic music that should be sent by /musics
+        Music(
             music_id="a",
             name="a",
             thumbnail="https://a.com",
@@ -17,8 +19,7 @@ class TestMusics(EndpointTestCase):
             url="https://www.a.com",
             source="youtube",
             room=self.r,
-        )
-        m.save()
+        ).save()
 
         # Create new room and a new music that should not be sent by /musics
         r2 = Room(name='b', password='b')
@@ -45,4 +46,4 @@ class TestMusics(EndpointTestCase):
         response.data['results'].should.be.a(list)
         response.data['results'].should.have.length_of(1)
 
-        self.assertResponseEqualsMusic(response.data['results'][0], Music.objects.all().first())
+        self.assertResponseEqualsMusic(response.data['results'][0], Music.objects.get(music_id='a', room=self.r))
