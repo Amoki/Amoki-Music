@@ -67,9 +67,12 @@ class SearchView(APIView):
         libraryVideos = []
         for music in Music.objects.filter(room=room):
             if fuzz.token_set_ratio(music.name, query) > 50:
+                for serviceMusic in serviceResult :
+                    if music.music_id == serviceMusic['music_id'] :
+                        serviceResult.remove(serviceMusic)
                 libraryVideos.append(MusicSerializer(music).data)
                 if len(libraryVideos) >= 10:
-                    break
+                 break
 
         results = {"serviceSearch": serviceResult, "librarySearch": libraryVideos}
         return Response(results)
