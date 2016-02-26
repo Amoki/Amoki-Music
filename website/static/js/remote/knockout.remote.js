@@ -12,9 +12,6 @@ $(function() {
   $('.ko-library').each(function(index) {
     ko.applyBindings(musicsLibraryVM, $('.ko-library')[index]);
   });
-  $('.ko-login').each(function(index) {
-    ko.applyBindings(loginVM, $('.ko-login')[index]);
-  });
 
   loginVM.getRooms();
   if(getCookie('room_token')) {
@@ -23,6 +20,12 @@ $(function() {
   else {
     loginVM.isConnected(false);
   }
+});
+
+$(window).load(function() {
+  $('.ko-login').each(function(index) {
+    ko.applyBindings(loginVM, $('.ko-login')[index]);
+  });
 });
 
 $(document).on('click', '.ordering-to-top, .ordering-move-up, .ordering-move-down, .ordering-to-bot', function() {
