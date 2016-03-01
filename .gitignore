@@ -8,6 +8,7 @@
 *.db
 *.db.old
 *.cmd
+*.bat
 *.sh
 .directory
 
@@ -15,3 +16,4 @@
 collected-static/*
 
 node_modules/*
+.venv/*
