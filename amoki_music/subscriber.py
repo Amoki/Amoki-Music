@@ -17,6 +17,7 @@ class CustomSubscriber(RedisSubscriber):
 
     def __init__(self, connection):
         self._subscription = None
+        self.request = None
         super(CustomSubscriber, self).__init__(connection)
 
     def set_pubsub_channels(self, request, channels):
@@ -47,9 +48,10 @@ class CustomSubscriber(RedisSubscriber):
         for key in self._get_message_channels(request=request, facility=facility, **audience):
             self._subscription.subscribe(key)
 
-        self.update_room_listeners(request)
+        self.request = request
+        self.update_room_listeners(self.request)
 
-    def release(self, request):
+    def release(self):
         """
         New implementation to free up Redis subscriptions when websockets close. This prevents
         memory sap when Redis Output Buffer and Output Lists build when websockets are abandoned.
@@ -58,7 +60,7 @@ class CustomSubscriber(RedisSubscriber):
         if self._subscription and self._subscription.subscribed:
             self._subscription.unsubscribe()
             self._subscription.reset()
-        self.update_room_listeners(request)
+        self.update_room_listeners(self.request)
 
     def update_room_listeners(self, request):
         facility = request.path_info.replace(settings.WEBSOCKET_URL, '', 1)
