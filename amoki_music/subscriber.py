@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from ws4redis.redis_store import RedisStore, SELF
+from ws4redis.redis_store import SELF
+from ws4redis.subscriber import RedisSubscriber
 from player.models import Room
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 import json
 
 
-class RedisSubscriber(RedisStore):
+class CustomSubscriber(RedisSubscriber):
     """
     Subscriber class, used by the websocket code to listen for subscribed channels
     """
@@ -16,13 +17,7 @@ class RedisSubscriber(RedisStore):
 
     def __init__(self, connection):
         self._subscription = None
-        super(RedisSubscriber, self).__init__(connection)
-
-    def parse_response(self):
-        """
-        Parse a message response sent by the Redis datastore on a subscribed channel.
-        """
-        return self._subscription.parse_response()
+        super(CustomSubscriber, self).__init__(connection)
 
     def set_pubsub_channels(self, request, channels):
         """
@@ -53,23 +48,6 @@ class RedisSubscriber(RedisStore):
             self._subscription.subscribe(key)
 
         self.update_room_listeners(request)
-        
-    def send_persited_messages(self, websocket):
-        """
-        This method is called immediately after a websocket is openend by the client, so that
-        persisted messages can be sent back to the client upon connection.
-        """
-        for channel in self._subscription.channels:
-            message = self._connection.get(channel)
-            if message:
-                websocket.send(message)
-
-    def get_file_descriptor(self):
-        """
-        Returns the file descriptor used for passing to the select call when listening
-        on the message queue.
-        """
-        return self._subscription.connection and self._subscription.connection._sock.fileno()
 
     def release(self, request):
         """

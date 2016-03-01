@@ -152,7 +152,7 @@ TEMPLATE_LOADERS = (
 # Websockets
 WEBSOCKET_URL = '/ws/'
 
-WS4REDIS_SUBSCRIBER = 'amoki_music.subscriber.RedisSubscriber'
+WS4REDIS_SUBSCRIBER = 'amoki_music.subscriber.CustomSubscriber'
 
 WS4REDIS_CONNECTION = {
     'host': 'localhost',
