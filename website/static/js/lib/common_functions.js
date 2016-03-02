@@ -59,6 +59,7 @@ function connectWs(token, uri, heartbeat) {
     heartbeat: heartbeat,
     onOpen: onWsOpen,
     onError: onWsError,
+    onClose: onWsClose,
   });
 }
 
