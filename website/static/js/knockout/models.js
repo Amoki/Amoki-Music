@@ -17,7 +17,7 @@ function Music(data) {
   this.source = ko.observable(data.source);
   this.channel_name = ko.observable(data.channel_name);
   this.description = ko.observable(data.description);
-  this.one_shot = ko.observable(data.one_shot);
+  this.oneShot = ko.observable(data.one_shot);
 
   this.from = data.from;
 }

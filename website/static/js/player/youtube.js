@@ -107,7 +107,13 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function() {
         previewYoutubePlayer.initialized = true;
+        youtubePlayerPreviewControl.setVolume(getCookie('volumePlayer'));
       },
+      onStateChange: function(event) {
+        if(event.data === YT.PlayerState.PLAYING) {
+          updateVolume(0, true);
+        }
+      }
     },
   });
 }

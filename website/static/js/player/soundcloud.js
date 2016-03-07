@@ -26,6 +26,12 @@ soundcloudPreviewPlayer.bind(SC.Widget.Events.ERROR, function() {
   }
 });
 
+var hasPlayed = false;
+soundcloudPreviewPlayer.bind(SC.Widget.Events.PLAY, function() {
+  hasPlayed = true;
+  updateVolume(0, true);
+});
+
 var soundcloudPlayerControl = {
   play: function(options) {
     if(soundcloudPlayer.initialized) {
@@ -77,6 +83,7 @@ var soundcloudPlayerControl = {
 
 var soundcloudPlayerPreviewControl = {
   play: function(options) {
+    hasPlayed = false;
     if(soundcloudPreviewPlayer.initialized) {
       soundcloudPreviewPlayer.load(
         'https://api.soundcloud.com/tracks/' + options.music_id,
@@ -84,8 +91,14 @@ var soundcloudPlayerPreviewControl = {
           buying: false,
           visual: true,
           hide_related: true,
+          callback: function() {
+            soundcloudPreviewPlayer.setVolume(getCookie('volumePlayer') / 100);
+          },
         }
       );
+      soundcloudPreviewPlayer.bind(SC.Widget.Events.PLAY, function() {
+        soundcloudPreviewPlayer.seekTo(options.timer_start * 1000 || 0);
+      });
     }
   },
   stop: function() {
@@ -99,6 +112,6 @@ var soundcloudPlayerPreviewControl = {
     }
   },
   getState: function() {
-    return 1;
+    return hasPlayed;
   }
 };

@@ -32,9 +32,9 @@ function LibraryViewModel() {
     self.musicPreview(null);
   };
 
-  self.addMusic = function(music,one_shot) {
+  self.addMusic = function(music, oneShot) {
     // Return a json serialized Music object
-      music['one_shot']= one_shot
+    music.oneShot = oneShot;
     $.ajax("/music", {
       data: ko.toJSON(music),
       type: "post",
@@ -74,13 +74,13 @@ function LibraryViewModel() {
     });
   };
 
-  self.sendMusic = function(music, play, one_shot) {
+  self.sendMusic = function(music, play, oneShot) {
     $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music").prop('disabled', true);
     $("button.btn-add-music-one-shot").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music-one-shot").prop('disabled', true);
     if(music.from === 'search') {
-      self.addMusic(music,one_shot);
+      self.addMusic(music,oneShot);
     }
     else if(music.from === 'library') {
       (play === 'play') ? self.addMusic(music,false) : self.patchMusic(music, play);
@@ -88,7 +88,6 @@ function LibraryViewModel() {
   };
 
   self.openPreviewMusic = function(music) {
-    updateVolume(0, true);
     self.musicPreview(music);
     handlerStart = self.musicPreview().timer_start() ? self.musicPreview().timer_start() : 0;
     handlerEnd = self.musicPreview().timer_end() ? self.musicPreview().timer_end() : self.musicPreview().total_duration();
@@ -101,13 +100,21 @@ function LibraryViewModel() {
     playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});
   };
 
-  self.closePreviewMusic = function(valid, play , one_shot) {
+  self.closePreviewMusic = function(valid, play, oneShot) {
+    if(roomVM.room().currentMusic() && roomVM.room().currentMusic().source() === "soundcloud" && playerPreviewControlWrapper.soundcloud.getState() === true) {
+      playerControlWrapper.soundcloud.play(
+        {
+          music_id: roomVM.room().currentMusic().music_id(),
+          timer_start: $('#time-left-progress-bar').data('currentTimePast'),
+        }
+      );
+    }
     updateVolume(getCookie('volumePlayer'), true);
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
       self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
-      self.sendMusic(self.musicPreview(), play, one_shot);
+      self.sendMusic(self.musicPreview(), play, oneShot);
     }
     self.musicPreview(null);
   };
