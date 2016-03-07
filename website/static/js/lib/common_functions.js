@@ -21,6 +21,20 @@ if(!getCookie('volumePlayer')) {
 }
 
 var ws4redis;
+function connectWs(token, uri, heartbeat) {
+  if(typeof(ws4redis) === "object") {
+    ws4redis.close();
+  }
+  ws4redis = new WS4Redis({
+    uri: uri + token + '?subscribe-broadcast',
+    onMessage: receiveMessage,
+    heartbeat: heartbeat,
+    onOpen: onWsOpen,
+    onError: onWsError,
+    onClose: onWsClose,
+  });
+}
+
 function setRoomConnexion(token, heartbeat, wsUri) {
   storeCookie('room_token', token);
   $.ajaxSetup({
@@ -47,20 +61,6 @@ function setRoomConnexion(token, heartbeat, wsUri) {
       }
     );
   }
-}
-
-function connectWs(token, uri, heartbeat) {
-  if(typeof(ws4redis) === "object") {
-    ws4redis.close();
-  }
-  ws4redis = new WS4Redis({
-    uri: uri + token + '?subscribe-broadcast',
-    onMessage: receiveMessage,
-    heartbeat: heartbeat,
-    onOpen: onWsOpen,
-    onError: onWsError,
-    onClose: onWsClose,
-  });
 }
 
 function logOutRoom() {
