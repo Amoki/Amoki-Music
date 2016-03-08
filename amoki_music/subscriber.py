@@ -38,11 +38,8 @@ class CustomSubscriber(RedisSubscriber):
 
     def update_room_listeners(self, request):
         facility = request.path_info.replace(settings.WEBSOCKET_URL, '', 1)
-        tokens = []
-        for room in Room.objects.all():
-            tokens.append(room.token)
 
-        if facility not in tokens:
+        if facility not in [room.token for room in Room.objects.all()]:
             raise PermissionDenied("Unknow room")
 
         prefix = self.get_prefix()
