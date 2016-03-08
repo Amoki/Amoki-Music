@@ -62,7 +62,7 @@ class Room(models.Model):
     def send_message(self, message):
         redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
         message = RedisMessage(json.dumps(message))
-        redis_publisher.publish_message(message)[settings.WS4REDIS_PREFIX + ":broadcast:" + self.token]
+        redis_publisher.publish_message(message)
 
     def play(self, music):
         # clear the queue
