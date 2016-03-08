@@ -5,7 +5,6 @@ from player.models import Room
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 import json
-from django.core.exceptions import PermissionDenied
 
 
 class CustomSubscriber(RedisSubscriber):
@@ -40,7 +39,7 @@ class CustomSubscriber(RedisSubscriber):
         facility = request.path_info.replace(settings.WEBSOCKET_URL, '', 1)
 
         if facility not in [room.token for room in Room.objects.all()]:
-            raise PermissionDenied("Unknow room")
+            raise Exception("Unknow room")
 
         prefix = self.get_prefix()
         key = prefix + 'broadcast:' + facility
