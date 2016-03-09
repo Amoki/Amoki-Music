@@ -256,6 +256,7 @@ function RoomViewModel() {
   };
 
   self.patchShuffle = function() {
+    $('#submit-shuffle').prop('disabled', true);
     self.room().shuffle(!self.room().shuffle());
     $.ajax({
       url: '/room',
@@ -264,6 +265,7 @@ function RoomViewModel() {
       contentType: 'application/json',
       dataType: 'json',
       success: function() {
+        $('#submit-shuffle').prop('disabled', false);
         (self.room().shuffle()) ? modalConfirm($('#modal-shuffle-on')) : modalConfirm($('#modal-shuffle-off'));
       },
       error: logErrors,
@@ -271,6 +273,7 @@ function RoomViewModel() {
   };
 
   self.postNext = function() {
+    $('.btn-to-lock').prop('disabled', true);
     $.ajax("/room/next", {
       data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
       type: "post",
