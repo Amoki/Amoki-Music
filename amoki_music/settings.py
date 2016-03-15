@@ -152,6 +152,8 @@ TEMPLATE_LOADERS = (
 # Websockets
 WEBSOCKET_URL = '/ws/'
 
+WS4REDIS_SUBSCRIBER = 'player.subscriber.CustomSubscriber'
+
 WS4REDIS_CONNECTION = {
     'host': 'localhost',
     'port': 6379,
