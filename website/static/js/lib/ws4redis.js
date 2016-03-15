@@ -49,6 +49,7 @@ function WS4Redis(options) {
         connect(ws.url);
       }, interval);
     }
+    return options.onClose();
   }
 
   function onError(evt) {
