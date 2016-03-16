@@ -56,6 +56,11 @@ function onWsError() {
   }
 }
 
+function onWsClose() {
+  loginVM.wsConnected(false);
+  loginVM.logOut();
+}
+
 function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
   mappedPlaylistTracks = $.map(newPlaylistTracks, function(item) {
     return new PlaylistTrack(item);
