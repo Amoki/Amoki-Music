@@ -41,5 +41,5 @@ class PlaylistTrack(OrderedModel):
 
     ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
 
-    class Meta(OrderedModel.Meta):
-        pass
+    class Meta:
+        ordering = ('room', 'order')
