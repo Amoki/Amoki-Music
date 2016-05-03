@@ -48,12 +48,8 @@ function onWsOpen() {
 }
 
 function onWsError() {
-  reconnectTry += 1;
   loginVM.wsError(true);
   loginVM.wsConnected(false);
-  if(reconnectTry > 6) {
-    loginVM.logOut();
-  }
 }
 
 function onWsClose() {
