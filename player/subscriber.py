@@ -46,7 +46,7 @@ class CustomSubscriber(RedisSubscriber):
         query = self._connection.execute_command('PUBSUB', 'NUMSUB', key)
 
         room_to_update = Room.objects.get(token=facility)
-        room_to_update.listeners = query[1] if len(query) > 1 else 0
+        room_to_update.listeners = int(query[1]) if len(query) > 1 else 0
         room_to_update.save()
 
         redis_publisher = RedisPublisher(facility=room_to_update.token, broadcast=True)
