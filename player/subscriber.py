@@ -37,6 +37,9 @@ class CustomSubscriber(RedisSubscriber):
 
     def update_room_listeners(self, request):
         facility = request.path_info.replace(settings.WEBSOCKET_URL, '', 1)
+        print('\n\n')
+        print("FICILITY : {}".format(facility))
+        print('\n\n')
 
         if facility not in [room.token for room in Room.objects.all()]:
             raise Exception("Unknow room")
@@ -49,10 +52,16 @@ class CustomSubscriber(RedisSubscriber):
         room_to_update.listeners = query[1] if len(query) > 1 else 0
         room_to_update.save()
 
+        print('\n\n')
+        print("LISTENNERS IN ROOM : {}".format(room_to_update.listeners))
+        print('\n\n')
         redis_publisher = RedisPublisher(facility=room_to_update.token, broadcast=True)
         message = {
             'action': 'listeners_updated',
             'listeners': room_to_update.listeners
         }
         listenersMessage = RedisMessage(json.dumps(message))
+        print('\n\n')
+        print("LISTENNERS MESSAGE : {}".format(listenersMessage))
+        print('\n\n')
         redis_publisher.publish_message(listenersMessage)
