@@ -164,7 +164,6 @@ function wsActionPlay(message) {
 }
 
 function wsActionUpdateListeners(message) {
-  console.debug(message);
   roomVM.room().listeners(message.listeners);
 }
 
@@ -174,7 +173,6 @@ function wsActionUpdateVolume(message) {
 
 // receive a message though the websocket from the server
 function receiveMessage(message) {
-  console.debug(message);
   switch(message.action) {
     case 'stop':
       wsActionStop();
