@@ -131,15 +131,11 @@
           <div class="remote">
             <!-- HEADER REMOTE -->
             <div class="row header-remote" data-bind="with: room">
-              <div data-bind="if: currentMusic()">
-                <div class="col-xs-offset-1 col-xs-10 title">
-                    <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
-                </div>
+              <div data-bind="if: currentMusic()" class="col-xs-offset-1 col-xs-10 title">
+                  <a class="now-playing" data-bind="attr: {href: currentMusic().url() }, text: currentMusic().name()"></a>
               </div>
-              <div data-bind="if: !currentMusic()">
-                <div class="col-xs-offset-1 col-xs-10 title">
-                    <span class="now-playing">No music :'( Add yours now !</span>
-                </div>
+              <div data-bind="if: !currentMusic()" class="col-xs-offset-1 col-xs-10 title">
+                  <span class="now-playing">No music :'( Add yours now !</span>
               </div>
             </div>
             <!-- END HEADER REMOTE -->
