@@ -1,16 +1,15 @@
 import importlib
 
 from django.conf.urls import url
-from rest_framework.urlpatterns import format_suffix_patterns
 
 # Load all routes, get the APIView's as_view method
-views = {}
-for endpoint in ['music_endpoint', 'musics', 'room', 'rooms', 'search']:
-    views[endpoint] = getattr(importlib.import_module('endpoints.' + endpoint), endpoint.capitalize() + 'View').as_view()
 from endpoints.room import RoomNextView
 from endpoints import login
 from endpoints.sources import sources
 from endpoints import playlist
+views = {}
+for endpoint in ['music_endpoint', 'musics', 'room', 'rooms', 'search']:
+    views[endpoint] = getattr(importlib.import_module('endpoints.' + endpoint), endpoint.capitalize() + 'View').as_view()
 
 urlpatterns = [
     url(r'^search$', views['search']),
@@ -27,5 +26,3 @@ urlpatterns = [
     url(r'^playlist/(?P<pk>[0-9]+)$', playlist.delete),
     url(r'^playlist/(?P<pk>[0-9]+)/(?P<action>[a-z]+)($|/(?P<target>[0-9]+)$)', playlist.post),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
