@@ -67,7 +67,7 @@ function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
 function wsActionStop() {
   // Stop the players
   Object.keys(playerControlWrapper).forEach(function(player) {
-    playerControlWrapper[player].stop();
+    playerControlWrapper[player] && playerControlWrapper[player].stop();
     $('.player-child').not('.player-child-no-music').stop().fadeOut(250);
   });
 
