@@ -9,9 +9,9 @@ from website.views.home import remote
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^admin/doc/', admindocs_urls),
+    url(r'^admin/doc/', include(admindocs_urls)),
     url(r'^admin/', admin.site.urls),
-    url(r'^docs/', rest_framework_swagger_urls),
+    url(r'^docs/', include(rest_framework_swagger_urls)),
     url(r'^', include(routes)),
     url(r'^$', remote, name='remote'),
 ]
