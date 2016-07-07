@@ -66,7 +66,7 @@ INSTALLED_APPS = (
     'website',
 )
 
-SOURCES = ["youtube", "soundcloud"]
+SOURCES = ["youtube", ]  # "soundcloud" // DISABLED
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
