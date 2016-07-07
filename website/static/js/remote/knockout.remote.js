@@ -104,7 +104,7 @@ function wsActionMusicPatched(message) {
   // notify the modification to subscribers
   roomVM.playlistTracks.valueHasMutated();
 
-  if(roomVM.room().currentMusic() && roomVM.room().currentMusic().pk() === music.pk()) {
+  if(roomVM.room().currentMusic().pk() === music.pk()) {
     roomVM.room().currentMusic(music);
     roomVM.room().current_time_past($('#time-left-progress-bar').data('currentTimePast'));
     roomVM.room().current_time_left(roomVM.room().currentMusic().duration() - roomVM.room().current_time_past());
