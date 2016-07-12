@@ -22,33 +22,69 @@ class TestPlaylist(EndpointTestCase):
         )
         self.m.save()
 
+        self.mx = Music(
+            music_id="x",
+            name="x",
+            thumbnail="https://x.com",
+            total_duration=150,
+            duration=104,
+            url="https://www.x.com",
+            source="soundcloud",
+            timer_start=20,
+            room=self.r,
+        )
+        self.mx.save()
+
         self.pt = PlaylistTrack(track=self.m, room=self.r)
         self.pt.save()
+        self.ptx = PlaylistTrack(track=self.mx, room=self.r)
+        self.ptx.save()
 
     def test_get(self):
         response = self.client.get('/playlist')
 
         response.status_code.should.eql(status.HTTP_200_OK)
 
-        expected_result = [{
-            'pk': self.pt.pk,
-            'order': 0,
-            'music': {
-                'pk': self.m.pk,
-                'music_id': 'a',
-                'name': 'a',
-                'thumbnail': 'https://a.com',
-                'total_duration': 114,
-                'duration': 104,
-                'url': 'https://www.a.com',
-                'source': 'youtube',
-                'timer_start': 10,
-                'count': 0,
-                'last_play': None,
-                'one_shot': False
+        expected_result = [
+            {
+                'pk': self.pt.pk,
+                'order': 0,
+                'music': {
+                    'pk': self.m.pk,
+                    'music_id': 'a',
+                    'name': 'a',
+                    'thumbnail': 'https://a.com',
+                    'total_duration': 114,
+                    'duration': 104,
+                    'url': 'https://www.a.com',
+                    'source': 'youtube',
+                    'timer_start': 10,
+                    'count': 0,
+                    'last_play': None,
+                    'one_shot': False
+                },
+                'track_type': 0,
+            },
+            {
+                'pk': self.ptx.pk,
+                'order': 1,
+                'music': {
+                    'pk': self.mx.pk,
+                    'music_id': 'x',
+                    'name': 'x',
+                    'thumbnail': 'https://x.com',
+                    'total_duration': 150,
+                    'duration': 104,
+                    'url': 'https://www.x.com',
+                    'source': 'soundcloud',
+                    'timer_start': 20,
+                    'count': 0,
+                    'last_play': None,
+                    'one_shot': False
+                },
+                'track_type': 0,
             }
-        }]
-
+        ]
         list(response.data).should.eql(expected_result)
 
     def test_delete(self):
@@ -112,12 +148,12 @@ class TestPlaylist(EndpointTestCase):
         response = self.client.post('/playlist/%s/below/%s' % (self.pt.pk, pt2.pk))
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([pt2, self.pt])
+        list(self.r.playlist.all()).should.eql([self.ptx, pt2, self.pt])
 
         response = self.client.post('/playlist/%s/above/%s' % (pt2.pk, self.pt.pk))
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([pt2, self.pt])
+        list(self.r.playlist.all()).should.eql([self.ptx, pt2, self.pt])
 
     def test_other_action(self):
         m2 = Music(
@@ -140,4 +176,4 @@ class TestPlaylist(EndpointTestCase):
         response = self.client.post('/playlist/%s/top' % pt2.pk)
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([pt2, self.pt])
+        list(self.r.playlist.all()).should.eql([pt2, self.pt, self.ptx])
