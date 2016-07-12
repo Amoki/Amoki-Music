@@ -146,7 +146,10 @@ function wsActionPlay(message) {
   musicsLibraryVM.getLibrary();
 
   // Update the playlist
-  roomVM.playlistTracks.shift();
+  mappedPlaylistTracks = $.map(message.room.playlist, function(item) {
+    return new PlaylistTrack(item);
+  });
+  roomVM.playlistTracks(mappedPlaylistTracks);
 
   // Update the page title
   document.title = roomVM.room().currentMusic().name();
