@@ -77,4 +77,4 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlaylistTrack
-        fields = ('pk', 'order', 'music', 'track_type')
+        fields = ('pk', 'track_type', 'order', 'music')
