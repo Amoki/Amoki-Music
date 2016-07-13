@@ -35,8 +35,8 @@ class PlaylistTrack(OrderedModel):
     NORMAL = 0
     SHUFFLE = 1
     STATUS_CHOICES = (
-        (NORMAL, 'Selected by an user request'),
-        (SHUFFLE, 'Randomly selected'),
+        (NORMAL, '"NORMAL" = Selected by an user request'),
+        (SHUFFLE, '"SHUFFLE" = Randomly selected'),
     )
 
     room = models.ForeignKey('player.Room', related_name='playlist')
@@ -44,10 +44,14 @@ class PlaylistTrack(OrderedModel):
     track_type = models.IntegerField(choices=STATUS_CHOICES, default=NORMAL)
     order_with_respect_to = ('room', 'track_type')
 
-    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
+    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below', 'changetype']
 
     class Meta:
         ordering = ('room', 'track_type', 'order')
 
     def __str__(self):
         return "Room : {}, Music : {}, Type : {}".format(self.room, self.track, self.track_type)
+
+    def changetype(self, new_type):
+        self.track_type = getattr(PlaylistTrack, new_type)
+        self.save()
