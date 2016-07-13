@@ -25,10 +25,7 @@ class Music(models.Model):
         unique_together = ("music_id", "room")
 
     def __str__(self):
-        return """Music : {} \n
-                Total duration : {} \n
-                Duration : {} \n
-                """.format(self.name, self.total_duration, self.duration)
+        return "Title : {}, Total duration : {}, Duration : {}".format(self.name, self.total_duration, self.duration)
 
     def is_valid(self):
         return source.check_validity(self.source, self.music_id)
@@ -51,3 +48,6 @@ class PlaylistTrack(OrderedModel):
 
     class Meta:
         ordering = ('room', 'track_type', 'order')
+
+    def __str__(self):
+        return "Room : {}, Music : {}, Type : {}".format(self.room, self.track, self.track_type)

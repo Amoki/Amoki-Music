@@ -35,15 +35,32 @@ class TestPlaylist(EndpointTestCase):
         )
         self.mx.save()
 
+        self.my = Music(
+            music_id="y",
+            name="y",
+            thumbnail="https://y.com",
+            total_duration=170,
+            duration=104,
+            url="https://www.y.com",
+            source="soundcloud",
+            timer_start=20,
+            room=self.r,
+        )
+        self.my.save()
+
         self.pt = PlaylistTrack(track=self.m, room=self.r)
         self.pt.save()
-        self.ptx = PlaylistTrack(track=self.mx, room=self.r)
+        self.ptx = PlaylistTrack(track=self.mx, room=self.r, track_type=PlaylistTrack.SHUFFLE)
         self.ptx.save()
+        self.pty = PlaylistTrack(track=self.my, room=self.r)
+        self.pty.save()
 
     def test_get(self):
         response = self.client.get('/playlist')
 
         response.status_code.should.eql(status.HTTP_200_OK)
+
+        list(self.r.playlist.all()).should.eql([self.pt, self.pty, self.ptx])
 
         expected_result = [
             {
@@ -66,8 +83,27 @@ class TestPlaylist(EndpointTestCase):
                 'track_type': 0,
             },
             {
-                'pk': self.ptx.pk,
+                'pk': self.pty.pk,
                 'order': 1,
+                'music': {
+                    'pk': self.my.pk,
+                    'music_id': 'y',
+                    'name': 'y',
+                    'thumbnail': 'https://y.com',
+                    'total_duration': 170,
+                    'duration': 104,
+                    'url': 'https://www.y.com',
+                    'source': 'soundcloud',
+                    'timer_start': 20,
+                    'count': 0,
+                    'last_play': None,
+                    'one_shot': False
+                },
+                'track_type': 0,
+            },
+            {
+                'pk': self.ptx.pk,
+                'order': 0,
                 'music': {
                     'pk': self.mx.pk,
                     'music_id': 'x',
@@ -82,7 +118,7 @@ class TestPlaylist(EndpointTestCase):
                     'last_play': None,
                     'one_shot': False
                 },
-                'track_type': 0,
+                'track_type': 1,
             }
         ]
         list(response.data).should.eql(expected_result)
@@ -148,12 +184,12 @@ class TestPlaylist(EndpointTestCase):
         response = self.client.post('/playlist/%s/below/%s' % (self.pt.pk, pt2.pk))
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([self.ptx, pt2, self.pt])
+        list(self.r.playlist.all()).should.eql([self.pty, pt2, self.pt, self.ptx])
 
-        response = self.client.post('/playlist/%s/above/%s' % (pt2.pk, self.pt.pk))
+        response = self.client.post('/playlist/%s/above/%s' % (self.pt.pk, self.pty.pk))
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([self.ptx, pt2, self.pt])
+        list(self.r.playlist.all()).should.eql([self.pt, self.pty, pt2, self.ptx])
 
     def test_other_action(self):
         m2 = Music(
@@ -172,8 +208,12 @@ class TestPlaylist(EndpointTestCase):
         pt2.save()
 
         # test only one action to test the endpoint. Actions themselves are already tested in OrderedModel lib
-
-        response = self.client.post('/playlist/%s/top' % pt2.pk)
+        
+        # This test check the "order_with_respect" param too
+        # self.ptx is a Shuffle track so it should always be AFTER the normal tracks !
+        # (in fact it's not rly important because the system first check for Normal tracks then for Shuffle tracks
+        #  but it's more a readability factor for the administration)
+        response = self.client.post('/playlist/%s/bottom' % self.pt.pk)
 
         response.status_code.should.eql(status.HTTP_200_OK)
-        list(self.r.playlist.all()).should.eql([pt2, self.pt, self.ptx])
+        list(self.r.playlist.all()).should.eql([self.pty, pt2, self.pt, self.ptx])
