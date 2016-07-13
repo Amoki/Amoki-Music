@@ -124,6 +124,16 @@ class TestPlaylist(EndpointTestCase):
         list(response.data).should.eql(expected_result)
 
     def test_delete(self):
+        response = self.client.patch('/room', {'shuffle': True})
+        self.r = self.reload(self.r)
+
+        self.r.playlist.filter(track_type=PlaylistTrack.SHUFFLE).count().should.eql(1)
+        response = self.client.delete('/playlist/%s' % self.ptx.pk)
+        response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
+
+        self.r.playlist.filter(track_type=PlaylistTrack.SHUFFLE).count().should.eql(self.r.nb_shuffle_items)
+
+    def test_delete_shuffle_playlistTrack(self):
         response = self.client.delete('/playlist/%s' % self.pt.pk)
         response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
 

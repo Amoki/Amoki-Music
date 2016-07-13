@@ -71,9 +71,10 @@ def delete(request, room, pk, format=None):
     """
     try:
         p_track = PlaylistTrack.objects.get(pk=pk, room=room)
-        if p_track.track_type == PlaylistTrack.SHUFFLE:
-            room.fill_shuffle_playlist()
+        p_track_type = p_track.track_type
         p_track.delete()
+        if p_track_type == PlaylistTrack.SHUFFLE:
+            room.fill_shuffle_playlist()
 
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)

@@ -25,7 +25,7 @@ class TestRoom(EndpointTestCase):
             'token': self.r.token,
             'current_time_past': 0,
             'current_time_past_percent': 0,
-            'listeners' : 0
+            'listeners': 0
         }
 
         response.status_code.should.eql(status.HTTP_200_OK)
