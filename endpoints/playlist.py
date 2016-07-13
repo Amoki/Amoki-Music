@@ -39,7 +39,7 @@ def post(request, room, pk, action, target=None):
             return Response('"{}" action needs a target parameter'.format(action), status=status.HTTP_400_BAD_REQUEST)
         
         if action == 'changetype':
-            if target not in [elem for elem, desc in PlaylistTrack.STATUS_CHOICES]:
+            if target not in {'NORMAL', 'SHUFFLE'}:
                 choices = '; '.join(desc for elem, desc in PlaylistTrack.STATUS_CHOICES)
                 return Response('"{}" action needs a target type (can be : {}) parameter'.format(action, choices), status=status.HTTP_400_BAD_REQUEST)
         else:

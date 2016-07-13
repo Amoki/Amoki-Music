@@ -143,6 +143,10 @@ class TestPlaylist(EndpointTestCase):
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
         response.data.should.eql('Action can only be: "%s"' % '" or "'.join(PlaylistTrack.ACTIONS))
 
+        response = self.client.post('/playlist/%s/top/123456789' % self.pt.pk)
+        # Should response 200 because top ignore the target (it don't need a target)
+        response.status_code.should.eql(status.HTTP_200_OK)
+
     def test_post_above_and_below_action_without_target(self):
         response = self.client.post('/playlist/%s/above' % self.pt.pk)
 
@@ -217,3 +221,17 @@ class TestPlaylist(EndpointTestCase):
 
         response.status_code.should.eql(status.HTTP_200_OK)
         list(self.r.playlist.all()).should.eql([self.pty, pt2, self.pt, self.ptx])
+
+    def test_change_playlistTrack_type(self):
+        response = self.client.post('/playlist/%s/changetype/SHUFFLE' % self.pt.pk)
+        response.status_code.should.eql(status.HTTP_200_OK)
+        
+        self.pt = self.reload(self.pt)
+        self.pt.track_type.should.eql(PlaylistTrack.SHUFFLE)
+
+    def test_change_playlistTrack_type_bad_type(self):
+        response = self.client.post('/playlist/%s/changetype/oui' % self.pt.pk)
+        response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post('/playlist/%s/changetype' % self.pt.pk)
+        response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
