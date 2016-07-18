@@ -164,11 +164,12 @@ class Room(models.Model):
                 current_shuffle_count += 1
         else:
             PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).delete()
-            message = {
-                'action': 'playlistTrack_deleted',
-                'playlistTracks': self.get_serialized_playlist()
-            }
-            self.send_message(message)
+        
+        message = {
+            'action': 'playlistTrack_updated',
+            'playlistTracks': self.get_serialized_playlist()
+        }
+        self.send_message(message)
 
     def get_current_remaining_time(self):
         if self.current_music:
