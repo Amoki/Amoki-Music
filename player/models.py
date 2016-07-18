@@ -235,12 +235,12 @@ class Room(models.Model):
         else:
             self.shuffle = False
             self.save()
-            self.fill_shuffle_playlist()
             message = {
                 'action': 'shuffle_changed',
                 'shuffle': False,
             }
             self.send_message(message)
+        self.fill_shuffle_playlist()
 
     def get_serialized_playlist(self):
         # Horrible but Mom said me I can :3
