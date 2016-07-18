@@ -32,9 +32,9 @@ function LibraryViewModel() {
     self.musicPreview(null);
   };
 
-  self.addMusic = function(music,one_shot) {
+  self.addMusic = function(music, oneShot) {
     // Return a json serialized Music object
-      music['one_shot']= one_shot
+    music.one_shot = oneShot;
     $.ajax("/music", {
       data: ko.toJSON(music),
       type: "post",
@@ -74,13 +74,13 @@ function LibraryViewModel() {
     });
   };
 
-  self.sendMusic = function(music, play, one_shot) {
+  self.sendMusic = function(music, play, oneShot) {
     $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music").prop('disabled', true);
     $("button.btn-add-music-one-shot").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music-one-shot").prop('disabled', true);
     if(music.from === 'search') {
-      self.addMusic(music,one_shot);
+      self.addMusic(music, oneShot);
     }
     else if(music.from === 'library') {
       (play === 'play') ? self.addMusic(music,false) : self.patchMusic(music, play);
@@ -101,13 +101,13 @@ function LibraryViewModel() {
     playerPreviewControlWrapper[music.source()].play({music_id: self.musicPreview().music_id()});
   };
 
-  self.closePreviewMusic = function(valid, play , one_shot) {
+  self.closePreviewMusic = function(valid, play, oneShot) {
     updateVolume(getCookie('volumePlayer'), true);
     $('#music_preview').modal('hide');
     if(valid) {
       self.musicPreview().timer_start($('#slider-preview').slider("values", 0));
       self.musicPreview().duration(self.musicPreview().total_duration() - self.musicPreview().timer_start() - (self.musicPreview().total_duration() - $('#slider-preview').slider("values", 1)));
-      self.sendMusic(self.musicPreview(), play, one_shot);
+      self.sendMusic(self.musicPreview(), play, oneShot);
     }
     self.musicPreview(null);
   };
@@ -187,6 +187,7 @@ function RoomViewModel() {
 
   self.room = ko.observable();
   self.playlistTracks = ko.observableArray([]);
+  self.shufflePlaylistTracks = ko.observableArray([]);
 
   (!getCookie('playerOpen') || getCookie('playerOpen') === false) ? storeCookie('playerOpen', false) : null;
   self.playerOpen = ko.observable((getCookie('playerOpen') === "true"));
@@ -194,6 +195,7 @@ function RoomViewModel() {
   self.clear = function() {
     self.room(null);
     self.playlistTracks([]);
+    self.shufflePlaylistTracks([]);
     self.playerOpen(false);
     self.closePlayer();
   };
@@ -247,9 +249,17 @@ function RoomViewModel() {
   self.getPlaylist = function() {
     $.getJSON("/playlist", function(allData) {
       var mappedPlaylistTracks = $.map(allData, function(item) {
-        return new PlaylistTrack(item);
+        if(item.track_type === 0) {
+          return new PlaylistTrack(item);
+        }
+      });
+      var mappedShufflePlaylistTracks = $.map(allData, function(item) {
+        if(item.track_type === 1) {
+          return new PlaylistTrack(item);
+        }
       });
       self.playlistTracks(mappedPlaylistTracks);
+      self.shufflePlaylistTracks(mappedShufflePlaylistTracks);
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
@@ -320,7 +330,7 @@ function RoomViewModel() {
   };
 
   self.deletePlaylistTrack = function(playlistTrack) {
-    self.playlistTracks.remove(playlistTrack);
+    $.inArray(playlistTrack, self.playlistTracks) !== -1 ? self.playlistTracks.remove(playlistTrack) : self.shufflePlaylistTracks.remove(playlistTrack);
     $.ajax("/playlist/" + playlistTrack.pk(), {
       type: "delete",
       contentType: "application/json",
