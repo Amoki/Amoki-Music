@@ -138,7 +138,8 @@ class Room(models.Model):
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics
-        musics = self.music_set.exclude(one_shot=True).exclude(duration__gte=600).order_by('-last_play')
+        musics_in_shuffle = PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE)
+        musics = self.music_set.exclude(one_shot=True).exclude(duration__gte=600).exclude(pk__in=musics_in_shuffle).order_by('-last_play')
         count = musics.count()
 
         to_remove = int(count / 10)
@@ -156,20 +157,21 @@ class Room(models.Model):
         return musics[i]
 
     def fill_shuffle_playlist(self):
-        if self.shuffle:
+        if self.nb_shuffle_items > 0:
             current_shuffle_count = PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).count()
-            while current_shuffle_count < self.nb_shuffle_items:
-                shuffled_track = self.select_random_music()
-                PlaylistTrack.objects.create(room=self, track=shuffled_track, track_type=PlaylistTrack.SHUFFLE)
-                current_shuffle_count += 1
-        else:
-            PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).delete()
-        
-        message = {
-            'action': 'playlistTrack_updated',
-            'playlistTracks': self.get_serialized_playlist()
-        }
-        self.send_message(message)
+            if current_shuffle_count < self.nb_shuffle_items and self.shuffle:
+                while current_shuffle_count < self.nb_shuffle_items:
+                    shuffled_track = self.select_random_music()
+                    PlaylistTrack.objects.create(room=self, track=shuffled_track, track_type=PlaylistTrack.SHUFFLE)
+                    current_shuffle_count += 1
+            else:
+                PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).delete()
+
+            message = {
+                'action': 'playlistTrack_updated',
+                'playlistTracks': self.get_serialized_playlist()
+            }
+            self.send_message(message)
 
     def get_current_remaining_time(self):
         if self.current_music:
@@ -225,23 +227,20 @@ class Room(models.Model):
             raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
-            message = {
-                'action': 'shuffle_changed',
-                'shuffle': True,
-            }
             self.save()
-            self.send_message(message)
             if not self.current_music:
                 self.play_next()
+            else:
+                self.fill_shuffle_playlist()
         else:
             self.shuffle = False
             self.save()
-            message = {
-                'action': 'shuffle_changed',
-                'shuffle': False,
-            }
-            self.send_message(message)
-        self.fill_shuffle_playlist()
+            self.fill_shuffle_playlist()
+        message = {
+            'action': 'shuffle_changed',
+            'shuffle': self.shuffle,
+        }
+        self.send_message(message)
 
     def get_serialized_playlist(self):
         # Horrible but Mom said me I can :3
