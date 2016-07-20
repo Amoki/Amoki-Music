@@ -187,7 +187,9 @@ function RoomViewModel() {
 
   self.room = ko.observable();
   self.playlistTracks = ko.observableArray([]);
+  self.playlistTracks.id = 'NORMAL';
   self.shufflePlaylistTracks = ko.observableArray([]);
+  self.shufflePlaylistTracks.id = 'SHUFFLE';
 
   (!getCookie('playerOpen') || getCookie('playerOpen') === false) ? storeCookie('playerOpen', false) : null;
   self.playerOpen = ko.observable((getCookie('playerOpen') === "true"));

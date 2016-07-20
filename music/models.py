@@ -44,7 +44,8 @@ class PlaylistTrack(OrderedModel):
     track_type = models.IntegerField(choices=STATUS_CHOICES, default=NORMAL)
     order_with_respect_to = ('room', 'track_type')
 
-    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below', 'changetype']
+    MOVE_ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
+    TYPE_ACTIONS = ['changetype']
 
     class Meta:
         ordering = ('room', 'track_type', 'order')

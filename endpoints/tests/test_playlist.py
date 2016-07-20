@@ -151,7 +151,7 @@ class TestPlaylist(EndpointTestCase):
         response = self.client.post('/playlist/%s/badaction' % self.pt.pk)
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
-        response.data.should.eql('Action can only be: "%s"' % '" or "'.join(PlaylistTrack.ACTIONS))
+        response.data.should.eql('Action can only be: "%s"' % '" or "'.join(PlaylistTrack.MOVE_ACTIONS + PlaylistTrack.TYPE_ACTIONS))
 
         response = self.client.post('/playlist/%s/top/123456789' % self.pt.pk)
         # Should response 200 because top ignore the target (it don't need a target)
@@ -178,6 +178,13 @@ class TestPlaylist(EndpointTestCase):
 
         response.status_code.should.eql(status.HTTP_404_NOT_FOUND)
         response.data.should.eql("Can't find this playlistTrack as target.")
+
+    def test_post_changetype_action_with_bad_target(self):
+        response = self.client.post('/playlist/%s/changetype/oui' % self.pt.pk)
+
+        response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
+        choices = ' or '.join(desc for elem, desc in PlaylistTrack.STATUS_CHOICES)
+        response.data.should.eql('"{}" action needs a target type (can be : {}) parameter'.format('changetype', choices))
 
     def test_post_below_or_above_action(self):
         m2 = Music(

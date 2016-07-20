@@ -11,16 +11,16 @@
   <link href="{% static 'css/style.less' %}" rel="stylesheet/less">
   <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
 
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
+  <script type="text/javascript" src="{% static 'js/lib/knockout-3.4.0.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/js.cookie-2.0.3.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/bootstrap.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/lib/prefixfree.min.js' %}"></script>
@@ -489,7 +489,7 @@
         </div>
         <!-- ko if: playlistTracks().length  -->
         <table class="table table-striped table-condensed header-fixed">
-          <tbody class="normal-playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
+          <tbody class="normal-playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable, beforeMove: beforeMoveSortable}">
             <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
               <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack($data) }"><i class="fa fa-2x fa-trash-o"></i></td>
               <td class="name" data-bind="text: music().name"></td>
@@ -527,7 +527,7 @@
                 </tbody>
               </table>
               <table class="table table-striped table-condensed header-fixed">
-                <tbody class="shuffle-playlist-sortable" data-bind="sortable: {data: $root.shufflePlaylistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
+                <tbody class="shuffle-playlist-sortable" data-bind="sortable: {data: $root.shufflePlaylistTracks, options: sortableOptions, afterMove: afterMoveSortable, beforeMove: beforeMoveSortable}">
                   <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
                     <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack($data) }"><i class="fa fa-2x fa-trash-o"></i></td>
                     <td class="name" data-bind="text: music().name"></td>
