@@ -117,10 +117,12 @@ class Room(models.Model):
             shuffled.date = datetime.now()
             shuffled.save()
 
-            self.fill_shuffle_playlist()
             self.play(music=shuffled)
         else:
             self.stop()
+        
+        if self.shuffle:
+            self.fill_shuffle_playlist()
 
     def add_music(self, music):
         # Adding the music to the queue
@@ -138,8 +140,7 @@ class Room(models.Model):
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics
-        musics_in_shuffle = PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE)
-        musics = self.music_set.exclude(one_shot=True).exclude(duration__gte=600).exclude(pk__in=musics_in_shuffle).order_by('-last_play')
+        musics = self.music_set.exclude(one_shot=True).exclude(duration__gte=600).order_by('-last_play')
         count = musics.count()
 
         to_remove = int(count / 10)
