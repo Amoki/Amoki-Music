@@ -489,7 +489,7 @@
         </div>
         <!-- ko if: playlistTracks().length  -->
         <table class="table table-striped table-condensed header-fixed">
-          <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
+          <tbody class="normal-playlist-sortable" data-bind="sortable: {data: playlistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
             <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
               <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack($data) }"><i class="fa fa-2x fa-trash-o"></i></td>
               <td class="name" data-bind="text: music().name"></td>
@@ -511,7 +511,7 @@
           <!-- ko if: shuffle() -->
             <!-- ko if: $root.shufflePlaylistTracks().length === 0 -->
             <table class="table table-striped table-condensed header-fixed">
-              <tbody class="playlist-ajax playlist-sortable">
+              <tbody>
                 <tr class="empty">
                   <td>Shuffle activated...<br />Let the music be your guide</td>
                 </tr>
@@ -520,14 +520,14 @@
             <!-- /ko -->
             <!-- ko if: $root.shufflePlaylistTracks().length !== 0 -->
               <table class="table table-striped table-condensed header-fixed">
-                <tbody class="playlist-ajax playlist-sortable">
+                <tbody>
                   <tr class="empty">
                     <td>Comming next...</td>
                   </tr>
                 </tbody>
               </table>
               <table class="table table-striped table-condensed header-fixed">
-                <tbody class="playlist-ajax playlist-sortable" data-bind="sortable: {data: $root.shufflePlaylistTracks, options: sortableOptions}">
+                <tbody class="shuffle-playlist-sortable" data-bind="sortable: {data: $root.shufflePlaylistTracks, options: sortableOptions, afterMove: afterMoveSortable}">
                   <tr class="playlist-item" data-bind="attr: { 'data-pkplaylisttrack': pk() }">
                     <td class="icon-trash" data-bind="click: function() { $root.deletePlaylistTrack($data) }"><i class="fa fa-2x fa-trash-o"></i></td>
                     <td class="name" data-bind="text: music().name"></td>
@@ -547,7 +547,7 @@
           <!-- /ko -->
           <!-- ko if: (!shuffle() && $root.playlistTracks().length === 0 && $root.shufflePlaylistTracks().length === 0) -->
             <table class="table table-striped table-condensed header-fixed">
-              <tbody class="playlist-ajax playlist-sortable">
+              <tbody>
                 <tr class="empty">
                   <td>No more musics in the playlist !</td>
                 </tr>

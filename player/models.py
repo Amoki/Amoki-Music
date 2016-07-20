@@ -160,11 +160,12 @@ class Room(models.Model):
     def fill_shuffle_playlist(self):
         if self.nb_shuffle_items > 0:
             current_shuffle_count = PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).count()
-            if current_shuffle_count < self.nb_shuffle_items and self.shuffle:
-                while current_shuffle_count < self.nb_shuffle_items:
-                    shuffled_track = self.select_random_music()
-                    PlaylistTrack.objects.create(room=self, track=shuffled_track, track_type=PlaylistTrack.SHUFFLE)
-                    current_shuffle_count += 1
+            if self.shuffle:
+                if current_shuffle_count < self.nb_shuffle_items:
+                    while current_shuffle_count < self.nb_shuffle_items:
+                        shuffled_track = self.select_random_music()
+                        PlaylistTrack.objects.create(room=self, track=shuffled_track, track_type=PlaylistTrack.SHUFFLE)
+                        current_shuffle_count += 1
             else:
                 PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).delete()
 
