@@ -32,8 +32,7 @@ def post(request, room, pk, action, target=None):
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
     if action not in PlaylistTrack.MOVE_ACTIONS and action not in PlaylistTrack.TYPE_ACTIONS:
-        possible_actions = '" or "'.join(elem for elem in PlaylistTrack.MOVE_ACTIONS + PlaylistTrack.TYPE_ACTIONS)
-        return Response('Action can only be: "{}"'.format(possible_actions), status=status.HTTP_400_BAD_REQUEST)
+        return Response('Action can only be: "{}"'.format('" or "'.join(elem for elem in PlaylistTrack.MOVE_ACTIONS + PlaylistTrack.TYPE_ACTIONS)), status=status.HTTP_400_BAD_REQUEST)
 
     if action in {'above', 'below', 'changetype'}:
         if target is None:
@@ -41,8 +40,7 @@ def post(request, room, pk, action, target=None):
         
         if action == 'changetype':
             if target not in {'NORMAL', 'SHUFFLE'}:
-                choices = ' or '.join(desc for elem, desc in PlaylistTrack.STATUS_CHOICES)
-                return Response('"{}" action needs a target type (can be : {}) parameter'.format(action, choices), status=status.HTTP_400_BAD_REQUEST)
+                return Response('"{}" action needs a target type (can be : {}) parameter'.format(action, ' or '.join(desc for elem, desc in PlaylistTrack.STATUS_CHOICES)), status=status.HTTP_400_BAD_REQUEST)
         else:
             try:
                 target = PlaylistTrack.objects.get(pk=int(target), room=room)
