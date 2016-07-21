@@ -27,7 +27,7 @@ class PlaylistView(APIView):
         ---
         serializer: PlaylistSerializer
         """
-        pk = request.POST.get('pk')
+        pk = request.data.get('pk')
         if pk is None:
             return Response('POST action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -35,11 +35,11 @@ class PlaylistView(APIView):
         except PlaylistTrack.DoesNotExist:
             return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
-        action = request.POST.get('action')
+        action = request.data.get('action')
         if action not in PlaylistTrack.ACTIONS:
             return Response('Action can only be: "%s"' % '" or "'.join(PlaylistTrack.ACTIONS), status=status.HTTP_400_BAD_REQUEST)
 
-        target = request.POST.get('target')
+        target = request.data.get('target')
         if action in {'above', 'below'}:
             if target is None:
                 return Response('"%s" action needs a target parameter' % action, status=status.HTTP_400_BAD_REQUEST)
@@ -67,7 +67,7 @@ class PlaylistView(APIView):
         ---
         serializer: PlaylistSerializer
         """
-        pk = request.POST.get('pk')
+        pk = request.data.get('pk')
         if pk is None:
             return Response('DELETE action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
         try:

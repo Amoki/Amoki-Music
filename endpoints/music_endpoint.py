@@ -75,10 +75,9 @@ class Music_endpointView(APIView):
         ---
         serializer: MusicSerializer
         """
-        pk = request.POST.get('pk')
+        pk = request.data.get('pk')
         if pk is None:
             return Response('PATCH action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
-
         try:
             music = Music.objects.get(pk=pk, room=room)
         except Music.DoesNotExist:
@@ -100,7 +99,7 @@ class Music_endpointView(APIView):
         Delete a music
         ---
         """
-        pk = request.POST.get('pk')
+        pk = request.data.get('pk')
         if pk is None:
             return Response('DELETE action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
 
