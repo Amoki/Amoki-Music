@@ -18,11 +18,9 @@ PYTHON_ENV = os.environ.get('PYTHON_ENV', 'development')
 
 if PYTHON_ENV == 'production':  # pragma: no cover
     DEBUG = False
-    TEMPLATE_DEBUG = False
     WS4REDIS_DB = 1
 else:
     DEBUG = True
-    TEMPLATE_DEBUG = True
     WS4REDIS_DB = 0
     WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
@@ -136,19 +134,6 @@ STATICFILES_FINDERS = (
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates/'),
-)
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
-)
-
-
 # Websockets
 WEBSOCKET_URL = '/ws/'
 
@@ -167,12 +152,35 @@ WS4REDIS_PREFIX = 'ws_' + PYTHON_ENV
 
 WS4REDIS_HEARTBEAT = '--heartbeat--'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.static',
-    'django.core.context_processors.request',
-    'ws4redis.context_processors.default',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/'),
+        ],
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
+                'ws4redis.context_processors.default',
+            ],
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ],
+            'debug': DEBUG
+        },
+
+    },
+]
 
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_PREFIX = 'session'
@@ -220,6 +228,7 @@ REST_FRAMEWORK = {
 USE_X_FORWARDED_HOST = True
 
 
+# Disable migration during testsuite
 class DisableMigrations(object):
     def __contains__(self, item):
         return True
@@ -234,6 +243,5 @@ if len(sys.argv) > 1 and 'test' in sys.argv:
         'django.contrib.auth.hashers.MD5PasswordHasher',  # Replace hasher with a simpler and faster hash method
     )
     DEBUG = False
-    TEMPLATE_DEBUG = False
     TESTING = True
     MIGRATION_MODULES = DisableMigrations()  # Disable migrations during tests

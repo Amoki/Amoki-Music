@@ -48,12 +48,8 @@ function onWsOpen() {
 }
 
 function onWsError() {
-  reconnectTry += 1;
   loginVM.wsError(true);
   loginVM.wsConnected(false);
-  if(reconnectTry > 6) {
-    loginVM.logOut();
-  }
 }
 
 function onWsClose() {
@@ -71,7 +67,7 @@ function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
 function wsActionStop() {
   // Stop the players
   Object.keys(playerControlWrapper).forEach(function(player) {
-    playerControlWrapper[player].stop();
+    playerControlWrapper[player] && playerControlWrapper[player].stop();
     $('.player-child').not('.player-child-no-music').stop().fadeOut(250);
   });
 
@@ -108,7 +104,7 @@ function wsActionMusicPatched(message) {
   // notify the modification to subscribers
   roomVM.playlistTracks.valueHasMutated();
 
-  if(roomVM.room().currentMusic().pk() === music.pk()) {
+  if(roomVM.room().currentMusic() && roomVM.room().currentMusic().pk() === music.pk()) {
     roomVM.room().currentMusic(music);
     roomVM.room().current_time_past($('#time-left-progress-bar').data('currentTimePast'));
     roomVM.room().current_time_left(roomVM.room().currentMusic().duration() - roomVM.room().current_time_past());

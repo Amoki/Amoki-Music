@@ -11,7 +11,7 @@ var playerPreviewControlWrapper = {
 function updateVolume(volume, doNotCookieSave) {
   Object.keys(playerControlWrapper).forEach(function(player) {
     doNotCookieSave ? null : storeCookie('volumePlayer', volume);
-    playerControlWrapper[player].setVolume(volume);
+    playerControlWrapper[player] && playerControlWrapper[player].setVolume(volume);
   });
 }
 
