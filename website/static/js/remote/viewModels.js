@@ -34,7 +34,7 @@ function LibraryViewModel() {
 
   self.addMusic = function(music, oneShot) {
     // Return a json serialized Music object
-    music.oneShot = oneShot;
+    music.one_shot = oneShot;
     $.ajax("/music", {
       data: ko.toJSON(music),
       type: "post",
@@ -80,7 +80,7 @@ function LibraryViewModel() {
     $("button.btn-add-music-one-shot").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     $("button.btn-add-music-one-shot").prop('disabled', true);
     if(music.from === 'search') {
-      self.addMusic(music,oneShot);
+      self.addMusic(music, oneShot);
     }
     else if(music.from === 'library') {
       (play === 'play') ? self.addMusic(music,false) : self.patchMusic(music, play);
