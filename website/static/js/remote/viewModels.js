@@ -193,6 +193,11 @@ function RoomViewModel() {
   var self = this;
 
   self.room = ko.observable();
+  self.listenersTitle = ko.computed(function() {
+    if(self.room() && self.room().listeners()) {
+      return 'There is ' + self.room().listeners() + ' ' + (self.room().listeners() > 1 ? 'people' : 'person') + ' in this room';
+    }
+  });
   self.playlistTracks = ko.observableArray([]);
 
   (!getCookie('playerOpen') || getCookie('playerOpen') === false) ? storeCookie('playerOpen', false) : null;

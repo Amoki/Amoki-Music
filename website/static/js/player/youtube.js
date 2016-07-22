@@ -68,6 +68,11 @@ var youtubePlayerPreviewControl = {
     else {
       return previewYoutubePlayer.getPlayerState();
     }
+  },
+  setVolume: function(volume) {
+    if(youtubePlayer.initialized) {
+      youtubePlayer.setVolume(volume);
+    }
   }
 };
 

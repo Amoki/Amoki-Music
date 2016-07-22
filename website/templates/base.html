@@ -116,7 +116,7 @@
             <ul class="nav navbar-nav navbar-right navbar-listeners" data-bind="with:room">
               <li data-bind="if: listeners">
                 <a class="btn-navbar">
-                  <button class="btn btn-primary btn-navbar btn-navbar-listeners" type="button" data-bind="text: listeners, attr: {title: 'There is ' + listeners() + ' person(s) in this room'}"></button>
+                  <button class="btn btn-primary btn-navbar btn-navbar-listeners" type="button" data-bind="text: listeners, attr: {title: $parent.listenersTitle()}"></button>
                 </a>
               </li>
             </ul>
