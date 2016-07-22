@@ -72,8 +72,6 @@ $(document).ready(function() {
   });
   resize();
 
-  $('.overlay-playlist').hide();
-
   $('#querySearch').autocomplete({
     minLength: 2,
     source: function(request, response) {

@@ -40,6 +40,9 @@ $(document).on('click', '#btn-open-player', function() {
 
 
 function onWsOpen() {
+  $('.overlay-playlist').hide();
+  $('#tab_btn_library a').tab('show');
+
   reconnectTry = 0;
   loginVM.wsError(false);
   roomVM.init();

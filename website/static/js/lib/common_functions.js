@@ -82,7 +82,7 @@ function ajax(source) {
   });
 }
 
-function logErrors(resultat, statut, erreur) {
+function logErrors(resultat, statut, erreur, source) {
   console.error(resultat.responseText);
   console.error("Statut : " + statut);
   console.error("Error: " + erreur.stack);

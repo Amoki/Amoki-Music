@@ -41,13 +41,15 @@ function LibraryViewModel() {
       contentType: "application/json",
       dataType: "json",
       success: function() {
-        $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
-        $("button.btn-add-music").prop('disabled', false);
-        $("button.btn-add-music-one-shot").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
-        $("button.btn-add-music-one-shot").prop('disabled', false);
         modalConfirm($('#modal-add-music'));
       },
-      error: logErrors,
+      error: function(jqXHR, textStatus, errorThrown) {
+        logErrors(jqXHR, textStatus, errorThrown, "Music update");
+      },
+      complete: function() {
+        $("button.btn-add-music").prop('disabled', false).removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
+        $("button.btn-add-music-one-shot").prop('disabled', false).removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
+      }
     });
   };
 
@@ -59,26 +61,26 @@ function LibraryViewModel() {
       contentType: "application/json",
       dataType: "json",
       success: function() {
-        if(!play) {
-          $("button.btn-add-music").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
-          $("button.btn-add-music").prop('disabled', false);
-          $("button.btn-add-music-one-shot").removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
-          $("button.btn-add-music-one-shot").prop('disabled', false);
-          modalConfirm($('#modal-add-music'));
-        }
-        else {
+        if(play) {
           self.addMusic(music,false);
         }
+        else {
+          modalConfirm($('#modal-update-music'));
+        }
       },
-      error: logErrors,
+      error: function(jqXHR, textStatus, errorThrown) {
+        logErrors(jqXHR, textStatus, errorThrown, "Music update");
+      },
+      complete: function() {
+        $("button.btn-add-music").prop('disabled', false).removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-play-circle");
+        $("button.btn-add-music-one-shot").prop('disabled', false).removeClass("icon-refresh").children("span").attr("class", "glyphicon glyphicon-fire");
+      }
     });
   };
 
   self.sendMusic = function(music, play, one_shot) {
-    $("button.btn-add-music").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
-    $("button.btn-add-music").prop('disabled', true);
-    $("button.btn-add-music-one-shot").addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
-    $("button.btn-add-music-one-shot").prop('disabled', true);
+    $("button.btn-add-music").prop('disabled', true).addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
+    $("button.btn-add-music-one-shot").prop('disabled', true).addClass("icon-refresh").children("span").attr("class", "fa fa-refresh fa-spin");
     if(music.from === 'search') {
       self.addMusic(music,one_shot);
     }
@@ -220,8 +222,7 @@ function RoomViewModel() {
     self.playerOpen(false);
     storeCookie('playerOpen', false);
     if($('#tab_btn_playlist').hasClass('active')) {
-      $('#tab_btn_playlist, #playlist').removeClass('active');
-      $('#tab_btn_library, #library').addClass('active');
+      $('#tab_btn_library a').tab('show');
     }
     Object.keys(playerControlWrapper).forEach(function(player) {
       playerControlWrapper[player].stop();
