@@ -147,7 +147,8 @@ function LibraryViewModel() {
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
-    url = event ? event.target.value : url = "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
+    url = event ? event.target.value : "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
+
     $.getJSON(url, function(allData) {
       var mappedMusics = $.map(allData.results, function(item) {
         item.from = 'library';
