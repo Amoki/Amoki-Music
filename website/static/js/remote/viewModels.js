@@ -147,7 +147,7 @@ function LibraryViewModel() {
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
-    event ? url = event.target.value : url = "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
+    url = event ? event.target.value : url = "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
     $.getJSON(url, function(allData) {
       var mappedMusics = $.map(allData.results, function(item) {
         item.from = 'library';
@@ -288,10 +288,11 @@ function RoomViewModel() {
 
   self.postPlaylistSort = function(pk, action, target) {
     $('.overlay-playlist').show();
-    var data = {};
-    pk ? data.pk = pk : null;
-    action ? data.action = action : null;
-    target ? data.target = target : null;
+    var data = {
+      'pk': pk,
+      'action' : action,
+      'target' : target
+    };
     data = ko.toJSON(data);
     $.ajax({
       url: '/playlist',
