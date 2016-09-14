@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from endpoints.utils.decorators import room_required
+from endpoints.utils.decorators import room_required, pk_required
 from music.serializers import MusicSerializer
 from music.models import Music
 
@@ -68,16 +68,14 @@ class Music_endpointView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @pk_required
     @room_required
-    def patch(self, request, room, format=None):
+    def patch(self, request, room, pk, format=None):
         """
         Update music
         ---
         serializer: MusicSerializer
         """
-        pk = request.data.get('pk')
-        if pk is None:
-            return Response('PATCH action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
         try:
             music = Music.objects.get(pk=pk, room=room)
         except Music.DoesNotExist:
@@ -93,16 +91,13 @@ class Music_endpointView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @pk_required
     @room_required
-    def delete(self, request, room, format=None):
+    def delete(self, request, room, pk, format=None):
         """
         Delete a music
         ---
         """
-        pk = request.data.get('pk')
-        if pk is None:
-            return Response('DELETE action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
-
         try:
             music_to_delete = Music.objects.get(pk=pk, room=room)
         except Music.DoesNotExist:

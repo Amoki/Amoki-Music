@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from endpoints.utils.decorators import room_required
+from endpoints.utils.decorators import room_required, pk_required
 from music.serializers import PlaylistSerializer
 from music.models import PlaylistTrack
 
@@ -20,16 +20,14 @@ class PlaylistView(APIView):
         """
         return Response(PlaylistSerializer(room.playlist, many=True).data)
 
+    @pk_required
     @room_required
-    def post(self, request, room):
+    def post(self, request, room, pk):
         """
         Update playlist
         ---
         serializer: PlaylistSerializer
         """
-        pk = request.data.get('pk')
-        if pk is None:
-            return Response('POST action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
         try:
             playlistTrack = PlaylistTrack.objects.get(pk=pk, room=room)
         except PlaylistTrack.DoesNotExist:
@@ -60,16 +58,14 @@ class PlaylistView(APIView):
         room.send_message(message)
         return Response(PlaylistSerializer(room.playlist.all(), many=True).data, status=status.HTTP_200_OK)
 
+    @pk_required
     @room_required
-    def delete(self, request, room):
+    def delete(self, request, room, pk):
         """
         Delete music from playlist
         ---
         serializer: PlaylistSerializer
         """
-        pk = request.data.get('pk')
-        if pk is None:
-            return Response('DELETE action needs a pk parameter', status=status.HTTP_400_BAD_REQUEST)
         try:
             PlaylistTrack.objects.get(pk=pk, room=room).delete()
         except PlaylistTrack.DoesNotExist:

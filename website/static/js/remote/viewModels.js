@@ -276,7 +276,7 @@ function RoomViewModel() {
   self.postNext = function() {
     $('.btn-to-lock').prop('disabled', true);
     $.ajax("/room/next", {
-      data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
+      data: ko.toJSON({pk: self.room().currentMusic().pk()}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
