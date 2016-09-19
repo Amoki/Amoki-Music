@@ -59,12 +59,12 @@ function onWsClose() {
 
 function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
   mappedPlaylistTracks = $.map(newPlaylistTracks, function(item) {
-    if(item.track_type === 0) {
+    if(item.track_type === roomVM.playlistTracks.id) {
       return new PlaylistTrack(item);
     }
   });
   mappedShufflePlaylistTracks = $.map(newPlaylistTracks, function(item) {
-    if(item.track_type === 1) {
+    if(item.track_type === roomVM.shufflePlaylistTracks.id) {
       return new PlaylistTrack(item);
     }
   });

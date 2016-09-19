@@ -80,7 +80,7 @@ class TestPlaylist(EndpointTestCase):
                     'last_play': None,
                     'one_shot': False
                 },
-                'track_type': 0,
+                'track_type': 'NORMAL',
             },
             {
                 'pk': self.pty.pk,
@@ -99,7 +99,7 @@ class TestPlaylist(EndpointTestCase):
                     'last_play': None,
                     'one_shot': False
                 },
-                'track_type': 0,
+                'track_type': 'NORMAL',
             },
             {
                 'pk': self.ptx.pk,
@@ -118,7 +118,7 @@ class TestPlaylist(EndpointTestCase):
                     'last_play': None,
                     'one_shot': False
                 },
-                'track_type': 1,
+                'track_type': 'SHUFFLE',
             }
         ]
         list(response.data).should.eql(expected_result)
@@ -241,6 +241,7 @@ class TestPlaylist(EndpointTestCase):
 
     def test_change_playlistTrack_type(self):
         response = self.client.post('/playlist/%s/changetype/SHUFFLE' % self.pt.pk)
+        print(response.data)
         response.status_code.should.eql(status.HTTP_200_OK)
         
         self.pt = self.reload(self.pt)

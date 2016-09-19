@@ -32,16 +32,16 @@ class Music(models.Model):
 
 
 class PlaylistTrack(OrderedModel):
-    NORMAL = 0
-    SHUFFLE = 1
+    NORMAL = 'NORMAL'
+    SHUFFLE = 'SHUFFLE'
     STATUS_CHOICES = (
-        (NORMAL, '"NORMAL" = Selected by an user request'),
-        (SHUFFLE, '"SHUFFLE" = Randomly selected'),
+        (NORMAL, '"NORMAL" : Selected by an user request'),
+        (SHUFFLE, '"SHUFFLE" : Randomly selected'),
     )
 
     room = models.ForeignKey('player.Room', related_name='playlist')
     track = models.ForeignKey('music.Music')
-    track_type = models.IntegerField(choices=STATUS_CHOICES, default=NORMAL)
+    track_type = models.CharField(max_length=20, choices=STATUS_CHOICES, default=NORMAL)
     order_with_respect_to = ('room', 'track_type')
 
     MOVE_ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']

@@ -251,12 +251,12 @@ function RoomViewModel() {
   self.getPlaylist = function() {
     $.getJSON("/playlist", function(allData) {
       var mappedPlaylistTracks = $.map(allData, function(item) {
-        if(item.track_type === 0) {
+        if(item.track_type === self.playlistTracks.id) {
           return new PlaylistTrack(item);
         }
       });
       var mappedShufflePlaylistTracks = $.map(allData, function(item) {
-        if(item.track_type === 1) {
+        if(item.track_type === self.shufflePlaylistTracks.id) {
           return new PlaylistTrack(item);
         }
       });

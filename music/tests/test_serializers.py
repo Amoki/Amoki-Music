@@ -69,7 +69,7 @@ class SerializersTestCase(TestCase):
                 'last_play': None,
                 'one_shot': False
             },
-            'track_type': 0
+            'track_type': 'NORMAL'
         }
 
         dict(PlaylistSerializer(pt).data).should.eql(expected_serialization)
