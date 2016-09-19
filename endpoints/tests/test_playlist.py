@@ -241,7 +241,6 @@ class TestPlaylist(EndpointTestCase):
 
     def test_change_playlistTrack_type(self):
         response = self.client.post('/playlist/%s/changetype/SHUFFLE' % self.pt.pk)
-        print(response.data)
         response.status_code.should.eql(status.HTTP_200_OK)
         
         self.pt = self.reload(self.pt)
