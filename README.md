@@ -41,7 +41,7 @@ How to use
 ## In development
 #### Start the server
 ```bash
-pyhton manage.py runserver <ip:port>
+python manage.py runserver <ip:port>
 ```
 Connect to your server and let you be guided by our awesome UI
 
