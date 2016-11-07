@@ -25,7 +25,7 @@ function WS4Redis(options) {
       console.warn("Closing connection. Reason: Too many missed heartbeats.");
       ws.close();
     }
-    ws.send(options.heartbeat_msg);
+    ws.send(options.heartbeat);
   }
 
   function onOpen() {
