@@ -9,6 +9,12 @@ var sortableOptions = {
   },
 };
 
+var beforeMoveSortable = function(obj) {
+  if(obj.sourceParent.id !== obj.targetParent.id) {
+    obj.cancelDrop = true;
+  }
+};
+
 var afterMoveSortable = function(obj) {
   var action = "";
   var targetPk;

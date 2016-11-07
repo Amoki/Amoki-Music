@@ -25,21 +25,34 @@ class Music(models.Model):
         unique_together = ("music_id", "room")
 
     def __str__(self):
-        return """Music : {} \n
-                Total duration : {} \n
-                Duration : {} \n
-                """.format(self.name, self.total_duration, self.duration)
+        return "Title : {}, Total duration : {}, Duration : {}".format(self.name, self.total_duration, self.duration)
 
     def is_valid(self):
         return source.check_validity(self.source, self.music_id)
 
 
 class PlaylistTrack(OrderedModel):
+    NORMAL = 'NORMAL'
+    SHUFFLE = 'SHUFFLE'
+    STATUS_CHOICES = (
+        (NORMAL, '"NORMAL" : Selected by an user request'),
+        (SHUFFLE, '"SHUFFLE" : Randomly selected'),
+    )
+
     room = models.ForeignKey('player.Room', related_name='playlist')
     track = models.ForeignKey('music.Music')
-    order_with_respect_to = 'room'
+    track_type = models.CharField(max_length=20, choices=STATUS_CHOICES, default=NORMAL)
+    order_with_respect_to = ('room', 'track_type')
 
-    ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
+    MOVE_ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']
+    TYPE_ACTIONS = ['changetype']
 
     class Meta:
-        ordering = ('room', 'order')
+        ordering = ('room', 'track_type', 'order')
+
+    def __str__(self):
+        return "Room : {}, Music : {}, Type : {}".format(self.room, self.track, self.track_type)
+
+    def changetype(self, new_type):
+        self.track_type = getattr(PlaylistTrack, new_type)
+        self.save()

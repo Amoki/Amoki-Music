@@ -59,9 +59,17 @@ function onWsClose() {
 
 function wsActionUpdatePlaylistTrack(newPlaylistTracks) {
   mappedPlaylistTracks = $.map(newPlaylistTracks, function(item) {
-    return new PlaylistTrack(item);
+    if(item.track_type === roomVM.playlistTracks.id) {
+      return new PlaylistTrack(item);
+    }
+  });
+  mappedShufflePlaylistTracks = $.map(newPlaylistTracks, function(item) {
+    if(item.track_type === roomVM.shufflePlaylistTracks.id) {
+      return new PlaylistTrack(item);
+    }
   });
   roomVM.playlistTracks(mappedPlaylistTracks);
+  roomVM.shufflePlaylistTracks(mappedShufflePlaylistTracks);
 }
 
 function wsActionStop() {
@@ -146,7 +154,7 @@ function wsActionPlay(message) {
   musicsLibraryVM.getLibrary();
 
   // Update the playlist
-  roomVM.playlistTracks.shift();
+  wsActionUpdatePlaylistTrack(message.room.playlist);
 
   // Update the page title
   document.title = roomVM.room().currentMusic().name();

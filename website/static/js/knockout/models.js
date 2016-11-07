@@ -24,6 +24,7 @@ function Music(data) {
 // Playlist model
 function PlaylistTrack(data) {
   this.pk = ko.observable(data.pk);
+  this.trackType = ko.observable(data.track_type);
   this.order = ko.observable(data.order);
   this.music = ko.observable(new Music(data.music));
 }

@@ -25,7 +25,7 @@ class TestRoom(EndpointTestCase):
             'token': self.r.token,
             'current_time_past': 0,
             'current_time_past_percent': 0,
-            'listeners' : 0
+            'listeners': 0
         }
 
         response.status_code.should.eql(status.HTTP_200_OK)
@@ -170,3 +170,24 @@ class TestRoom(EndpointTestCase):
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
         response.data.should.eql("Can't next while no music is currently played")
+
+    def test_next_shuffle_playlistTrack(self):
+        m = Music(
+            music_id="a",
+            name="a",
+            thumbnail="https://a.com",
+            total_duration=114,
+            duration=114,
+            url="https://www.a.com",
+            source="youtube",
+            room=self.r,
+        )
+        m.save()
+
+        response = self.client.patch('/room', {'shuffle': True})
+        response.status_code.should.eql(status.HTTP_200_OK)
+        self.r.playlist.filter(track_type=PlaylistTrack.SHUFFLE).count().should.eql(self.r.nb_shuffle_items)
+
+        response = self.client.post('/room/next', {'music_pk': m.pk})
+        response.status_code.should.eql(status.HTTP_200_OK)
+        self.r.playlist.filter(track_type=PlaylistTrack.SHUFFLE).count().should.eql(self.r.nb_shuffle_items)

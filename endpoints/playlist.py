@@ -31,18 +31,23 @@ def post(request, room, pk, action, target=None):
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
-    if action not in PlaylistTrack.ACTIONS:
-        return Response('Action can only be: "%s"' % '" or "'.join(PlaylistTrack.ACTIONS), status=status.HTTP_400_BAD_REQUEST)
+    if action not in PlaylistTrack.MOVE_ACTIONS and action not in PlaylistTrack.TYPE_ACTIONS:
+        return Response('Action can only be: "{}"'.format('" or "'.join(elem for elem in PlaylistTrack.MOVE_ACTIONS + PlaylistTrack.TYPE_ACTIONS)), status=status.HTTP_400_BAD_REQUEST)
 
-    if action in {'above', 'below'}:
+    if action in {'above', 'below', 'changetype'}:
         if target is None:
-            return Response('"%s" action needs a target parameter' % action, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            target = PlaylistTrack.objects.get(pk=int(target), room=room)
-        except PlaylistTrack.DoesNotExist:
-            return Response("Can't find this playlistTrack as target.", status=status.HTTP_404_NOT_FOUND)
-
-    if target is not None:
+            return Response('"{}" action needs a target parameter'.format(action), status=status.HTTP_400_BAD_REQUEST)
+        
+        if action == 'changetype':
+            if target not in [status for status, desc in PlaylistTrack.STATUS_CHOICES]:
+                return Response('"{}" action needs a target type (can be : {}) parameter'.format(action, ' or '.join(desc for elem, desc in PlaylistTrack.STATUS_CHOICES)), status=status.HTTP_400_BAD_REQUEST)
+        else:
+            try:
+                target = PlaylistTrack.objects.get(pk=int(target), room=room)
+                getattr(playlistTrack, action)(target)
+            except PlaylistTrack.DoesNotExist:
+                return Response("Can't find this playlistTrack as target.", status=status.HTTP_404_NOT_FOUND)
+        
         getattr(playlistTrack, action)(target)
     else:
         getattr(playlistTrack, action)()
@@ -64,7 +69,12 @@ def delete(request, room, pk, format=None):
     serializer: PlaylistSerializer
     """
     try:
-        PlaylistTrack.objects.get(pk=pk, room=room).delete()
+        p_track = PlaylistTrack.objects.get(pk=pk, room=room)
+        p_track_type = p_track.track_type
+        p_track.delete()
+        if p_track_type == PlaylistTrack.SHUFFLE:
+            room.fill_shuffle_playlist()
+
     except PlaylistTrack.DoesNotExist:
         return Response("Can't find this playlistTrack.", status=status.HTTP_404_NOT_FOUND)
 
@@ -73,4 +83,4 @@ def delete(request, room, pk, format=None):
         'playlistTracks': PlaylistSerializer(room.playlist.all(), many=True).data
     }
     room.send_message(message)
-    return Response(PlaylistSerializer(room.playlist.all(), many=True).data, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)

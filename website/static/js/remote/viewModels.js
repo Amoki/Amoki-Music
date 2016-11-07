@@ -187,6 +187,9 @@ function RoomViewModel() {
 
   self.room = ko.observable();
   self.playlistTracks = ko.observableArray([]);
+  self.playlistTracks.id = 'NORMAL';
+  self.shufflePlaylistTracks = ko.observableArray([]);
+  self.shufflePlaylistTracks.id = 'SHUFFLE';
 
   (!getCookie('playerOpen') || getCookie('playerOpen') === false) ? storeCookie('playerOpen', false) : null;
   self.playerOpen = ko.observable((getCookie('playerOpen') === "true"));
@@ -194,6 +197,7 @@ function RoomViewModel() {
   self.clear = function() {
     self.room(null);
     self.playlistTracks([]);
+    self.shufflePlaylistTracks([]);
     self.playerOpen(false);
     self.closePlayer();
   };
@@ -247,9 +251,17 @@ function RoomViewModel() {
   self.getPlaylist = function() {
     $.getJSON("/playlist", function(allData) {
       var mappedPlaylistTracks = $.map(allData, function(item) {
-        return new PlaylistTrack(item);
+        if(item.track_type === self.playlistTracks.id) {
+          return new PlaylistTrack(item);
+        }
+      });
+      var mappedShufflePlaylistTracks = $.map(allData, function(item) {
+        if(item.track_type === self.shufflePlaylistTracks.id) {
+          return new PlaylistTrack(item);
+        }
       });
       self.playlistTracks(mappedPlaylistTracks);
+      self.shufflePlaylistTracks(mappedShufflePlaylistTracks);
     }).fail(function(jqxhr) {
       console.error(jqxhr.responseText);
     });
@@ -320,7 +332,7 @@ function RoomViewModel() {
   };
 
   self.deletePlaylistTrack = function(playlistTrack) {
-    self.playlistTracks.remove(playlistTrack);
+    $.inArray(playlistTrack, self.playlistTracks) !== -1 ? self.playlistTracks.remove(playlistTrack) : self.shufflePlaylistTracks.remove(playlistTrack);
     $.ajax("/playlist/" + playlistTrack.pk(), {
       type: "delete",
       contentType: "application/json",

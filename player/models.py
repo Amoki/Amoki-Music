@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 import random
 import math
@@ -10,7 +11,6 @@ from datetime import datetime
 from threading import Timer
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
-from django.conf import settings
 
 from music.models import PlaylistTrack
 
@@ -36,6 +36,7 @@ class Room(models.Model):
     tracks = models.ManyToManyField('music.Music', through='music.PlaylistTrack', related_name="+")
     volume = models.PositiveIntegerField(default=10)
     listeners = models.PositiveIntegerField(editable=False, default=0)
+    nb_shuffle_items = models.PositiveIntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     UnableToUpdate = UnableToUpdate
 
@@ -101,20 +102,27 @@ class Room(models.Model):
 
     def play_next(self):
         self.refresh_from_db()
-        next_music = self.tracks.all().order_by('playlisttrack__order').first()
+        next_music = self.tracks.filter(playlisttrack__track_type=PlaylistTrack.NORMAL).order_by('playlisttrack__order').first()
 
         if next_music:
             PlaylistTrack.objects.filter(room=self, track=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
-            shuffled = self.select_random_music()
+            shuffled = self.tracks.filter(playlisttrack__track_type=PlaylistTrack.SHUFFLE).order_by('playlisttrack__order').first()
+            if shuffled:
+                PlaylistTrack.objects.filter(room=self, track=shuffled).first().delete()
+            else:
+                shuffled = self.select_random_music()
             shuffled.date = datetime.now()
             shuffled.save()
 
             self.play(music=shuffled)
         else:
             self.stop()
+        
+        if self.shuffle:
+            self.fill_shuffle_playlist()
 
     def add_music(self, music):
         # Adding the music to the queue
@@ -142,11 +150,30 @@ class Room(models.Model):
         a = count / float(5)  # Le point où ca commence à monter
         b = count / float(27)  # La vitesse à laquelle ca monte
         x = random.uniform(1, count - a - 1)
-        i = min(int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1)  # Can't select out of range music
+
+        i = min(int(math.floor(x + a - a * math.exp(-x / b))), musics.count() - 1)  # Can't select out of range music
         if i < 0:
             i = 0  # Can't get negative index
 
         return musics[i]
+
+    def fill_shuffle_playlist(self):
+        if self.nb_shuffle_items > 0:
+            current_shuffle_count = PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).count()
+            if self.shuffle:
+                if current_shuffle_count < self.nb_shuffle_items:
+                    while current_shuffle_count < self.nb_shuffle_items:
+                        shuffled_track = self.select_random_music()
+                        PlaylistTrack.objects.create(room=self, track=shuffled_track, track_type=PlaylistTrack.SHUFFLE)
+                        current_shuffle_count += 1
+            else:
+                PlaylistTrack.objects.filter(room=self, track_type=PlaylistTrack.SHUFFLE).delete()
+
+            message = {
+                'action': 'playlistTrack_updated',
+                'playlistTracks': self.get_serialized_playlist()
+            }
+            self.send_message(message)
 
     def get_current_remaining_time(self):
         if self.current_music:
@@ -202,22 +229,20 @@ class Room(models.Model):
             raise self.UnableToUpdate("Can't activate shuffle when there is no musics.")
         if to_active:
             self.shuffle = True
-            message = {
-                'action': 'shuffle_changed',
-                'shuffle': True,
-            }
             self.save()
-            self.send_message(message)
             if not self.current_music:
                 self.play_next()
+            else:
+                self.fill_shuffle_playlist()
         else:
             self.shuffle = False
-            message = {
-                'action': 'shuffle_changed',
-                'shuffle': False,
-            }
             self.save()
-            self.send_message(message)
+            self.fill_shuffle_playlist()
+        message = {
+            'action': 'shuffle_changed',
+            'shuffle': self.shuffle,
+        }
+        self.send_message(message)
 
     def get_serialized_playlist(self):
         # Horrible but Mom said me I can :3
