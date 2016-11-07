@@ -21,7 +21,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.delete('/music/%s' % m.pk)
+        response = self.client.delete('/music', {'pk': m.pk})
 
         response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
 
@@ -42,7 +42,7 @@ class TestMusic(EndpointTestCase):
         self.r.current_music = m
         self.r.save()
 
-        response = self.client.delete('/music/%s' % m.pk)
+        response = self.client.delete('/music', {'pk': m.pk})
 
         response.status_code.should.eql(status.HTTP_204_NO_CONTENT)
 
@@ -52,7 +52,7 @@ class TestMusic(EndpointTestCase):
         self.r.current_music.should.eql(None)
 
     def test_delete_not_exists(self):
-        response = self.client.delete('/music/42')
+        response = self.client.delete('/music', {'pk': 42})
 
         response.status_code.should.eql(status.HTTP_404_NOT_FOUND)
 
@@ -69,7 +69,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.patch('/music/%s' % m.pk, {'timer_start': 8, 'duration': 106})
+        response = self.client.patch('/music', {'pk': m.pk, 'timer_start': 8, 'duration': 106})
 
         response.status_code.should.eql(status.HTTP_200_OK)
         response.data.should.have.key('timer_start').which.should.equal(8)
@@ -95,7 +95,7 @@ class TestMusic(EndpointTestCase):
         firstEvent = Events.get(self.r)
 
         m = self.r.current_music
-        self.client.patch('/music/%s' % m.pk, {'duration': 100})
+        self.client.patch('/music', {'pk': m.pk, 'duration': 100})
 
         # Can't check more precisely the event because of the variable time for the script to execute
         # We at least check if the event is different so we can deduce that it has been updated
@@ -109,7 +109,7 @@ class TestMusic(EndpointTestCase):
         lastEvent.shouldnt.eql(secondEvent)
 
     def test_patch_unexisting_music(self):
-        response = self.client.patch('/music/165423123', {'timer_start': 8})
+        response = self.client.patch('/music', {'pk': 165423123, 'timer_start': 8})
 
         response.status_code.should.eql(status.HTTP_404_NOT_FOUND)
 
@@ -126,7 +126,7 @@ class TestMusic(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.patch('/music/%s' % m.pk, {'total_duration': 'wtf'})
+        response = self.client.patch('/music', {'pk': m.pk, 'total_duration': 'wtf'})
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
 

@@ -53,7 +53,7 @@ function LibraryViewModel() {
 
   self.patchMusic = function(music, play) {
     // Return a json serialized Music object
-    $.ajax("/music/" + music.pk(), {
+    $.ajax("/music", {
       data: ko.toJSON(music),
       type: "patch",
       contentType: "application/json",
@@ -147,7 +147,8 @@ function LibraryViewModel() {
 
   // Load Library page from server, convert it to Music instances, then populate self.musics
   self.getLibrary = function(target, event) {
-    event ? url = event.target.value : url = "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
+    url = event ? event.target.value : "/musics?page=" + self.currentPage() + "&page_size=" + pageSize;
+
     $.getJSON(url, function(allData) {
       var mappedMusics = $.map(allData.results, function(item) {
         item.from = 'library';
@@ -275,7 +276,7 @@ function RoomViewModel() {
   self.postNext = function() {
     $('.btn-to-lock').prop('disabled', true);
     $.ajax("/room/next", {
-      data: ko.toJSON({music_pk: self.room().currentMusic().pk()}),
+      data: ko.toJSON({pk: self.room().currentMusic().pk()}),
       type: "post",
       contentType: "application/json",
       dataType: 'json',
@@ -287,17 +288,19 @@ function RoomViewModel() {
   };
 
   self.postPlaylistSort = function(pk, action, target) {
-    target = (typeof target === 'undefined') ? '' : target;
     $('.overlay-playlist').show();
-    var url = '/playlist';
-    url += pk ? '/' + pk : '';
-    url += action ? '/' + action : '';
-    url += target ? '/' + target : '';
+    var data = {
+      'pk': pk,
+      'action' : action,
+      'target' : target
+    };
+    data = ko.toJSON(data);
     $.ajax({
-      url: url,
+      url: '/playlist',
       type: 'post',
       contentType: 'application/json',
       dataType: 'json',
+      data: data,
       success: function() {
         $('.overlay-playlist').hide();
       },
@@ -308,10 +311,11 @@ function RoomViewModel() {
   self.deleteMusic = function(music) {
     pk = music ? music.pk() : self.room().currentMusic().pk();
 
-    $.ajax("/music/" + pk, {
+    $.ajax("/music", {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
+      data: ko.toJSON({'pk': pk}),
       success: function() {
         modalConfirm($('#modal-delete-music'));
       },
@@ -321,10 +325,11 @@ function RoomViewModel() {
 
   self.deletePlaylistTrack = function(playlistTrack) {
     self.playlistTracks.remove(playlistTrack);
-    $.ajax("/playlist/" + playlistTrack.pk(), {
+    $.ajax("/playlist", {
       type: "delete",
       contentType: "application/json",
       dataType: 'json',
+      data: ko.toJSON({pk: playlistTrack.pk()}),
       success: function() {
         modalConfirm($('#modal-delete-playlistTrack'));
       },

@@ -143,7 +143,7 @@ class TestRoom(EndpointTestCase):
         m2.save()
         PlaylistTrack.objects.create(room=self.r, track=m2)
 
-        response = self.client.post('/room/next', {'music_pk': m.pk})
+        response = self.client.post('/room/next', {'pk': m.pk})
 
         response.status_code.should.eql(status.HTTP_200_OK)
         self.assertResponseEqualsMusic(response.data['current_music'], self.reload(m2))
@@ -166,7 +166,7 @@ class TestRoom(EndpointTestCase):
         )
         m.save()
 
-        response = self.client.post('/room/next', {'music_pk': m.pk})
+        response = self.client.post('/room/next', {'pk': m.pk})
 
         response.status_code.should.eql(status.HTTP_400_BAD_REQUEST)
         response.data.should.eql("Can't next while no music is currently played")

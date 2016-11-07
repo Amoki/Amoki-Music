@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from endpoints.utils.decorators import room_required
+from endpoints.utils.decorators import room_required, pk_required
 from player.serializers import RoomSerializer
 
 
@@ -64,24 +64,22 @@ class RoomNextView(APIView):
     Next music.
     """
 
+    @pk_required
     @room_required
-    def post(self, request, room, format=None):
+    def post(self, request, room, pk, format=None):
         """
         Skip music and play next one
         ---
         parameters:
-          - name: music_pk
+          - name: pk
             required: true
             type: int
             paramType: body
             description: The pk of the current music to be sure to not skip twice the same music
         """
-        if 'music_pk' not in request.data:
-            return Response("Missing music_pk parameter", status=status.HTTP_400_BAD_REQUEST)
-
         if not room.current_music:
             return Response("Can't next while no music is currently played", status.HTTP_400_BAD_REQUEST)
 
-        if request.data['music_pk'] == room.current_music.pk:
+        if pk == room.current_music.pk:
             room.play_next()
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)

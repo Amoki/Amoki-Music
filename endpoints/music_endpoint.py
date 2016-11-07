@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from endpoints.utils.decorators import room_required
+from endpoints.utils.decorators import room_required, pk_required
 from music.serializers import MusicSerializer
 from music.models import Music
 
@@ -68,6 +68,7 @@ class Music_endpointView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @pk_required
     @room_required
     def patch(self, request, room, pk, format=None):
         """
@@ -90,6 +91,7 @@ class Music_endpointView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @pk_required
     @room_required
     def delete(self, request, room, pk, format=None):
         """
