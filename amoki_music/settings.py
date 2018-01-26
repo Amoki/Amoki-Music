@@ -68,6 +68,9 @@ INSTALLED_APPS = (
 
 SOURCES = ["youtube", "soundcloud"]
 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'amoki_music/youtube_key.json'
+
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -169,7 +172,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.request',
                 'ws4redis.context_processors.default',
             ],
             'loaders': [

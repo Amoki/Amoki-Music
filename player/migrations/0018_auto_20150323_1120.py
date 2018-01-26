@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='room',
             name='current_music',
-            field=models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.PROTECT, editable=False, to='music.Music', null=True),
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.PROTECT, editable=False, to='music.Music', null=True),
         ),
     ]

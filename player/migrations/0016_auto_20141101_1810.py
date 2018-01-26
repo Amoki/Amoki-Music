@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='room',
             name='current_music',
-            field=models.ForeignKey(related_name=b'+', editable=False, to='music.Music', null=True),
+            field=models.ForeignKey(related_name='+', editable=False, to='music.Music', null=True, on_delete=models.CASCADE),
         ),
         migrations.DeleteModel(
             name='Music',

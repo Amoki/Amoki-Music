@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='playlisttrack',
             name='room',
-            field=models.ForeignKey(related_name='playlist', to='player.Room'),
+            field=models.ForeignKey(related_name='playlist', to='player.Room', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.RemoveField(

@@ -8,7 +8,7 @@ class Music(models.Model):
     music_id = models.CharField(max_length=16)
     name = models.CharField(max_length=255, editable=False)
     url = models.CharField(max_length=512, editable=False)
-    room = models.ForeignKey('player.Room')
+    room = models.ForeignKey('player.Room', on_delete=models.CASCADE)
     # Total duration of the music
     total_duration = models.PositiveIntegerField(editable=False)
     # Duration in second which will be played
@@ -35,8 +35,8 @@ class Music(models.Model):
 
 
 class PlaylistTrack(OrderedModel):
-    room = models.ForeignKey('player.Room', related_name='playlist')
-    track = models.ForeignKey('music.Music')
+    room = models.ForeignKey('player.Room', on_delete=models.CASCADE, related_name='playlist')
+    track = models.ForeignKey('music.Music', on_delete=models.CASCADE)
     order_with_respect_to = 'room'
 
     ACTIONS = ['top', 'up', 'down', 'bottom', 'above', 'below']

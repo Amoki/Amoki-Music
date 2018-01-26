@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='temporarymusic',
             name='source',
-            field=models.ForeignKey(editable=False, to='music.Source'),
+            field=models.ForeignKey(editable=False, to='music.Source', on_delete=models.CASCADE),
         ),
     ]

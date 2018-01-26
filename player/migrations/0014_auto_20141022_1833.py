@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='room',
             name='current_music',
-            field=models.ForeignKey(related_name=b'+', to='player.Music', null=True),
+            field=models.ForeignKey(related_name='+', to='player.Music', null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='room',

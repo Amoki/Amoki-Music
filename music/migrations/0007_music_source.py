@@ -44,13 +44,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='music',
             name='source',
-            field=models.ForeignKey(to='music.Source', null=True, editable=False),
+            field=models.ForeignKey(to='music.Source', null=True, editable=False, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.RunPython(set_sources_as_youtube),
         migrations.AlterField(
             model_name='music',
             name='source',
-            field=models.ForeignKey(to='music.Source', editable=False),
+            field=models.ForeignKey(to='music.Source', editable=False, on_delete=models.CASCADE),
         ),
     ]

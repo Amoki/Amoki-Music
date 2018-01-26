@@ -24,12 +24,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='temporarymusic',
             name='source',
-            field=models.ForeignKey(to='music.Source', null=True),
+            field=models.ForeignKey(to='music.Source', null=True, on_delete=models.CASCADE),
         ),
         migrations.RunPython(set_sources),
         migrations.AlterField(
             model_name='temporarymusic',
             name='source',
-            field=models.ForeignKey(to='music.Source'),
+            field=models.ForeignKey(to='music.Source', on_delete=models.CASCADE),
         ),
     ]

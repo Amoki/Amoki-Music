@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='room',
             name='tracks',
-            field=models.ManyToManyField(related_name=b'+', through='music.PlaylistTrack', to='music.Music'),
+            field=models.ManyToManyField(related_name='+', through='music.PlaylistTrack', to='music.Music'),
             preserve_default=True,
         ),
     ]

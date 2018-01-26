@@ -1,0 +1,15 @@
+gevent==1.2.2
+Django==2.0.1
+google-api-python-client==1.6.5
+isodate==0.6.0
+soundcloud==0.5.0
+django-websocket-redis==0.5.1
+django-redis-sessions==0.6.1
+djangorestframework==3.7.7
+markdown==2.6.11
+django-ordered-model==1.4.3
+django-rest-swagger==2.1.2
+docutils==0.14
+django-nose==1.4.5
+uwsgi==2.0.15
+sure==1.4.7

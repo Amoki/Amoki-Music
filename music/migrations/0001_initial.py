@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('count', models.PositiveIntegerField(default=0, editable=False)),
                 ('last_play', models.DateTimeField(null=True)),
                 ('dead_link', models.BooleanField(default=False)),
-                ('room', models.ForeignKey(to='player.Room')),
+                ('room', models.ForeignKey(to='player.Room', on_delete=models.CASCADE)),
             ],
             options={
             },

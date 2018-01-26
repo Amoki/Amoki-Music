@@ -41,12 +41,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='music',
             name='room',
-            field=models.ForeignKey(null=True, to='player.Room'),
+            field=models.ForeignKey(null=True, to='player.Room', on_delete=models.CASCADE),
         ),
         migrations.RunPython(link_all_musics_to_room),
         migrations.AlterField(
             model_name='music',
             name='room',
-            field=models.ForeignKey(to='player.Room'),
+            field=models.ForeignKey(to='player.Room', on_delete=models.CASCADE),
         ),
     ]

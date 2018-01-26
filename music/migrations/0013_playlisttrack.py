@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('order', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('room', models.ForeignKey(to='player.Room')),
-                ('track', models.ForeignKey(to='music.Music')),
+                ('room', models.ForeignKey(to='player.Room', on_delete=models.CASCADE)),
+                ('track', models.ForeignKey(to='music.Music', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('order',),
