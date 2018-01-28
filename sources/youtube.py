@@ -10,8 +10,7 @@ URL_REGEX = "(?:v=|youtu\.be\/)([^&?]+)"
 
 youtube = youtube_api(
     "youtube",
-    "v3",
-    developerKey=settings.YOUTUBE_KEY
+    "v3"
 )
 
 

@@ -66,11 +66,6 @@ INSTALLED_APPS = (
     'website',
 )
 
-SOURCES = ["youtube", "soundcloud"]
-
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'amoki_music/youtube_key.json'
-
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -190,10 +185,11 @@ SESSION_REDIS_PREFIX = 'session'
 #
 # Modules
 #
+SOURCES = ["youtube", "soundcloud"]
 
 # Youtube
-YOUTUBE_KEY = os.environ.get('YOUTUBE_KEY', None)
 YOUTUBE_LANGUAGE = os.environ.get('YOUTUBE_LANGUAGE', 'FR')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'amoki_music/youtube_key.json'
 
 # Soundcloud
 SOUNDCLOUD_KEY = os.environ.get('SOUNDCLOUD_KEY', None)
