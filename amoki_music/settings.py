@@ -213,7 +213,6 @@ SWAGGER_SETTINGS = {
     'token_type': 'Bearer'
 }
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -226,17 +225,19 @@ REST_FRAMEWORK = {
 USE_X_FORWARDED_HOST = True
 
 
-# Disable migration during testsuite
-class DisableMigrations(object):
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return "notmigrations"
-
 TESTING = False
 
-if len(sys.argv) > 1 and 'test' in sys.argv:
+if 'test' in sys.argv:
+    # Disable migration during testsuite
+    class DisableMigrations(object):
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return None
+
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
     PASSWORD_HASHERS = (
         'django.contrib.auth.hashers.MD5PasswordHasher',  # Replace hasher with a simpler and faster hash method
     )

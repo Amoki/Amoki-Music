@@ -7,9 +7,9 @@ class Init(AppConfig):
     verbose_name = 'Player'
 
     def ready(self):
-        from player.models import Events
         if not settings.TESTING:
-            Room = self.get_model('Room')
+            from .models import Room, Events
+
             # Initialize events dict and clean rooms
             try:
                 for room in Room.objects.all():

@@ -8,7 +8,8 @@ class Init(AppConfig):
 
     def ready(self):
         if not settings.TESTING:
-            PlaylistTrack = self.get_model('PlaylistTrack')
+            from .models import PlaylistTrack
+
             try:
                 # Delete all playlists
                 PlaylistTrack.objects.all().delete()

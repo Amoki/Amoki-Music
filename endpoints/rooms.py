@@ -9,7 +9,7 @@ class RoomsView(ListAPIView):
     """
     Rooms resource.
     """
-    queryset = Room.objects.all()
+    queryset = Room.objects.all().order_by('name')
     serializer_class = RoomsSerializer
     pagination_class = StandardResultsSetPagination
 
