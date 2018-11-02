@@ -1,0 +1,56 @@
+version: '3.5'
+
+services:
+
+    backend:
+        build:
+            context: ../
+            dockerfile: docker/python-uwsgi/Dockerfile
+        ports:
+          - 8000:8000
+        volumes:
+            - ..:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - frontend
+        hostname: amoki-music-backend
+        container_name: amoki-music-backend
+        command: python manage.py runserver 0.0.0.0:8000
+
+    backend-ws:
+        build:
+            context: ../
+            dockerfile: docker/python-uwsgi-ws/Dockerfile
+        volumes:
+            - ..:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - frontend
+        hostname: amoki-music-backend-ws
+        container_name: amoki-music-backend-ws
+
+    backend-ws-redis:
+        image: redis:4.0.11-alpine
+        command: ["redis-server", "--appendonly", "yes"]
+        volumes:
+            - redis-data:/data
+        networks:
+            - frontend
+        hostname: amoki-music-backend-ws-redis
+        container_name: amoki-music-backend-ws-redis
+
+    frontend:
+        image: nginx:1.15.1-alpine
+        volumes:
+            - ..:/var/www/amoki-music:ro
+            - ./nginx/conf/amoki-music.conf:/etc/nginx/conf.d/default.conf:ro
+        networks:
+            - frontend
+        hostname: amoki-music-frontend
+        container_name: amoki-music-frontend
+
+volumes:
+    redis-data:
+
+networks:
+    frontend:

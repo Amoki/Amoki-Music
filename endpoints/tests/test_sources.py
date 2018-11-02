@@ -12,4 +12,4 @@ class TestRooms(EndpointTestCase):
 
         response.status_code.should.eql(status.HTTP_200_OK)
 
-        response.data.should.eql(['youtube', 'soundcloud'])
+        response.data.should.eql(['soundcloud'])
