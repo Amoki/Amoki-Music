@@ -138,10 +138,10 @@ WEBSOCKET_URL = '/ws/'
 WS4REDIS_SUBSCRIBER = 'player.subscriber.CustomSubscriber'
 
 WS4REDIS_CONNECTION = {
-    'host': 'backend-ws-redis',
-    'port': 6379,
+    'host': os.environ.get('REDIS_HOST', 'backend-ws-redis'),
+    'port': os.environ.get('REDIS_PORT', 6379),
     'db': WS4REDIS_DB,
-    'password': None,
+    'password': os.environ.get('REDIS_PASSWORD', None),
 }
 
 WS4REDIS_EXPIRE = 0

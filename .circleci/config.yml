@@ -1,0 +1,87 @@
+version: 2.1
+
+executors:
+  docker-config:
+    docker:
+      - image: circleci/python:3.6
+      - image: circleci/redis:4-alpine
+
+references:
+  restore_repo: &restore_repo
+    restore_cache:
+      keys:
+        - v1-repo-{{ .Branch }}-{{ .Revision }}
+        - v1-repo-{{ .Branch }}
+        - v1-repo
+jobs:
+  # checkout_code:
+  #   executor: docker-config
+  #   steps:
+  #     - *restore_repo
+  #     - checkout
+  #     - save_cache:
+  #         key: v1-repo-{{ .Branch }}-{{ .Revision }}
+  #         paths:
+  #           - .
+  test:
+    executor: docker-config
+    steps:
+      # - *restore_repo
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: install dependencies
+          command: sudo pip install -r requirements.txt
+
+      - run:
+          name: run tests
+          command: |
+            mkdir -p xunit/
+            coverage run manage.py test --with-xunit --xunit-file=xunit/xunit.xml
+
+      - save_cache:
+          paths:
+            - ~/.local
+            - ~/.cache
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - store_test_results:
+          path: xunit/
+
+      - run:
+          name: run coverage
+          command: |
+            mkdir -p ~/coverage
+            coverage html -d ~/coverage/html-report
+            coveralls --rcfile=.coveragerc
+
+      - store_artifacts:
+          path: ~/coverage/html-report
+          destination: test-reports
+
+  build:
+    executor: docker-config
+    steps:
+      # - *restore_repo
+      - setup_remote_docker
+      - run:
+          name: push to docker hub
+          command: |
+            docker-compose build -f docker/docker-compose.yml
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      # - checkout_code
+      - test
+          # requires:
+          #   - checkout_code
+      - build:
+          # requires:
+          #   - checkout_code
+            - test
