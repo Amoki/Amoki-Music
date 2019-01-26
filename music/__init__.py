@@ -1,1 +1,2 @@
-default_app_config = 'music.initialization.Init'
+default_app_config = "music.apps.MusicConfig"
+

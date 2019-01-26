@@ -1,7 +1,0 @@
-[run]
-branch = True
-
-[report]
-omit = */migrations/*,*/__init__.py,*/admin.py,*.v_env/*,*virtualenv*,*/test_*
-exclude_lines =
-    pragma: no cover

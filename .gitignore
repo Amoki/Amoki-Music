@@ -18,4 +18,5 @@ collected-static/*
 node_modules/*
 .venv/
 
-amoki_music/youtube_key.json
+youtube_key.json
+.vscode

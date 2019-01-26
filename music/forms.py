@@ -1,5 +1,5 @@
-from player.models import Room
 from django import forms
+from music.models import Room
 
 
 class DuplicateForm(forms.Form):
