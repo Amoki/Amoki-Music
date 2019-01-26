@@ -25,7 +25,9 @@ def create_room_event(sender, instance, created, **kwargs):
 @receiver(post_save, sender=MusicQueue)
 def update_room_state(sender, instance, created, **kwargs):
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(instance.room.name, RoomSerializer(room).data)
-
+    async_to_sync(channel_layer.group_send)(
+        f"room_{instance.room_id}",
+        {"type": "room_message", "message": RoomSerializer(instance.room).data},
+    )
     print("STATE_UPDATED")
 

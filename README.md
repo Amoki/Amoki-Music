@@ -32,3 +32,6 @@ How to use
 python manage.py runserver <ip:port>
 ```
 Connect to your server and let you be guided by our awesome UI
+
+#### See the swagger doc
+http://locahost:8000/doc

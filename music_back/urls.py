@@ -7,7 +7,8 @@ from music.views import (
     RoomViewSet,
     RoomListViewSet,
     MusicQueueViewSet,
-    SearchView,
+    search_view,
+    time_view,
 )
 from utils.doc import schema_view
 
@@ -24,7 +25,8 @@ urlpatterns = [
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("", include(router.urls)),
     path("", include(rooms_router.urls)),
-    path("search", SearchView.as_view()),
+    path("search", search_view),
+    path("time", time_view),
     url(
         r"^doc(?P<format>.json|.yaml)$",
         schema_view.without_ui(cache_timeout=0),

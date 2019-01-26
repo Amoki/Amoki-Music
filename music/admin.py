@@ -27,7 +27,7 @@ class MusicAdmin(admin.ModelAdmin):
     def add_music(self, request, queryset):
         for music in queryset:
             # Transform music into dict
-            music.room.add_music(**MusicSerializer(music).data)
+            music.room.add_music(music)
 
     def duplicate_music(self, request, queryset):
         if "do_action" in request.POST:

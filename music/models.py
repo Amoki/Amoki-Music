@@ -12,19 +12,19 @@ import services
 
 class Music(models.Model):
     music_id = models.CharField(max_length=16)
-    name = models.CharField(max_length=255, editable=False)
-    url = models.CharField(max_length=512, editable=False)
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=512)
     room = models.ForeignKey("Room", on_delete=models.CASCADE)
     # Total duration of the music
-    total_duration = models.PositiveIntegerField(editable=False)
+    total_duration = models.PositiveIntegerField()
     # Duration in second which will be played
     duration = models.PositiveIntegerField()
     # thumbnail in 190 * 120
     thumbnail = models.CharField(max_length=255)
-    count = models.PositiveIntegerField(default=0, editable=False)
+    count = models.PositiveIntegerField(default=0)
     last_play = models.DateTimeField(null=True)
     timer_start = models.PositiveIntegerField(default=0)
-    service = models.CharField(max_length=255, editable=False)
+    service = models.CharField(max_length=255)
     one_shot = models.BooleanField(default=False)
 
     class Meta:
@@ -67,7 +67,7 @@ class Room(models.Model):
     listeners = models.PositiveIntegerField(editable=False, default=0)
 
     def __str__(self):
-        return f"self.name \n playing: self.current_music"
+        return f"{self.name} \n playing: {self.current_music}"
 
     def update(self, modifications):
         for key, value in modifications.items():
@@ -116,14 +116,16 @@ class Room(models.Model):
 
     def play_next(self):
         self.refresh_from_db()
+        if self.current_music:
+            MusicQueue.objects.filter(room=self, music=self.current_music).first().delete()
         next_music = self.music_queue.all().order_by("musicqueue__order").first()
-
         if next_music:
-            MusicQueue.objects.filter(room=self, music=next_music).first().delete()
             self.play(music=next_music)
 
         elif self.shuffle:
+            print("SHUFFLE")
             shuffled = self.select_random_music()
+            print(shuffled)
             if shuffled:
                 shuffled.date = datetime.now()
                 shuffled.save()
@@ -225,16 +227,12 @@ class Room(models.Model):
             self._shuffle = False
         elif to_active:
             self._shuffle = True
-            message = {"action": "shuffle_changed", "shuffle": True}
             self.save()
-            self.send_message(message)
             if not self.current_music:
                 self.play_next()
         else:
             self._shuffle = False
-            message = {"action": "shuffle_changed", "shuffle": False}
             self.save()
-            self.send_message(message)
 
 
 class Events:
