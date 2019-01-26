@@ -1,4 +1,4 @@
-import datetime
+import time
 from django.conf import settings
 from rest_framework import serializers
 from rest_framework.utils import model_meta
@@ -74,7 +74,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "name", "shuffle", "token", "music_queue", "volume", "listeners")
+        fields = ("id", "name", "shuffle", "token", "music_queue", "volume")
 
     @swagger_serializer_method(serializer_or_field=MusicQueueElement(many=True))
     def get_music_queue(self, room):
@@ -84,9 +84,9 @@ class RoomSerializer(serializers.ModelSerializer):
             formatted_queue.append(
                 {
                     "music": MusicSerializer(music_queue[0]).data,
-                    "timestamp_start": music_queue[0].last_play.timestamp()
+                    "timestamp_start": int(music_queue[0].last_play.timestamp())
                     if music_queue[0].last_play
-                    else datetime.datetime.now().timestamp(),
+                    else int(time.time()),
                 }
             )
             for index, music_queue_elt in enumerate(music_queue[1:]):

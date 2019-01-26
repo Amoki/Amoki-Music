@@ -18,7 +18,7 @@ router.register("room-list", RoomListViewSet)
 
 rooms_router = routers.NestedSimpleRouter(router, "rooms", lookup="room")
 rooms_router.register("musics", MusicViewSet)
-rooms_router.register("playlist", MusicQueueViewSet)
+rooms_router.register("queue", MusicQueueViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

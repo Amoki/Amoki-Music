@@ -1,6 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from music.models import Room, generate_token, Events, MusicQueue
 from music.serializers import RoomSerializer
@@ -22,12 +22,6 @@ def create_room_event(sender, instance, created, **kwargs):
         Events.set(instance, None)
 
 
-@receiver(post_save, sender=MusicQueue)
-def update_room_state(sender, instance, created, **kwargs):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f"room_{instance.room_id}",
-        {"type": "room_message", "message": RoomSerializer(instance.room).data},
-    )
-    print("STATE_UPDATED")
-
+@receiver(post_save, sender=Room)
+def on_room_change(sender, instance, created, **kwargs):
+    instance.send_state()

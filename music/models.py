@@ -2,6 +2,8 @@ import random
 import math
 from datetime import datetime
 from threading import Timer
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.db import models
 from django.db.models import Sum
 from django.utils.crypto import get_random_string
@@ -64,7 +66,6 @@ class Room(models.Model):
     token = models.CharField(max_length=64, default=generate_token)
     music_queue = models.ManyToManyField("Music", through="MusicQueue", related_name="+")
     volume = models.PositiveIntegerField(default=10)
-    listeners = models.PositiveIntegerField(editable=False, default=0)
 
     def __str__(self):
         return f"{self.name} \n playing: {self.current_music}"
@@ -78,11 +79,6 @@ class Room(models.Model):
         self.token = generate_token()
         self.save()
 
-    def send_message(self, message):
-        """ redis_publisher = RedisPublisher(facility=self.token, broadcast=True)
-        message = RedisMessage(json.dumps(message))
-        redis_publisher.publish_message(message) """
-
     def play(self, music):
         # clear the queue
         event = Events.get(self)
@@ -90,8 +86,6 @@ class Room(models.Model):
             event.cancel()
 
         MusicQueue.objects.create(room=self, music=music)
-        self.save()
-        print(music.is_valid())
         if not music.is_valid():
             music.delete()
             self.play_next()
@@ -100,10 +94,6 @@ class Room(models.Model):
             music.last_play = datetime.now()
             music.save()
 
-            """ message = {"action": "play", "room": self.get_serialized_room()}
-
-            self.send_message(message) """
-
             # Tricky code that create a new thread. Be careful about asynchronousity
             event = Events.set(self, Timer(music.duration, self.play_next, ()))
             event.start()
@@ -111,11 +101,18 @@ class Room(models.Model):
     def stop(self):
         self.current_music = None
         self.save()
-        message = {"action": "stop"}
-        self.send_message(message)
+
+    def send_state(self):
+        from music.serializers import RoomSerializer
+
+        channel_layer = get_channel_layer()
+        data = RoomSerializer(self).data
+        data["people_count"] = channel_layer.receive_count
+        async_to_sync(channel_layer.group_send)(
+            f"room_{self.id}", {"type": "room_message", "message": data}
+        )
 
     def play_next(self):
-        self.refresh_from_db()
         if self.current_music:
             MusicQueue.objects.filter(room=self, music=self.current_music).first().delete()
         next_music = self.music_queue.all().order_by("musicqueue__order").first()
@@ -123,14 +120,13 @@ class Room(models.Model):
             self.play(music=next_music)
 
         elif self.shuffle:
-            print("SHUFFLE")
             shuffled = self.select_random_music()
-            print(shuffled)
             if shuffled:
                 shuffled.date = datetime.now()
                 shuffled.save()
-
                 self.play(music=shuffled)
+
+        self.send_state()
 
     def add_music(self, music):
         # Adding the music to the queue
@@ -139,12 +135,6 @@ class Room(models.Model):
         # Autoplay
         if not self.current_music:
             self.play_next()
-        else:
-            """ message = {
-                "action": "music_added",
-                "playlistTracks": self.get_serialized_playlist(),
-            }
-            self.send_message(message) """
 
     def select_random_music(self):
         # Select random music, excluding 10% last played musics
@@ -171,48 +161,6 @@ class Room(models.Model):
 
         return musics[i]
 
-    def get_current_remaining_time(self):
-        if self.current_music:
-            time = self.current_music.duration - int(
-                (datetime.now() - self.current_music.last_play).total_seconds()
-            )
-            return int(time)
-        return 0
-
-    def get_remaining_time(self):
-        if self.music_queue.count() > 0:
-            time_left = (
-                self.music_queue.all().aggregate(Sum("duration")).get("duration__sum") or 0
-            )
-            time_left += self.get_current_remaining_time()
-            return int(time_left)
-        return 0
-
-    def get_current_time_past(self):
-        if self.current_music:
-            current_time_past = self.current_music.duration - self.get_current_remaining_time()
-            return current_time_past
-        return 0
-
-    def get_current_time_past_percent(self):
-        if self.current_music:
-            try:
-                current_total_time = self.current_music.duration
-                current_time_left = self.get_current_remaining_time()
-                current_time_past_percent = (
-                    (current_total_time - current_time_left) * 100
-                ) / current_total_time
-                return current_time_past_percent
-            except ZeroDivisionError:
-                pass
-        return 0
-
-    def get_musics_remaining(self):
-        return self.music_queue.all().order_by("playlisttrack__order")
-
-    def get_count_remaining(self):
-        return self.music_queue.count()
-
     @property
     def current_music(self):
         return self.music_queue.first()
@@ -227,12 +175,10 @@ class Room(models.Model):
             self._shuffle = False
         elif to_active:
             self._shuffle = True
-            self.save()
             if not self.current_music:
                 self.play_next()
         else:
             self._shuffle = False
-            self.save()
 
 
 class Events:
