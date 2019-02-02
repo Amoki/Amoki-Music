@@ -7,7 +7,6 @@ from googleapiclient.discovery import build as youtube_api
 
 URL_REGEX = r"(?:v=|youtu\.be\/)([^&?]+)"
 
-print(settings.YOUTUBE_API_KEY)
 youtube = youtube_api("youtube", "v3")
 
 

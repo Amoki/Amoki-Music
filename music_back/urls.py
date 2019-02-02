@@ -8,6 +8,7 @@ from music.views import (
     RoomListViewSet,
     MusicQueueViewSet,
     search_view,
+    complete_view,
     time_view,
 )
 from utils.doc import schema_view
@@ -26,6 +27,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("", include(rooms_router.urls)),
     path("search", search_view),
+    path("search/complete", complete_view),
     path("time", time_view),
     url(
         r"^doc(?P<format>.json|.yaml)$",

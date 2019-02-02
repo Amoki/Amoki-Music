@@ -149,13 +149,17 @@ class Room(models.Model):
         to_remove = int(count / 10)
         count -= to_remove
         musics = musics[to_remove:]
+        print(count)
 
         a = count / float(5)  # Le point où ca commence à monter
         b = count / float(27)  # La vitesse à laquelle ca monte
+        print(a, b)
         x = random.uniform(1, count - a - 1)
+        print(x)
         i = min(
-            int(math.floor(x + a - a * math.exp(-x / b))), len(musics) - 1
+            math.floor(x + a - a * math.exp(-x / b)), len(musics) - 1
         )  # Can't select out of range music
+        print(i)
         if i < 0:
             i = 0  # Can't get negative index
 

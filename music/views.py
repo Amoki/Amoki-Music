@@ -1,5 +1,6 @@
 import time
-from rest_framework import viewsets, mixins, status, views
+import requests
+from rest_framework import viewsets, mixins, status, views, serializers
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework_nested.viewsets import NestedViewSetMixin
@@ -12,6 +13,7 @@ from music.serializers import (
     MusicQueueSerializer,
     SearchQuerySerializer,
     SearchResultSerializer,
+    CompleteQuerySerializer,
 )
 from music.models import Room, Music, MusicQueue
 import services
@@ -70,13 +72,34 @@ class MusicQueueViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 
 @swagger_auto_schema(
+    query_serializer=CompleteQuerySerializer,
+    responses={200: serializers.ListSerializer(child=serializers.CharField())},
+    method="GET",
+)
+@api_view(["GET"])
+def complete_view(request):
+    serializer = CompleteQuerySerializer(data=request.query_params)
+    serializer.is_valid(raise_exception=True)
+    params = {
+        "hl": "fr",  # Language
+        "ds": "yt",  # Restrict lookup to youtube
+        "q": serializer.validated_data["query"],  # query term
+        "client": "firefox",  # force youtube style response, i.e. json
+    }
+    response = requests.get("https://suggestqueries.google.com/complete/search", params=params)
+    response.raise_for_status()
+    results = response.json()[1]
+    return Response(results)
+
+
+@swagger_auto_schema(
     query_serializer=SearchQuerySerializer,
     responses={200: SearchResultSerializer(many=True)},
     method="GET",
 )
 @api_view(["GET"])
 def search_view(request):
-    serializer = SearchQuerySerializer(request.query_string)
+    serializer = SearchQuerySerializer(data=request.query_params)
     serializer.is_valid(raise_exception=True)
     results = services.search(**serializer.validated_data)
     return Response(results)

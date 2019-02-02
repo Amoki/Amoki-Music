@@ -19,7 +19,7 @@ djangorestframework = "*"
 drf-nested-routers = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
-

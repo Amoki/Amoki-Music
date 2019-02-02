@@ -125,3 +125,7 @@ class SearchResultSerializer(serializers.Serializer):
     views = serializers.IntegerField(read_only=True)
     total_duration = serializers.IntegerField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
+
+
+class CompleteQuerySerializer(serializers.Serializer):
+    query = serializers.CharField()
