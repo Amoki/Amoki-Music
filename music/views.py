@@ -36,7 +36,7 @@ class MusicViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class MusicQueueViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = MusicQueue.objects.all()
-    serializer_class = MusicQueue
+    serializer_class = MusicQueueSerializer
 
     @action(detail=False, methods=["post"])
     def next(self, request, room_pk):
