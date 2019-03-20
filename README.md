@@ -1,32 +1,35 @@
-Amoki-Music
-===========
-External Requirements
----------------------
+# Amoki-Music
+
+## External Requirements
 ```sh
-sudo apt install redis-server
+sudo apt install redis-server python3.7 python3.7-dev
 ```
 
-
-Install
----------
+## Install
 * `git clone git@github.com:Amoki/Amoki-Music.git` : retrieve the repo
 * `cd Amoki-Music`
-* `pip3 install pipenv` : create a virtual-env for python code
-* `pipenv shell` : activate the virtual_env
+* `sudo pip3 install pipenv` : create a virtual-env for python code
 * `pipenv install` : install all requirements
-* `./manage.py migrate` : migrate DB
-* `./manage.py createsuperuser` : add your own admin.
 
 
-Configure
----------
+## Configure
 
 #### env:
-Create a file named youtube_key.json at the root folder with your youtube key
+Create a file named youtube_key.json at the root folder with your youtube API key
 
-How to use
-----------
-## In development
+## How to use
+
+### In development
+
+#### Activate the virtual_env
+`pipenv shell`
+
+#### Migrate DB
+`./manage.py migrate`
+
+#### Create admin account
+`./manage.py createsuperuser`
+
 #### Start the server
 ```bash
 python manage.py runserver <ip:port>
