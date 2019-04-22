@@ -4,29 +4,7 @@ from rest_framework import serializers
 from rest_framework.utils import model_meta
 from drf_yasg.utils import swagger_serializer_method
 from music.models import Music, Room, MusicQueue
-
-
-def bind_parents_on_create(Cls):
-    class WrappedClass(Cls):
-        def create(self, validated_data):
-            if hasattr(self, "parent_save_kwargs"):
-                kwargs = {
-                    self.parent_save_kwargs.get(key, key): value
-                    for key, value in self.context["view"].kwargs.items()
-                }
-            else:
-                kwargs = {
-                    key.replace("_pk", ""): value
-                    for key, value in self.context["view"].kwargs.items()
-                }
-            info = model_meta.get_field_info(self.Meta.model)
-            for field_name, relation_info in info.relations.items():
-                if relation_info.related_model and field_name in kwargs:
-                    validated_data[f"{field_name}_id"] = kwargs[field_name]
-            return super().create(validated_data)
-
-    WrappedClass.__name__ = Cls.__name__
-    return WrappedClass
+from utils.serializers import ScopeLimitedPKRelatedField, bind_parents_on_create
 
 
 @bind_parents_on_create
@@ -61,11 +39,12 @@ class MusicQueueElement(serializers.Serializer):
 @bind_parents_on_create
 class MusicQueueSerializer(serializers.ModelSerializer):
     parent_lookup_kwargs = {"room_pk": "room_id"}
-    music = MusicSerializer()
+    music = MusicSerializer(read_only=True)
+    music_id = ScopeLimitedPKRelatedField(write_only=True, parent_lookup_kwargs=parent_lookup_kwargs)
 
     class Meta:
         model = MusicQueue
-        fields = ("music",)
+        fields = ("music", "music_id")
 
 
 class RoomSerializer(serializers.ModelSerializer):
