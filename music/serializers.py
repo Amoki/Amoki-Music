@@ -53,7 +53,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "name", "shuffle", "token", "music_queue", "volume")
+        fields = ("id", "name", "shuffle", "music_queue")
 
     @swagger_serializer_method(serializer_or_field=MusicQueueElement(many=True))
     def get_music_queue(self, room):

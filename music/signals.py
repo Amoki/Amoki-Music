@@ -1,19 +1,9 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.db.models.signals import pre_save, post_save, post_delete
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
-from music.models import Room, generate_token, Events, MusicQueue
+from music.models import Room, Events, MusicQueue
 from music.serializers import RoomSerializer
-
-
-@receiver(pre_save, sender=Room)
-def update_token_on_password_change(sender, instance, **kwargs):
-    # first save() of a room don't have pk (not in BD).
-    # This if is used to skip the signal of this first call.
-    # (Room.objects.get need to have a valid pk argument)
-    if instance.pk:
-        if instance.password != Room.objects.get(pk=instance.pk).password:
-            instance.token = generate_token()
 
 
 @receiver(post_save, sender=Room)
@@ -25,3 +15,17 @@ def create_room_event(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Room)
 def on_room_change(sender, instance, created, **kwargs):
     instance.send_state()
+
+@receiver(m2m_changed, sender=MusicQueue)
+def queue_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
+    if action == "post_add":
+        instance.send_state()
+    elif action == "post_remove":
+        music_remove = model
+        if instance.current_music:
+            instance.add_music(instance.current_music)
+        elif instance.shuffle:
+            next_music = instance.select_random_music()
+            instance.add_music(next_music)
+        else:
+            instance.send_state()

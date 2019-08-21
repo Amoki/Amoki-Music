@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework.utils import model_meta
 
 def bind_parents_on_create(Cls):
     class WrappedClass(Cls):
@@ -33,9 +33,7 @@ class ScopeLimitedMixin:
         queryset = super().get_queryset()
         filters = {}
 
-        if hasattr(self.parent, "get_parent_lookup_kwargs"):
-            parent_lookup_kwargs = self.parent.get_parent_lookup_kwargs()
-        elif hasattr(self.parent, "parent_lookup_kwargs"):
+        if hasattr(self.parent, "parent_lookup_kwargs"):
             parent_lookup_kwargs = self.parent.parent_lookup_kwargs
         elif self.parent_lookup_kwargs:
             parent_lookup_kwargs = self.parent_lookup_kwargs

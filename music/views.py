@@ -33,6 +33,10 @@ class MusicViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Music.objects.all()
     serializer_class = MusicSerializer
 
+    def perform_create(self, serializer):
+        music = serializer.save()
+        music.room.add_music(music)
+
 
 class MusicQueueViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = MusicQueue.objects.all()
@@ -41,7 +45,7 @@ class MusicQueueViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     @action(detail=False, methods=["post"])
     def next(self, request, room_pk):
         room = Room.objects.get(id=room_pk)
-        room.play_next()
+        room.stop_current_music()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=["post"])

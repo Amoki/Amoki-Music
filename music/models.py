@@ -6,7 +6,6 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db import models
 from django.db.models import Sum
-from django.utils.crypto import get_random_string
 from ordered_model.models import OrderedModel
 
 import services
@@ -54,53 +53,31 @@ class MusicQueue(OrderedModel):
     class Meta:
         ordering = ("room", "order")
 
-
-def generate_token():
-    return get_random_string(length=32)
-
-
 class Room(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    password = models.CharField(max_length=128)
     _shuffle = models.BooleanField(default=False)
-    token = models.CharField(max_length=64, default=generate_token)
     music_queue = models.ManyToManyField("Music", through="MusicQueue", related_name="+")
-    volume = models.PositiveIntegerField(default=10)
 
     def __str__(self):
-        return f"{self.name} \n playing: {self.current_music}"
+        return f"Room: {self.name}"
 
-    def update(self, modifications):
-        for key, value in modifications.items():
-            setattr(self, key, value)
-            self.save()
-
-    def reset_token(self):
-        self.token = generate_token()
-        self.save()
-
-    def play(self, music):
-        # clear the queue
-        event = Events.get(self)
-        if event:
-            event.cancel()
-
-        MusicQueue.objects.create(room=self, music=music)
-        if not music.is_valid():
-            music.delete()
-            self.play_next()
-        else:
-            music.count += 1
-            music.last_play = datetime.now()
-            music.save()
-
-            # Tricky code that create a new thread. Be careful about asynchronousity
-            event = Events.set(self, Timer(music.duration, self.play_next, ()))
+    @property
+    def current_music(self):
+        return self.music_queue.first()
+    def add_music(self, music):
+        if not self.current_music:
+            # There is no current music, therefor no event: create one
+            event = Events.set(self, Timer(music.duration, self.stop_current_music, ()))
             event.start()
+        self.music_queue.add(music)
 
-    def stop(self):
-        self.current_music = None
-        self.save()
+    def stop_current_music(self):
+        music = self.current_music
+        if music:
+            event = Events.get(self)
+            if event:
+                event.cancel()
+            self.music_queue.remove(music)
 
     def send_state(self):
         from music.serializers import RoomSerializer
@@ -112,31 +89,11 @@ class Room(models.Model):
             f"room_{self.id}", {"type": "room_message", "message": data}
         )
 
-    def play_next(self):
-        if self.current_music:
-            MusicQueue.objects.filter(room=self, music=self.current_music).first().delete()
-        next_music = self.music_queue.all().order_by("musicqueue__order").first()
-        if next_music:
-            self.play(music=next_music)
-
-        elif self.shuffle:
-            shuffled = self.select_random_music()
-            if shuffled:
-                shuffled.date = datetime.now()
-                shuffled.save()
-                self.play(music=shuffled)
-
-        self.send_state()
-
-    def add_music(self, music):
-        # Adding the music to the queue
-        MusicQueue.objects.create(room=self, music=music)
-
-        # Autoplay
-        if not self.current_music:
-            self.play_next()
-
     def select_random_music(self):
+        return (self.music_set.exclude(one_shot=True)
+            .exclude(duration__gte=600)
+            .order_by("?")
+            .first())
         # Select random music, excluding 10% last played musics
         musics = (
             self.music_set.exclude(one_shot=True)
@@ -144,30 +101,22 @@ class Room(models.Model):
             .order_by("-last_play")
         )
         count = musics.count()
-        if count <= 1:
+        if count == 0:
             return None
         to_remove = int(count / 10)
         count -= to_remove
         musics = musics[to_remove:]
-        print(count)
 
         a = count / float(5)  # Le point où ca commence à monter
         b = count / float(27)  # La vitesse à laquelle ca monte
-        print(a, b)
         x = random.uniform(1, count - a - 1)
-        print(x)
         i = min(
             math.floor(x + a - a * math.exp(-x / b)), len(musics) - 1
         )  # Can't select out of range music
-        print(i)
         if i < 0:
             i = 0  # Can't get negative index
 
         return musics[i]
-
-    @property
-    def current_music(self):
-        return self.music_queue.first()
 
     @property
     def shuffle(self):
@@ -180,7 +129,8 @@ class Room(models.Model):
         elif to_active:
             self._shuffle = True
             if not self.current_music:
-                self.play_next()
+                next_music = self.select_random_music()
+                self.add_music(next_music)
         else:
             self._shuffle = False
 

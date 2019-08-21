@@ -20,6 +20,8 @@ drf-nested-routers = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
 requests = "*"
+docutils = "*"
+packaging = "*"
 
 [requires]
 python_version = "3.7"

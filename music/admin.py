@@ -63,7 +63,7 @@ class MusicAdmin(admin.ModelAdmin):
 
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ("name", "shuffle", "current_music")
+    list_display = ("name", "shuffle")
 
 
 class MusicQueueAdmin(OrderedModelAdmin):
