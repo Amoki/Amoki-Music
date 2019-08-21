@@ -16,7 +16,7 @@ django-ordered-model = "*"
 channels = "*"
 channels-redis = "*"
 djangorestframework = "*"
-drf-nested-routers = "*"
+drf-nested-routers = {ref = "define-parent-kwargs-in-view",git = "git://github.com/bimdata/drf-nested-routers"}
 drf-yasg = "*"
 django-cors-headers = "*"
 requests = "*"

@@ -25,22 +25,16 @@ def bind_parents_on_create(Cls):
 
 
 class ScopeLimitedMixin:
-    def __init__(self, parent_lookup_kwargs=None, **kwargs):
-        self.parent_lookup_kwargs = parent_lookup_kwargs
-        super().__init__(**kwargs)
+    """
+    Limit FK queryset with parent_lookup_kwargs
+    """
 
     def get_queryset(self):
         queryset = super().get_queryset()
         filters = {}
-
-        if hasattr(self.parent, "parent_lookup_kwargs"):
-            parent_lookup_kwargs = self.parent.parent_lookup_kwargs
-        elif self.parent_lookup_kwargs:
-            parent_lookup_kwargs = self.parent_lookup_kwargs
-
-        if parent_lookup_kwargs:
-            for kwarg, field in parent_lookup_kwargs.items():
-                filters[field] = self.parent.context["view"].kwargs.get(kwarg)
+        if hasattr(self.context["view"], "parent_lookup_kwargs"):
+            for kwarg, field in self.context["view"].parent_lookup_kwargs.items():
+                filters[field] = self.context["view"].kwargs.get(kwarg)
 
         return queryset.filter(**filters)
 

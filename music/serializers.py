@@ -9,8 +9,6 @@ from utils.serializers import ScopeLimitedPKRelatedField, bind_parents_on_create
 
 @bind_parents_on_create
 class MusicSerializer(serializers.ModelSerializer):
-    parent_lookup_kwargs = {"room_pk": "room_id"}
-
     class Meta:
         model = Music
         fields = (
@@ -38,13 +36,32 @@ class MusicQueueElement(serializers.Serializer):
 
 @bind_parents_on_create
 class MusicQueueSerializer(serializers.ModelSerializer):
-    parent_lookup_kwargs = {"room_pk": "room_id"}
-    music = MusicSerializer(read_only=True)
-    music_id = ScopeLimitedPKRelatedField(write_only=True, parent_lookup_kwargs=parent_lookup_kwargs)
+    music = MusicSerializer(
+        read_only=True, 
+        required=False,
+        help_text="Read only field. To add a new music, use #rooms_musics_create"
+    )
+    music_id = ScopeLimitedPKRelatedField(
+        queryset=Music.objects.all(),
+        write_only=True,
+        source="music",
+        help_text="The ID of the music to add to the queue. Write Only field"
+    )
+    queue_id = serializers.IntegerField(
+        read_only=True,
+        source="id", 
+        help_text="ID of the queue element (a music). It's the Id needed for queue updates"
+    )
+
+    def create(self, validated_data):
+        room = Room.objects.get(id=validated_data.get("room_id"))
+        music = validated_data.get("music")
+        room.music_queue.add(music)
+        return MusicQueue.objects.get(room=room, music=music)
 
     class Meta:
         model = MusicQueue
-        fields = ("music", "music_id")
+        fields = ("music", "music_id", "queue_id")
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -108,3 +125,7 @@ class SearchResultSerializer(serializers.Serializer):
 
 class CompleteQuerySerializer(serializers.Serializer):
     query = serializers.CharField()
+
+
+class PositionSerializer(serializers.Serializer):
+    position = serializers.IntegerField()

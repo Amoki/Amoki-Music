@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "756fc95bc88f87fa4732ed6dc83d4853e1082cc6436d3a2a6bdb953d6b790c5d"
+            "sha256": "b4008e69cd9505d953222acb24c117eb4ba674b350a3a66153a123bcc22c3c12"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -226,12 +226,8 @@
             "version": "==0.15.2"
         },
         "drf-nested-routers": {
-            "hashes": [
-                "sha256:46e5c3abc15c782cafafd7d75028e8f9121bbc6228e3599bbb48a3daa4585034",
-                "sha256:60c1e1f5cc801e757d26a8138e61c44419ef800c213c3640c5b6138e77d46762"
-            ],
-            "index": "pypi",
-            "version": "==0.91"
+            "git": "git://github.com/bimdata/drf-nested-routers",
+            "ref": "24c8e54c19829f5f7f216cd99dd2855b2f11983c"
         },
         "drf-yasg": {
             "hashes": [
