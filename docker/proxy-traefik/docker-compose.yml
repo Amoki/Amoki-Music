@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+
+    backend:
+        build:
+            context: ../../
+            dockerfile: docker/builds/Dockerfile
+        volumes:
+            - ../../:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - proxy-traefik
+            - music
+        command: python manage.py runserver 0.0.0.0:80
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.amoki-music.rule=Host(`${DOMAIN:?DOMAIN NOT SET !}`)
+            - traefik.http.routers.amoki-music.entrypoints=http
+            - traefik.http.services.amoki-music.loadbalancer.server.port=80
+
+    backend-ws:
+        build:
+            context: ../../
+            dockerfile: docker/builds/Dockerfile
+        volumes:
+            - ../../:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - music
+        command: [
+            "uwsgi",
+            "--http-socket", "0.0.0.0:3032",
+            "--chdir", "/var/www/amoki-music",
+            "--wsgi-file", "/var/www/amoki-music/amoki_music/wsgi_websocket.py",
+            "--gevent", "1000",
+            "--http-websockets"
+        ]
+
+    backend-ws-redis:
+        image: redis:5-alpine
+        command: ["redis-server", "--appendonly", "yes"]
+        volumes:
+            - redis-data:/data
+        networks:
+            - music
+
+networks:
+    music:
+    proxy-traefik:
+        external: true
+
+volumes:
+    redis-data:

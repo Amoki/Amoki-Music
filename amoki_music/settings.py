@@ -138,7 +138,7 @@ WEBSOCKET_URL = '/ws/'
 WS4REDIS_SUBSCRIBER = 'player.subscriber.CustomSubscriber'
 
 WS4REDIS_CONNECTION = {
-    'host': 'localhost',
+    'host': 'backend-ws-redis',
     'port': 6379,
     'db': WS4REDIS_DB,
     'password': None,
@@ -181,6 +181,14 @@ TEMPLATES = [
 
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_PREFIX = 'session'
+SESSION_REDIS = {
+    'host': 'backend-ws-redis',
+    'port': 6379,
+    'db': 0,
+    'password': None,
+    'socket_timeout': 1,
+    'retry_on_timeout': False
+}
 
 #
 # Modules

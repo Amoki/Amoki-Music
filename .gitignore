@@ -11,6 +11,7 @@
 *.bat
 *.sh
 .directory
+.idea
 
 # Static files
 collected-static/*

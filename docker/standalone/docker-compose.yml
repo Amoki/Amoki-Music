@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+
+    backend:
+        build:
+            context: ../../
+            dockerfile: docker/builds/Dockerfile
+        ports:
+            - 80:3031
+        volumes:
+            - ../../:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - music
+        command: python manage.py runserver 0.0.0.0:3031
+
+    backend-ws:
+        build:
+            context: ../../
+            dockerfile: docker/builds/Dockerfile
+        volumes:
+            - ../../:/var/www/amoki-music
+        working_dir: /var/www/amoki-music
+        networks:
+            - music
+        command: [
+            "uwsgi",
+            "--http-socket", "0.0.0.0:3032",
+            "--chdir", "/var/www/amoki-music",
+            "--wsgi-file", "/var/www/amoki-music/amoki_music/wsgi_websocket.py",
+            "--gevent", "1000",
+            "--http-websockets"
+        ]
+
+    backend-ws-redis:
+        image: redis:5-alpine
+        volumes:
+            - redis-data:/data
+        networks:
+            - music
+        command: redis-server --appendonly yes
+
+networks:
+    music:
+
+volumes:
+    redis-data:
