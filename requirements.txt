@@ -5,7 +5,7 @@ isodate==0.6.0
 soundcloud==0.5.0
 django-websocket-redis==0.5.1
 django-redis-sessions==0.6.1
-djangorestframework==3.7.7
+djangorestframework==3.11.2
 markdown==2.6.11
 django-ordered-model==1.4.3
 django-rest-swagger==2.1.2
